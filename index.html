@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Travel Like a Photographer — Guides, Photo Spots & Itineraries</title>
+  <meta name="description" content="Travel guides written by a photographer: exact photo spots, shooting tips, day-by-day itineraries, and what to eat and see.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+TC:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ============ HEADER ============ -->
+  <header class="site-header">
+    <nav class="nav">
+      <a class="logo" href="index.html">
+        <span class="aperture" aria-hidden="true"></span>
+        <span data-i18n="siteName">Travel Like a Photographer</span>
+      </a>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+      <ul class="nav-links">
+        <li><a href="destinations.html" data-i18n="navDestinations">Destinations</a></li>
+        <li><a href="photo-spots.html" data-i18n="navSpots">Photo Spots</a></li>
+        <li><a href="itineraries.html" data-i18n="navItineraries">Itineraries</a></li>
+        <li><a href="gallery.html" data-i18n="navGallery">Gallery</a></li>
+        <li><a href="about.html" data-i18n="navAbout">About</a></li>
+      </ul>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button id="lang-en" class="on">EN</button>
+        <button id="lang-zh">中</button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ============ HERO — one framed photograph ============ -->
+  <section class="hero">
+    <div class="hero-frame">
+      <img src="images/hero.svg" alt="Featured landscape photograph">
+      <span class="corner tl" aria-hidden="true"></span>
+      <span class="corner tr" aria-hidden="true"></span>
+      <span class="corner bl" aria-hidden="true"></span>
+      <span class="corner br" aria-hidden="true"></span>
+      <div class="hero-content">
+        <p class="hero-kicker" data-i18n="heroKicker">A photographer's field notes</p>
+        <h1 data-i18n="heroTitle">See the world through the viewfinder.</h1>
+        <p class="hero-sub" data-i18n="heroSub">Real itineraries, exact photo spots, and everything I researched before pressing the shutter — so you can travel and shoot like you've been there before.</p>
+        <a class="btn" href="destinations.html" data-i18n="heroCta">Browse the guides</a>
+        <div class="hero-exif">
+          <span><strong>f/</strong>8</span>
+          <span><strong>1/</strong>250s</span>
+          <span><strong>ISO</strong> 100</span>
+          <span><strong>24</strong>mm</span>
+          <span data-i18n="heroExifNote">— replace with your photo's real settings</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURED GUIDES — editorial grid ============ -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2 data-i18n="guidesTitle">Latest field guides</h2>
+        <span class="exif" data-i18n="guidesLabel">Vol. 01 — Guides</span>
+      </div>
+      <div class="guide-grid">
+
+        <article class="guide lead reveal">
+          <a class="g-link" href="posts/sample-guide.html">
+            <div class="photo">
+              <img src="images/santorini.svg" alt="Santorini, Greece">
+              <span class="frame-no">FR 01</span>
+            </div>
+            <p class="cat" data-i18n="g1cat">Greece · Full Guide</p>
+            <h3 data-i18n="g1title">Santorini for Photographers: 3 Days, 9 Shots, Zero Crowds</h3>
+            <p data-i18n="g1desc">Where to stand at sunrise in Oia before the tour buses arrive, which rooftops you can actually access, and the one village most photographers skip.</p>
+            <p class="g-exif">3-DAY ITINERARY · 9 PHOTO SPOTS · EAT &amp; SEE</p>
+          </a>
+        </article>
+
+        <article class="guide reveal">
+          <a class="g-link" href="posts/sample-guide.html">
+            <div class="photo">
+              <img src="images/kyoto.svg" alt="Kyoto, Japan">
+              <span class="frame-no">FR 02</span>
+            </div>
+            <p class="cat" data-i18n="g2cat">Japan · Full Guide</p>
+            <h3 data-i18n="g2title">Kyoto in Autumn: A Shot List for Temple Season</h3>
+            <p data-i18n="g2desc">Timing the maple color, the temples that allow tripods, and where to eat between golden hours.</p>
+            <p class="g-exif">5-DAY ITINERARY · 12 PHOTO SPOTS</p>
+          </a>
+        </article>
+
+        <article class="guide reveal">
+          <a class="g-link" href="posts/sample-guide.html">
+            <div class="photo">
+              <img src="images/hero.svg" alt="Placeholder destination">
+              <span class="frame-no">FR 03</span>
+            </div>
+            <p class="cat" data-i18n="g3cat">Coming soon</p>
+            <h3 data-i18n="g3title">Your next trip goes here</h3>
+            <p data-i18n="g3desc">This card is a placeholder — we'll fill it with a real trip from your planning notes.</p>
+            <p class="g-exif">— · —</p>
+          </a>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PHOTO SPOTS — the contact sheet ============ -->
+  <section class="section contact-sheet">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2 data-i18n="spotsTitle">The contact sheet — photo spots</h2>
+        <span class="exif" data-i18n="spotsLabel">Scroll →</span>
+      </div>
+      <div class="sheet-scroll">
+
+        <a class="spot reveal" href="photo-spots.html">
+          <img src="images/santorini.svg" alt="Oia blue domes photo spot">
+          <p class="spot-no">No. 001</p>
+          <h3 data-i18n="s1title">Oia Blue Domes Lookout</h3>
+          <p class="spot-meta"><span class="pin">◉</span> <span data-i18n="s1loc">Santorini, Greece — exact pin</span><br>
+          <span data-i18n="s1time">Best: sunrise · 24–70mm</span></p>
+        </a>
+
+        <a class="spot reveal" href="photo-spots.html">
+          <img src="images/kyoto.svg" alt="Fushimi Inari photo spot">
+          <p class="spot-no">No. 002</p>
+          <h3 data-i18n="s2title">Fushimi Inari Upper Gates</h3>
+          <p class="spot-meta"><span class="pin">◉</span> <span data-i18n="s2loc">Kyoto, Japan — exact pin</span><br>
+          <span data-i18n="s2time">Best: 7 am · 35mm</span></p>
+        </a>
+
+        <a class="spot reveal" href="photo-spots.html">
+          <img src="images/hero.svg" alt="Placeholder photo spot">
+          <p class="spot-no">No. 003</p>
+          <h3 data-i18n="s3title">Your secret spot</h3>
+          <p class="spot-meta"><span class="pin">◉</span> <span data-i18n="s3loc">General area only — you choose</span><br>
+          <span data-i18n="s3time">Best: golden hour</span></p>
+        </a>
+
+        <a class="spot reveal" href="photo-spots.html">
+          <img src="images/santorini.svg" alt="Placeholder photo spot">
+          <p class="spot-no">No. 004</p>
+          <h3 data-i18n="s4title">More spots from your trips</h3>
+          <p class="spot-meta"><span class="pin">◉</span> <span data-i18n="s4loc">Added as we build</span><br>
+          <span data-i18n="s4time">—</span></p>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HOW I PLAN — the method ============ -->
+  <section class="section method">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2 data-i18n="methodTitle">How every guide is made</h2>
+        <span class="exif" data-i18n="methodLabel">The method</span>
+      </div>
+      <div class="method-grid">
+        <div class="step reveal">
+          <p class="step-no" data-i18n="m1no">Step 01 — Research</p>
+          <h3 data-i18n="m1title">Weeks of homework</h3>
+          <p data-i18n="m1desc">Every trip starts long before the flight: scouting locations, light direction, seasons, opening hours, and the food worth traveling for.</p>
+        </div>
+        <div class="step reveal">
+          <p class="step-no" data-i18n="m2no">Step 02 — Shoot</p>
+          <h3 data-i18n="m2title">Boots on the ground</h3>
+          <p data-i18n="m2desc">I walk the plan, shoot the shot list, and note what actually worked — and what the blogs got wrong.</p>
+        </div>
+        <div class="step reveal">
+          <p class="step-no" data-i18n="m3no">Step 03 — Share</p>
+          <h3 data-i18n="m3title">The guide you're reading</h3>
+          <p data-i18n="m3desc">The research, the route, and the exact spots — published so your trip starts where mine ended.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section class="section about-strip">
+    <div class="wrap about-inner">
+      <div class="about-portrait reveal">
+        <img src="images/portrait.svg" alt="Portrait of the photographer">
+        <span class="exif" data-i18n="portraitCaption">self-portrait · somewhere far away</span>
+      </div>
+      <div class="reveal">
+        <h2 data-i18n="aboutTitle">The person behind the lens</h2>
+        <p class="lede dropcap" data-i18n="aboutLede">I'm a photographer who plans trips the way other people plan weddings — spreadsheets, maps, shot lists, and food research included.</p>
+        <p data-i18n="aboutBody">This site is everything I wish existed when I started: honest guides that tell you where the photo was taken, when to be there, and what to do with the rest of your day. (We'll replace this with your real story.)</p>
+        <a class="btn" href="about.html" data-i18n="aboutCta">My story</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NEWSLETTER ============ -->
+  <section class="newsletter">
+    <h2 data-i18n="newsTitle">New guides, straight from the field</h2>
+    <p data-i18n="newsSub">One email when a new guide is published. No spam — a photographer's word.</p>
+    <form onsubmit="event.preventDefault(); alert(document.documentElement.lang === 'zh-Hant' ? '訂閱功能會在網站上線時啟用!' : 'Sign-ups will work once the site is online!');">
+      <input type="email" placeholder="your@email.com" aria-label="Email address" required>
+      <button class="btn" type="submit" data-i18n="newsCta">Subscribe</button>
+    </form>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <a class="logo" href="index.html">
+        <span class="aperture" aria-hidden="true"></span>
+        <span data-i18n="siteName">Travel Like a Photographer</span>
+      </a>
+      <ul class="footer-links">
+        <li><a href="destinations.html" data-i18n="navDestinations">Destinations</a></li>
+        <li><a href="photo-spots.html" data-i18n="navSpots">Photo Spots</a></li>
+        <li><a href="itineraries.html" data-i18n="navItineraries">Itineraries</a></li>
+        <li><a href="gallery.html" data-i18n="navGallery">Gallery</a></li>
+        <li><a href="about.html" data-i18n="navAbout">About</a></li>
+        <li><a href="#" data-i18n="footInstagram">Instagram</a></li>
+      </ul>
+      <p class="footer-note" data-i18n="footNote">© 2026 Travel Like a Photographer — All photographs are my own.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

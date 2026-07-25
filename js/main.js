@@ -1,0 +1,185 @@
+/* ==========================================================
+   TRAVEL LIKE A PHOTOGRAPHER — site behavior
+   1. Mobile menu   2. EN/中文 switcher   3. Scroll reveals
+   ========================================================== */
+
+/* ---------- 1. Mobile menu ---------- */
+const toggle = document.querySelector('.nav-toggle');
+const links = document.querySelector('.nav-links');
+if (toggle && links) {
+  toggle.addEventListener('click', () => {
+    const open = links.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', open);
+  });
+}
+
+/* ---------- 2. Language switcher ----------
+   Every translated element has a data-i18n="key" attribute.
+   Add new text in BOTH dictionaries below. */
+
+const i18n = {
+  en: {
+    siteName: 'Travel Like a Photographer',
+    navDestinations: 'Destinations',
+    navSpots: 'Photo Spots',
+    navItineraries: 'Itineraries',
+    navGallery: 'Gallery',
+    navAbout: 'About',
+
+    heroKicker: "A photographer's field notes",
+    heroTitle: 'See the world through the viewfinder.',
+    heroSub: "Real itineraries, exact photo spots, and everything I researched before pressing the shutter — so you can travel and shoot like you've been there before.",
+    heroCta: 'Browse the guides',
+    heroExifNote: "— replace with your photo's real settings",
+
+    guidesTitle: 'Latest field guides',
+    guidesLabel: 'Vol. 01 — Guides',
+    g1cat: 'Greece · Full Guide',
+    g1title: 'Santorini for Photographers: 3 Days, 9 Shots, Zero Crowds',
+    g1desc: 'Where to stand at sunrise in Oia before the tour buses arrive, which rooftops you can actually access, and the one village most photographers skip.',
+    g2cat: 'Japan · Full Guide',
+    g2title: 'Kyoto in Autumn: A Shot List for Temple Season',
+    g2desc: 'Timing the maple color, the temples that allow tripods, and where to eat between golden hours.',
+    g3cat: 'Coming soon',
+    g3title: 'Your next trip goes here',
+    g3desc: "This card is a placeholder — we'll fill it with a real trip from your planning notes.",
+
+    spotsTitle: 'The contact sheet — photo spots',
+    spotsLabel: 'Scroll →',
+    s1title: 'Oia Blue Domes Lookout',
+    s1loc: 'Santorini, Greece — exact pin',
+    s1time: 'Best: sunrise · 24–70mm',
+    s2title: 'Fushimi Inari Upper Gates',
+    s2loc: 'Kyoto, Japan — exact pin',
+    s2time: 'Best: 7 am · 35mm',
+    s3title: 'Your secret spot',
+    s3loc: 'General area only — you choose',
+    s3time: 'Best: golden hour',
+    s4title: 'More spots from your trips',
+    s4loc: 'Added as we build',
+    s4time: '—',
+
+    methodTitle: 'How every guide is made',
+    methodLabel: 'The method',
+    m1no: 'Step 01 — Research',
+    m1title: 'Weeks of homework',
+    m1desc: 'Every trip starts long before the flight: scouting locations, light direction, seasons, opening hours, and the food worth traveling for.',
+    m2no: 'Step 02 — Shoot',
+    m2title: 'Boots on the ground',
+    m2desc: 'I walk the plan, shoot the shot list, and note what actually worked — and what the blogs got wrong.',
+    m3no: 'Step 03 — Share',
+    m3title: "The guide you're reading",
+    m3desc: 'The research, the route, and the exact spots — published so your trip starts where mine ended.',
+
+    aboutTitle: 'The person behind the lens',
+    aboutLede: "I'm a photographer who plans trips the way other people plan weddings — spreadsheets, maps, shot lists, and food research included.",
+    aboutBody: "This site is everything I wish existed when I started: honest guides that tell you where the photo was taken, when to be there, and what to do with the rest of your day. (We'll replace this with your real story.)",
+    aboutCta: 'My story',
+    portraitCaption: 'self-portrait · somewhere far away',
+
+    newsTitle: 'New guides, straight from the field',
+    newsSub: "One email when a new guide is published. No spam — a photographer's word.",
+    newsCta: 'Subscribe',
+
+    footInstagram: 'Instagram',
+    footNote: '© 2026 Travel Like a Photographer — All photographs are my own.'
+  },
+
+  zh: {
+    siteName: '像攝影師一樣旅行',
+    navDestinations: '目的地',
+    navSpots: '攝影點',
+    navItineraries: '行程',
+    navGallery: '作品集',
+    navAbout: '關於我',
+
+    heroKicker: '一位攝影師的田野筆記',
+    heroTitle: '透過觀景窗看世界。',
+    heroSub: '真實的行程、精確的攝影點,以及每次按下快門前做的所有功課——讓你的旅行,像已經來過一樣。',
+    heroCta: '瀏覽指南',
+    heroExifNote: '——之後換成你照片的真實參數',
+
+    guidesTitle: '最新旅拍指南',
+    guidesLabel: 'Vol. 01 — 指南',
+    g1cat: '希臘 · 完整指南',
+    g1title: '攝影師的聖托里尼:3 天、9 個機位、避開人潮',
+    g1desc: '日出時該站在 Oia 的哪個位置、哪些屋頂真的能上去,以及大多數攝影師錯過的那座村莊。',
+    g2cat: '日本 · 完整指南',
+    g2title: '秋天的京都:寺廟紅葉季拍攝清單',
+    g2desc: '楓葉變色的時間點、允許腳架的寺廟,以及兩個黃金時刻之間該吃什麼。',
+    g3cat: '即將推出',
+    g3title: '你的下一趟旅程',
+    g3desc: '這是佔位卡片——我們會用你規劃筆記中的真實行程填滿它。',
+
+    spotsTitle: '底片索引——攝影點',
+    spotsLabel: '往右滑 →',
+    s1title: 'Oia 藍頂教堂觀景點',
+    s1loc: '希臘聖托里尼——精確座標',
+    s1time: '最佳:日出 · 24–70mm',
+    s2title: '伏見稻荷上段鳥居',
+    s2loc: '日本京都——精確座標',
+    s2time: '最佳:早上 7 點 · 35mm',
+    s3title: '你的私藏機位',
+    s3loc: '只標大概區域——由你決定',
+    s3time: '最佳:黃金時刻',
+    s4title: '更多來自你旅程的機位',
+    s4loc: '建置中陸續加入',
+    s4time: '—',
+
+    methodTitle: '每份指南的誕生過程',
+    methodLabel: '製作方法',
+    m1no: '步驟 01 — 研究',
+    m1title: '出發前的數週功課',
+    m1desc: '每趟旅程早在班機起飛前就開始:勘景、光線方向、季節、開放時間,還有值得專程前往的美食。',
+    m2no: '步驟 02 — 拍攝',
+    m2title: '親自走一遍',
+    m2desc: '我照著計畫走、拍完清單上的每一張,並記下真正有用的資訊——以及部落格寫錯的地方。',
+    m3no: '步驟 03 — 分享',
+    m3title: '你正在讀的這份指南',
+    m3desc: '研究、路線、精確機位——全部公開,讓你的旅程從我的終點開始。',
+
+    aboutTitle: '鏡頭後面的人',
+    aboutLede: '我是個攝影師,規劃旅行像別人籌備婚禮一樣認真——試算表、地圖、拍攝清單、美食研究,一樣都不少。',
+    aboutBody: '這個網站是我剛起步時最希望存在的東西:誠實的指南,告訴你照片在哪裡拍、什麼時候去,以及一天剩下的時間該做什麼。(之後會換成你的真實故事。)',
+    aboutCta: '我的故事',
+    portraitCaption: '自拍 · 在遙遠的某處',
+
+    newsTitle: '新指南,直送你的信箱',
+    newsSub: '新指南發佈時寄一封信給你。不濫發——攝影師的承諾。',
+    newsCta: '訂閱',
+
+    footInstagram: 'Instagram',
+    footNote: '© 2026 像攝影師一樣旅行——所有照片皆為本人拍攝。'
+  }
+};
+
+function setLang(lang) {
+  const dict = i18n[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key]) el.textContent = dict[key];
+  });
+  document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : 'en';
+  document.getElementById('lang-en').classList.toggle('on', lang === 'en');
+  document.getElementById('lang-zh').classList.toggle('on', lang === 'zh');
+  localStorage.setItem('tlap-lang', lang);
+}
+
+document.getElementById('lang-en')?.addEventListener('click', () => setLang('en'));
+document.getElementById('lang-zh')?.addEventListener('click', () => setLang('zh'));
+
+/* remember the visitor's choice */
+const saved = localStorage.getItem('tlap-lang');
+if (saved === 'zh') setLang('zh');
+
+/* ---------- 3. Reveal on scroll ---------- */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
