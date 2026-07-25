@@ -55,7 +55,10 @@
     </div>
   </section>
 
-  <!-- ============ FEATURED GUIDES — editorial grid ============ -->
+  <!-- Everything inside site-main scrolls up OVER the pinned hero -->
+  <main class="site-main">
+
+  <!-- ============ FEATURED GUIDES — clean cards ============ -->
   <section class="section">
     <div class="wrap">
       <div class="section-head reveal">
@@ -64,16 +67,12 @@
       </div>
       <div class="guide-grid">
 
-        <article class="guide lead reveal">
+        <article class="guide reveal">
           <a class="g-link" href="posts/sample-guide.html">
             <div class="photo">
               <img src="images/santorini.svg" alt="Santorini, Greece">
-              <span class="frame-no">FR 01</span>
             </div>
-            <p class="cat" data-i18n="g1cat">Greece · Full Guide</p>
             <h3 data-i18n="g1title">Santorini for Photographers: 3 Days, 9 Shots, Zero Crowds</h3>
-            <p data-i18n="g1desc">Where to stand at sunrise in Oia before the tour buses arrive, which rooftops you can actually access, and the one village most photographers skip.</p>
-            <p class="g-exif">3-DAY ITINERARY · 9 PHOTO SPOTS · EAT &amp; SEE</p>
           </a>
         </article>
 
@@ -81,12 +80,8 @@
           <a class="g-link" href="posts/sample-guide.html">
             <div class="photo">
               <img src="images/kyoto.svg" alt="Kyoto, Japan">
-              <span class="frame-no">FR 02</span>
             </div>
-            <p class="cat" data-i18n="g2cat">Japan · Full Guide</p>
             <h3 data-i18n="g2title">Kyoto in Autumn: A Shot List for Temple Season</h3>
-            <p data-i18n="g2desc">Timing the maple color, the temples that allow tripods, and where to eat between golden hours.</p>
-            <p class="g-exif">5-DAY ITINERARY · 12 PHOTO SPOTS</p>
           </a>
         </article>
 
@@ -94,12 +89,8 @@
           <a class="g-link" href="posts/sample-guide.html">
             <div class="photo">
               <img src="images/hero.svg" alt="Placeholder destination">
-              <span class="frame-no">FR 03</span>
             </div>
-            <p class="cat" data-i18n="g3cat">Coming soon</p>
             <h3 data-i18n="g3title">Your next trip goes here</h3>
-            <p data-i18n="g3desc">This card is a placeholder — we'll fill it with a real trip from your planning notes.</p>
-            <p class="g-exif">— · —</p>
           </a>
         </article>
 
@@ -204,6 +195,8 @@
       <button class="btn" type="submit" data-i18n="newsCta">Subscribe</button>
     </form>
   </section>
+
+  </main>
 
   <!-- ============ FOOTER ============ -->
   <footer class="site-footer">
