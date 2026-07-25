@@ -19,14 +19,14 @@ if (toggle && links) {
 
 const i18n = {
   en: {
-    siteName: 'Travel Like a Photographer',
+    siteName: 'tuan photography',
     navDestinations: 'Destinations',
     navSpots: 'Photo Spots',
     navItineraries: 'Itineraries',
     navGallery: 'Gallery',
     navAbout: 'About',
 
-    heroKicker: "A photographer's field notes",
+    heroKicker: 'Travel like a photographer — field notes from the road',
     heroTitle: 'See the world through the viewfinder.',
     heroSub: "Real itineraries, exact photo spots, and everything I researched before pressing the shutter — so you can travel and shoot like you've been there before.",
     heroCta: 'Browse the guides',
@@ -82,18 +82,18 @@ const i18n = {
     newsCta: 'Subscribe',
 
     footInstagram: 'Instagram',
-    footNote: '© 2026 Travel Like a Photographer — All photographs are my own.'
+    footNote: '© 2026 tuan photography 陳亮元 — All photographs are my own.'
   },
 
   zh: {
-    siteName: '像攝影師一樣旅行',
+    siteName: 'tuan photography',
     navDestinations: '目的地',
     navSpots: '攝影點',
     navItineraries: '行程',
     navGallery: '作品集',
     navAbout: '關於我',
 
-    heroKicker: '一位攝影師的田野筆記',
+    heroKicker: '像攝影師一樣旅行——來自路上的田野筆記',
     heroTitle: '透過觀景窗看世界。',
     heroSub: '真實的行程、精確的攝影點,以及每次按下快門前做的所有功課——讓你的旅行,像已經來過一樣。',
     heroCta: '瀏覽指南',
@@ -149,7 +149,7 @@ const i18n = {
     newsCta: '訂閱',
 
     footInstagram: 'Instagram',
-    footNote: '© 2026 像攝影師一樣旅行——所有照片皆為本人拍攝。'
+    footNote: '© 2026 tuan photography 陳亮元——所有照片皆為本人拍攝。'
   }
 };
 

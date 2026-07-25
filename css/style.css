@@ -108,6 +108,20 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
   background: var(--kodak-red);
 }
 
+/* the 陳亮元 signature mark next to the logo */
+.logo-cjk {
+  font-family: var(--body);
+  font-weight: 500;
+  font-size: 0.82rem;
+  letter-spacing: 0.3em;
+  color: var(--kodak-red);
+  border-left: 1px solid var(--line);
+  padding-left: 10px;
+  margin-left: 2px;
+  transform: translateY(1px);
+}
+.site-footer .logo-cjk { color: var(--frame-gold); border-left-color: var(--line-dark); }
+
 .nav-links {
   display: flex;
   gap: 26px;
