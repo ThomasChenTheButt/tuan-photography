@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Itineraries — tuan photography 陳亮元</title>
+  <meta name="description" content="Day-by-day trip plans built around light: where to shoot, what to eat, and what to see in between.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+TC:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav">
+      <a class="logo" href="index.html">
+        <span class="aperture" aria-hidden="true"></span>
+        <span>tuan photography</span>
+        <span class="logo-cjk">陳亮元</span>
+      </a>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+      <ul class="nav-links">
+        <li><a href="destinations.html" data-i18n="navDestinations">Destinations</a></li>
+        <li><a href="photo-spots.html" data-i18n="navSpots">Photo Spots</a></li>
+        <li><a href="itineraries.html" class="active" data-i18n="navItineraries">Itineraries</a></li>
+        <li><a href="gallery.html" data-i18n="navGallery">Gallery</a></li>
+        <li><a href="about.html" data-i18n="navAbout">About</a></li>
+      </ul>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button id="lang-en" class="on">EN</button>
+        <button id="lang-zh">中</button>
+      </div>
+    </nav>
+  </header>
+
+  <div class="page-header">
+    <h1 data-i18n="itTitle">Itineraries</h1>
+    <p data-i18n="itSub">Trip plans built around light — sunrise spots first, museums at noon, dinner near the blue-hour location. Steal them.</p>
+  </div>
+
+  <section class="section" style="padding-top: 24px;">
+    <div class="wrap">
+
+      <article class="itin-card reveal">
+        <img src="images/santorini.svg" alt="Santorini itinerary">
+        <div class="itin-body">
+          <p class="cat" data-i18n="it1cat">Greece · 3 days</p>
+          <h3 data-i18n="it1title">Santorini: The Photographer's Long Weekend</h3>
+          <p data-i18n="it1desc">Three days scheduled around golden hours — with the boring midday heat spent eating and swimming, not queueing.</p>
+          <div class="itin-meta">
+            <span data-i18n="it1m1">3 days</span>
+            <span data-i18n="it1m2">Season: Apr–Jun</span>
+            <span data-i18n="it1m3">Pace: relaxed</span>
+            <span data-i18n="it1m4">9 photo spots</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="itin-card reveal">
+        <img src="images/kyoto.svg" alt="Kyoto itinerary">
+        <div class="itin-body">
+          <p class="cat" data-i18n="it2cat">Japan · 5 days</p>
+          <h3 data-i18n="it2title">Kyoto Autumn: Five Days of Temples and Maple</h3>
+          <p data-i18n="it2desc">A route ordered by tripod rules and crowd flow — early temples, quiet gardens at lunch, izakaya after blue hour.</p>
+          <div class="itin-meta">
+            <span data-i18n="it2m1">5 days</span>
+            <span data-i18n="it2m2">Season: mid-Nov</span>
+            <span data-i18n="it2m3">Pace: full</span>
+            <span data-i18n="it2m4">12 photo spots</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="itin-card reveal">
+        <img src="images/hero.svg" alt="Placeholder itinerary">
+        <div class="itin-body">
+          <p class="cat" data-i18n="it3cat">Coming soon</p>
+          <h3 data-i18n="it3title">Your planning docs, published</h3>
+          <p data-i18n="it3desc">The itineraries you built in Google Drive get polished and published here — research included.</p>
+          <div class="itin-meta">
+            <span>—</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <a class="logo" href="index.html">
+        <span class="aperture" aria-hidden="true"></span>
+        <span>tuan photography</span>
+        <span class="logo-cjk">陳亮元</span>
+      </a>
+      <ul class="footer-links">
+        <li><a href="destinations.html" data-i18n="navDestinations">Destinations</a></li>
+        <li><a href="photo-spots.html" data-i18n="navSpots">Photo Spots</a></li>
+        <li><a href="itineraries.html" data-i18n="navItineraries">Itineraries</a></li>
+        <li><a href="gallery.html" data-i18n="navGallery">Gallery</a></li>
+        <li><a href="about.html" data-i18n="navAbout">About</a></li>
+        <li><a href="#" data-i18n="footInstagram">Instagram</a></li>
+      </ul>
+      <p class="footer-note" data-i18n="footNote">© 2026 tuan photography 陳亮元 — All photographs are my own.</p>
+    </div>
+  </footer>
+
+  <script>
+  window.pageI18n = {
+    en: {
+      itTitle: 'Itineraries',
+      itSub: 'Trip plans built around light — sunrise spots first, museums at noon, dinner near the blue-hour location. Steal them.',
+      it1cat: 'Greece · 3 days',
+      it1title: "Santorini: The Photographer's Long Weekend",
+      it1desc: 'Three days scheduled around golden hours — with the boring midday heat spent eating and swimming, not queueing.',
+      it1m1: '3 days', it1m2: 'Season: Apr–Jun', it1m3: 'Pace: relaxed', it1m4: '9 photo spots',
+      it2cat: 'Japan · 5 days',
+      it2title: 'Kyoto Autumn: Five Days of Temples and Maple',
+      it2desc: 'A route ordered by tripod rules and crowd flow — early temples, quiet gardens at lunch, izakaya after blue hour.',
+      it2m1: '5 days', it2m2: 'Season: mid-Nov', it2m3: 'Pace: full', it2m4: '12 photo spots',
+      it3cat: 'Coming soon',
+      it3title: 'Your planning docs, published',
+      it3desc: 'The itineraries you built in Google Drive get polished and published here — research included.'
+    },
+    zh: {
+      itTitle: '行程',
+      itSub: '圍繞光線設計的行程——日出機位排最前、中午逛博物館、晚餐訂在藍調時刻機位旁。儘管拿去用。',
+      it1cat: '希臘 · 3 天',
+      it1title: '聖托里尼:攝影師的長週末',
+      it1desc: '三天都排在黃金時刻前後——無聊又炎熱的中午拿來吃飯和游泳,不拿來排隊。',
+      it1m1: '3 天', it1m2: '季節:4–6 月', it1m3: '節奏:悠閒', it1m4: '9 個機位',
+      it2cat: '日本 · 5 天',
+      it2title: '京都之秋:寺廟與紅葉的五天',
+      it2desc: '依腳架規定與人潮動線排序的路線——清晨拍寺廟、中午躲進安靜庭園、藍調時刻後去居酒屋。',
+      it2m1: '5 天', it2m2: '季節:11 月中', it2m3: '節奏:充實', it2m4: '12 個機位',
+      it3cat: '即將推出',
+      it3title: '你的規劃文件,正式出版',
+      it3desc: '你在 Google Drive 裡做的行程會在這裡被打磨、發佈——包含所有研究筆記。'
+    }
+  };
+  </script>
+  <script src="js/main.js"></script>
+</body>
+</html>

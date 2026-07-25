@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Photo Spots — tuan photography 陳亮元</title>
+  <meta name="description" content="A library of shooting locations: where each photo was taken, the best time of day, and what lens to bring.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+TC:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="darkroom-page">
+
+  <header class="site-header">
+    <nav class="nav">
+      <a class="logo" href="index.html">
+        <span class="aperture" aria-hidden="true"></span>
+        <span>tuan photography</span>
+        <span class="logo-cjk">陳亮元</span>
+      </a>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+      <ul class="nav-links">
+        <li><a href="destinations.html" data-i18n="navDestinations">Destinations</a></li>
+        <li><a href="photo-spots.html" class="active" data-i18n="navSpots">Photo Spots</a></li>
+        <li><a href="itineraries.html" data-i18n="navItineraries">Itineraries</a></li>
+        <li><a href="gallery.html" data-i18n="navGallery">Gallery</a></li>
+        <li><a href="about.html" data-i18n="navAbout">About</a></li>
+      </ul>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button id="lang-en" class="on">EN</button>
+        <button id="lang-zh">中</button>
+      </div>
+    </nav>
+  </header>
+
+  <div class="page-header">
+    <h1 data-i18n="spTitle">The contact sheet</h1>
+    <p data-i18n="spSub">Every frame worth chasing — where it was taken, when the light is right, and what to bring. Fragile places get a general area only.</p>
+  </div>
+
+  <div class="filter-bar" role="group" aria-label="Filter spots">
+    <button data-filter="all" class="on" data-i18n="fAll">All spots</button>
+    <button data-filter="exact" data-i18n="fExact">◉ Exact pin</button>
+    <button data-filter="general" data-i18n="fGeneral">◎ General area</button>
+  </div>
+
+  <section style="padding-bottom: 80px;">
+    <div class="wrap">
+      <div class="spots-grid">
+
+        <a class="spot reveal" href="posts/sample-guide.html" data-pin="exact">
+          <img src="images/santorini.svg" alt="Oia blue domes photo spot">
+          <p class="spot-no">No. 001</p>
+          <h3 data-i18n="sp1title">Oia Blue Domes Lookout</h3>
+          <p class="spot-meta" data-i18n="sp1meta">Santorini, Greece · Best: sunrise · 24–70mm</p>
+          <span class="pin-badge exact" data-i18n="badgeExact">◉ Exact pin</span>
+        </a>
+
+        <a class="spot reveal" href="posts/sample-guide.html" data-pin="exact">
+          <img src="images/kyoto.svg" alt="Fushimi Inari photo spot">
+          <p class="spot-no">No. 002</p>
+          <h3 data-i18n="sp2title">Fushimi Inari Upper Gates</h3>
+          <p class="spot-meta" data-i18n="sp2meta">Kyoto, Japan · Best: 7 am · 35mm</p>
+          <span class="pin-badge exact" data-i18n="badgeExact">◉ Exact pin</span>
+        </a>
+
+        <a class="spot reveal" href="posts/sample-guide.html" data-pin="general">
+          <img src="images/hero.svg" alt="Secret sunrise ridge photo spot">
+          <p class="spot-no">No. 003</p>
+          <h3 data-i18n="sp3title">A quiet sunrise ridge</h3>
+          <p class="spot-meta" data-i18n="sp3meta">Somewhere in the mountains · Best: golden hour · 16–35mm</p>
+          <span class="pin-badge general" data-i18n="badgeGeneral">◎ General area</span>
+        </a>
+
+        <a class="spot reveal" href="posts/sample-guide.html" data-pin="exact">
+          <img src="images/santorini.svg" alt="Imerovigli caldera walk photo spot">
+          <p class="spot-no">No. 004</p>
+          <h3 data-i18n="sp4title">Imerovigli Caldera Walk</h3>
+          <p class="spot-meta" data-i18n="sp4meta">Santorini, Greece · Best: blue hour · 70–200mm</p>
+          <span class="pin-badge exact" data-i18n="badgeExact">◉ Exact pin</span>
+        </a>
+
+        <a class="spot reveal" href="posts/sample-guide.html" data-pin="general">
+          <img src="images/kyoto.svg" alt="Hidden temple garden photo spot">
+          <p class="spot-no">No. 005</p>
+          <h3 data-i18n="sp5title">A hidden temple garden</h3>
+          <p class="spot-meta" data-i18n="sp5meta">Kyoto, Japan · Best: overcast noon · 50mm</p>
+          <span class="pin-badge general" data-i18n="badgeGeneral">◎ General area</span>
+        </a>
+
+        <a class="spot reveal" href="posts/sample-guide.html" data-pin="exact">
+          <img src="images/hero.svg" alt="Placeholder photo spot">
+          <p class="spot-no">No. 006</p>
+          <h3 data-i18n="sp6title">Your next spot goes here</h3>
+          <p class="spot-meta" data-i18n="sp6meta">Added from your real trips as we build</p>
+          <span class="pin-badge exact" data-i18n="badgeExact">◉ Exact pin</span>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <a class="logo" href="index.html">
+        <span class="aperture" aria-hidden="true"></span>
+        <span>tuan photography</span>
+        <span class="logo-cjk">陳亮元</span>
+      </a>
+      <ul class="footer-links">
+        <li><a href="destinations.html" data-i18n="navDestinations">Destinations</a></li>
+        <li><a href="photo-spots.html" data-i18n="navSpots">Photo Spots</a></li>
+        <li><a href="itineraries.html" data-i18n="navItineraries">Itineraries</a></li>
+        <li><a href="gallery.html" data-i18n="navGallery">Gallery</a></li>
+        <li><a href="about.html" data-i18n="navAbout">About</a></li>
+        <li><a href="#" data-i18n="footInstagram">Instagram</a></li>
+      </ul>
+      <p class="footer-note" data-i18n="footNote">© 2026 tuan photography 陳亮元 — All photographs are my own.</p>
+    </div>
+  </footer>
+
+  <script>
+  window.pageI18n = {
+    en: {
+      spTitle: 'The contact sheet',
+      spSub: 'Every frame worth chasing — where it was taken, when the light is right, and what to bring. Fragile places get a general area only.',
+      fAll: 'All spots',
+      fExact: '◉ Exact pin',
+      fGeneral: '◎ General area',
+      badgeExact: '◉ Exact pin',
+      badgeGeneral: '◎ General area',
+      sp1title: 'Oia Blue Domes Lookout',
+      sp1meta: 'Santorini, Greece · Best: sunrise · 24–70mm',
+      sp2title: 'Fushimi Inari Upper Gates',
+      sp2meta: 'Kyoto, Japan · Best: 7 am · 35mm',
+      sp3title: 'A quiet sunrise ridge',
+      sp3meta: 'Somewhere in the mountains · Best: golden hour · 16–35mm',
+      sp4title: 'Imerovigli Caldera Walk',
+      sp4meta: 'Santorini, Greece · Best: blue hour · 70–200mm',
+      sp5title: 'A hidden temple garden',
+      sp5meta: 'Kyoto, Japan · Best: overcast noon · 50mm',
+      sp6title: 'Your next spot goes here',
+      sp6meta: 'Added from your real trips as we build'
+    },
+    zh: {
+      spTitle: '底片索引',
+      spSub: '每一個值得追逐的畫面——在哪裡拍、光線何時最好、該帶什麼。脆弱的秘境只標大概區域。',
+      fAll: '全部機位',
+      fExact: '◉ 精確座標',
+      fGeneral: '◎ 大概區域',
+      badgeExact: '◉ 精確座標',
+      badgeGeneral: '◎ 大概區域',
+      sp1title: 'Oia 藍頂教堂觀景點',
+      sp1meta: '希臘聖托里尼 · 最佳:日出 · 24–70mm',
+      sp2title: '伏見稻荷上段鳥居',
+      sp2meta: '日本京都 · 最佳:早上 7 點 · 35mm',
+      sp3title: '安靜的日出稜線',
+      sp3meta: '山裡的某處 · 最佳:黃金時刻 · 16–35mm',
+      sp4title: 'Imerovigli 火山口步道',
+      sp4meta: '希臘聖托里尼 · 最佳:藍調時刻 · 70–200mm',
+      sp5title: '隱藏的寺廟庭園',
+      sp5meta: '日本京都 · 最佳:陰天中午 · 50mm',
+      sp6title: '你的下一個機位',
+      sp6meta: '之後會從你的真實旅程陸續加入'
+    }
+  };
+  </script>
+  <script src="js/main.js"></script>
+</body>
+</html>

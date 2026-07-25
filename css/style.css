@@ -181,15 +181,15 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 .hero {
   position: relative;
-  margin: 40px auto 0;
-  max-width: calc(var(--wrap) + 40px);
-  padding: 0 28px;
+  margin: 0;
+  max-width: none;
+  padding: 0;
 }
 
 .hero-frame {
   position: relative;
   overflow: hidden;
-  min-height: 74vh;
+  min-height: calc(100vh - 74px);   /* full screen below the header */
   display: flex;
   align-items: flex-end;
 }
@@ -225,9 +225,10 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .hero-content {
   position: relative;
   z-index: 2;
-  padding: 48px 52px;
+  padding: 48px 52px 56px;
   color: #fdfaf4;
-  max-width: 720px;
+  max-width: 860px;
+  margin: 0 auto 0 max(28px, calc((100vw - var(--wrap)) / 2));  /* aligns with the page grid */
 }
 
 .hero-kicker {
@@ -670,4 +671,400 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
   .about-portrait { max-width: 300px; margin: 0 auto; }
 
   .section { padding: 60px 0; }
+}
+
+/* ==========================================================
+   INNER PAGE COMPONENTS
+   ========================================================== */
+
+/* ---------- Page header (inner pages) ---------- */
+
+.page-header {
+  text-align: center;
+  padding: 72px 24px 8px;
+}
+.page-header h1 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(2.2rem, 4.5vw, 3.1rem);
+  letter-spacing: -0.01em;
+  margin-bottom: 12px;
+}
+.page-header p {
+  color: var(--ink-soft);
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+/* ---------- Article pages ---------- */
+
+.article-hero {
+  position: relative;
+  height: 56vh;
+  min-height: 320px;
+  overflow: hidden;
+}
+.article-hero img { width: 100%; height: 100%; object-fit: cover; }
+
+.article {
+  max-width: 760px;
+  margin: -90px auto 0;
+  background: #fdfaf4;
+  position: relative;
+  z-index: 5;
+  padding: 52px 56px 56px;
+  border-radius: 4px 4px 0 0;
+  box-shadow: 0 -6px 30px rgba(36, 29, 21, 0.12);
+}
+
+.article .card-tag {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--kodak-red);
+  display: inline-block;
+  margin-bottom: 10px;
+}
+
+.article h1 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(1.9rem, 4vw, 2.5rem);
+  line-height: 1.15;
+  margin-bottom: 12px;
+}
+
+.article .meta {
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-soft);
+  margin-bottom: 28px;
+  padding-bottom: 22px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.article h2 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.6rem;
+  margin: 46px 0 14px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+
+.article p { margin-bottom: 18px; }
+
+.article figure { margin: 30px 0; }
+.article figure img { border-radius: 4px; }
+.article figcaption {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+  text-align: center;
+  margin-top: 10px;
+}
+
+/* The signature "photo spot" tip box */
+.photo-tip {
+  background: var(--paper-deep);
+  border-left: 4px solid var(--kodak-red);
+  padding: 20px 26px;
+  border-radius: 0 6px 6px 0;
+  margin: 28px 0;
+}
+.photo-tip .tip-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--kodak-red);
+  margin-bottom: 8px;
+}
+.photo-tip p:last-child { margin-bottom: 0; font-size: 0.97rem; }
+
+@media (max-width: 820px) {
+  .article { padding: 34px 26px 40px; margin-top: -56px; }
+}
+
+/* ---------- Dark pages (Photo Spots, Gallery) ---------- */
+
+body.darkroom-page { background: var(--darkroom); color: var(--darkroom-ink); }
+body.darkroom-page .site-header {
+  background: rgba(25, 20, 16, 0.92);
+  border-bottom-color: var(--line-dark);
+}
+body.darkroom-page .site-header .logo { color: var(--darkroom-ink); }
+body.darkroom-page .site-header .logo-cjk { color: var(--frame-gold); border-left-color: var(--line-dark); }
+body.darkroom-page .nav-links a { color: var(--darkroom-ink); }
+body.darkroom-page .nav-links a:hover, body.darkroom-page .nav-links a.active { border-bottom-color: var(--frame-gold); }
+body.darkroom-page .lang-switch { border-color: var(--darkroom-ink); }
+body.darkroom-page .lang-switch button { color: var(--darkroom-ink); }
+body.darkroom-page .lang-switch button.on { background: var(--darkroom-ink); color: var(--darkroom); }
+body.darkroom-page .nav-toggle { color: var(--darkroom-ink); }
+body.darkroom-page .nav-links { background: var(--darkroom); border-bottom-color: var(--line-dark); }
+body.darkroom-page .page-header p { color: #8f8577; }
+body.darkroom-page .site-footer { border-top: 1px solid var(--line-dark); }
+
+/* ---------- Filter bar (Photo Spots) ---------- */
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 26px 0 46px;
+}
+.filter-bar button {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 9px 18px;
+  background: transparent;
+  border: 1px solid var(--line-dark);
+  border-radius: 2px;
+  color: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+.filter-bar button:hover { border-color: var(--frame-gold); }
+.filter-bar button.on { border-color: var(--frame-gold); color: var(--frame-gold); }
+
+.spots-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+}
+.spots-grid .spot[hidden] { display: none; }
+
+.pin-badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 2px;
+  margin-top: 8px;
+}
+.pin-badge.exact { background: rgba(194,44,30,0.18); color: #e0968c; }
+.pin-badge.general { background: rgba(217,164,65,0.14); color: var(--frame-gold); }
+
+/* ---------- Editorial data tables (guides) ---------- */
+
+.table-scroll { overflow-x: auto; margin: 26px 0; }
+
+.info-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.93rem;
+  min-width: 520px;
+}
+.info-table caption {
+  caption-side: top;
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--kodak-red);
+  padding-bottom: 10px;
+}
+.info-table th {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: left;
+  color: var(--ink-soft);
+  border-bottom: 2px solid var(--ink);
+  padding: 10px 14px 8px;
+}
+.info-table td {
+  border-bottom: 1px solid var(--line);
+  padding: 12px 14px;
+  vertical-align: top;
+}
+.info-table td:first-child { font-weight: 600; }
+.info-table .best { color: var(--kodak-red); font-weight: 600; }
+
+/* ---------- Gear checklist 拍攝裝備清單 ---------- */
+
+.gear-list {
+  background: #fdfaf4;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--frame-gold);
+  border-radius: 0 6px 6px 0;
+  padding: 24px 28px;
+  margin: 26px 0;
+  list-style: none;
+}
+.gear-list li {
+  font-size: 0.96rem;
+  padding: 7px 0 7px 30px;
+  position: relative;
+  border-bottom: 1px dashed var(--line);
+}
+.gear-list li:last-child { border-bottom: none; }
+.gear-list li::before {
+  content: '□';
+  position: absolute;
+  left: 0;
+  font-family: var(--mono);
+  color: var(--frame-gold);
+  font-size: 1.05rem;
+}
+.gear-list .why { color: var(--ink-soft); font-size: 0.88rem; }
+
+/* ---------- FAQ ---------- */
+
+.faq details {
+  border-bottom: 1px solid var(--line);
+  padding: 4px 0;
+}
+.faq summary {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.06rem;
+  padding: 14px 30px 14px 0;
+  cursor: pointer;
+  list-style: none;
+  position: relative;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after {
+  content: '+';
+  position: absolute;
+  right: 4px;
+  font-family: var(--mono);
+  color: var(--kodak-red);
+}
+.faq details[open] summary::after { content: '−'; }
+.faq details p { padding: 0 0 16px; color: var(--ink-soft); font-size: 0.96rem; }
+
+/* ---------- Table of contents ---------- */
+
+.toc {
+  background: var(--paper-deep);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 22px 26px;
+  margin: 28px 0;
+}
+.toc .exif { display: block; margin-bottom: 10px; }
+.toc ol {
+  list-style: none;
+  counter-reset: toc;
+  columns: 2;
+  gap: 32px;
+}
+.toc li { counter-increment: toc; padding: 4px 0; break-inside: avoid; }
+.toc li::before {
+  content: counter(toc, decimal-leading-zero);
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--kodak-red);
+  margin-right: 10px;
+}
+.toc a { color: var(--ink); }
+.toc a:hover { color: var(--kodak-red); text-decoration: none; }
+
+/* ---------- Day-by-day itinerary timeline ---------- */
+
+.day {
+  border-left: 2px solid var(--line);
+  padding: 0 0 26px 26px;
+  position: relative;
+}
+.day:last-of-type { padding-bottom: 6px; }
+.day::before {
+  content: '';
+  position: absolute;
+  left: -7px; top: 6px;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--kodak-red);
+  border: 2px solid var(--paper);
+}
+.day .day-no {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--kodak-red);
+  margin-bottom: 6px;
+}
+.day h3 { font-family: var(--display); font-weight: 600; font-size: 1.25rem; margin-bottom: 8px; }
+.day p { color: var(--ink-soft); font-size: 0.97rem; margin-bottom: 8px; }
+.day .exif { display: block; margin-top: 4px; }
+
+/* ---------- Gallery wall (Wilhelm-style) ---------- */
+
+.gallery-wall {
+  columns: 3;
+  column-gap: 18px;
+  padding-bottom: 40px;
+}
+.gallery-wall figure {
+  break-inside: avoid;
+  margin: 0 0 18px;
+  position: relative;
+  overflow: hidden;
+}
+.gallery-wall img {
+  width: 100%;
+  transition: transform 0.5s ease, opacity 0.3s;
+}
+.gallery-wall figure:hover img { transform: scale(1.03); }
+.gallery-wall figcaption {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 30px 14px 12px;
+  background: linear-gradient(transparent, rgba(25,20,16,0.85));
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--darkroom-ink);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.gallery-wall figure:hover figcaption { opacity: 1; }
+
+/* ---------- Itinerary cards ---------- */
+
+.itin-card {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 34px;
+  background: var(--card, #fff);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 30px;
+  background: #fdfaf4;
+}
+.itin-card img { width: 100%; height: 100%; min-height: 230px; object-fit: cover; }
+.itin-card .itin-body { padding: 28px 30px 28px 0; }
+.itin-card .cat { font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--kodak-red); margin-bottom: 8px; }
+.itin-card h3 { font-family: var(--display); font-weight: 600; font-size: 1.5rem; margin-bottom: 10px; }
+.itin-card p { color: var(--ink-soft); font-size: 0.97rem; margin-bottom: 14px; }
+.itin-card .itin-meta {
+  display: flex; flex-wrap: wrap; gap: 18px;
+  font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--ink-soft);
+  border-top: 1px solid var(--line); padding-top: 14px;
+}
+
+@media (max-width: 860px) {
+  .gallery-wall { columns: 2; }
+  .toc ol { columns: 1; }
+  .itin-card { grid-template-columns: 1fr; }
+  .itin-card .itin-body { padding: 0 24px 24px; }
+}
+@media (max-width: 540px) {
+  .gallery-wall { columns: 1; }
 }

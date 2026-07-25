@@ -153,6 +153,13 @@ const i18n = {
   }
 };
 
+/* Pages can define their own extra translations in a
+   window.pageI18n = { en: {...}, zh: {...} } block before this file loads. */
+if (window.pageI18n) {
+  Object.assign(i18n.en, window.pageI18n.en || {});
+  Object.assign(i18n.zh, window.pageI18n.zh || {});
+}
+
 function setLang(lang) {
   const dict = i18n[lang];
   document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -171,6 +178,20 @@ document.getElementById('lang-zh')?.addEventListener('click', () => setLang('zh'
 /* remember the visitor's choice */
 const saved = localStorage.getItem('tlap-lang');
 if (saved === 'zh') setLang('zh');
+
+/* ---------- Photo-spot filter (Photo Spots page only) ---------- */
+const filterBar = document.querySelector('.filter-bar');
+if (filterBar) {
+  filterBar.addEventListener('click', e => {
+    const btn = e.target.closest('button[data-filter]');
+    if (!btn) return;
+    filterBar.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === btn));
+    const f = btn.dataset.filter;
+    document.querySelectorAll('.spots-grid .spot').forEach(card => {
+      card.hidden = f !== 'all' && card.dataset.pin !== f;
+    });
+  });
+}
 
 /* ---------- 3. Reveal on scroll ---------- */
 const observer = new IntersectionObserver(entries => {

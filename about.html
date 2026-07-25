@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — tuan photography 陳亮元</title>
+  <meta name="description" content="About tuan photography 陳亮元 — a photographer who over-plans trips so you don't have to.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+TC:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <nav class="nav">
+      <a class="logo" href="index.html">
+        <span class="aperture" aria-hidden="true"></span>
+        <span>tuan photography</span>
+        <span class="logo-cjk">陳亮元</span>
+      </a>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+      <ul class="nav-links">
+        <li><a href="destinations.html" data-i18n="navDestinations">Destinations</a></li>
+        <li><a href="photo-spots.html" data-i18n="navSpots">Photo Spots</a></li>
+        <li><a href="itineraries.html" data-i18n="navItineraries">Itineraries</a></li>
+        <li><a href="gallery.html" data-i18n="navGallery">Gallery</a></li>
+        <li><a href="about.html" class="active" data-i18n="navAbout">About</a></li>
+      </ul>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button id="lang-en" class="on">EN</button>
+        <button id="lang-zh">中</button>
+      </div>
+    </nav>
+  </header>
+
+  <section class="section about-strip">
+    <div class="wrap about-inner">
+      <div class="about-portrait reveal">
+        <img src="images/portrait.svg" alt="Portrait of 陳亮元">
+        <span class="exif" data-i18n="abPortrait">陳亮元 · behind the camera</span>
+      </div>
+      <div class="reveal">
+        <h2 data-i18n="abTitle">I plan trips like shoots — because they are.</h2>
+        <p class="lede dropcap" data-i18n="abLede">Before every trip I disappear into research: light direction, seasons, opening hours, transport, and the food locals actually eat. Then I go, shoot the plan, and write down what was true and what wasn't.</p>
+        <p data-i18n="abBody1">This site is that homework, published. Every guide tells you where the photo was taken, when to stand there, and what to do with the rest of your day. Some spots get exact pins; the fragile ones stay vague on purpose — you'll understand when you get there.</p>
+        <p data-i18n="abBody2">(This is placeholder text — we'll replace it with your real story, your countries visited, and your credentials.)</p>
+        <a class="btn" href="mailto:thomaslychen@gmail.com" data-i18n="abCta">Say hello</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section method" style="margin-top: 0;">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2 data-i18n="abFactsTitle">Field notes on me</h2>
+        <span class="exif">EXIF</span>
+      </div>
+      <div class="method-grid">
+        <div class="step reveal">
+          <p class="step-no" data-i18n="abF1no">Countries</p>
+          <h3 data-i18n="abF1">— and counting</h3>
+          <p data-i18n="abF1d">We'll fill in your real numbers here.</p>
+        </div>
+        <div class="step reveal">
+          <p class="step-no" data-i18n="abF2no">Camera bag</p>
+          <h3 data-i18n="abF2">Your gear here</h3>
+          <p data-i18n="abF2d">Bodies, lenses, and the tripod that survived everything.</p>
+        </div>
+        <div class="step reveal">
+          <p class="step-no" data-i18n="abF3no">Currently</p>
+          <h3 data-i18n="abF3">Planning the next trip</h3>
+          <p data-i18n="abF3d">Where you are and what's next — updated as you go.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <a class="logo" href="index.html">
+        <span class="aperture" aria-hidden="true"></span>
+        <span>tuan photography</span>
+        <span class="logo-cjk">陳亮元</span>
+      </a>
+      <ul class="footer-links">
+        <li><a href="destinations.html" data-i18n="navDestinations">Destinations</a></li>
+        <li><a href="photo-spots.html" data-i18n="navSpots">Photo Spots</a></li>
+        <li><a href="itineraries.html" data-i18n="navItineraries">Itineraries</a></li>
+        <li><a href="gallery.html" data-i18n="navGallery">Gallery</a></li>
+        <li><a href="about.html" data-i18n="navAbout">About</a></li>
+        <li><a href="#" data-i18n="footInstagram">Instagram</a></li>
+      </ul>
+      <p class="footer-note" data-i18n="footNote">© 2026 tuan photography 陳亮元 — All photographs are my own.</p>
+    </div>
+  </footer>
+
+  <script>
+  window.pageI18n = {
+    en: {
+      abPortrait: '陳亮元 · behind the camera',
+      abTitle: 'I plan trips like shoots — because they are.',
+      abLede: "Before every trip I disappear into research: light direction, seasons, opening hours, transport, and the food locals actually eat. Then I go, shoot the plan, and write down what was true and what wasn't.",
+      abBody1: "This site is that homework, published. Every guide tells you where the photo was taken, when to stand there, and what to do with the rest of your day. Some spots get exact pins; the fragile ones stay vague on purpose — you'll understand when you get there.",
+      abBody2: "(This is placeholder text — we'll replace it with your real story, your countries visited, and your credentials.)",
+      abCta: 'Say hello',
+      abFactsTitle: 'Field notes on me',
+      abF1no: 'Countries', abF1: '— and counting', abF1d: "We'll fill in your real numbers here.",
+      abF2no: 'Camera bag', abF2: 'Your gear here', abF2d: 'Bodies, lenses, and the tripod that survived everything.',
+      abF3no: 'Currently', abF3: 'Planning the next trip', abF3d: "Where you are and what's next — updated as you go."
+    },
+    zh: {
+      abPortrait: '陳亮元 · 鏡頭後面',
+      abTitle: '我把旅行當拍攝案規劃——因為它本來就是。',
+      abLede: '每趟旅行前,我都會埋進研究裡:光線方向、季節、開放時間、交通,還有當地人真正在吃的東西。然後出發、照計畫拍攝,再記下哪些是真的、哪些不是。',
+      abBody1: '這個網站就是那些功課的出版版本。每份指南都告訴你照片在哪裡拍、什麼時候該站在那裡,以及一天剩下的時間該做什麼。有些機位給精確座標;脆弱的秘境則刻意模糊——到了你就懂。',
+      abBody2: '(這是佔位文字——之後會換成你的真實故事、造訪過的國家與經歷。)',
+      abCta: '打聲招呼',
+      abFactsTitle: '關於我的田野筆記',
+      abF1no: '國家數', abF1: '——持續增加中', abF1d: '之後填上你的真實數字。',
+      abF2no: '相機包', abF2: '你的器材', abF2d: '機身、鏡頭,和那支什麼都撐過的腳架。',
+      abF3no: '現在', abF3: '正在規劃下一趟', abF3d: '你在哪裡、接下來去哪——隨時更新。'
+    }
+  };
+  </script>
+  <script src="js/main.js"></script>
+</body>
+</html>

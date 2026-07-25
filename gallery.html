@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery — tuan photography 陳亮元</title>
+  <meta name="description" content="Selected photography by tuan photography 陳亮元.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+TC:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="darkroom-page">
+
+  <header class="site-header">
+    <nav class="nav">
+      <a class="logo" href="index.html">
+        <span class="aperture" aria-hidden="true"></span>
+        <span>tuan photography</span>
+        <span class="logo-cjk">陳亮元</span>
+      </a>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false">☰</button>
+      <ul class="nav-links">
+        <li><a href="destinations.html" data-i18n="navDestinations">Destinations</a></li>
+        <li><a href="photo-spots.html" data-i18n="navSpots">Photo Spots</a></li>
+        <li><a href="itineraries.html" data-i18n="navItineraries">Itineraries</a></li>
+        <li><a href="gallery.html" class="active" data-i18n="navGallery">Gallery</a></li>
+        <li><a href="about.html" data-i18n="navAbout">About</a></li>
+      </ul>
+      <div class="lang-switch" role="group" aria-label="Language">
+        <button id="lang-en" class="on">EN</button>
+        <button id="lang-zh">中</button>
+      </div>
+    </nav>
+  </header>
+
+  <div class="page-header">
+    <h1 data-i18n="galTitle">Gallery</h1>
+    <p data-i18n="galSub">Selected work. Hover a photo for where and how it was taken.</p>
+  </div>
+
+  <section style="padding-bottom: 60px;">
+    <div class="wrap">
+      <div class="gallery-wall">
+        <figure><img src="images/hero.svg" alt="Mountain sunset"><figcaption>MOUNTAIN RIDGE · f/8 · 1/250s · ISO 100</figcaption></figure>
+        <figure><img src="images/santorini.svg" alt="Santorini blue domes"><figcaption>SANTORINI · f/11 · 1/125s · ISO 100</figcaption></figure>
+        <figure><img src="images/kyoto.svg" alt="Kyoto torii gates"><figcaption>KYOTO · f/2.8 · 1/60s · ISO 400</figcaption></figure>
+        <figure><img src="images/portrait.svg" alt="Portrait"><figcaption>SELF · f/4 · 1/200s · ISO 200</figcaption></figure>
+        <figure><img src="images/kyoto.svg" alt="Kyoto torii gates"><figcaption>KYOTO · f/5.6 · 1/250s · ISO 100</figcaption></figure>
+        <figure><img src="images/santorini.svg" alt="Santorini caldera"><figcaption>SANTORINI · f/8 · 1/500s · ISO 100</figcaption></figure>
+        <figure><img src="images/hero.svg" alt="Mountain valley"><figcaption>VALLEY · f/13 · 1/30s · ISO 100</figcaption></figure>
+        <figure><img src="images/kyoto.svg" alt="Temple detail"><figcaption>TEMPLE · f/1.8 · 1/800s · ISO 100</figcaption></figure>
+        <figure><img src="images/santorini.svg" alt="Island street"><figcaption>ISLAND · f/4 · 1/320s · ISO 100</figcaption></figure>
+      </div>
+      <p class="exif" style="text-align:center; color:#8f8577;" data-i18n="galNote">Placeholder frames — your real photos replace these, keeping their true EXIF data.</p>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="wrap footer-inner">
+      <a class="logo" href="index.html">
+        <span class="aperture" aria-hidden="true"></span>
+        <span>tuan photography</span>
+        <span class="logo-cjk">陳亮元</span>
+      </a>
+      <ul class="footer-links">
+        <li><a href="destinations.html" data-i18n="navDestinations">Destinations</a></li>
+        <li><a href="photo-spots.html" data-i18n="navSpots">Photo Spots</a></li>
+        <li><a href="itineraries.html" data-i18n="navItineraries">Itineraries</a></li>
+        <li><a href="gallery.html" data-i18n="navGallery">Gallery</a></li>
+        <li><a href="about.html" data-i18n="navAbout">About</a></li>
+        <li><a href="#" data-i18n="footInstagram">Instagram</a></li>
+      </ul>
+      <p class="footer-note" data-i18n="footNote">© 2026 tuan photography 陳亮元 — All photographs are my own.</p>
+    </div>
+  </footer>
+
+  <script>
+  window.pageI18n = {
+    en: {
+      galTitle: 'Gallery',
+      galSub: 'Selected work. Hover a photo for where and how it was taken.',
+      galNote: 'Placeholder frames — your real photos replace these, keeping their true EXIF data.'
+    },
+    zh: {
+      galTitle: '作品集',
+      galSub: '精選作品。滑鼠移到照片上,可看拍攝地點與參數。',
+      galNote: '佔位圖框——之後換上你的真實作品,並保留真實的 EXIF 參數。'
+    }
+  };
+  </script>
+  <script src="js/main.js"></script>
+</body>
+</html>
