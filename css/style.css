@@ -137,6 +137,7 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
   color: var(--ink);
   padding: 6px 0;
   border-bottom: 2px solid transparent;
+  white-space: nowrap;   /* a menu item never breaks into two lines */
 }
 .nav-links a:hover, .nav-links a.active {
   text-decoration: none;
@@ -631,15 +632,22 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* Mid widths: compress the header so all links stay visible in one row */
 @media (max-width: 1020px) {
-  .nav { gap: 18px; }
-  .nav-links { gap: 14px; }
-  .nav-links a { font-size: 0.68rem; letter-spacing: 0.08em; }
-  .logo { font-size: 1rem; }
-  .logo-cjk { font-size: 0.74rem; letter-spacing: 0.2em; }
+  .nav { gap: 14px; }
+  .nav-links { gap: 11px; }
+  .nav-links a { font-size: 0.66rem; letter-spacing: 0.05em; }
+  .logo { font-size: 0.95rem; gap: 8px; }
+  .logo-cjk { font-size: 0.7rem; letter-spacing: 0.12em; padding-left: 8px; }
+  .lang-switch button { padding: 5px 9px; }
+}
+
+/* Very tight band just above the phone cutoff: drop the 陳亮元 mark
+   from the header so the full menu keeps comfortable spacing */
+@media (max-width: 780px) and (min-width: 701px) {
+  .site-header .logo-cjk { display: none; }
 }
 
 /* True phones only: collapse to the hamburger menu */
-@media (max-width: 620px) {
+@media (max-width: 700px) {
   .nav { gap: 12px; padding: 0 16px; }
   .logo { font-size: 0.95rem; gap: 8px; }
   .logo-cjk { font-size: 0.68rem; letter-spacing: 0.12em; padding-left: 8px; }
