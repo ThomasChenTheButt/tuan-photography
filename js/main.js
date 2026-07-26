@@ -179,6 +179,22 @@ document.getElementById('lang-zh')?.addEventListener('click', () => setLang('zh'
 const saved = localStorage.getItem('tlap-lang');
 if (saved === 'zh') setLang('zh');
 
+/* ---------- Hero parallax drift (homepage) ----------
+   The pinned cover photo slowly rises (~1/3 of scroll speed)
+   while the page content scrolls up over it at full speed. */
+const heroEl = document.querySelector('.hero');
+if (heroEl && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => {
+      heroEl.style.transform = 'translateY(' + (-window.scrollY * 0.32) + 'px)';
+      ticking = false;
+    });
+  }, { passive: true });
+}
+
 /* ---------- Photo-spot filter (Photo Spots page only) ---------- */
 const filterBar = document.querySelector('.filter-bar');
 if (filterBar) {
