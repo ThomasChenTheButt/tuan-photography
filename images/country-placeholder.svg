@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6d6357"/>
+      <stop offset="1" stop-color="#b8a88f"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="800" fill="url(#g)"/>
+  <path d="M0 620 L240 470 L420 590 L620 450 L800 570 L800 800 L0 800 Z" fill="#000000" opacity="0.2"/>
+  <circle cx="400" cy="360" r="90" fill="#ffffff" opacity="0.15"/>
+  <text x="400" y="180" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#ffffff" opacity="0.9">📷 Country photo here</text>
+</svg>
