@@ -629,8 +629,21 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 /* ---------------- Mobile ---------------- */
 
-@media (max-width: 860px) {
-  .nav { gap: 16px; }
+/* Mid widths: compress the header so all links stay visible in one row */
+@media (max-width: 1020px) {
+  .nav { gap: 18px; }
+  .nav-links { gap: 14px; }
+  .nav-links a { font-size: 0.68rem; letter-spacing: 0.08em; }
+  .logo { font-size: 1rem; }
+  .logo-cjk { font-size: 0.74rem; letter-spacing: 0.2em; }
+}
+
+/* True phones only: collapse to the hamburger menu */
+@media (max-width: 620px) {
+  .nav { gap: 12px; padding: 0 16px; }
+  .logo { font-size: 0.95rem; gap: 8px; }
+  .logo-cjk { font-size: 0.68rem; letter-spacing: 0.12em; padding-left: 8px; }
+  .lang-switch button { padding: 5px 9px; }
   .nav-toggle { display: block; }
   .nav-links {
     display: none;
@@ -643,7 +656,9 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
     gap: 16px;
   }
   .nav-links.open { display: flex; }
+}
 
+@media (max-width: 860px) {
   .hero { padding: 0 16px; margin-top: 20px; }
   .hero-content { padding: 30px 24px; }
   .hero-frame { min-height: 64vh; }
