@@ -863,6 +863,32 @@ body.darkroom-page .site-footer { border-top: 1px solid var(--line-dark); }
   background: var(--kodak-red);
 }
 
+/* whole continent card is a link */
+a.continent { color: var(--ink); display: block; }
+a.continent:hover { text-decoration: none; }
+a.continent:hover h2 { color: var(--kodak-red); }
+
+.continent .stat {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  border-top: 1px dashed var(--line);
+  padding-top: 10px;
+}
+
+/* empty continent page */
+.empty-state {
+  text-align: center;
+  padding: 70px 24px 40px;
+  max-width: 480px;
+  margin: 0 auto;
+}
+.empty-state .exif { display: block; margin-bottom: 14px; color: var(--kodak-red); }
+.empty-state p { color: var(--ink-soft); margin-bottom: 28px; }
+
 .country-list { list-style: none; }
 .country-list a {
   display: flex;

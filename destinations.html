@@ -42,87 +42,58 @@
   <section class="section" style="padding-top: 24px;">
     <div class="wrap">
 
-      <!-- Continent directory: 3 across, countries listed inside -->
-      <div class="continent-grid reveal">
+      <!-- Seven continents, three per row — click one to enter it -->
+      <div class="continent-grid">
 
-        <div class="continent">
+        <a class="continent reveal" href="continents/europe.html">
           <div class="photo"><img src="images/continent-europe.svg" alt="Europe"></div>
           <h2 data-i18n="contEurope">Europe</h2>
           <p class="note" data-i18n="contEuropeNote">Blue domes, marble lanes, and evenings where the golden hour never seems to end.</p>
-          <ul class="country-list">
-            <li><a href="#greece"><span data-i18n="c1name">Greece</span><span class="count">1</span></a></li>
-          </ul>
-        </div>
+          <span class="stat" data-i18n="statEurope">1 country · 1 guide</span>
+        </a>
 
-        <div class="continent">
+        <a class="continent reveal" href="continents/asia.html">
           <div class="photo"><img src="images/continent-asia.svg" alt="Asia"></div>
           <h2 data-i18n="contAsia">Asia</h2>
           <p class="note" data-i18n="contAsiaNote">Temple mornings, neon nights, and seasons that change what you shoot.</p>
-          <ul class="country-list">
-            <li><a href="#japan"><span data-i18n="c2name">Japan</span><span class="count">1</span></a></li>
-          </ul>
-        </div>
+          <span class="stat" data-i18n="statAsia">1 country · 1 guide</span>
+        </a>
 
-        <div class="continent">
-          <div class="photo"><img src="images/continent-more.svg" alt="More continents coming"></div>
-          <h2 data-i18n="contMore">More to come</h2>
-          <p class="note" data-i18n="contMoreNote">The next trips are still in the planning folder — this space is reserved.</p>
-          <ul class="country-list">
-            <li><a href="#soon"><span data-i18n="c3name">More to come</span><span class="count">—</span></a></li>
-          </ul>
-        </div>
+        <a class="continent reveal" href="continents/africa.html">
+          <div class="photo"><img src="images/continent-africa.svg" alt="Africa"></div>
+          <h2 data-i18n="contAfrica">Africa</h2>
+          <p class="note" data-i18n="contAfricaNote">Savanna light, red dust, and horizons that never quite end.</p>
+          <span class="stat" data-i18n="statSoon">Coming soon</span>
+        </a>
 
-      </div>
+        <a class="continent reveal" href="continents/north-america.html">
+          <div class="photo"><img src="images/continent-north-america.svg" alt="North America"></div>
+          <h2 data-i18n="contNA">North America</h2>
+          <p class="note" data-i18n="contNANote">Deserts, skylines, and roads made for driving into the sunset.</p>
+          <span class="stat" data-i18n="statSoon">Coming soon</span>
+        </a>
 
-      <div class="country-group reveal" id="greece">
-        <div class="section-head">
-          <h2 data-i18n="c1name">Greece</h2>
-          <span class="exif" data-i18n="c1count">1 guide</span>
-        </div>
-        <div class="guide-grid">
-          <article class="guide">
-            <a class="g-link" href="posts/sample-guide.html">
-              <div class="photo">
-                <img src="images/santorini.svg" alt="Santorini, Greece">
-              </div>
-              <h3 data-i18n="d1title">Santorini for Photographers: 3 Days, 9 Shots, Zero Crowds</h3>
-            </a>
-          </article>
-        </div>
-      </div>
+        <a class="continent reveal" href="continents/south-america.html">
+          <div class="photo"><img src="images/continent-south-america.svg" alt="South America"></div>
+          <h2 data-i18n="contSA">South America</h2>
+          <p class="note" data-i18n="contSANote">Andean peaks, salt flats, and colors that don't need editing.</p>
+          <span class="stat" data-i18n="statSoon">Coming soon</span>
+        </a>
 
-      <div class="country-group reveal" id="japan">
-        <div class="section-head">
-          <h2 data-i18n="c2name">Japan</h2>
-          <span class="exif" data-i18n="c2count">1 guide</span>
-        </div>
-        <div class="guide-grid">
-          <article class="guide">
-            <a class="g-link" href="posts/sample-guide.html">
-              <div class="photo">
-                <img src="images/kyoto.svg" alt="Kyoto, Japan">
-              </div>
-              <h3 data-i18n="d2title">Kyoto in Autumn: A Shot List for Temple Season</h3>
-            </a>
-          </article>
-        </div>
-      </div>
+        <a class="continent reveal" href="continents/oceania.html">
+          <div class="photo"><img src="images/continent-oceania.svg" alt="Oceania"></div>
+          <h2 data-i18n="contOceania">Oceania</h2>
+          <p class="note" data-i18n="contOceaniaNote">Reefs, ridgelines, and the southern stars after dark.</p>
+          <span class="stat" data-i18n="statSoon">Coming soon</span>
+        </a>
 
-      <div class="country-group reveal" id="soon">
-        <div class="section-head">
-          <h2 data-i18n="c3name">More to come</h2>
-          <span class="exif" data-i18n="c3count">In the darkroom</span>
-        </div>
-        <div class="guide-grid">
-          <article class="guide">
-            <a class="g-link" href="posts/sample-guide.html">
-              <div class="photo">
-                <img src="images/hero.svg" alt="Placeholder destination">
-              </div>
-              <h3 data-i18n="d3title">Your trips from the planning folder</h3>
-            </a>
-          </article>
-        </div>
+        <a class="continent reveal" href="continents/antarctica.html">
+          <div class="photo"><img src="images/continent-antarctica.svg" alt="Antarctica"></div>
+          <h2 data-i18n="contAntarctica">Antarctica</h2>
+          <p class="note" data-i18n="contAntarcticaNote">The white silence at the end of the map.</p>
+          <span class="stat" data-i18n="statSoon">Coming soon</span>
+        </a>
+
       </div>
 
     </div>
@@ -151,43 +122,37 @@
   window.pageI18n = {
     en: {
       destTitle: 'Destinations',
-      destSub: "Every place I've photographed, researched, eaten through, and written up — organized by country.",
-      contEurope: 'Europe', contAsia: 'Asia', contMore: 'More to come',
+      destSub: "Every place I've photographed, researched, eaten through, and written up — pick a continent to explore.",
+      contEurope: 'Europe', contAsia: 'Asia', contAfrica: 'Africa',
+      contNA: 'North America', contSA: 'South America',
+      contOceania: 'Oceania', contAntarctica: 'Antarctica',
       contEuropeNote: 'Blue domes, marble lanes, and evenings where the golden hour never seems to end.',
       contAsiaNote: 'Temple mornings, neon nights, and seasons that change what you shoot.',
-      contMoreNote: 'The next trips are still in the planning folder — this space is reserved.',
-      c1name: 'Greece', c1count: '1 guide',
-      c2name: 'Japan', c2count: '1 guide',
-      c3name: 'More to come', c3count: 'In the darkroom',
-      d1cat: 'Greece',
-      d1title: 'Santorini for Photographers: 3 Days, 9 Shots, Zero Crowds',
-      d1desc: 'The complete guide: sunrise positions in Oia, accessible rooftops, and the quiet village everyone skips.',
-      d2cat: 'Japan',
-      d2title: 'Kyoto in Autumn: A Shot List for Temple Season',
-      d2desc: 'Maple timing, tripod rules, and the food between golden hours.',
-      d3cat: 'Coming soon',
-      d3title: 'Your trips from the planning folder',
-      d3desc: 'Each trip in your Google Drive becomes a card here — one guide per destination.'
+      contAfricaNote: 'Savanna light, red dust, and horizons that never quite end.',
+      contNANote: 'Deserts, skylines, and roads made for driving into the sunset.',
+      contSANote: "Andean peaks, salt flats, and colors that don't need editing.",
+      contOceaniaNote: 'Reefs, ridgelines, and the southern stars after dark.',
+      contAntarcticaNote: 'The white silence at the end of the map.',
+      statEurope: '1 country · 1 guide',
+      statAsia: '1 country · 1 guide',
+      statSoon: 'Coming soon'
     },
     zh: {
       destTitle: '目的地',
-      destSub: '每一個我拍攝過、研究過、吃遍也寫成指南的地方——依國家分類。',
-      contEurope: '歐洲', contAsia: '亞洲', contMore: '更多大洲',
+      destSub: '每一個我拍攝過、研究過、吃遍也寫成指南的地方——選一個大洲開始探索。',
+      contEurope: '歐洲', contAsia: '亞洲', contAfrica: '非洲',
+      contNA: '北美洲', contSA: '南美洲',
+      contOceania: '大洋洲', contAntarctica: '南極洲',
       contEuropeNote: '藍頂教堂、大理石巷弄,以及彷彿不會結束的黃金時刻。',
       contAsiaNote: '清晨的寺廟、深夜的霓虹,以及會改變拍攝主題的四季。',
-      contMoreNote: '下一趟旅程還在規劃資料夾裡——這個位置先保留著。',
-      c1name: '希臘', c1count: '1 份指南',
-      c2name: '日本', c2count: '1 份指南',
-      c3name: '更多目的地', c3count: '沖洗中',
-      d1cat: '希臘',
-      d1title: '攝影師的聖托里尼:3 天、9 個機位、避開人潮',
-      d1desc: '完整指南:Oia 的日出站位、真正能上去的屋頂,以及大家都錯過的安靜村莊。',
-      d2cat: '日本',
-      d2title: '秋天的京都:寺廟紅葉季拍攝清單',
-      d2desc: '楓葉時機、腳架規定,以及兩個黃金時刻之間的美食。',
-      d3cat: '即將推出',
-      d3title: '來自你規劃資料夾的旅程',
-      d3desc: '你 Google Drive 裡的每趟旅程都會變成這裡的一張卡片——一個目的地一份指南。'
+      contAfricaNote: '莽原的光線、赭紅的塵土,以及望不到盡頭的地平線。',
+      contNANote: '沙漠、天際線,以及一路開進日落的公路。',
+      contSANote: '安地斯山峰、鹽湖,以及不需要後製的色彩。',
+      contOceaniaNote: '珊瑚礁、稜線,以及入夜後的南半球星空。',
+      contAntarcticaNote: '地圖盡頭的白色寂靜。',
+      statEurope: '1 個國家 · 1 份指南',
+      statAsia: '1 個國家 · 1 份指南',
+      statSoon: '即將推出'
     }
   };
   </script>
