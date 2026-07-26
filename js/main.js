@@ -21,9 +21,9 @@ const i18n = {
   en: {
     siteName: 'tuan photography',
     navDestinations: 'Destinations',
-    navSpots: 'Photo Spots',
-    navItineraries: 'Itineraries',
     navGallery: 'Gallery',
+    navBlog: 'Blog',
+    navSkills: 'Skills',
     navAbout: 'About',
 
     heroKicker: 'Travel like a photographer — field notes from the road',
@@ -43,21 +43,6 @@ const i18n = {
     g3cat: 'Coming soon',
     g3title: 'Your next trip goes here',
     g3desc: "This card is a placeholder — we'll fill it with a real trip from your planning notes.",
-
-    spotsTitle: 'The contact sheet — photo spots',
-    spotsLabel: 'Scroll →',
-    s1title: 'Oia Blue Domes Lookout',
-    s1loc: 'Santorini, Greece — exact pin',
-    s1time: 'Best: sunrise · 24–70mm',
-    s2title: 'Fushimi Inari Upper Gates',
-    s2loc: 'Kyoto, Japan — exact pin',
-    s2time: 'Best: 7 am · 35mm',
-    s3title: 'Your secret spot',
-    s3loc: 'General area only — you choose',
-    s3time: 'Best: golden hour',
-    s4title: 'More spots from your trips',
-    s4loc: 'Added as we build',
-    s4time: '—',
 
     methodTitle: 'How every guide is made',
     methodLabel: 'The method',
@@ -88,9 +73,9 @@ const i18n = {
   zh: {
     siteName: 'tuan photography',
     navDestinations: '目的地',
-    navSpots: '攝影點',
-    navItineraries: '行程',
     navGallery: '作品集',
+    navBlog: '網誌',
+    navSkills: '攝影技巧',
     navAbout: '關於我',
 
     heroKicker: '像攝影師一樣旅行——來自路上的田野筆記',
@@ -110,21 +95,6 @@ const i18n = {
     g3cat: '即將推出',
     g3title: '你的下一趟旅程',
     g3desc: '這是佔位卡片——我們會用你規劃筆記中的真實行程填滿它。',
-
-    spotsTitle: '底片索引——攝影點',
-    spotsLabel: '往右滑 →',
-    s1title: 'Oia 藍頂教堂觀景點',
-    s1loc: '希臘聖托里尼——精確座標',
-    s1time: '最佳:日出 · 24–70mm',
-    s2title: '伏見稻荷上段鳥居',
-    s2loc: '日本京都——精確座標',
-    s2time: '最佳:早上 7 點 · 35mm',
-    s3title: '你的私藏機位',
-    s3loc: '只標大概區域——由你決定',
-    s3time: '最佳:黃金時刻',
-    s4title: '更多來自你旅程的機位',
-    s4loc: '建置中陸續加入',
-    s4time: '—',
 
     methodTitle: '每份指南的誕生過程',
     methodLabel: '製作方法',
@@ -193,20 +163,6 @@ if (heroEl && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       ticking = false;
     });
   }, { passive: true });
-}
-
-/* ---------- Photo-spot filter (Photo Spots page only) ---------- */
-const filterBar = document.querySelector('.filter-bar');
-if (filterBar) {
-  filterBar.addEventListener('click', e => {
-    const btn = e.target.closest('button[data-filter]');
-    if (!btn) return;
-    filterBar.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === btn));
-    const f = btn.dataset.filter;
-    document.querySelectorAll('.spots-grid .spot').forEach(card => {
-      card.hidden = f !== 'all' && card.dataset.pin !== f;
-    });
-  });
 }
 
 /* ---------- 3. Reveal on scroll ---------- */

@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gallery — tuan photography 陳亮元</title>
-  <meta name="description" content="Selected photography by tuan photography 陳亮元.">
+  <title>Blog — tuan photography 陳亮元</title>
+  <meta name="description" content="Travel stories and field notes by tuan photography 陳亮元.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+TC:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="darkroom-page">
+<body>
 
   <header class="site-header">
     <nav class="nav">
@@ -22,8 +22,8 @@
       <button class="nav-toggle" aria-label="Menu" aria-expanded="false">☰</button>
       <ul class="nav-links">
         <li><a href="destinations.html" data-i18n="navDestinations">Destinations</a></li>
-        <li><a href="gallery.html" class="active" data-i18n="navGallery">Gallery</a></li>
-        <li><a href="blog.html" data-i18n="navBlog">Blog</a></li>
+        <li><a href="gallery.html" data-i18n="navGallery">Gallery</a></li>
+        <li><a href="blog.html" class="active" data-i18n="navBlog">Blog</a></li>
         <li><a href="skills.html" data-i18n="navSkills">Skills</a></li>
         <li><a href="about.html" data-i18n="navAbout">About</a></li>
       </ul>
@@ -35,24 +35,29 @@
   </header>
 
   <div class="page-header">
-    <h1 data-i18n="galTitle">Gallery</h1>
-    <p data-i18n="galSub">Selected work. Hover a photo for where and how it was taken.</p>
+    <h1 data-i18n="pTitle">Blog</h1>
+    <p data-i18n="pSub">Field notes, travel stories, and what actually happened between the photos.</p>
   </div>
 
-  <section style="padding-bottom: 60px;">
+  <section class="section" style="padding-top: 24px;">
     <div class="wrap">
-      <div class="gallery-wall">
-        <figure><img src="images/hero.svg" alt="Mountain sunset"><figcaption>MOUNTAIN RIDGE · f/8 · 1/250s · ISO 100</figcaption></figure>
-        <figure><img src="images/santorini.svg" alt="Santorini blue domes"><figcaption>SANTORINI · f/11 · 1/125s · ISO 100</figcaption></figure>
-        <figure><img src="images/kyoto.svg" alt="Kyoto torii gates"><figcaption>KYOTO · f/2.8 · 1/60s · ISO 400</figcaption></figure>
-        <figure><img src="images/portrait.svg" alt="Portrait"><figcaption>SELF · f/4 · 1/200s · ISO 200</figcaption></figure>
-        <figure><img src="images/kyoto.svg" alt="Kyoto torii gates"><figcaption>KYOTO · f/5.6 · 1/250s · ISO 100</figcaption></figure>
-        <figure><img src="images/santorini.svg" alt="Santorini caldera"><figcaption>SANTORINI · f/8 · 1/500s · ISO 100</figcaption></figure>
-        <figure><img src="images/hero.svg" alt="Mountain valley"><figcaption>VALLEY · f/13 · 1/30s · ISO 100</figcaption></figure>
-        <figure><img src="images/kyoto.svg" alt="Temple detail"><figcaption>TEMPLE · f/1.8 · 1/800s · ISO 100</figcaption></figure>
-        <figure><img src="images/santorini.svg" alt="Island street"><figcaption>ISLAND · f/4 · 1/320s · ISO 100</figcaption></figure>
+      <div class="guide-grid">
+
+        <article class="guide reveal">
+          <a class="g-link" href="posts/sample-guide.html">
+            <div class="photo"><img src="images/santorini.svg" alt="Sample article"></div>
+            <h3 data-i18n="b1title">Sample article — this is what a post will look like</h3>
+          </a>
+        </article>
+
+        <article class="guide reveal">
+          <a class="g-link" href="blog.html">
+            <div class="photo"><img src="images/country-placeholder.svg" alt="Coming soon"></div>
+            <h3 data-i18n="b2title">First real story: coming after the Vietnam trip</h3>
+          </a>
+        </article>
+
       </div>
-      <p class="exif" style="text-align:center; color:#8f8577;" data-i18n="galNote">Placeholder frames — your real photos replace these, keeping their true EXIF data.</p>
     </div>
   </section>
 
@@ -78,14 +83,16 @@
   <script>
   window.pageI18n = {
     en: {
-      galTitle: 'Gallery',
-      galSub: 'Selected work. Hover a photo for where and how it was taken.',
-      galNote: 'Placeholder frames — your real photos replace these, keeping their true EXIF data.'
+      pTitle: 'Blog',
+      pSub: 'Field notes, travel stories, and what actually happened between the photos.',
+      b1title: 'Sample article — this is what a post will look like',
+      b2title: 'First real story: coming after the Vietnam trip'
     },
     zh: {
-      galTitle: '作品集',
-      galSub: '精選作品。滑鼠移到照片上,可看拍攝地點與參數。',
-      galNote: '佔位圖框——之後換上你的真實作品,並保留真實的 EXIF 參數。'
+      pTitle: '網誌',
+      pSub: '田野筆記、旅行故事,以及照片與照片之間真正發生的事。',
+      b1title: '範例文章——未來的文章長這樣',
+      b2title: '第一篇真實故事:越南旅程結束後刊出'
     }
   };
   </script>
