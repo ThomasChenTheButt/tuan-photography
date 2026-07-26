@@ -41,10 +41,13 @@
 
   <section class="section" style="padding-top: 24px;">
     <div class="wrap">
-      <div class="empty-state reveal">
-        <span class="exif" data-i18n="wipLabel">Guides in progress</span>
-        <p data-i18n="wipText">The trip notes for this country are being turned into full guides — photo spots, itineraries, and all.</p>
-        <a class="btn" href="../destinations.html" data-i18n="backBtn">Back to destinations</a>
+      <div class="guide-grid">
+        <article class="guide reveal">
+          <a class="g-link" href="../posts/barcelona.html">
+            <div class="photo"><img src="../images/continent-europe.svg" alt="Barcelona guide"></div>
+            <h3 data-i18n="g1">Barcelona for Photographers: Four Days of Gaudí, Golden Hours &amp; Tapas</h3>
+          </a>
+        </article>
       </div>
     </div>
   </section>
@@ -70,23 +73,19 @@
 
   <script>
   window.pageI18n = {
-  "en": {
-    "pTitle": "Spain",
-    "pSub": "Barcelona — Gaudí and golden streets.",
-    "statLabel": "2026.7",
-    "wipLabel": "Guides in progress",
-    "wipText": "The trip notes for this country are being turned into full guides — photo spots, itineraries, and all.",
-    "backBtn": "Back to destinations"
-  },
-  "zh": {
-    "pTitle": "西班牙",
-    "pSub": "巴賽隆納——高第與金色街道。",
-    "statLabel": "2026.7",
-    "wipLabel": "指南製作中",
-    "wipText": "這個國家的旅行筆記正在整理成完整指南——攝影點、行程,一樣不少。",
-    "backBtn": "回到目的地"
-  }
-};
+    en: {
+      pTitle: 'Spain',
+      pSub: 'Barcelona — Gaudí and golden streets.',
+      statLabel: '2026.7',
+      g1: 'Barcelona for Photographers: Four Days of Gaudí, Golden Hours & Tapas'
+    },
+    zh: {
+      pTitle: '西班牙',
+      pSub: '巴賽隆納——高第與金色街道。',
+      statLabel: '2026.7',
+      g1: '攝影師的巴賽隆納:高第、黃金時刻與 Tapas 的四天'
+    }
+  };
   </script>
   <script src="../js/main.js"></script>
 </body>
