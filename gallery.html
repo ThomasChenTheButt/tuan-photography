@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Gallery — tuan photography 陳亮元</title>
-  <meta name="description" content="Selected photography by tuan photography 陳亮元.">
+  <meta name="description" content="Selected photography by tuan photography 陳亮元 — portfolio and galleries by country.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+TC:wght@400;500;600&display=swap" rel="stylesheet">
@@ -34,25 +34,102 @@
     </nav>
   </header>
 
-  <div class="page-header">
-    <h1 data-i18n="galTitle">Gallery</h1>
-    <p data-i18n="galSub">Selected work. Hover a photo for where and how it was taken.</p>
-  </div>
-
-  <section style="padding-bottom: 60px;">
+  <section style="padding: 30px 0 70px;">
     <div class="wrap">
-      <div class="gallery-wall">
-        <figure><img src="images/hero.svg" alt="Mountain sunset"><figcaption>MOUNTAIN RIDGE · f/8 · 1/250s · ISO 100</figcaption></figure>
-        <figure><img src="images/santorini.svg" alt="Santorini blue domes"><figcaption>SANTORINI · f/11 · 1/125s · ISO 100</figcaption></figure>
-        <figure><img src="images/kyoto.svg" alt="Kyoto torii gates"><figcaption>KYOTO · f/2.8 · 1/60s · ISO 400</figcaption></figure>
-        <figure><img src="images/portrait.svg" alt="Portrait"><figcaption>SELF · f/4 · 1/200s · ISO 200</figcaption></figure>
-        <figure><img src="images/kyoto.svg" alt="Kyoto torii gates"><figcaption>KYOTO · f/5.6 · 1/250s · ISO 100</figcaption></figure>
-        <figure><img src="images/santorini.svg" alt="Santorini caldera"><figcaption>SANTORINI · f/8 · 1/500s · ISO 100</figcaption></figure>
-        <figure><img src="images/hero.svg" alt="Mountain valley"><figcaption>VALLEY · f/13 · 1/30s · ISO 100</figcaption></figure>
-        <figure><img src="images/kyoto.svg" alt="Temple detail"><figcaption>TEMPLE · f/1.8 · 1/800s · ISO 100</figcaption></figure>
-        <figure><img src="images/santorini.svg" alt="Island street"><figcaption>ISLAND · f/4 · 1/320s · ISO 100</figcaption></figure>
+
+      <!-- ============ PORTFOLIO — tight photo wall ============ -->
+      <div class="gallery-label reveal">
+        <h2 data-i18n="portfolioTitle">Portfolio</h2>
+        <span class="exif" style="color:#8f8577;" data-i18n="portfolioNote">Selected work — placeholders until your photos arrive</span>
       </div>
-      <p class="exif" style="text-align:center; color:#8f8577;" data-i18n="galNote">Placeholder frames — your real photos replace these, keeping their true EXIF data.</p>
+      <div class="portfolio-grid">
+        <figure><img src="images/hero.svg" alt="Portfolio photo 1"></figure>
+        <figure><img src="images/santorini.svg" alt="Portfolio photo 2"></figure>
+        <figure><img src="images/kyoto.svg" alt="Portfolio photo 3"></figure>
+        <figure><img src="images/continent-europe.svg" alt="Portfolio photo 4"></figure>
+        <figure><img src="images/continent-asia.svg" alt="Portfolio photo 5"></figure>
+        <figure><img src="images/continent-oceania.svg" alt="Portfolio photo 6"></figure>
+        <figure><img src="images/continent-north-america.svg" alt="Portfolio photo 7"></figure>
+        <figure><img src="images/portrait.svg" alt="Portfolio photo 8"></figure>
+        <figure><img src="images/continent-africa.svg" alt="Portfolio photo 9"></figure>
+        <figure><img src="images/continent-south-america.svg" alt="Portfolio photo 10"></figure>
+        <figure><img src="images/continent-antarctica.svg" alt="Portfolio photo 11"></figure>
+        <figure><img src="images/country-placeholder.svg" alt="Portfolio photo 12"></figure>
+      </div>
+
+      <!-- ============ BY COUNTRIES ============ -->
+      <div class="gallery-label reveal" style="margin-top: 72px;">
+        <h2 data-i18n="byCountryTitle">By Countries</h2>
+        <span class="exif" style="color:#8f8577;" data-i18n="byCountryNote">Click a country to enter its gallery</span>
+      </div>
+      <div class="by-country-grid">
+
+        <a class="country-tile reveal" href="countries/taiwan.html">
+          <img src="images/country-placeholder.svg" alt="Taiwan gallery">
+          <span class="tile-label" data-i18n="gn_taiwan">Taiwan</span>
+        </a>
+        <a class="country-tile reveal" href="countries/japan.html">
+          <img src="images/kyoto.svg" alt="Japan gallery">
+          <span class="tile-label" data-i18n="gn_japan">Japan</span>
+        </a>
+        <a class="country-tile reveal" href="countries/south-korea.html">
+          <img src="images/country-placeholder.svg" alt="South Korea gallery">
+          <span class="tile-label" data-i18n="gn_korea">South Korea</span>
+        </a>
+        <a class="country-tile reveal" href="countries/hong-kong.html">
+          <img src="images/country-placeholder.svg" alt="Hong Kong gallery">
+          <span class="tile-label" data-i18n="gn_hk">Hong Kong</span>
+        </a>
+        <a class="country-tile reveal" href="countries/china.html">
+          <img src="images/country-placeholder.svg" alt="China gallery">
+          <span class="tile-label" data-i18n="gn_china">China</span>
+        </a>
+        <a class="country-tile reveal" href="countries/singapore.html">
+          <img src="images/country-placeholder.svg" alt="Singapore gallery">
+          <span class="tile-label" data-i18n="gn_singapore">Singapore</span>
+        </a>
+        <a class="country-tile reveal" href="countries/vietnam.html">
+          <img src="images/country-placeholder.svg" alt="Vietnam gallery">
+          <span class="tile-label" data-i18n="gn_vietnam">Vietnam</span>
+        </a>
+        <a class="country-tile reveal" href="countries/dubai.html">
+          <img src="images/country-placeholder.svg" alt="Dubai gallery">
+          <span class="tile-label" data-i18n="gn_dubai">UAE · Dubai</span>
+        </a>
+        <a class="country-tile reveal" href="countries/uk.html">
+          <img src="images/continent-europe.svg" alt="United Kingdom gallery">
+          <span class="tile-label" data-i18n="gn_uk">United Kingdom</span>
+        </a>
+        <a class="country-tile reveal" href="countries/france.html">
+          <img src="images/country-placeholder.svg" alt="France gallery">
+          <span class="tile-label" data-i18n="gn_france">France</span>
+        </a>
+        <a class="country-tile reveal" href="countries/spain.html">
+          <img src="images/country-placeholder.svg" alt="Spain gallery">
+          <span class="tile-label" data-i18n="gn_spain">Spain</span>
+        </a>
+        <a class="country-tile reveal" href="countries/germany.html">
+          <img src="images/country-placeholder.svg" alt="Germany gallery">
+          <span class="tile-label" data-i18n="gn_germany">Germany</span>
+        </a>
+        <a class="country-tile reveal" href="countries/switzerland.html">
+          <img src="images/country-placeholder.svg" alt="Switzerland gallery">
+          <span class="tile-label" data-i18n="gn_swiss">Switzerland</span>
+        </a>
+        <a class="country-tile reveal" href="countries/australia.html">
+          <img src="images/continent-oceania.svg" alt="Australia gallery">
+          <span class="tile-label" data-i18n="gn_australia">Australia</span>
+        </a>
+        <a class="country-tile reveal" href="countries/new-zealand.html">
+          <img src="images/country-placeholder.svg" alt="New Zealand gallery">
+          <span class="tile-label" data-i18n="gn_nz">New Zealand</span>
+        </a>
+        <a class="country-tile reveal" href="countries/usa.html">
+          <img src="images/continent-north-america.svg" alt="United States gallery">
+          <span class="tile-label" data-i18n="gn_usa">United States</span>
+        </a>
+
+      </div>
     </div>
   </section>
 
@@ -78,14 +155,24 @@
   <script>
   window.pageI18n = {
     en: {
-      galTitle: 'Gallery',
-      galSub: 'Selected work. Hover a photo for where and how it was taken.',
-      galNote: 'Placeholder frames — your real photos replace these, keeping their true EXIF data.'
+      portfolioTitle: 'Portfolio',
+      portfolioNote: 'Selected work — placeholders until your photos arrive',
+      byCountryTitle: 'By Countries',
+      byCountryNote: 'Click a country to enter its gallery',
+      gn_taiwan: 'Taiwan', gn_japan: 'Japan', gn_korea: 'South Korea', gn_hk: 'Hong Kong',
+      gn_china: 'China', gn_singapore: 'Singapore', gn_vietnam: 'Vietnam', gn_dubai: 'UAE · Dubai',
+      gn_uk: 'United Kingdom', gn_france: 'France', gn_spain: 'Spain', gn_germany: 'Germany',
+      gn_swiss: 'Switzerland', gn_australia: 'Australia', gn_nz: 'New Zealand', gn_usa: 'United States'
     },
     zh: {
-      galTitle: '作品集',
-      galSub: '精選作品。滑鼠移到照片上,可看拍攝地點與參數。',
-      galNote: '佔位圖框——之後換上你的真實作品,並保留真實的 EXIF 參數。'
+      portfolioTitle: '精選作品',
+      portfolioNote: '精選輯——換上你的照片前先以佔位圖示意',
+      byCountryTitle: '依國家瀏覽',
+      byCountryNote: '點選國家進入該國作品集',
+      gn_taiwan: '台灣', gn_japan: '日本', gn_korea: '韓國', gn_hk: '香港',
+      gn_china: '中國', gn_singapore: '新加坡', gn_vietnam: '越南', gn_dubai: '杜拜',
+      gn_uk: '英國', gn_france: '法國', gn_spain: '西班牙', gn_germany: '德國',
+      gn_swiss: '瑞士', gn_australia: '澳洲', gn_nz: '紐西蘭', gn_usa: '美國'
     }
   };
   </script>
