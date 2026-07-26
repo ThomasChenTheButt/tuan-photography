@@ -42,7 +42,33 @@
   <section class="section" style="padding-top: 24px;">
     <div class="wrap">
 
-      <div class="country-group reveal">
+      <!-- Continent directory: 3 across, countries listed inside -->
+      <div class="continent-grid reveal">
+
+        <div class="continent">
+          <h2 data-i18n="contEurope">Europe</h2>
+          <ul class="country-list">
+            <li><a href="#greece"><span data-i18n="c1name">Greece</span><span class="count">1</span></a></li>
+          </ul>
+        </div>
+
+        <div class="continent">
+          <h2 data-i18n="contAsia">Asia</h2>
+          <ul class="country-list">
+            <li><a href="#japan"><span data-i18n="c2name">Japan</span><span class="count">1</span></a></li>
+          </ul>
+        </div>
+
+        <div class="continent">
+          <h2 data-i18n="contMore">More to come</h2>
+          <ul class="country-list">
+            <li><a href="#soon"><span data-i18n="c3name">More to come</span><span class="count">—</span></a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="country-group reveal" id="greece">
         <div class="section-head">
           <h2 data-i18n="c1name">Greece</h2>
           <span class="exif" data-i18n="c1count">1 guide</span>
@@ -59,7 +85,7 @@
         </div>
       </div>
 
-      <div class="country-group reveal">
+      <div class="country-group reveal" id="japan">
         <div class="section-head">
           <h2 data-i18n="c2name">Japan</h2>
           <span class="exif" data-i18n="c2count">1 guide</span>
@@ -76,7 +102,7 @@
         </div>
       </div>
 
-      <div class="country-group reveal">
+      <div class="country-group reveal" id="soon">
         <div class="section-head">
           <h2 data-i18n="c3name">More to come</h2>
           <span class="exif" data-i18n="c3count">In the darkroom</span>
@@ -120,6 +146,7 @@
     en: {
       destTitle: 'Destinations',
       destSub: "Every place I've photographed, researched, eaten through, and written up — organized by country.",
+      contEurope: 'Europe', contAsia: 'Asia', contMore: 'More to come',
       c1name: 'Greece', c1count: '1 guide',
       c2name: 'Japan', c2count: '1 guide',
       c3name: 'More to come', c3count: 'In the darkroom',
@@ -136,6 +163,7 @@
     zh: {
       destTitle: '目的地',
       destSub: '每一個我拍攝過、研究過、吃遍也寫成指南的地方——依國家分類。',
+      contEurope: '歐洲', contAsia: '亞洲', contMore: '更多大洲',
       c1name: '希臘', c1count: '1 份指南',
       c2name: '日本', c2count: '1 份指南',
       c3name: '更多目的地', c3count: '沖洗中',

@@ -817,6 +817,53 @@ body.darkroom-page .nav-links { background: var(--darkroom); border-bottom-color
 body.darkroom-page .page-header p { color: #8f8577; }
 body.darkroom-page .site-footer { border-top: 1px solid var(--line-dark); }
 
+/* ---------- Continent directory (Destinations) ---------- */
+
+.continent-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px;
+  margin-bottom: 96px;
+}
+
+.continent h2 {
+  font-family: var(--display);
+  font-weight: 500;
+  font-size: 1.2rem;
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+  position: relative;
+}
+.continent h2::after {
+  content: '';
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 36px;
+  height: 2px;
+  background: var(--kodak-red);
+}
+
+.country-list { list-style: none; }
+.country-list a {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 11px 2px;
+  border-bottom: 1px dashed var(--line);
+  color: var(--ink);
+  font-size: 0.98rem;
+}
+.country-list a:hover { color: var(--kodak-red); text-decoration: none; }
+.country-list .count {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+}
+
+@media (max-width: 700px) {
+  .continent-grid { grid-template-columns: 1fr; gap: 36px; margin-bottom: 64px; }
+}
+
 /* ---------- Country groups (Destinations) ---------- */
 
 .country-group { margin-bottom: 80px; }
