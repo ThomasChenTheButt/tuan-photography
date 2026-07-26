@@ -817,6 +817,13 @@ body.darkroom-page .nav-links { background: var(--darkroom); border-bottom-color
 body.darkroom-page .page-header p { color: #8f8577; }
 body.darkroom-page .site-footer { border-top: 1px solid var(--line-dark); }
 
+/* ---------- Country groups (Destinations) ---------- */
+
+.country-group { margin-bottom: 80px; }
+.country-group:last-child { margin-bottom: 20px; }
+.country-group .section-head { margin-bottom: 34px; }
+.country-group .section-head h2 { font-size: 1.35rem; }
+
 /* ---------- Filter bar (Photo Spots) ---------- */
 
 .filter-bar {
