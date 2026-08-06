@@ -25,12 +25,10 @@ const i18n = {
     navBlog: 'Blog',
     navSkills: 'Skills',
     navAbout: 'About',
-
-    heroKicker: 'Travel like a photographer — field notes from the road',
     heroTitle: 'See the world through the viewfinder.',
     heroSub: "Real itineraries, exact photo spots, and everything I researched before pressing the shutter — so you can travel and shoot like you've been there before.",
     heroCta: 'Browse the guides',
-    heroExifNote: "— replace with your photo's real settings",
+    heroExifNote: 'Aoraki / Mount Cook · New Zealand',
 
     guidesTitle: 'Latest field guides',
     guidesLabel: 'Vol. 01 — Guides',
@@ -77,12 +75,10 @@ const i18n = {
     navBlog: '網誌',
     navSkills: '攝影技巧',
     navAbout: '關於我',
-
-    heroKicker: '像攝影師一樣旅行——來自路上的田野筆記',
     heroTitle: '透過觀景窗看世界。',
     heroSub: '真實的行程、精確的攝影點,以及每次按下快門前做的所有功課——讓你的旅行,像已經來過一樣。',
     heroCta: '瀏覽指南',
-    heroExifNote: '——之後換成你照片的真實參數',
+    heroExifNote: '庫克山 · 紐西蘭',
 
     guidesTitle: '最新旅拍指南',
     guidesLabel: 'Vol. 01 — 指南',
