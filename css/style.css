@@ -743,9 +743,10 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 .article h1 {
   font-family: var(--display);
   font-weight: 600;
-  font-size: clamp(1.9rem, 4vw, 2.5rem);
-  line-height: 1.15;
-  margin-bottom: 12px;
+  font-size: clamp(2.6rem, 6.5vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 14px;
 }
 
 .article .meta {
