@@ -712,7 +712,12 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
   min-height: 320px;
   overflow: hidden;
 }
-.article-hero img { width: 100%; height: 100%; object-fit: cover; }
+.article-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 38%;   /* favour the upper half — skylines, spires, horizons */
+}
 
 .article {
   max-width: 760px;

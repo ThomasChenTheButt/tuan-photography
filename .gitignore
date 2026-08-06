@@ -3,3 +3,8 @@
 
 # Claude Code local tooling (skills, preview config) — not part of the website
 .claude/
+
+# Original full-res photos stay on your Mac only — the website uses the
+# web-sized copies in images/web/. Keeps the repo small and your originals private.
+images/*/
+!images/web/
