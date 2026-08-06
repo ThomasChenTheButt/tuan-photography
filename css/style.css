@@ -254,15 +254,16 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 .hero h1 {
   font-family: var(--display);
-  font-weight: 600;
-  font-size: clamp(2.5rem, 5.6vw, 4.3rem);
-  line-height: 1.06;
-  letter-spacing: -0.015em;
-  margin-bottom: 18px;
+  font-weight: 800;
+  font-size: clamp(2.9rem, 6.4vw, 5.2rem);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  margin-bottom: 20px;
 }
 
 .hero-sub {
-  font-size: 1.12rem;
+  font-weight: 300;
+  font-size: 1.2rem;
   max-width: 540px;
   color: rgba(253,250,244,0.88);
   margin-bottom: 28px;
@@ -513,13 +514,13 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
   margin-bottom: 16px;
 }
 
-.about-strip .lede { font-size: 1.1rem; margin-bottom: 14px; }
+.about-strip .lede { font-weight: 300; font-size: 1.22rem; margin-bottom: 14px; }
 .about-strip p { color: var(--ink-soft); margin-bottom: 14px; }
 
 /* drop cap — the magazine touch */
 .dropcap::first-letter {
   font-family: var(--display);
-  font-weight: 600;
+  font-weight: 900;
   font-size: 3.3em;
   float: left;
   line-height: 0.85;
@@ -693,13 +694,15 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 }
 .page-header h1 {
   font-family: var(--display);
-  font-weight: 600;
-  font-size: clamp(2.2rem, 4.5vw, 3.1rem);
-  letter-spacing: -0.01em;
+  font-weight: 800;
+  font-size: clamp(2.4rem, 5.2vw, 3.6rem);
+  letter-spacing: -0.025em;
   margin-bottom: 12px;
 }
 .page-header p {
   color: var(--ink-soft);
+  font-weight: 300;
+  font-size: 1.08rem;
   max-width: 620px;
   margin: 0 auto;
 }
@@ -742,7 +745,7 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 .article h1 {
   font-family: var(--display);
-  font-weight: 600;
+  font-weight: 800;
   font-size: clamp(2.6rem, 6.5vw, 4rem);
   line-height: 1.05;
   letter-spacing: -0.02em;
@@ -1261,4 +1264,64 @@ a.continent:hover h2 { color: var(--kodak-red); }
 }
 @media (max-width: 540px) {
   .gallery-wall { columns: 1; }
+}
+
+/* ==========================================================
+   PAGE-LOAD CHOREOGRAPHY
+   One orchestrated entrance per page: the photograph settles
+   while the words rise in sequence, like a print developing.
+   ========================================================== */
+
+@keyframes tp-rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes tp-settle {
+  from { transform: scale(1.055); }
+  to   { transform: scale(1); }
+}
+
+/* the photograph settles into place */
+.hero-frame > img,
+.article-hero img {
+  animation: tp-settle 2s cubic-bezier(0.16, 0.84, 0.24, 1) both;
+}
+
+/* the words rise, one after another */
+.hero-content > *,
+.article > h1,
+.article > .meta,
+.article > .toc,
+.page-header > * {
+  opacity: 0;
+  animation: tp-rise 0.9s cubic-bezier(0.16, 0.84, 0.24, 1) forwards;
+}
+
+.hero-content > *:nth-child(1) { animation-delay: 0.20s; }
+.hero-content > *:nth-child(2) { animation-delay: 0.32s; }
+.hero-content > *:nth-child(3) { animation-delay: 0.44s; }
+.hero-content > *:nth-child(4) { animation-delay: 0.56s; }
+.hero-content > *:nth-child(5) { animation-delay: 0.68s; }
+
+.article > h1     { animation-delay: 0.14s; }
+.article > .meta  { animation-delay: 0.26s; }
+.article > .toc   { animation-delay: 0.38s; }
+
+.page-header > *:nth-child(1) { animation-delay: 0.12s; }
+.page-header > *:nth-child(2) { animation-delay: 0.24s; }
+.page-header > *:nth-child(3) { animation-delay: 0.36s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-frame > img,
+  .article-hero img,
+  .hero-content > *,
+  .article > h1,
+  .article > .meta,
+  .article > .toc,
+  .page-header > * {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }

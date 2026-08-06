@@ -8,3 +8,9 @@
 # web-sized copies in images/web/. Keeps the repo small and your originals private.
 images/*/
 !images/web/
+
+# loose originals dropped straight into images/ (not the web copies)
+images/*.jpg
+images/*.jpeg
+images/*.png
+images/*.heic
