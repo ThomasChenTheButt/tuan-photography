@@ -1009,6 +1009,12 @@ a.continent:hover h2 { color: var(--kodak-red); }
   vertical-align: top;
 }
 .info-table td:first-child { font-weight: 600; }
+
+/* quick-facts table: the label column stays on one line */
+.info-table.facts td:first-child {
+  white-space: nowrap;
+  padding-right: 32px;
+}
 .info-table .best { color: var(--kodak-red); font-weight: 600; }
 
 /* ---------- Gear checklist 拍攝裝備清單 ---------- */
