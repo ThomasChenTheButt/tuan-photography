@@ -15,38 +15,45 @@
 
 ## 上次做到哪 Where we left off
 
-2026-08-07 — no new content this session; it was a health check on the whole site.
-Everything came back clean. Found and fixed one stale note in `CLAUDE.md` (it still said the
-heading font was Fraunces, but you switched to Instrument Serif). Set up this file as a proper
-end-of-day handoff so clearing the conversation stops costing us anything.
+2026-08-07 — no new website content; this was a housekeeping day.
+
+- Full health check on all 31 pages. Everything came back clean.
+- Fixed a stale line in `CLAUDE.md` — it still said the heading font was Fraunces, three commits
+  after the switch to Instrument Serif.
+- Set up this file as a proper end-of-day handoff, so clearing the conversation costs nothing.
+- Enabled **agent teams** (`.claude/settings.local.json`, gitignored, so it's on this Mac only).
+  Takes effect in a *new* session, not the one where it was switched on.
+- Decided how to use them: **three divergent versions, he picks** — not a design committee.
 
 ## 接下來 Next up
 
-**Start the New Zealand guide — as three competing versions, not one.**
+**Get the New Zealand photos in.** Everything else is blocked behind this.
 
-He wants to see genuinely different takes and pick/tune the one he likes, rather than be handed
-a single merged answer. Agent teams are enabled for this
-(`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` in `.claude/settings.local.json`).
+He drops his New Zealand originals into `images/new-zealand/` (gitignored, stays on his Mac) and
+says roughly which trip they're from. Then make web-sized copies into `images/web/` as
+`new-zealand-<subject>.jpg` — `sips -Z 2400 in.jpeg --setProperty formatOptions 62 --out …`.
 
-**The rule that makes this work: do NOT let them converge.** Design debates average out to the
-generic middle — the exact "AI slop" the brief warns against. They critique each other for
-*brief compliance* (especially the restraint rule), then all three survive to his desk intact.
+Only one NZ photo exists today, and it's already the homepage hero. Three layouts built around
+one image aren't three real choices — the material has to come first.
 
-Mechanics, so they don't overwrite each other — each teammate owns its own file:
-`posts/nz-a.html`, `posts/nz-b.html`, `posts/nz-c.html`. He reviews all three side by side at
-`localhost:8642/posts/nz-a.html` etc., picks one, and it gets renamed to `posts/new-zealand.html`.
-Delete the other two after he decides.
+**Then: the New Zealand guide as three competing versions.** The ready-to-paste prompt is in the
+2026-08-07 conversation; the shape is:
 
-**Blocked on:** his New Zealand photos + trip notes. Only one NZ photo exists so far
-(`new-zealand-aoraki-window.jpg`, currently the homepage hero). Three layouts built around one
-photo isn't a real choice — get the material in first.
+- Three teammates, three directions — photo-led / field-journal-led / breaks-the-template.
+- Each owns exactly one file — `posts/nz-a.html`, `nz-b.html`, `nz-c.html` — so they can't
+  overwrite each other. He reviews all three at `localhost:8642/posts/nz-a.html` etc.
+- They critique each other on **one question only**: does this respect the restraint rule in
+  `CLAUDE.md`?
+- **Do not merge, do not converge.** Design debates average out to the generic middle — the exact
+  thing the aesthetics block warns about. The taste call is his.
+- He picks one → rename to `posts/new-zealand.html`, link it from `countries/new-zealand.html`,
+  delete the other two.
 
 ## 等你決定 Waiting on you
 
-1. **The site isn't public yet.** GitHub Pages is off — the repo exists but nothing is served.
-   It's one switch in the repo's Settings → Pages. Say the word and I'll walk you through it.
-2. **15 of 16 country pages are empty shells.** Japan, Taiwan, USA, Switzerland and the rest
-   have pages built and waiting, but no guide behind them. Which country after New Zealand?
+1. **The site still isn't public.** GitHub Pages is off — the repo exists but nothing is served.
+   One switch in the repo's Settings → Pages. Say the word and I'll walk you through it.
+2. **15 of 16 country pages are empty shells.** Which country after New Zealand?
 3. **Vietnam (2026.8)** is a placeholder for the upcoming trip — nothing to write until you go.
 
 ## 如何接續 How to resume
