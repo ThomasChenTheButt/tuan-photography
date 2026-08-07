@@ -22,7 +22,7 @@ Bilingual EN / 繁體中文. Owner is not a developer — explain in plain Engli
 | `--kodak-red` | `#c22c1e` | primary accent, section rules, links |
 | `--frame-gold` | `#d9a441` | accent on dark sections |
 | `--darkroom` | `#191410` | dark pages (Gallery), footer |
-| `--display` | Fraunces | headings |
+| `--display` | Instrument Serif | headings |
 | `--body` | Noto Serif TC | body (also carries 中文) |
 | `--mono` | JetBrains Mono | EXIF-style labels, meta, nav |
 
@@ -88,6 +88,24 @@ critical that you think outside the box!
 
 Note: the aesthetics block above is general guidance. Where it conflicts with **the brief**
 at the top of this file, the brief wins — the owner has already made those calls deliberately.
+
+## Session log — PROGRESS.md (READ FIRST, WRITE LAST)
+
+- **At the start of every session: read `PROGRESS.md` before doing anything else.** It is the
+  handoff note from the last day of work — where we stopped, and what's queued next.
+  Treat it as a claim to verify, not gospel: skim the actual files / `git log` to confirm it's
+  still true, and correct it if it drifted.
+- **When he calls it a day** — "that's it for today", "收工", "done for now", "let's stop here",
+  or any similar sign-off — update `PROGRESS.md` *before* the final commit, without being asked.
+  Rewrite these sections so they describe today, not history:
+  - **現在狀態 / Where things stand** — what actually exists and works right now.
+  - **上次做到哪 / Where we left off** — what shipped this session, in his words not commit-speak.
+  - **接下來 / Next up** — the concrete first action for next time. One clear starting move,
+    not a wish list. Include the file(s) involved so the next session opens fast.
+  - **等你決定 / Waiting on you** — anything blocked on his call, so it isn't silently dropped.
+  - Stamp the date at the top and keep the file short. Prune anything already done; this is a
+    handoff note, not a changelog — `git log` is the changelog.
+- Then commit and push it along with the day's work.
 
 ## Working habits
 
