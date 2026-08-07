@@ -22,12 +22,24 @@ end-of-day handoff so clearing the conversation stops costing us anything.
 
 ## 接下來 Next up
 
-**Start the New Zealand guide.** It's the natural second country — the Aoraki photo is already
-on the homepage, so there's real material to build around.
+**Start the New Zealand guide — as three competing versions, not one.**
 
-First move: copy `posts/barcelona.html` to `posts/new-zealand.html` and strip it back to the
-8-section skeleton, then link it from `countries/new-zealand.html`. After that, the work is
-photos + your notes from the trip.
+He wants to see genuinely different takes and pick/tune the one he likes, rather than be handed
+a single merged answer. Agent teams are enabled for this
+(`CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1` in `.claude/settings.local.json`).
+
+**The rule that makes this work: do NOT let them converge.** Design debates average out to the
+generic middle — the exact "AI slop" the brief warns against. They critique each other for
+*brief compliance* (especially the restraint rule), then all three survive to his desk intact.
+
+Mechanics, so they don't overwrite each other — each teammate owns its own file:
+`posts/nz-a.html`, `posts/nz-b.html`, `posts/nz-c.html`. He reviews all three side by side at
+`localhost:8642/posts/nz-a.html` etc., picks one, and it gets renamed to `posts/new-zealand.html`.
+Delete the other two after he decides.
+
+**Blocked on:** his New Zealand photos + trip notes. Only one NZ photo exists so far
+(`new-zealand-aoraki-window.jpg`, currently the homepage hero). Three layouts built around one
+photo isn't a real choice — get the material in first.
 
 ## 等你決定 Waiting on you
 
