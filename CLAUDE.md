@@ -28,12 +28,54 @@ Bilingual EN / 繁體中文. Owner is not a developer — explain in plain Engli
 
 Never hard-code colors in components — use the variables.
 
+## Component vocabulary 元件清單 (build from these — don't invent)
+
+The design already lives in `css/style.css` (~1,335 lines). There is **no template file** and
+none is wanted: pages are assembled from these shared classes, so changing one rule in the
+stylesheet updates every page at once. A guide page is mostly *content*, not design.
+
+**Guide/article anatomy** (`posts/*.html` — `posts/barcelona.html` is the reference build):
+
+| Class | What it is |
+|---|---|
+| `.article-hero` | pinned full-bleed hero photo above the article |
+| `.article` | article body wrapper (measure, rhythm, heading styles) |
+| `.meta` | small line under the title — last-updated · travel dates |
+| `.toc` | numbered table of contents, two columns |
+| `.table-scroll` > `.info-table` | comparison table; wrapper makes it scroll on mobile |
+| `.info-table.facts` | the compact "facts" variant (label column, no wrap) |
+| `.best` | highlights the recommended cell in a table |
+| `.photo-tip` > `.tip-label` | boxed 📍 shooting tip — label line + body |
+| `.day` > `.day-no` | one block per day in 我的路線 |
+| `.gear-list` | bullet list for gear / practical notes |
+| `.exif` | mono EXIF strip (f-stop, shutter, ISO, focal length, place) |
+| `.faq` | FAQ block |
+
+**Shared chrome, on every page**: `.site-header`, `.nav`, `.logo` / `.logo-cjk`, `.nav-links`,
+`.nav-toggle`, `.lang-switch`, `.site-footer`, `.wrap`, `.section`, `.reveal` (load animation).
+
+**Listing pages**: `.country-tile`, `.country-grid`, `.guide-grid`, `.continent-grid`,
+`.gallery-wall`, `.portfolio-grid`, `.spot` / `.pin-badge`, `.empty-state`.
+
+### Rules
+
+- **Reuse these classes.** A new page should introduce almost no new CSS.
+- **Never use inline `style="…"`** except a hero's `background-image`. Inline styling is how a
+  page silently drifts away from the stylesheet and stops responding to design changes.
+- If something genuinely new is needed, add it to `css/style.css` as a **reusable class** —
+  never as a one-off on a single page.
+- Keeping this list accurate matters: it is read at the start of every session, and by any
+  teammate agent. If a component is added or renamed, update this table in the same commit.
+
 ## Structure
 
 Nav: Destinations 目的地 · Gallery 作品集 · Blog 網誌 · Skills 攝影技巧 · About 關於我.
 Destinations drills down: 7 continents → country pages → guides (`posts/`).
-Continent/country pages are **generated** by `gen_pages.py` (scratchpad) — edit the data there
-and rerun rather than hand-editing, EXCEPT `countries/spain.html`, which is hand-edited.
+Continent/country pages were generated once by a `gen_pages.py` script that lived in a temp
+folder and **no longer exists anywhere** (confirmed 2026-08-08 by a full-disk search). They are
+**hand-maintained** now. Edit them directly; there is nothing to rerun. If a change has to hit
+many of them at once, write a fresh script **inside the repo** so it survives — don't put it in
+a scratchpad again.
 
 ## Bilingual rule
 
