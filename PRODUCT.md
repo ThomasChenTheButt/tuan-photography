@@ -87,11 +87,13 @@ to stand there.
 - 8 photographs by the author, web-sized, in `images/web/`: 7 from Barcelona (city and
   architecture), 1 from New Zealand (Aoraki / Mount Cook through a car window). The owner chose
   to start with these 8 and add more later.
-- The Barcelona guide's full text, spot list, route, comparison tables, gear list and FAQ, in
+- Real camera data embedded in each photo file: body (Canon EOS R6 Mark II), lens, focal
+  length, aperture, shutter speed, ISO. These may be shown. The capture clock time is **not**
+  reliable (the camera clock's time zone is unknown) and is not shown.
+- The Barcelona guide's full text, spot list, route, comparison tables and practical notes, in
   both languages.
-- Not available, and not to be fabricated: a portrait of the author, his real biography and
-  gear list for About, real camera settings for photo captions, reader testimonials, follower
-  counts, guides for any place other than Barcelona. The homepage's "Santorini" and "Kyoto"
+- Not available, and not to be fabricated: a portrait of the author, his real biography,
+  reader testimonials, follower counts, guides for any place other than Barcelona. The homepage's "Santorini" and "Kyoto"
   guide cards and all `.svg` images are placeholders, not real content.
 
 ## Product Principles

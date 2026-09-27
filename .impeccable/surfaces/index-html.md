@@ -22,8 +22,15 @@ Would feel wrong even if polished: the design upstaging the photographs.
 Content on hand: 8 photographs with real camera data embedded in the files; the complete
 Barcelona guide in both languages. 15 countries have no content and stay empty.
 
-Unresolved: next guide's country; About's real story; whether a newsletter is wanted (removed
-from this build until decided).
+Adaptation: the lead slide on the home page and the plate at the top of a guide take the
+photograph's own shape instead of the square mount, because they are the two places a
+photograph is shown large outside the viewer.
+
+Unresolved, waiting on the owner: next guide's country; About's real story (the current
+biography is unconfirmed copy carried over from the old site); whether to publish a contact
+email (removed from this build); whether a newsletter is wanted (removed from this build);
+whether the typefaces may be downloaded and hosted with the site instead of loaded from
+Google Fonts.
 
 ## Direction contract
 

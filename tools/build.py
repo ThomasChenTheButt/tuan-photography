@@ -53,6 +53,26 @@ def e(text):
     return html.escape(text, quote=True)
 
 
+CJK = r"[\u3000-\u303f\u3400-\u9fff\uff00-\uffef]"
+PAIRS = {",": "，", ":": "：", ";": "；", "!": "！", "?": "？"}
+
+
+def zh_punct(text):
+    """Chinese text is set with full-width punctuation. Numbers, times and Latin words keep theirs."""
+    def swap(m):
+        return PAIRS[m.group(0)]
+    # a mark that touches a Chinese character on either side
+    text = re.sub(rf"(?<={CJK})[,:;!?]|[,:;!?](?={CJK})", swap, text)
+    # brackets: convert a pair when Chinese sits inside it or right beside it
+    def bracket(m):
+        before, inner, after = m.group(1), m.group(2), m.group(3)
+        if re.search(CJK, before + inner + after):
+            return f"{before}（{inner}）{after}"
+        return m.group(0)
+    text = re.sub(r"(.?)\(([^()<>]*)\)(.?)", bracket, text)
+    return text
+
+
 def icon(name):
     return f'<svg class="icon" aria-hidden="true"><use href="#i-{name}"/></svg>'
 
@@ -88,14 +108,14 @@ def slide_strings(s, en, zh):
         d[f"sw_{sid}"] = s["where"][lang]
         d[f"sa_{sid}"] = s["alt"][lang]
     en[f"sl_{sid}"] = f'{s["place"]["en"]}: how this was made'
-    zh[f"sl_{sid}"] = f'{s["place"]["zh"]}:這張怎麼拍'
+    zh[f"sl_{sid}"] = f'{s["place"]["zh"]}：這張怎麼拍'
 
 
-def slide(sid, root, en, zh, sizes="(max-width: 40rem) 46vw, (max-width: 80rem) 30vw, 20rem", lead=False):
+def slide(sid, root, en, zh, sizes="(max-width: 34rem) 92vw, (max-width: 48rem) 46vw, (max-width: 84rem) 31vw, 26rem", lead=False):
     """A mounted slide that can be picked up."""
     s = SLIDES[sid]
     slide_strings(s, en, zh)
-    shape = "slide--p" if s["h"] > s["w"] else "slide--l"
+    shape = ("slide--p" if s["h"] > s["w"] else "slide--l") + (" slide--lead" if lead else "")
     return f"""<a class="slide {shape}" href="{root}gallery.html#s-{sid}" data-slide="{sid}" aria-label="{e(en[f'sl_{sid}'])}" data-i18n-aria="sl_{sid}">
   <span class="slide__mount">
     <span class="slide__where"><span data-i18n="sw_{sid}">{e(s['where']['en'])}</span></span>
@@ -109,7 +129,7 @@ def plate(sid, root, en, zh):
     """The wide mount at the top of a guide."""
     s = SLIDES[sid]
     slide_strings(s, en, zh)
-    shape = "slide--p" if s["h"] > s["w"] else "slide--l"
+    shape = ("slide--p" if s["h"] > s["w"] else "slide--l") + " slide--lead"
     data = " · ".join([s["focal"], s["aperture"], s["shutter"], "ISO " + s["iso"]])
     return f"""<a class="slide {shape}" href="{root}gallery.html#s-{sid}" data-slide="{sid}" aria-label="{e(en[f'sl_{sid}'])}" data-i18n-aria="sl_{sid}">
       <span class="slide__mount">
@@ -124,7 +144,7 @@ def shot(sid, root, en, zh):
     """A slide inside a guide, with its caption."""
     s = SLIDES[sid]
     data = " · ".join([s["focal"], s["aperture"], s["shutter"], "ISO " + s["iso"]])
-    body = slide(sid, root, en, zh, "(max-width: 40rem) 92vw, (max-width: 62rem) 30vw, 15rem")
+    body = slide(sid, root, en, zh, "(max-width: 34rem) 92vw, (max-width: 62rem) 30vw, 15rem")
     return f'<figure class="shot" id="s-{sid}">\n{body}\n<figcaption>{e(data)}</figcaption>\n</figure>'
 
 
@@ -155,7 +175,7 @@ def country_slide(c, root, en, zh):
     return f"""<a class="slide {shape}" href="{href}">
   <span class="slide__mount">
     <span class="slide__where num"><span data-i18n="cd_{cid}">{e(c['date']['en'])}</span></span>
-    <span class="slide__window">{img(s, root, "(max-width: 40rem) 46vw, 20rem")}</span>
+    <span class="slide__window">{img(s, root, "(max-width: 34rem) 92vw, (max-width: 48rem) 46vw, 26rem")}</span>
     <span class="slide__foot"><span class="slide__place" data-i18n="cn_{cid}">{e(c['en'])}</span></span>
   </span>
 </a>"""
@@ -205,7 +225,13 @@ def header(root, current):
 def footer(root, slides_used, en, zh):
     links = "\n".join(f'        <li><a href="{root}{href}" data-i18n="{key}">{label}</a></li>'
                       for _, key, label, href in NAV)
-    data = [SLIDES[sid] for sid in slides_used]
+    data = []
+    for sid in slides_used:
+        s = json.loads(json.dumps(SLIDES[sid]))
+        for field in ("place", "where", "alt", "best", "note"):
+            if field in s:
+                s[field]["zh"] = zh_punct(s[field]["zh"])
+        data.append(s)
     blob = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
     page = json.dumps({"en": en, "zh": zh}, ensure_ascii=False, indent=1).replace("</", "<\\/")
     return f"""
@@ -237,6 +263,8 @@ window.pageI18n = {page};
 def write(path, title, zh_title, desc, current, body, en, zh):
     root = "../" * (len(Path(path).parts) - 1)
     en["docTitle"], zh["docTitle"] = title, zh_title
+    for k in list(zh):
+        zh[k] = zh_punct(zh[k])
     used = list(dict.fromkeys(re.findall(r'data-slide="([^"]+)"', body)))
     out = head(title, desc, root) + header(root, current) + "<main>\n" + body + "\n</main>\n" \
         + footer(root, used, en, zh)
@@ -274,7 +302,7 @@ def build_home():
               guideOpen="Open the guide",
               moreText=f"{len(COUNTRIES) - 1} more countries are in the drawers. Their guides are not written yet.",
               moreCta="See every destination")
-    zh.update(heroLine="像攝影師一樣旅行。",
+    zh.update(heroLine='<span class="nb">像攝影師</span><span class="nb">一樣旅行。</span>',
               heroSay="我是陳亮元，風景攝影師。拿起任何一張照片，就能看到它是怎麼拍的；寫好攻略的地方，會告訴你該站在哪裡、什麼時候去。",
               workTitle="作品", workSub="拿起一張，看它是怎麼拍的。",
               guidesTitle="攻略", guidesSub="站在哪裡、什麼時候去、一天怎麼走。",
@@ -296,9 +324,9 @@ def build_home():
       </a>""")
     body = f"""<div class="wrap">
   <section class="first">
-    {slide(lead, root, en, zh, "(max-width: 56rem) 92vw, 52vw", lead=True)}
+    {slide(lead, root, en, zh, "(max-width: 60rem) 92vw, 56vw", lead=True)}
     <div class="first__say">
-      <h1 data-i18n="heroLine">Travel like a photographer.</h1>
+      <h1 data-i18n-html="heroLine">Travel like a photographer.</h1>
       <p data-i18n="heroSay">{e(en['heroSay'])}</p>
       <a class="btn" href="{IG['url']}" target="_blank" rel="noopener">{icon('ig')}<span data-i18n="followCta">Follow on Instagram</span></a>
     </div>
@@ -392,11 +420,8 @@ def build_destinations():
             zh[f"kn_{kid}"] = f"{n} 個國家"
         else:
             en[f"kn_{kid}"], zh[f"kn_{kid}"] = k["state"]["en"], k["state"]["zh"]
-        pips = "".join('<span class="pip' + (' pip--on' if any(s["country"] == c["id"] for s in DATA["slides"]) else '')
-                       + '"></span>' for c in own)
-        strip = f'<span class="row__strip" aria-hidden="true">{pips}</span>' if pips else ""
         rows.append(f"""      <a class="row" href="continents/{kid}.html">
-        <span><span class="row__name" data-i18n="k_{kid}">{e(k['en'])}</span>{strip}</span>
+        <span class="row__name" data-i18n="k_{kid}">{e(k['en'])}</span>
         <span class="row__note" data-i18n="ks_{kid}">{e(k['sub']['en'])}</span>
         <span class="row__end num"><span data-i18n="kn_{kid}">{e(en[f'kn_{kid}'])}</span>{icon('right')}</span>
       </a>""")
@@ -444,9 +469,8 @@ def build_continents():
   </section>
 </div>"""
         else:
-            en.update(emptyLabel=k["state"]["en"],
-                      emptyText="This continent is still in the planning folder — guides will appear here after the trip.")
-            zh.update(emptyLabel=k["state"]["zh"], emptyText="這個大洲還在規劃資料夾裡——旅程結束後,指南就會出現在這裡。")
+            en.update(emptyLabel=k["state"]["en"], emptyText="There are no photographs or guides from this continent yet.")
+            zh.update(emptyLabel=k["state"]["zh"], emptyText="這個大洲還沒有照片，也還沒有攻略。")
             body = top + blank(root, en, zh, "emptyLabel", en["emptyLabel"], "emptyText", en["emptyText"]) + "\n</div>"
         write(f"continents/{kid}.html", f"{k['en']} — {SITE}", f"{k['zh']} — {SITE}",
               f"{k['en']}: countries photographed by 陳亮元 Thomas Chen.", "destinations", body, en, zh)
@@ -505,9 +529,13 @@ def build_countries():
     </div>
   </section>""")
         if not guides:
-            en.update(wipLabel="Guide in progress",
-                      wipText="The trip notes for this country are being turned into full guides — photo spots, itineraries, and all.")
-            zh.update(wipLabel="攻略製作中", wipText="這個國家的旅行筆記正在整理成完整指南——攝影點、行程,一樣不少。")
+            if own:
+                en.update(wipLabel="No guide yet", wipText="The guide for this country is not written yet.")
+                zh.update(wipLabel="還沒有攻略", wipText="這個國家的攻略還沒寫。")
+            else:
+                en.update(wipLabel="Nothing here yet",
+                          wipText="The guide for this country is not written yet, and its slides are not on the table.")
+                zh.update(wipLabel="還沒有內容", wipText="這個國家的攻略還沒寫，片子也還沒放上桌。")
             if own:
                 en.setdefault("backBtn", "Back to destinations")
                 zh.setdefault("backBtn", "回到目的地")
@@ -601,7 +629,6 @@ def build_about():
       <p data-i18n="abBody1">{e(en['abBody1'])}</p>
       <div class="acts">
         <a class="btn" href="{IG['url']}" target="_blank" rel="noopener">{icon('ig')}<span data-i18n="followCta">Follow on Instagram</span></a>
-        <a class="btn btn--line" href="mailto:{DATA['email']}" data-i18n="abCta">Say hello</a>
       </div>
       <dl class="facts">
         <div><dt data-i18n="fCountries">Countries</dt><dd class="num" data-i18n="fCountriesV">{e(en['fCountriesV'])}</dd></div>
