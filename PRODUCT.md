@@ -94,8 +94,8 @@ to stand there.
 - The Barcelona guide's full text, spot list, route, comparison tables and practical notes, in
   both languages.
 - Not available, and not to be fabricated: a portrait of the author, his real biography,
-  reader testimonials, follower counts, guides for any place other than Barcelona. The homepage's "Santorini" and "Kyoto"
-  guide cards and all `.svg` images are placeholders, not real content.
+  reader testimonials, follower counts, guides for any place other than Barcelona. The old site's placeholder guide cards and
+  placeholder images were removed from this build.
 
 ## Product Principles
 

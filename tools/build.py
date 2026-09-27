@@ -14,6 +14,7 @@ import html
 import json
 import re
 import subprocess
+import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -25,6 +26,7 @@ IG = DATA["instagram"]
 SIZES = (640, 1280)
 SRGB = "/System/Library/ColorSync/Profiles/sRGB Profile.icc"
 SITE = "tuan photography 陳亮元"
+STAMP = time.strftime("%Y%m%d%H%M")   # added to the stylesheet and script addresses so browsers never show a stale copy
 
 FONTS = "https://fonts.googleapis.com/css2?family=Geist:wght@400..600&family=Noto+Sans+TC:wght@400..600&display=swap"
 
@@ -218,7 +220,7 @@ def head(title, desc, root):
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="{FONTS}" rel="stylesheet">
-  <link rel="stylesheet" href="{root}css/style.css">
+  <link rel="stylesheet" href="{root}css/style.css?v={STAMP}">
 </head>
 <body>
 """
@@ -275,7 +277,7 @@ def footer(root, used, en, zh):
 <script>
 window.pageI18n = {page};
 </script>
-<script src="{root}js/main.js"></script>
+<script src="{root}js/main.js?v={STAMP}"></script>
 </body>
 </html>
 """
@@ -665,9 +667,10 @@ def build_guide(name, title_en, title_zh, desc):
                   lambda m: f'<a href="{m.group(1)}" target="_blank" rel="noopener" data-i18n="mapLink">Map</a>', body)
     body = body.replace("{ate}", '<span class="ate" data-i18n="ate">eaten</span>')
     for a, b in (('<table class="sheet">', '<table class="sheet" role="table">'), ("<thead>", '<thead role="rowgroup">'),
-                 ("<tbody>", '<tbody role="rowgroup">'), ("<tr>", '<tr role="row">'), ("<th ", '<th role="columnheader" '),
-                 ("<td>", '<td role="cell">'), ("<td ", '<td role="cell" ')):
+                 ("<tbody>", '<tbody role="rowgroup">'), ("<tr>", '<tr role="row">')):
         body = body.replace(a, b)
+    body = re.sub(r"<th(?=[ >])(?![^>]*role=)", '<th role="columnheader"', body)
+    body = re.sub(r"<td(?=[ >])(?![^>]*role=)", '<td role="cell"', body)
     write(f"posts/{name}.html", title_en, title_zh, desc, "destinations", body, en, zh)
 
 
