@@ -26,7 +26,7 @@ const i18n = {
     navSkills: 'Skills',
     navAbout: 'About',
     heroTitle: 'See the world through the viewfinder.',
-    heroSub: "Real itineraries, exact photo spots, and everything I researched before pressing the shutter — so you can travel and shoot like you've been there before.",
+    heroSub: "Real itineraries and exact photo spots — so you travel like you've been here before.",
     heroCta: 'Browse the guides',
     heroExifNote: 'Aoraki / Mount Cook · New Zealand',
 
@@ -76,7 +76,7 @@ const i18n = {
     navSkills: '攝影技巧',
     navAbout: '關於我',
     heroTitle: '透過觀景窗看世界。',
-    heroSub: '真實的行程、精確的攝影點,以及每次按下快門前做的所有功課——讓你的旅行,像已經來過一樣。',
+    heroSub: '真實行程與精確機位——讓你的旅行,像已經來過一樣。',
     heroCta: '瀏覽指南',
     heroExifNote: '庫克山 · 紐西蘭',
 
