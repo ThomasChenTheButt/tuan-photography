@@ -1,0 +1,510 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-27T21:30:00+08:00",
+  "title": "Design System: tuan photography 陳亮元",
+  "extensions": {
+    "colorMeta": {
+      "table": {
+        "role": "neutral",
+        "displayName": "Opal Table",
+        "canonical": "oklch(96.4% 0.004 170)",
+        "tonalRamp": [
+          "oklch(15% 0.004 170)",
+          "oklch(27% 0.004 170)",
+          "oklch(39% 0.004 170)",
+          "oklch(50% 0.004 170)",
+          "oklch(62% 0.004 170)",
+          "oklch(73% 0.004 170)",
+          "oklch(85% 0.004 170)",
+          "oklch(95% 0.004 170)"
+        ]
+      },
+      "table-lit": {
+        "role": "neutral",
+        "displayName": "Lamp Centre",
+        "canonical": "oklch(99.2% 0.002 170)",
+        "tonalRamp": [
+          "oklch(15% 0.002 170)",
+          "oklch(27% 0.002 170)",
+          "oklch(39% 0.002 170)",
+          "oklch(50% 0.002 170)",
+          "oklch(62% 0.002 170)",
+          "oklch(73% 0.002 170)",
+          "oklch(85% 0.002 170)",
+          "oklch(95% 0.002 170)"
+        ]
+      },
+      "table-edge": {
+        "role": "neutral",
+        "displayName": "Table Edge",
+        "canonical": "oklch(91.5% 0.006 175)",
+        "tonalRamp": [
+          "oklch(15% 0.006 175)",
+          "oklch(27% 0.006 175)",
+          "oklch(39% 0.006 175)",
+          "oklch(50% 0.006 175)",
+          "oklch(62% 0.006 175)",
+          "oklch(73% 0.006 175)",
+          "oklch(85% 0.006 175)",
+          "oklch(95% 0.006 175)"
+        ]
+      },
+      "hair": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "oklch(83% 0.007 180)",
+        "tonalRamp": [
+          "oklch(15% 0.007 180)",
+          "oklch(27% 0.007 180)",
+          "oklch(39% 0.007 180)",
+          "oklch(50% 0.007 180)",
+          "oklch(62% 0.007 180)",
+          "oklch(73% 0.007 180)",
+          "oklch(85% 0.007 180)",
+          "oklch(95% 0.007 180)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Print Ink",
+        "canonical": "oklch(21% 0.008 220)",
+        "tonalRamp": [
+          "oklch(15% 0.008 220)",
+          "oklch(27% 0.008 220)",
+          "oklch(39% 0.008 220)",
+          "oklch(50% 0.008 220)",
+          "oklch(62% 0.008 220)",
+          "oklch(73% 0.008 220)",
+          "oklch(85% 0.008 220)",
+          "oklch(95% 0.008 220)"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Second Ink",
+        "canonical": "oklch(43% 0.01 215)",
+        "tonalRamp": [
+          "oklch(15% 0.01 215)",
+          "oklch(27% 0.01 215)",
+          "oklch(39% 0.01 215)",
+          "oklch(50% 0.01 215)",
+          "oklch(62% 0.01 215)",
+          "oklch(73% 0.01 215)",
+          "oklch(85% 0.01 215)",
+          "oklch(95% 0.01 215)"
+        ]
+      },
+      "mount": {
+        "role": "neutral",
+        "displayName": "Graphite Mount",
+        "canonical": "oklch(24.5% 0.006 235)",
+        "tonalRamp": [
+          "oklch(15% 0.006 235)",
+          "oklch(27% 0.006 235)",
+          "oklch(39% 0.006 235)",
+          "oklch(50% 0.006 235)",
+          "oklch(62% 0.006 235)",
+          "oklch(73% 0.006 235)",
+          "oklch(85% 0.006 235)",
+          "oklch(95% 0.006 235)"
+        ]
+      },
+      "mount-lip": {
+        "role": "neutral",
+        "displayName": "Mount Lip",
+        "canonical": "oklch(33% 0.007 235)",
+        "tonalRamp": [
+          "oklch(15% 0.007 235)",
+          "oklch(27% 0.007 235)",
+          "oklch(39% 0.007 235)",
+          "oklch(50% 0.007 235)",
+          "oklch(62% 0.007 235)",
+          "oklch(73% 0.007 235)",
+          "oklch(85% 0.007 235)",
+          "oklch(95% 0.007 235)"
+        ]
+      },
+      "mount-ink": {
+        "role": "neutral",
+        "displayName": "Mount Lettering",
+        "canonical": "oklch(94% 0.004 170)",
+        "tonalRamp": [
+          "oklch(15% 0.004 170)",
+          "oklch(27% 0.004 170)",
+          "oklch(39% 0.004 170)",
+          "oklch(50% 0.004 170)",
+          "oklch(62% 0.004 170)",
+          "oklch(73% 0.004 170)",
+          "oklch(85% 0.004 170)",
+          "oklch(95% 0.004 170)"
+        ]
+      },
+      "mount-ink-2": {
+        "role": "neutral",
+        "displayName": "Second Mount Lettering",
+        "canonical": "oklch(76% 0.008 190)",
+        "tonalRamp": [
+          "oklch(15% 0.008 190)",
+          "oklch(27% 0.008 190)",
+          "oklch(39% 0.008 190)",
+          "oklch(50% 0.008 190)",
+          "oklch(62% 0.008 190)",
+          "oklch(73% 0.008 190)",
+          "oklch(85% 0.008 190)",
+          "oklch(95% 0.008 190)"
+        ]
+      },
+      "room": {
+        "role": "neutral",
+        "displayName": "The Room",
+        "canonical": "oklch(14.5% 0.005 235)",
+        "tonalRamp": [
+          "oklch(15% 0.005 235)",
+          "oklch(27% 0.005 235)",
+          "oklch(39% 0.005 235)",
+          "oklch(50% 0.005 235)",
+          "oklch(62% 0.005 235)",
+          "oklch(73% 0.005 235)",
+          "oklch(85% 0.005 235)",
+          "oklch(95% 0.005 235)"
+        ]
+      },
+      "pencil": {
+        "role": "primary",
+        "displayName": "Grease Pencil Orange",
+        "canonical": "oklch(69% 0.19 46)",
+        "tonalRamp": [
+          "oklch(15% 0.19 46)",
+          "oklch(27% 0.19 46)",
+          "oklch(39% 0.19 46)",
+          "oklch(50% 0.19 46)",
+          "oklch(62% 0.19 46)",
+          "oklch(73% 0.19 46)",
+          "oklch(85% 0.19 46)",
+          "oklch(95% 0.19 46)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The home page line only."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Page titles: plain place names or section names."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Section headings and the name in a ruled row."
+      },
+      "lede": {
+        "displayName": "Lede",
+        "purpose": "The sentence under a page title or beside the lead slide."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Reading text, at most 70ch. Emphasis is weight 650."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Menu, meta lines, table cells, footer."
+      },
+      "label-strong": {
+        "displayName": "Label, strong",
+        "purpose": "Buttons and text actions."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Photograph captions with camera data, table headers. Tabular lining figures."
+      },
+      "hand": {
+        "displayName": "Hand",
+        "purpose": "The place name written on a mount, clamped to two lines."
+      },
+      "hand-display": {
+        "displayName": "Hand, large",
+        "purpose": "The Instagram handle in the footer."
+      }
+    },
+    "shadows": [
+      {
+        "name": "mount-rest",
+        "value": "inset 0 1px 0 var(--mount-lip), 0 0.4cqi 0.9cqi oklch(20% 0.01 235 / 0.28), 0 2cqi 4cqi -1.4cqi oklch(20% 0.01 235 / 0.4)",
+        "purpose": "A mount resting on the table: contact shadow plus lip highlight, scaled to the mount's width."
+      },
+      {
+        "name": "mount-lifted",
+        "value": "inset 0 1px 0 var(--mount-lip), 0 0.6cqi 1.2cqi oklch(20% 0.01 235 / 0.26), 0 4cqi 6cqi -2cqi oklch(20% 0.01 235 / 0.45)",
+        "purpose": "Hover on a mount that can be picked up, with translateY(-0.7cqi)."
+      },
+      {
+        "name": "window-cut",
+        "value": "0 0 0 1px oklch(0% 0 0 / 0.55), 0 0 3cqi oklch(100% 0 0 / 0.08)",
+        "purpose": "The cut edge of a slide window and the light coming through it."
+      },
+      {
+        "name": "window-empty",
+        "value": "0 0 0 1px oklch(0% 0 0 / 0.5), inset 0 0.6cqi 3cqi oklch(40% 0.01 220 / 0.3)",
+        "purpose": "The table seen through an unlit, empty window."
+      },
+      {
+        "name": "held-to-light",
+        "value": "0 0 5rem oklch(100% 0 0 / 0.06)",
+        "purpose": "The photograph held up in the viewer."
+      },
+      {
+        "name": "lamp",
+        "value": "radial-gradient(115% 85% at 50% 30%, var(--table-lit) 0%, var(--table) 46%, var(--table-edge) 100%)",
+        "purpose": "The fixed page ground. A gradient, not a shadow; listed here because it is the system's base depth layer."
+      }
+    ],
+    "motion": [
+      {
+        "name": "out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The one easing curve, used by every transition."
+      },
+      {
+        "name": "lamp-strike",
+        "value": "1100ms linear, once per session; opacity keyframes 1, 1, 0.35, 0.92, 0.9, 0.18, 0.7, 0.12, 0 at 0, 14, 17, 22, 30, 34, 42, 55, 100%",
+        "purpose": "The only entrance motion: a room-coloured overlay flickers off. CSS only; disabled under prefers-reduced-motion."
+      },
+      {
+        "name": "mount-lift",
+        "value": "320ms",
+        "purpose": "Transform and shadow of a mount under the pointer."
+      },
+      {
+        "name": "pick-up",
+        "value": "460ms view transition; 420ms fade of the viewer",
+        "purpose": "A slide travelling from its mount to the viewer."
+      },
+      {
+        "name": "pencil-ring",
+        "value": "700ms stroke-dashoffset",
+        "purpose": "The ring drawing itself on the slide that was put back."
+      },
+      {
+        "name": "menu-underline",
+        "value": "260ms background-size",
+        "purpose": "Underline growing under a menu item."
+      },
+      {
+        "name": "button",
+        "value": "180ms background-color and transform",
+        "purpose": "Button hover and press."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "nav-and-first",
+        "value": "60rem"
+      },
+      {
+        "name": "reading",
+        "value": "62rem"
+      },
+      {
+        "name": "about-and-viewer",
+        "value": "56rem"
+      },
+      {
+        "name": "slides-two-column",
+        "value": "34rem to 48rem"
+      },
+      {
+        "name": "rows-and-footer",
+        "value": "46rem"
+      },
+      {
+        "name": "table-stack-day-blank",
+        "value": "40rem"
+      },
+      {
+        "name": "shots",
+        "value": "34rem"
+      },
+      {
+        "name": "contents-and-facts",
+        "value": "30rem"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one primary action in a view; on this site, the Instagram follow.",
+      "html": "<a class=\"ds-btn\" href=\"#\"><svg class=\"ds-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><rect x=\"3.5\" y=\"3.5\" width=\"17\" height=\"17\" rx=\"4.5\"/><circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M17.2 6.8h.01\"/></svg><span>Follow on Instagram</span></a>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; gap: 0.6rem; font-family: var(--f-print); font-size: var(--t-s); font-weight: 600; line-height: 1.2; text-decoration: none; color: var(--mount-ink); background: var(--mount); border: 1px solid var(--mount); border-radius: 5px; padding: 0.85rem 1.15rem; cursor: pointer; transition: background-color 180ms var(--out), transform 180ms var(--out); } .ds-btn:hover { background: var(--room); } .ds-btn:active { transform: translateY(1px); } .ds-icon { width: 1.05em; height: 1.05em; flex: none; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; } .ds-btn:focus-visible { outline: 2px solid var(--pencil); outline-offset: 3px; border-radius: 2px; } "
+    },
+    {
+      "name": "Line Button",
+      "kind": "button",
+      "refersTo": "button-line",
+      "description": "The way back from an empty page.",
+      "html": "<a class=\"ds-btn ds-btn--line\" href=\"#\"><svg class=\"ds-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M20 12H5M11 6l-6 6 6 6\"/></svg><span>Back to destinations</span></a>",
+      "css": ".ds-btn { display: inline-flex; align-items: center; gap: 0.6rem; font-family: var(--f-print); font-size: var(--t-s); font-weight: 600; line-height: 1.2; text-decoration: none; color: var(--mount-ink); background: var(--mount); border: 1px solid var(--mount); border-radius: 5px; padding: 0.85rem 1.15rem; cursor: pointer; transition: background-color 180ms var(--out), transform 180ms var(--out); } .ds-btn:hover { background: var(--room); } .ds-btn:active { transform: translateY(1px); } .ds-btn--line { color: var(--ink); background: transparent; border-color: var(--ink); } .ds-btn--line:hover { background: var(--ink); color: var(--table-lit); } .ds-icon { width: 1.05em; height: 1.05em; flex: none; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; } .ds-btn:focus-visible { outline: 2px solid var(--pencil); outline-offset: 3px; border-radius: 2px; } "
+    },
+    {
+      "name": "Button in the Room",
+      "kind": "button",
+      "refersTo": "button-on-dark",
+      "description": "The primary button inside the viewer and the footer, on the dark ground.",
+      "html": "<div class=\"ds-room\"><a class=\"ds-btn ds-btn--dark\" href=\"#\"><span>Read the guide</span><svg class=\"ds-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12h15M13 6l6 6-6 6\"/></svg></a></div>",
+      "css": ".ds-room { background: var(--room); padding: 1.5rem; } .ds-btn { display: inline-flex; align-items: center; gap: 0.6rem; font-family: var(--f-print); font-size: var(--t-s); font-weight: 600; line-height: 1.2; text-decoration: none; color: var(--mount-ink); background: var(--mount); border: 1px solid var(--mount); border-radius: 5px; padding: 0.85rem 1.15rem; cursor: pointer; transition: background-color 180ms var(--out), transform 180ms var(--out); } .ds-btn:hover { background: var(--room); } .ds-btn:active { transform: translateY(1px); } .ds-btn--dark { color: var(--room); background: var(--mount-ink); border-color: var(--mount-ink); } .ds-btn--dark:hover { background: var(--table-lit); } .ds-icon { width: 1.05em; height: 1.05em; flex: none; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; } .ds-btn:focus-visible { outline: 2px solid var(--pencil); outline-offset: 3px; border-radius: 2px; } "
+    },
+    {
+      "name": "Table Edge Navigation",
+      "kind": "nav",
+      "refersTo": "menu-button",
+      "description": "The name, the five-item menu and the language switch along the top of the table.",
+      "html": "<header class=\"ds-edge\"><a class=\"ds-name\" href=\"#\">tuan photography <span>陳亮元</span></a><nav class=\"ds-menu\"><ul><li><a href=\"#\" aria-current=\"page\">Gallery</a></li><li><a href=\"#\">Destinations</a></li><li><a href=\"#\">About</a></li></ul><div class=\"ds-lang\"><button type=\"button\" aria-pressed=\"true\">EN</button><i></i><button type=\"button\" aria-pressed=\"false\">中文</button></div></nav></header>",
+      "css": ".ds-edge { display: flex; align-items: center; gap: var(--s-3); padding-block: 1.15rem; font-family: var(--f-print); color: var(--ink); } .ds-name { display: inline-flex; align-items: baseline; gap: 0.6rem; text-decoration: none; color: inherit; font-weight: 650; font-size: var(--t-m); letter-spacing: -0.012em; white-space: nowrap; } .ds-name span { font-weight: 600; letter-spacing: 0.08em; font-size: 0.94em; } .ds-menu { margin-left: auto; display: flex; align-items: center; gap: 2rem; } .ds-menu ul { display: flex; gap: 1.9rem; margin: 0; padding: 0; list-style: none; } .ds-menu a { font-size: var(--t-s); color: inherit; text-decoration: none; padding-block: 0.35rem; white-space: nowrap; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1.5px no-repeat; transition: background-size 260ms var(--out); } .ds-menu a:hover, .ds-menu a[aria-current=\"page\"] { background-size: 100% 1.5px; } .ds-lang { display: flex; align-items: center; gap: 0.15rem; font-size: var(--t-s); } .ds-lang button { font: inherit; color: var(--ink-2); background: none; border: 0; padding: 0.35rem 0.45rem; cursor: pointer; border-radius: 3px; } .ds-lang button[aria-pressed=\"true\"] { color: var(--ink); font-weight: 650; } .ds-lang i { width: 1px; height: 0.95em; background: var(--hair); } .ds-edge :focus-visible { outline: 2px solid var(--pencil); outline-offset: 3px; border-radius: 2px; } "
+    },
+    {
+      "name": "Slide Mount",
+      "kind": "card",
+      "refersTo": "slide-mount",
+      "description": "One photograph in a graphite mount: where, the window, the name by hand. Shown here already picked, with the pencil ring.",
+      "html": "<a class=\"ds-slide ds-is-picked\" href=\"#\"><span class=\"ds-slide__mount\"><span class=\"ds-slide__where\"><span>Barcelona, Spain</span></span><span class=\"ds-slide__window\"><img src=\"images/web/640/spain-bunkers-carmel-sunset.jpg\" width=\"2200\" height=\"1466\" alt=\"Barcelona and the Sagrada Família seen from Bunkers del Carmel at golden hour\"><svg class=\"ds-slide__ring\" viewBox=\"0 0 110 114\" preserveAspectRatio=\"none\" aria-hidden=\"true\"><path pathLength=\"1\" vector-effect=\"non-scaling-stroke\" d=\"M58 5C31 3 8 22 5 52c-3 31 20 55 50 57 29 2 50-20 51-51C107 27 86 6 55 7c-9 0-17 2-24 6\"/></svg></span><span class=\"ds-slide__foot\"><span class=\"ds-slide__place\">Bunkers del Carmel</span></span></span></a>",
+      "css": ".ds-slide { container-type: inline-size; display: block; width: 22rem; max-width: 100%; color: var(--mount-ink); text-decoration: none; position: relative; font-family: var(--f-print); } .ds-slide__mount { display: grid; grid-template-rows: minmax(2.2rem, 11cqi) 84cqi minmax(2.6rem, 11cqi); justify-items: center; align-items: center; background: var(--mount); border-radius: clamp(4px, 1.6cqi, 12px); box-shadow: inset 0 1px 0 var(--mount-lip), 0 0.4cqi 0.9cqi oklch(20% 0.01 235 / 0.28), 0 2cqi 4cqi -1.4cqi oklch(20% 0.01 235 / 0.4); transition: transform 320ms var(--out), box-shadow 320ms var(--out); } a.ds-slide:hover .ds-slide__mount { transform: translateY(-0.7cqi); box-shadow: inset 0 1px 0 var(--mount-lip), 0 0.6cqi 1.2cqi oklch(20% 0.01 235 / 0.26), 0 4cqi 6cqi -2cqi oklch(20% 0.01 235 / 0.45); } .ds-slide__window { grid-row: 2; position: relative; width: 84cqi; background: var(--room); box-shadow: 0 0 0 1px oklch(0% 0 0 / 0.55), 0 0 3cqi oklch(100% 0 0 / 0.08); } .ds-slide__window img { display: block; width: 100%; height: auto; } .ds-slide__where, .ds-slide__foot { width: 84cqi; display: flex; justify-content: space-between; gap: 3cqi; min-height: 0; } .ds-slide__where { grid-row: 1; align-self: end; align-items: end; padding-bottom: clamp(0.35rem, 1.8cqi, 0.8rem); font-size: clamp(0.75rem, 3cqi, 0.9375rem); color: var(--mount-ink-2); line-height: 1.15; } .ds-slide__foot { grid-row: 3; align-self: start; align-items: start; padding-top: clamp(0.35rem, 1.8cqi, 0.8rem); } .ds-slide__place { font-family: var(--f-hand); font-size: clamp(0.875rem, 4.4cqi, 1.6rem); line-height: 1.08; } .ds-slide__ring { position: absolute; inset: -7% -5%; width: 110%; height: 114%; overflow: visible; pointer-events: none; fill: none; stroke: var(--pencil); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: 0; } .ds-is-picked .ds-slide__ring { opacity: 1; stroke-dashoffset: 0; transition: stroke-dashoffset 700ms var(--out); } .ds-slide:focus-visible { outline: 2px solid var(--pencil); outline-offset: 3px; border-radius: 2px; } "
+    },
+    {
+      "name": "Empty Mount",
+      "kind": "card",
+      "refersTo": "slide-window-empty",
+      "description": "Stands in for work that does not exist yet. The table shows through an unlit window.",
+      "html": "<div class=\"ds-slide ds-slide--empty\"><span class=\"ds-slide__mount\"><span class=\"ds-slide__where\"></span><span class=\"ds-slide__window\"></span><span class=\"ds-slide__foot\"><span class=\"ds-slide__place\">Nothing here yet</span></span></span></div>",
+      "css": ".ds-slide { container-type: inline-size; display: block; width: 15rem; max-width: 100%; color: var(--mount-ink); text-decoration: none; position: relative; font-family: var(--f-print); } .ds-slide__mount { display: grid; grid-template-rows: minmax(2.2rem, 11cqi) 84cqi minmax(2.6rem, 11cqi); justify-items: center; align-items: center; background: var(--mount); border-radius: clamp(4px, 1.6cqi, 12px); box-shadow: inset 0 1px 0 var(--mount-lip), 0 0.4cqi 0.9cqi oklch(20% 0.01 235 / 0.28), 0 2cqi 4cqi -1.4cqi oklch(20% 0.01 235 / 0.4); transition: transform 320ms var(--out), box-shadow 320ms var(--out); } a.ds-slide:hover .ds-slide__mount { transform: translateY(-0.7cqi); box-shadow: inset 0 1px 0 var(--mount-lip), 0 0.6cqi 1.2cqi oklch(20% 0.01 235 / 0.26), 0 4cqi 6cqi -2cqi oklch(20% 0.01 235 / 0.45); } .ds-slide__window { grid-row: 2; position: relative; width: 84cqi; background: var(--room); box-shadow: 0 0 0 1px oklch(0% 0 0 / 0.55), 0 0 3cqi oklch(100% 0 0 / 0.08); } .ds-slide__window img { display: block; width: 100%; height: auto; } .ds-slide__where, .ds-slide__foot { width: 84cqi; display: flex; justify-content: space-between; gap: 3cqi; min-height: 0; } .ds-slide__where { grid-row: 1; align-self: end; align-items: end; padding-bottom: clamp(0.35rem, 1.8cqi, 0.8rem); font-size: clamp(0.75rem, 3cqi, 0.9375rem); color: var(--mount-ink-2); line-height: 1.15; } .ds-slide__foot { grid-row: 3; align-self: start; align-items: start; padding-top: clamp(0.35rem, 1.8cqi, 0.8rem); } .ds-slide__place { font-family: var(--f-hand); font-size: clamp(0.875rem, 4.4cqi, 1.6rem); line-height: 1.08; } .ds-slide--empty .ds-slide__mount { background: color-mix(in oklch, var(--mount) 88%, var(--table)); } .ds-slide--empty .ds-slide__window { aspect-ratio: 3 / 2; background: var(--table-edge); box-shadow: 0 0 0 1px oklch(0% 0 0 / 0.5), inset 0 0.6cqi 3cqi oklch(40% 0.01 220 / 0.3); } .ds-slide--empty .ds-slide__place { color: var(--mount-ink-2); }"
+    },
+    {
+      "name": "Ruled Row",
+      "kind": "custom",
+      "refersTo": "",
+      "description": "A guide or place in a list: name, quiet note with figures, action. The whole row is the link.",
+      "html": "<div class=\"ds-rows\"><a class=\"ds-row\" href=\"#\"><span class=\"ds-row__name\">Barcelona</span><span class=\"ds-row__note\">Spain · 11 photo spots · 4 days · travelled July 2026</span><span class=\"ds-row__end\"><span>Open the guide</span><svg class=\"ds-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12h15M13 6l6 6-6 6\"/></svg></span></a></div>",
+      "css": ".ds-rows { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.6fr) auto; column-gap: var(--s-4); border-top: 1px solid var(--ink); font-family: var(--f-print); color: var(--ink); } .ds-row { grid-column: 1 / -1; display: grid; grid-template-columns: subgrid; align-items: center; padding-block: 1.35rem; border-bottom: 1px solid var(--hair); text-decoration: none; color: inherit; } .ds-row__name { font-size: var(--t-xl); font-weight: 700; letter-spacing: -0.025em; line-height: 1.05; } .ds-row__note { color: var(--ink-2); font-variant-numeric: tabular-nums lining-nums; } .ds-row__end { justify-self: end; display: inline-flex; align-items: center; gap: 0.5rem; font-size: var(--t-s); font-weight: 600; white-space: nowrap; } .ds-row:hover .ds-row__name { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.14em; } .ds-icon { width: 1.05em; height: 1.05em; flex: none; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; } .ds-row:focus-visible { outline: 2px solid var(--pencil); outline-offset: 3px; border-radius: 2px; } "
+    },
+    {
+      "name": "Sheet",
+      "kind": "custom",
+      "refersTo": "",
+      "description": "A comparison table in a guide. Ruled, no fills; the recommended cell is marked by weight only.",
+      "html": "<div class=\"ds-sheet-wrap\"><table class=\"ds-sheet\"><caption>Photo spots</caption><thead><tr><th>Spot</th><th>Best time</th><th>Notes</th></tr></thead><tbody><tr><td>Bunkers del Carmel</td><td class=\"ds-t ds-best\">Sunset · 21:25</td><td>360° city panorama.</td></tr><tr><td>Arc de Triomf</td><td class=\"ds-t\">Dusk</td><td>Warm brick glows at dusk.</td></tr></tbody></table></div>",
+      "css": ".ds-sheet-wrap { overflow-x: auto; border-top: 1px solid var(--ink); font-family: var(--f-print); color: var(--ink); } .ds-sheet { width: 100%; border-collapse: collapse; font-size: var(--t-s); line-height: 1.45; } .ds-sheet caption { caption-side: top; text-align: left; font-weight: 650; padding-block: 0.8rem 0.5rem; } .ds-sheet th, .ds-sheet td { text-align: left; vertical-align: top; padding: 0.75rem 1.1rem 0.75rem 0; border-bottom: 1px solid var(--hair); } .ds-sheet th { font-weight: 650; color: var(--ink-2); font-size: var(--t-xs); white-space: nowrap; } .ds-sheet td:first-child { font-weight: 650; min-width: 9.5rem; } .ds-sheet .ds-best { font-weight: 650; } .ds-sheet .ds-t { white-space: nowrap; font-variant-numeric: tabular-nums lining-nums; }"
+    },
+    {
+      "name": "Note",
+      "kind": "card",
+      "refersTo": "note",
+      "description": "A boxed aside in a guide, with its heading written by hand.",
+      "html": "<div class=\"ds-note\"><h3>Park Güell, the bus-stop trick</h3><p>Ride one more stop and walk back downhill to the entrance.</p></div>",
+      "css": ".ds-note { padding: 1.15rem 1.35rem 1.3rem; background: var(--table-lit); border: 1px solid var(--hair); border-radius: 4px; font-family: var(--f-print); font-size: var(--t-m); line-height: 1.55; color: var(--ink); } .ds-note h3 { margin: 0; font-family: var(--f-hand); font-weight: 400; font-size: 1.45rem; line-height: 1.25; letter-spacing: 0; } .ds-note p { margin: 0.5rem 0 0; }"
+    },
+    {
+      "name": "Viewer Data",
+      "kind": "custom",
+      "refersTo": "viewer",
+      "description": "The column beside a slide held up in the dark room: controls, the place by hand, and how it was made.",
+      "html": "<div class=\"ds-viewer\"><div class=\"ds-viewer__bar\"><div><button class=\"ds-viewer__btn\" type=\"button\" aria-label=\"Previous slide\"><svg class=\"ds-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M20 12H5M11 6l-6 6 6 6\"/></svg></button><button class=\"ds-viewer__btn\" type=\"button\" aria-label=\"Next slide\"><svg class=\"ds-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M4 12h15M13 6l6 6-6 6\"/></svg></button></div><button class=\"ds-viewer__btn\" type=\"button\" aria-label=\"Put the slide back\"><svg class=\"ds-icon\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M6 6l12 12M18 6 6 18\"/></svg></button></div><h2>Sagrada Família, inside</h2><p class=\"ds-viewer__where\">Barcelona, Spain</p><h3>How it was made</h3><dl><div><dt>Focal length</dt><dd>95mm</dd></div><div><dt>Aperture</dt><dd>f/5</dd></div><div><dt>Shutter</dt><dd>1/200s</dd></div><div><dt>ISO</dt><dd>2000</dd></div></dl></div>",
+      "css": ".ds-viewer { background: var(--room); color: var(--mount-ink); padding: 1.5rem; max-width: 23rem; font-family: var(--f-print); } .ds-viewer__bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-3); } .ds-viewer__bar div { display: flex; gap: 0.4rem; } .ds-viewer__btn { display: inline-grid; place-items: center; width: 2.75rem; height: 2.75rem; color: var(--mount-ink); background: transparent; border: 1px solid oklch(100% 0 0 / 0.22); border-radius: 5px; cursor: pointer; } .ds-viewer__btn:hover { background: oklch(100% 0 0 / 0.1); } .ds-viewer__btn .ds-icon { width: 1.2rem; height: 1.2rem; } .ds-viewer h2 { margin: 0; font-family: var(--f-hand); font-weight: 400; font-size: clamp(2rem, 1.5rem + 1.6vw, 2.9rem); line-height: 1.1; letter-spacing: 0; } .ds-viewer__where { margin: 0.35rem 0 var(--s-3); color: var(--mount-ink-2); } .ds-viewer h3 { margin: 0; font-size: var(--t-s); font-weight: 650; color: var(--mount-ink-2); } .ds-viewer dl { margin: 0.5rem 0 0; border-top: 1px solid oklch(100% 0 0 / 0.3); font-size: var(--t-s); } .ds-viewer dl div { display: grid; grid-template-columns: 7rem minmax(0, 1fr); gap: 0.75rem; padding-block: 0.55rem; border-bottom: 1px solid oklch(100% 0 0 / 0.13); } .ds-viewer dt { color: var(--mount-ink-2); } .ds-viewer dd { margin: 0; font-variant-numeric: tabular-nums lining-nums; } .ds-icon { width: 1.05em; height: 1.05em; flex: none; stroke: currentColor; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; } .ds-viewer__btn:focus-visible { outline: 2px solid var(--pencil); outline-offset: 3px; border-radius: 2px; } "
+    }
+  ],
+  "narrative": {
+    "northStar": "The Light Table",
+    "overview": "The site is a picture editor's light table. The page is a sheet of cool opal acrylic lit from below, brightest a little above the middle and falling off toward the edges. Photographs sit on it in graphite slide mounts, and they are the only things on the table that carry colour. Everything else is one of three materials: table (the lit ground and its hairline rules), mount (the dark card that holds a photograph and the lettering on it), or pencil (a single grease-pencil orange).\n\nThe system is quiet and dense in the way a working desk is. Type is a newspaper picture-desk grotesque, printed flat on the table. Place names are written on the mount by hand. Camera data is set in tabular figures and is always real, read from the photograph's own file. Work that does not exist yet is shown as an empty mount with the table showing through its window, never as a stand-in image.\n\nMotion follows one grammar: the lamp strikes once when the visitor arrives (a 1100ms flicker from the dark room to the lit table, once per session), and after that nothing moves unless the visitor picks something up. Picking up a slide turns the lamp off: the room goes dark, the photograph is held up large, and its making is read beside it. The world refuses the category's full-bleed hero slideshow over a white masonry grid, and refuses its moody dark-serif opposite. It carries no cream, no serif, no film-strip ornament and no monospaced labels.",
+    "keyCharacteristics": [
+      "A lit, near-neutral ground with a radial lamp gradient; never a flat white page.",
+      "Graphite mounts with three fixed bands: where, the window, the name.",
+      "Photographs are never cropped; the window takes the photograph's shape inside a square area.",
+      "Two hands: printed grotesque for everything typeset, a handwritten face for what is written on a mount.",
+      "One accent, grease-pencil orange, absent from every page at rest.",
+      "Lists and tables are ruled rows: one ink rule on top, hairlines between.",
+      "Both languages are first-class; Chinese has its own line-height, tracking and full-width punctuation."
+    ],
+    "rules": [
+      {
+        "name": "The One Pencil Rule",
+        "body": "Grease-pencil orange marks the slide that was last picked up and the keyboard focus ring. It appears on no page at rest. It is never a link colour, a button fill, a heading colour or a decoration.",
+        "section": "colors"
+      },
+      {
+        "name": "The Only Glow Rule",
+        "body": "Photographs are the only saturated colour on the table. Every surface, rule and letter stays near-neutral, so nothing competes with the pictures.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Grounds Rule",
+        "body": "Text on the table uses the two inks; text on a mount or in the room uses the two mount letterings. The pairs are not swapped.",
+        "section": "colors"
+      },
+      {
+        "name": "The Two Hands Rule",
+        "body": "Anything typeset is Libre Franklin. The handwritten face is used only for what a person would write by hand: a place name on a mount, the name of the slide being held up, the heading of a note, the handle in the footer. It is never used for body text, menus, buttons or data.",
+        "section": "typography"
+      },
+      {
+        "name": "The Real Figures Rule",
+        "body": "Camera data, times, dates and prices are set in tabular lining figures, and every camera value shown is read from the photograph's file. Capture clock time is not shown.",
+        "section": "typography"
+      },
+      {
+        "name": "The Plain Name Rule",
+        "body": "A title is the place's name. Descriptive detail goes in the meta line under it.",
+        "section": "typography"
+      },
+      {
+        "name": "The Full-Width Rule",
+        "body": "Chinese strings are set with full-width punctuation; numbers, times and Latin words keep their own. Headings in Chinese drop the negative tracking and open their line-height.",
+        "section": "typography"
+      },
+      {
+        "name": "The Mounts Cast Shadows Rule",
+        "body": "Only a mount casts a shadow. Text, rows, tables, notes and buttons are printed flat on the table.",
+        "section": "elevation"
+      },
+      {
+        "name": "The One Lamp Rule",
+        "body": "The lamp strike is the only entrance motion. Nothing fades, slides or reveals on scroll. Motion after arrival is a response to the visitor: a mount lifting under the pointer (320ms), a slide being picked up (460ms view transition, 420ms fade of the room), the pencil ring drawing itself (700ms), a menu underline (260ms). All use one ease-out curve, `cubic-bezier(0.16, 1, 0.3, 1)`, and all are switched off under `prefers-reduced-motion`.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do put every photograph in a mount, with where it is on the top band and its name written by hand on the bottom band.",
+      "Do let the window take the photograph's shape. Landscape fills the width of the square, portrait fills the height.",
+      "Do use an empty mount, with a plain sentence, wherever work does not exist yet.",
+      "Do take every colour from the tokens, and size everything inside a mount in container units so it scales with the mount.",
+      "Do open lists, tables and guide sections with a 1px Print Ink rule and separate rows with hairlines.",
+      "Do set camera data, times, dates and prices in tabular lining figures, and show only values read from the photograph's file.",
+      "Do write every string in both languages, with full-width punctuation and open line-height in Chinese.",
+      "Do keep one primary button per view.",
+      "Do switch off every transition and the lamp strike under `prefers-reduced-motion`."
+    ],
+    "donts": [
+      "Don't use grease-pencil orange for anything except the picked slide's ring and the focus ring.",
+      "Don't crop, round or overlay a photograph, and don't set text on top of one.",
+      "Don't use a full-bleed hero, a slideshow or a masonry grid.",
+      "Don't add cream or warm paper tones, serif type, film-strip ornament or monospaced labels.",
+      "Don't use the handwritten face for body text, menus, buttons or data.",
+      "Don't add entrance animations, scroll reveals or looping motion. The lamp strikes once and that is all.",
+      "Don't put shadows on text, rows, tables, notes or buttons.",
+      "Don't fill an empty place with a stand-in image, an invented guide or invented camera data.",
+      "Don't mark emphasis with colour. Use weight 650."
+    ]
+  },
+  "openDecisions": [
+    {
+      "name": "Typeface hosting",
+      "status": "waiting on the owner",
+      "body": "Libre Franklin, Noto Sans TC and Iansui are loaded from fonts.googleapis.com on every page. Hosting the files with the site needs the owner's permission to download them."
+    },
+    {
+      "name": "About biography",
+      "status": "waiting on the owner",
+      "body": "The About text is copy carried over from the previous site and has not been confirmed by the owner as his own words."
+    }
+  ]
+}

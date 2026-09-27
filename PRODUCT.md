@@ -54,7 +54,8 @@ to stand there.
 
 ## Capabilities and Constraints
 
-- Plain static HTML, CSS and JavaScript. No framework, no build step.
+- Plain static HTML, CSS and JavaScript. No framework. The pages are written out by
+  `tools/build.py` from `data/site.json` and `content/`; nothing runs on a server.
 - Bilingual switch on every page. Shared strings live in `js/main.js` (`i18n.en` / `i18n.zh`),
   per-page strings in a `window.pageI18n` block. Every user-facing string exists in both
   languages.

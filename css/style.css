@@ -109,11 +109,13 @@ html.strike body::after {
 
 ::selection { background: var(--ink); color: var(--table-lit); }
 
+/* focus: ink on the lit table, pencil on anything dark (mounts, the room) */
 :focus-visible {
-  outline: 2px solid var(--pencil);
+  outline: 2px solid var(--ink);
   outline-offset: 3px;
   border-radius: 2px;
 }
+.slide:focus-visible, .viewer :focus-visible, .close :focus-visible { outline-color: var(--pencil); }
 
 html { scrollbar-color: var(--ink-2) var(--table-edge); }
 

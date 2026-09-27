@@ -17,6 +17,9 @@ freedom on the visual direction**, to compare side by side with the original.
 - Still binding here: plain place-name titles, the bilingual rule, the photo rules, real content
   only. The 15 country pages without content stay empty shells.
 - Do not merge this branch into `main` unless he says so after comparing.
+- **The design system for this folder is `DESIGN.md`**, not the tables below. Pages here are
+  generated: edit `data/site.json` or `content/`, then run `python3 tools/build.py`. Don't
+  hand-edit the generated HTML.
 
 ## The brief (owner-decided — these win over any generic guidance)
 

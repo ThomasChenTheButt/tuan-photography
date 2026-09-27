@@ -26,7 +26,7 @@ SIZES = (640, 1280)
 SRGB = "/System/Library/ColorSync/Profiles/sRGB Profile.icc"
 
 FONTS = ("https://fonts.googleapis.com/css2?family=Iansui&family=Libre+Franklin:"
-         "ital,wght@0,400..800;1,400&family=Noto+Sans+TC:wght@400;600;800&display=swap")
+         "ital,wght@0,400..800;1,400&family=Noto+Sans+TC:wght@400..800&display=swap")
 
 ICONS = """<svg width="0" height="0" class="sr" aria-hidden="true" focusable="false">
   <symbol id="i-right" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
