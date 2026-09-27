@@ -77,6 +77,12 @@ folder and **no longer exists anywhere** (confirmed 2026-08-08 by a full-disk se
 many of them at once, write a fresh script **inside the repo** so it survives — don't put it in
 a scratchpad again.
 
+**Site icon — "PT"** (photography tuan): same family as FinTuan's FT mark — rounded square,
+thin P in `--paper`, bold T in `--frame-gold`, on `--darkroom`. Files live in `icons/`, plus
+`favicon.ico` and `site.webmanifest` at the root. Don't edit the images by hand: change
+`tools/icons.py` and rerun it — it regenerates every size and adds the `<head>` tags to any
+new page that lacks them. The header wordmark (`.logo`) is separate and unchanged.
+
 ## Bilingual rule
 
 Shared strings live in `js/main.js` (`i18n.en` / `i18n.zh`); per-page strings in a
