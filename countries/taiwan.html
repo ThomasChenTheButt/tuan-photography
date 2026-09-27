@@ -1,93 +1,116 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-root="../">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Taiwan — tuan photography 陳亮元</title>
+  <meta name="description" content="Taiwan: photographs and guides by 陳亮元 Thomas Chen.">
+  <meta name="theme-color" content="#eef0ef">
+  <script>try{if(!sessionStorage.getItem('lamp')){document.documentElement.classList.add('strike');sessionStorage.setItem('lamp','1')}}catch(e){}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+TC:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Iansui&family=Libre+Franklin:ital,wght@0,400..800;1,400&family=Noto+Sans+TC:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-
-  <header class="site-header">
-    <nav class="nav">
-      <a class="logo" href="../index.html">
-        <span class="aperture" aria-hidden="true"></span>
-        <span>tuan photography</span>
-        <span class="logo-cjk">陳亮元</span>
-      </a>
-      <button class="nav-toggle" aria-label="Menu" aria-expanded="false">☰</button>
-      <ul class="nav-links">
-        <li><a href="../destinations.html" class="active" data-i18n="navDestinations">Destinations</a></li>
+<svg width="0" height="0" class="sr" aria-hidden="true" focusable="false">
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M20 12H5M11 6l-6 6 6 6"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M8 16 18 6M9 6h9v9"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><circle cx="12" cy="12" r="4"/><path d="M17.2 6.8h.01"/></symbol>
+</svg>
+<header class="wrap edge">
+  <a class="name" href="../index.html">tuan photography <span>陳亮元</span></a>
+  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu"><svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg><span data-i18n="navMenu">Menu</span></button>
+  <nav class="menu" id="menu" aria-label="Site">
+    <ul>
         <li><a href="../gallery.html" data-i18n="navGallery">Gallery</a></li>
+        <li><a href="../destinations.html" data-i18n="navDestinations" aria-current="page">Destinations</a></li>
         <li><a href="../blog.html" data-i18n="navBlog">Blog</a></li>
         <li><a href="../skills.html" data-i18n="navSkills">Skills</a></li>
         <li><a href="../about.html" data-i18n="navAbout">About</a></li>
-      </ul>
-      <div class="lang-switch" role="group" aria-label="Language">
-        <button id="lang-en" class="on">EN</button>
-        <button id="lang-zh">中</button>
-      </div>
-    </nav>
-  </header>
-
-  <div class="page-header">
+    </ul>
+    <a class="ig" href="https://www.instagram.com/tuan_1127/" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-ig"/></svg><span data-i18n="footInstagram">Instagram</span></a>
+    <div class="lang" role="group" aria-label="Language">
+      <button id="lang-en" type="button" aria-pressed="true" lang="en">EN</button><i></i><button id="lang-zh" type="button" aria-pressed="false" lang="zh-Hant">中文</button>
+    </div>
+  </nav>
+</header>
+<main>
+<div class="wrap">
+  <header class="page-top">
+    <ol class="path"><li><a href="../destinations.html" data-i18n="pathDest">Destinations</a></li><li><a href="../continents/asia.html" data-i18n="pathCont">Asia</a></li></ol>
     <h1 data-i18n="pTitle">Taiwan</h1>
     <p data-i18n="pSub">Home base — city ridgelines, night markets, izakaya nights.</p>
-    <p class="exif" style="margin-top: 10px;" data-i18n="statLabel">Ongoing</p>
-  </div>
-
-  <section class="section" style="padding-top: 24px;">
-    <div class="wrap">
-      <div class="empty-state reveal">
-        <span class="exif" data-i18n="wipLabel">Guides in progress</span>
+    <p class="when num" data-i18n="statLabel">Ongoing</p>
+  </header>
+  <section class="part">
+    <div class="blank">
+      <div class="slide slide--l slide--empty">
+  <span class="slide__mount">
+    <span class="slide__where"></span>
+    <span class="slide__window"></span>
+    <span class="slide__foot"><span class="slide__place" data-i18n="wipLabel">Guide in progress</span></span>
+  </span>
+</div>
+      <div>
         <p data-i18n="wipText">The trip notes for this country are being turned into full guides — photo spots, itineraries, and all.</p>
-        <a class="btn" href="../destinations.html" data-i18n="backBtn">Back to destinations</a>
+        <a class="btn btn--line" href="../destinations.html"><svg class="icon" aria-hidden="true"><use href="#i-left"/></svg><span data-i18n="backBtn">Back to destinations</span></a>
       </div>
     </div>
   </section>
+</div>
+</main>
 
-  <footer class="site-footer">
-    <div class="wrap footer-inner">
-      <a class="logo" href="../index.html">
-        <span class="aperture" aria-hidden="true"></span>
-        <span>tuan photography</span>
-        <span class="logo-cjk">陳亮元</span>
-      </a>
-      <ul class="footer-links">
-        <li><a href="../destinations.html" data-i18n="navDestinations">Destinations</a></li>
+<footer class="close">
+  <div class="wrap">
+    <div class="follow">
+      <h2 data-i18n="followTitle">@tuan_1127</h2>
+      <a class="btn" href="https://www.instagram.com/tuan_1127/" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-ig"/></svg><span data-i18n="followCta">Follow on Instagram</span></a>
+    </div>
+    <div class="foot">
+      <ul>
         <li><a href="../gallery.html" data-i18n="navGallery">Gallery</a></li>
+        <li><a href="../destinations.html" data-i18n="navDestinations">Destinations</a></li>
         <li><a href="../blog.html" data-i18n="navBlog">Blog</a></li>
         <li><a href="../skills.html" data-i18n="navSkills">Skills</a></li>
         <li><a href="../about.html" data-i18n="navAbout">About</a></li>
-        <li><a href="#" data-i18n="footInstagram">Instagram</a></li>
       </ul>
-      <p class="footer-note" data-i18n="footNote">© 2026 tuan photography 陳亮元 — All photographs are my own.</p>
+      <p data-i18n="footNote">© 2026 tuan photography 陳亮元 — All photographs are my own.</p>
     </div>
-  </footer>
+  </div>
+</footer>
 
-  <script>
-  window.pageI18n = {
-  "en": {
-    "pTitle": "Taiwan",
-    "pSub": "Home base — city ridgelines, night markets, izakaya nights.",
-    "statLabel": "Ongoing",
-    "wipLabel": "Guides in progress",
-    "wipText": "The trip notes for this country are being turned into full guides — photo spots, itineraries, and all.",
-    "backBtn": "Back to destinations"
-  },
-  "zh": {
-    "pTitle": "台灣",
-    "pSub": "大本營——城市稜線、夜市,與居酒屋之夜。",
-    "statLabel": "持續拍攝中",
-    "wipLabel": "指南製作中",
-    "wipText": "這個國家的旅行筆記正在整理成完整指南——攝影點、行程,一樣不少。",
-    "backBtn": "回到目的地"
-  }
+<script type="application/json" id="slides-data">[]</script>
+<script>
+window.pageI18n = {
+ "en": {
+  "pTitle": "Taiwan",
+  "pSub": "Home base — city ridgelines, night markets, izakaya nights.",
+  "statLabel": "Ongoing",
+  "pathDest": "Destinations",
+  "pathCont": "Asia",
+  "wipLabel": "Guide in progress",
+  "wipText": "The trip notes for this country are being turned into full guides — photo spots, itineraries, and all.",
+  "backBtn": "Back to destinations",
+  "docTitle": "Taiwan — tuan photography 陳亮元"
+ },
+ "zh": {
+  "pTitle": "台灣",
+  "pSub": "大本營——城市稜線、夜市,與居酒屋之夜。",
+  "statLabel": "持續拍攝中",
+  "pathDest": "目的地",
+  "pathCont": "亞洲",
+  "wipLabel": "攻略製作中",
+  "wipText": "這個國家的旅行筆記正在整理成完整指南——攝影點、行程,一樣不少。",
+  "backBtn": "回到目的地",
+  "docTitle": "台灣 — tuan photography 陳亮元"
+ }
 };
-  </script>
-  <script src="../js/main.js"></script>
+</script>
+<script src="../js/main.js"></script>
 </body>
 </html>

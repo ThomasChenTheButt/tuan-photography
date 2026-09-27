@@ -1,121 +1,72 @@
 /* ==========================================================
-   TRAVEL LIKE A PHOTOGRAPHER — site behavior
-   1. Mobile menu   2. EN/中文 switcher   3. Scroll reveals
+   tuan photography 陳亮元 — site behavior
+   1. EN / 中文 switcher   2. Menu   3. Picking a slide up
+   4. Guide contents marker
    ========================================================== */
 
-/* ---------- 1. Mobile menu ---------- */
-const toggle = document.querySelector('.nav-toggle');
-const links = document.querySelector('.nav-links');
-if (toggle && links) {
-  toggle.addEventListener('click', () => {
-    const open = links.classList.toggle('open');
-    toggle.setAttribute('aria-expanded', open);
-  });
-}
-
-/* ---------- 2. Language switcher ----------
-   Every translated element has a data-i18n="key" attribute.
+/* ---------- 1. Language switcher ----------
+   Every translated element has data-i18n="key".
+   data-i18n-html is the same but keeps bold text.
+   data-i18n-alt / data-i18n-aria translate an image's alt text
+   and a control's spoken label.
    Add new text in BOTH dictionaries below. */
 
 const i18n = {
   en: {
-    siteName: 'tuan photography',
-    navDestinations: 'Destinations',
     navGallery: 'Gallery',
+    navDestinations: 'Destinations',
     navBlog: 'Blog',
     navSkills: 'Skills',
     navAbout: 'About',
-    heroTitle: 'See the world through the viewfinder.',
-    heroSub: "Real itineraries and exact photo spots — so you travel like you've been here before.",
-    heroCta: 'Browse the guides',
-    heroExifNote: 'Aoraki / Mount Cook · New Zealand',
-
-    guidesTitle: 'Latest field guides',
-    guidesLabel: 'Vol. 01 — Guides',
-    g1cat: 'Greece · Full Guide',
-    g1title: 'Santorini for Photographers: 3 Days, 9 Shots, Zero Crowds',
-    g1desc: 'Where to stand at sunrise in Oia before the tour buses arrive, which rooftops you can actually access, and the one village most photographers skip.',
-    g2cat: 'Japan · Full Guide',
-    g2title: 'Kyoto in Autumn: A Shot List for Temple Season',
-    g2desc: 'Timing the maple color, the temples that allow tripods, and where to eat between golden hours.',
-    g3cat: 'Coming soon',
-    g3title: 'Your next trip goes here',
-    g3desc: "This card is a placeholder — we'll fill it with a real trip from your planning notes.",
-
-    methodTitle: 'How every guide is made',
-    methodLabel: 'The method',
-    m1no: 'Step 01 — Research',
-    m1title: 'Weeks of homework',
-    m1desc: 'Every trip starts long before the flight: scouting locations, light direction, seasons, opening hours, and the food worth traveling for.',
-    m2no: 'Step 02 — Shoot',
-    m2title: 'Boots on the ground',
-    m2desc: 'I walk the plan, shoot the shot list, and note what actually worked — and what the blogs got wrong.',
-    m3no: 'Step 03 — Share',
-    m3title: "The guide you're reading",
-    m3desc: 'The research, the route, and the exact spots — published so your trip starts where mine ended.',
-
-    aboutTitle: 'The person behind the lens',
-    aboutLede: "I'm a photographer who plans trips the way other people plan weddings — spreadsheets, maps, shot lists, and food research included.",
-    aboutBody: "This site is everything I wish existed when I started: honest guides that tell you where the photo was taken, when to be there, and what to do with the rest of your day. (We'll replace this with your real story.)",
-    aboutCta: 'My story',
-    portraitCaption: 'self-portrait · somewhere far away',
-
-    newsTitle: 'New guides, straight from the field',
-    newsSub: "One email when a new guide is published. No spam — a photographer's word.",
-    newsCta: 'Subscribe',
-
+    navMenu: 'Menu',
     footInstagram: 'Instagram',
-    footNote: '© 2026 tuan photography 陳亮元 — All photographs are my own.'
+    footNote: '© 2026 tuan photography 陳亮元 — All photographs are my own.',
+    followTitle: '@tuan_1127',
+    followCta: 'Follow on Instagram',
+    slideHow: 'How this was made',
+    slideOpen: 'how this was made',
+    vMaking: 'How it was made',
+    vCamera: 'Camera',
+    vLens: 'Lens',
+    vFocal: 'Focal length',
+    vAperture: 'Aperture',
+    vShutter: 'Shutter',
+    vIso: 'ISO',
+    vBest: 'Best time',
+    vGuide: 'Read the guide',
+    vNoGuide: 'The guide for this place is not written yet.',
+    vMap: 'Open the map pin',
+    vClose: 'Put the slide back',
+    vPrev: 'Previous slide',
+    vNext: 'Next slide'
   },
-
   zh: {
-    siteName: 'tuan photography',
-    navDestinations: '目的地',
     navGallery: '作品集',
+    navDestinations: '目的地',
     navBlog: '網誌',
     navSkills: '攝影技巧',
     navAbout: '關於我',
-    heroTitle: '透過觀景窗看世界。',
-    heroSub: '真實行程與精確機位——讓你的旅行,像已經來過一樣。',
-    heroCta: '瀏覽指南',
-    heroExifNote: '庫克山 · 紐西蘭',
-
-    guidesTitle: '最新旅拍指南',
-    guidesLabel: 'Vol. 01 — 指南',
-    g1cat: '希臘 · 完整指南',
-    g1title: '攝影師的聖托里尼:3 天、9 個機位、避開人潮',
-    g1desc: '日出時該站在 Oia 的哪個位置、哪些屋頂真的能上去,以及大多數攝影師錯過的那座村莊。',
-    g2cat: '日本 · 完整指南',
-    g2title: '秋天的京都:寺廟紅葉季拍攝清單',
-    g2desc: '楓葉變色的時間點、允許腳架的寺廟,以及兩個黃金時刻之間該吃什麼。',
-    g3cat: '即將推出',
-    g3title: '你的下一趟旅程',
-    g3desc: '這是佔位卡片——我們會用你規劃筆記中的真實行程填滿它。',
-
-    methodTitle: '每份指南的誕生過程',
-    methodLabel: '製作方法',
-    m1no: '步驟 01 — 研究',
-    m1title: '出發前的數週功課',
-    m1desc: '每趟旅程早在班機起飛前就開始:勘景、光線方向、季節、開放時間,還有值得專程前往的美食。',
-    m2no: '步驟 02 — 拍攝',
-    m2title: '親自走一遍',
-    m2desc: '我照著計畫走、拍完清單上的每一張,並記下真正有用的資訊——以及部落格寫錯的地方。',
-    m3no: '步驟 03 — 分享',
-    m3title: '你正在讀的這份指南',
-    m3desc: '研究、路線、精確機位——全部公開,讓你的旅程從我的終點開始。',
-
-    aboutTitle: '鏡頭後面的人',
-    aboutLede: '我是個攝影師,規劃旅行像別人籌備婚禮一樣認真——試算表、地圖、拍攝清單、美食研究,一樣都不少。',
-    aboutBody: '這個網站是我剛起步時最希望存在的東西:誠實的指南,告訴你照片在哪裡拍、什麼時候去,以及一天剩下的時間該做什麼。(之後會換成你的真實故事。)',
-    aboutCta: '我的故事',
-    portraitCaption: '自拍 · 在遙遠的某處',
-
-    newsTitle: '新指南,直送你的信箱',
-    newsSub: '新指南發佈時寄一封信給你。不濫發——攝影師的承諾。',
-    newsCta: '訂閱',
-
+    navMenu: '選單',
     footInstagram: 'Instagram',
-    footNote: '© 2026 tuan photography 陳亮元——所有照片皆為本人拍攝。'
+    footNote: '© 2026 tuan photography 陳亮元——所有照片皆為本人拍攝。',
+    followTitle: '@tuan_1127',
+    followCta: '在 Instagram 追蹤',
+    slideHow: '這張怎麼拍',
+    slideOpen: '這張怎麼拍',
+    vMaking: '這張怎麼拍',
+    vCamera: '相機',
+    vLens: '鏡頭',
+    vFocal: '焦距',
+    vAperture: '光圈',
+    vShutter: '快門',
+    vIso: 'ISO',
+    vBest: '最佳時間',
+    vGuide: '閱讀攻略',
+    vNoGuide: '這個地方的攻略還沒寫。',
+    vMap: '打開地圖座標',
+    vClose: '把片子放回去',
+    vPrev: '上一張',
+    vNext: '下一張'
   }
 };
 
@@ -126,49 +77,209 @@ if (window.pageI18n) {
   Object.assign(i18n.zh, window.pageI18n.zh || {});
 }
 
-function setLang(lang) {
+let lang = 'en';
+const t = key => i18n[lang][key] ?? i18n.en[key] ?? '';
+
+function setLang(next) {
+  lang = next === 'zh' ? 'zh' : 'en';
   const dict = i18n[lang];
   document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.getAttribute('data-i18n');
-    if (dict[key]) el.textContent = dict[key];
+    const v = dict[el.dataset.i18n];
+    if (v !== undefined) el.textContent = v;
   });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const v = dict[el.dataset.i18nHtml];
+    if (v !== undefined) el.innerHTML = v;
+  });
+  document.querySelectorAll('[data-i18n-alt]').forEach(el => {
+    const v = dict[el.dataset.i18nAlt];
+    if (v !== undefined) el.alt = v;
+  });
+  document.querySelectorAll('[data-i18n-aria]').forEach(el => {
+    const v = dict[el.dataset.i18nAria];
+    if (v !== undefined) el.setAttribute('aria-label', v);
+  });
+  if (dict.docTitle) document.title = dict.docTitle;
   document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : 'en';
-  document.getElementById('lang-en').classList.toggle('on', lang === 'en');
-  document.getElementById('lang-zh').classList.toggle('on', lang === 'zh');
-  localStorage.setItem('tlap-lang', lang);
+  document.getElementById('lang-en')?.setAttribute('aria-pressed', String(lang === 'en'));
+  document.getElementById('lang-zh')?.setAttribute('aria-pressed', String(lang === 'zh'));
+  try { localStorage.setItem('tlap-lang', lang); } catch (e) { /* private mode */ }
+  if (viewer?.open) renderViewer();
 }
 
 document.getElementById('lang-en')?.addEventListener('click', () => setLang('en'));
 document.getElementById('lang-zh')?.addEventListener('click', () => setLang('zh'));
 
-/* remember the visitor's choice */
-const saved = localStorage.getItem('tlap-lang');
-if (saved === 'zh') setLang('zh');
+/* ---------- 2. Menu (small screens) ---------- */
+const menuBtn = document.querySelector('.menu-btn');
+const menu = document.querySelector('.menu');
+menuBtn?.addEventListener('click', () => {
+  const open = menu.classList.toggle('open');
+  menuBtn.setAttribute('aria-expanded', String(open));
+});
 
-/* ---------- Hero parallax drift (homepage) ----------
-   The pinned cover photo slowly rises (~1/3 of scroll speed)
-   while the page content scrolls up over it at full speed. */
-const heroEl = document.querySelector('.hero');
-if (heroEl && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-  let ticking = false;
-  window.addEventListener('scroll', () => {
-    if (ticking) return;
-    ticking = true;
-    requestAnimationFrame(() => {
-      heroEl.style.transform = 'translateY(' + (-window.scrollY * 0.32) + 'px)';
-      ticking = false;
-    });
-  }, { passive: true });
+/* ---------- 3. Picking a slide up ----------
+   The slides on this page are listed in a JSON block (#slides-data).
+   Picking one turns the lamp off and shows how it was made.
+   Every slide has its own address: page.html#view-<id> */
+
+const root = document.documentElement.dataset.root || '';
+const dataEl = document.getElementById('slides-data');
+const slides = dataEl ? JSON.parse(dataEl.textContent) : [];
+const order = [...new Set([...document.querySelectorAll('[data-slide]')].map(el => el.dataset.slide))]
+  .filter(id => slides.some(s => s.id === id));
+
+let viewer = null;
+let current = null;
+
+function buildViewer() {
+  viewer = document.createElement('dialog');
+  viewer.className = 'viewer';
+  viewer.setAttribute('aria-labelledby', 'viewer-place');
+  viewer.innerHTML = `
+    <div class="viewer__bar">
+      <div>
+        <button class="viewer__btn" id="viewer-prev" type="button"><svg class="icon" aria-hidden="true"><use href="#i-left"/></svg></button>
+        <button class="viewer__btn" id="viewer-next" type="button"><svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></button>
+      </div>
+      <button class="viewer__btn" id="viewer-close" type="button"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+    </div>
+    <div class="viewer__photo"><img id="viewer-img" alt=""></div>
+    <div class="viewer__side">
+      <div>
+        <h2 id="viewer-place"></h2>
+        <p class="viewer__where" id="viewer-where"></p>
+      </div>
+      <div>
+        <h3 id="viewer-making"></h3>
+        <dl id="viewer-data"></dl>
+      </div>
+      <p class="viewer__note" id="viewer-note"></p>
+      <div class="viewer__acts" id="viewer-acts"></div>
+    </div>`;
+  document.body.append(viewer);
+  viewer.querySelector('#viewer-close').addEventListener('click', () => viewer.close());
+  viewer.querySelector('#viewer-prev').addEventListener('click', () => step(-1));
+  viewer.querySelector('#viewer-next').addEventListener('click', () => step(1));
+  viewer.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') step(-1);
+    if (e.key === 'ArrowRight') step(1);
+  });
+  viewer.addEventListener('close', () => {
+    if (location.hash.startsWith('#view-')) history.replaceState(null, '', location.pathname + location.search);
+    markPicked(current);
+    document.querySelector(`[data-slide="${current}"]`)?.focus({ preventScroll: true });
+  });
 }
 
-/* ---------- 3. Reveal on scroll ---------- */
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('in');
-      observer.unobserve(e.target);
-    }
-  });
-}, { threshold: 0.12 });
+function row(label, value) {
+  return value ? `<div><dt>${label}</dt><dd>${value}</dd></div>` : '';
+}
 
-document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+function renderViewer() {
+  const s = slides.find(x => x.id === current);
+  if (!s) return;
+  const img = viewer.querySelector('#viewer-img');
+  img.src = root + 'images/web/' + s.file;
+  img.width = s.w;
+  img.height = s.h;
+  img.alt = s.alt[lang];
+  viewer.querySelector('#viewer-place').textContent = s.place[lang];
+  viewer.querySelector('#viewer-where').textContent = s.where[lang];
+  viewer.querySelector('#viewer-making').textContent = t('vMaking');
+  viewer.querySelector('#viewer-data').innerHTML =
+    row(t('vBest'), s.best?.[lang]) +
+    row(t('vFocal'), s.focal) +
+    row(t('vAperture'), s.aperture) +
+    row(t('vShutter'), s.shutter) +
+    row(t('vIso'), s.iso) +
+    row(t('vLens'), s.lens) +
+    row(t('vCamera'), s.camera);
+  const note = viewer.querySelector('#viewer-note');
+  note.textContent = s.note?.[lang] ?? (s.guide ? '' : t('vNoGuide'));
+  note.hidden = !note.textContent;
+  const acts = [];
+  if (s.guide) {
+    acts.push(`<a class="btn" href="${root}${s.guide}#s-${s.id}">${t('vGuide')}<svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></a>`);
+  }
+  if (s.map) {
+    acts.push(`<a class="go" href="${s.map}" target="_blank" rel="noopener">${t('vMap')}<svg class="icon" aria-hidden="true"><use href="#i-out"/></svg></a>`);
+  }
+  viewer.querySelector('#viewer-acts').innerHTML = acts.join('');
+  viewer.querySelector('#viewer-close').setAttribute('aria-label', t('vClose'));
+  viewer.querySelector('#viewer-prev').setAttribute('aria-label', t('vPrev'));
+  viewer.querySelector('#viewer-next').setAttribute('aria-label', t('vNext'));
+  const many = order.length > 1;
+  viewer.querySelector('#viewer-prev').hidden = !many;
+  viewer.querySelector('#viewer-next').hidden = !many;
+}
+
+function markPicked(id) {
+  document.querySelectorAll('.slide.is-picked').forEach(el => el.classList.remove('is-picked'));
+  document.querySelectorAll(`[data-slide="${id}"]`).forEach(el => el.classList.add('is-picked'));
+}
+
+function pick(id, from) {
+  if (!slides.some(s => s.id === id)) return;
+  if (!viewer) buildViewer();
+  current = id;
+  const show = () => {
+    renderViewer();
+    if (!viewer.open) viewer.showModal();
+  };
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const thumb = from?.querySelector('img');
+  if (document.startViewTransition && thumb && !still && !viewer.open) {
+    const big = viewer.querySelector('#viewer-img');
+    thumb.style.viewTransitionName = 'picked';
+    const vt = document.startViewTransition(() => {
+      thumb.style.viewTransitionName = '';
+      big.style.viewTransitionName = 'picked';
+      show();
+    });
+    vt.finished.finally(() => { big.style.viewTransitionName = ''; });
+  } else {
+    show();
+  }
+  history.replaceState(null, '', '#view-' + id);
+}
+
+function step(d) {
+  if (order.length < 2) return;
+  const i = order.indexOf(current);
+  current = order[(i + d + order.length) % order.length];
+  renderViewer();
+  history.replaceState(null, '', '#view-' + current);
+}
+
+document.querySelectorAll('a[data-slide]').forEach(el => {
+  el.addEventListener('click', e => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey) return;
+    e.preventDefault();
+    pick(el.dataset.slide, el);
+  });
+});
+
+/* ---------- 4. Guide contents: mark the section being read ---------- */
+const tocLinks = [...document.querySelectorAll('.toc a[href^="#"]')];
+if (tocLinks.length && 'IntersectionObserver' in window) {
+  const byId = new Map(tocLinks.map(a => [a.getAttribute('href').slice(1), a]));
+  const seen = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      tocLinks.forEach(a => a.removeAttribute('aria-current'));
+      byId.get(e.target.id)?.setAttribute('aria-current', 'true');
+    });
+  }, { rootMargin: '-10% 0px -75% 0px' });
+  byId.forEach((a, id) => { const h = document.getElementById(id); if (h) seen.observe(h); });
+}
+
+/* ---------- start ---------- */
+let saved = null;
+try { saved = localStorage.getItem('tlap-lang'); } catch (e) { /* private mode */ }
+const first = saved || ((navigator.language || '').toLowerCase().startsWith('zh') ? 'zh' : 'en');
+if (first === 'zh') setLang('zh');
+
+const fromAddress = () => { if (location.hash.startsWith('#view-')) pick(location.hash.slice(6)); };
+window.addEventListener('hashchange', fromAddress);
+fromAddress();

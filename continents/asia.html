@@ -1,177 +1,182 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-root="../">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Asia — tuan photography 陳亮元</title>
+  <meta name="description" content="Asia: countries photographed by 陳亮元 Thomas Chen.">
+  <meta name="theme-color" content="#eef0ef">
+  <script>try{if(!sessionStorage.getItem('lamp')){document.documentElement.classList.add('strike');sessionStorage.setItem('lamp','1')}}catch(e){}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+TC:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Iansui&family=Libre+Franklin:ital,wght@0,400..800;1,400&family=Noto+Sans+TC:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-
-  <header class="site-header">
-    <nav class="nav">
-      <a class="logo" href="../index.html">
-        <span class="aperture" aria-hidden="true"></span>
-        <span>tuan photography</span>
-        <span class="logo-cjk">陳亮元</span>
-      </a>
-      <button class="nav-toggle" aria-label="Menu" aria-expanded="false">☰</button>
-      <ul class="nav-links">
-        <li><a href="../destinations.html" class="active" data-i18n="navDestinations">Destinations</a></li>
+<svg width="0" height="0" class="sr" aria-hidden="true" focusable="false">
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M20 12H5M11 6l-6 6 6 6"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M8 16 18 6M9 6h9v9"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><circle cx="12" cy="12" r="4"/><path d="M17.2 6.8h.01"/></symbol>
+</svg>
+<header class="wrap edge">
+  <a class="name" href="../index.html">tuan photography <span>陳亮元</span></a>
+  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu"><svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg><span data-i18n="navMenu">Menu</span></button>
+  <nav class="menu" id="menu" aria-label="Site">
+    <ul>
         <li><a href="../gallery.html" data-i18n="navGallery">Gallery</a></li>
+        <li><a href="../destinations.html" data-i18n="navDestinations" aria-current="page">Destinations</a></li>
         <li><a href="../blog.html" data-i18n="navBlog">Blog</a></li>
         <li><a href="../skills.html" data-i18n="navSkills">Skills</a></li>
         <li><a href="../about.html" data-i18n="navAbout">About</a></li>
-      </ul>
-      <div class="lang-switch" role="group" aria-label="Language">
-        <button id="lang-en" class="on">EN</button>
-        <button id="lang-zh">中</button>
-      </div>
-    </nav>
-  </header>
-
-  <div class="page-header">
+    </ul>
+    <a class="ig" href="https://www.instagram.com/tuan_1127/" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-ig"/></svg><span data-i18n="footInstagram">Instagram</span></a>
+    <div class="lang" role="group" aria-label="Language">
+      <button id="lang-en" type="button" aria-pressed="true" lang="en">EN</button><i></i><button id="lang-zh" type="button" aria-pressed="false" lang="zh-Hant">中文</button>
+    </div>
+  </nav>
+</header>
+<main>
+<div class="wrap">
+  <header class="page-top">
+    <ol class="path"><li><a href="../destinations.html" data-i18n="pathDest">Destinations</a></li></ol>
     <h1 data-i18n="pTitle">Asia</h1>
     <p data-i18n="pSub">Temple mornings, neon nights, and seasons that change what you shoot.</p>
-  </div>
-
-  <section class="section" style="padding-top: 24px;">
-    <div class="wrap">
-      <div class="continent-grid">
-        <a class="continent reveal" href="../countries/taiwan.html">
-          <div class="photo"><img src="../images/country-placeholder.svg" alt="Taiwan"></div>
-          <h2 data-i18n="cn_taiwan">Taiwan</h2>
-          <p class="note" data-i18n="cnote_taiwan">Home base — city ridgelines, night markets, izakaya nights.</p>
-          <span class="stat" data-i18n="cs_taiwan">Ongoing</span>
-        </a>
-        <a class="continent reveal" href="../countries/japan.html">
-          <div class="photo"><img src="../images/country-placeholder.svg" alt="Japan"></div>
-          <h2 data-i18n="cn_japan">Japan</h2>
-          <p class="note" data-i18n="cnote_japan">Osaka · Kyoto · Mt. Fuji · Tokyo · Hokkaido</p>
-          <span class="stat" data-i18n="cs_japan">2025.1</span>
-        </a>
-        <a class="continent reveal" href="../countries/south-korea.html">
-          <div class="photo"><img src="../images/country-placeholder.svg" alt="South Korea"></div>
-          <h2 data-i18n="cn_south-korea">South Korea</h2>
-          <p class="note" data-i18n="cnote_south-korea">Busan · Seoul · Jeju</p>
-          <span class="stat" data-i18n="cs_south-korea">2025.8</span>
-        </a>
-        <a class="continent reveal" href="../countries/hong-kong.html">
-          <div class="photo"><img src="../images/country-placeholder.svg" alt="Hong Kong"></div>
-          <h2 data-i18n="cn_hong-kong">Hong Kong</h2>
-          <p class="note" data-i18n="cnote_hong-kong">Harbour nights and peak lookouts.</p>
-          <span class="stat" data-i18n="cs_hong-kong">2025.5</span>
-        </a>
-        <a class="continent reveal" href="../countries/china.html">
-          <div class="photo"><img src="../images/country-placeholder.svg" alt="China"></div>
-          <h2 data-i18n="cn_china">China</h2>
-          <p class="note" data-i18n="cnote_china">Shanghai · Hangzhou · Zhangjiajie · Chongqing</p>
-          <span class="stat" data-i18n="cs_china">2026.6</span>
-        </a>
-        <a class="continent reveal" href="../countries/singapore.html">
-          <div class="photo"><img src="../images/country-placeholder.svg" alt="Singapore"></div>
-          <h2 data-i18n="cn_singapore">Singapore</h2>
-          <p class="note" data-i18n="cnote_singapore">City gardens and evening light shows.</p>
-          <span class="stat" data-i18n="cs_singapore">2026.4</span>
-        </a>
-        <a class="continent reveal" href="../countries/vietnam.html">
-          <div class="photo"><img src="../images/country-placeholder.svg" alt="Vietnam"></div>
-          <h2 data-i18n="cn_vietnam">Vietnam</h2>
-          <p class="note" data-i18n="cnote_vietnam">Hanoi · Ha Long Bay · Sapa · Da Nang</p>
-          <span class="stat" data-i18n="cs_vietnam">2026.8 · upcoming</span>
-        </a>
-        <a class="continent reveal" href="../countries/dubai.html">
-          <div class="photo"><img src="../images/country-placeholder.svg" alt="UAE · Dubai"></div>
-          <h2 data-i18n="cn_dubai">UAE · Dubai</h2>
-          <p class="note" data-i18n="cnote_dubai">Desert light and impossible skylines.</p>
-          <span class="stat" data-i18n="cs_dubai">2024 summer</span>
-        </a>
-      </div>
+  </header>
+  <section class="part">
+    <div class="slides">
+<a class="slide slide--l slide--empty" href="../countries/taiwan.html">
+  <span class="slide__mount">
+    <span class="slide__where"><span data-i18n="cd_taiwan">Ongoing</span></span>
+    <span class="slide__window"></span>
+    <span class="slide__foot"><span class="slide__place" data-i18n="cn_taiwan">Taiwan</span></span>
+  </span>
+</a>
+<a class="slide slide--l slide--empty" href="../countries/japan.html">
+  <span class="slide__mount">
+    <span class="slide__where"><span data-i18n="cd_japan">2025.1</span></span>
+    <span class="slide__window"></span>
+    <span class="slide__foot"><span class="slide__place" data-i18n="cn_japan">Japan</span></span>
+  </span>
+</a>
+<a class="slide slide--l slide--empty" href="../countries/south-korea.html">
+  <span class="slide__mount">
+    <span class="slide__where"><span data-i18n="cd_south-korea">2025.8</span></span>
+    <span class="slide__window"></span>
+    <span class="slide__foot"><span class="slide__place" data-i18n="cn_south-korea">South Korea</span></span>
+  </span>
+</a>
+<a class="slide slide--l slide--empty" href="../countries/hong-kong.html">
+  <span class="slide__mount">
+    <span class="slide__where"><span data-i18n="cd_hong-kong">2025.5</span></span>
+    <span class="slide__window"></span>
+    <span class="slide__foot"><span class="slide__place" data-i18n="cn_hong-kong">Hong Kong</span></span>
+  </span>
+</a>
+<a class="slide slide--l slide--empty" href="../countries/china.html">
+  <span class="slide__mount">
+    <span class="slide__where"><span data-i18n="cd_china">2026.6</span></span>
+    <span class="slide__window"></span>
+    <span class="slide__foot"><span class="slide__place" data-i18n="cn_china">China</span></span>
+  </span>
+</a>
+<a class="slide slide--l slide--empty" href="../countries/singapore.html">
+  <span class="slide__mount">
+    <span class="slide__where"><span data-i18n="cd_singapore">2026.4</span></span>
+    <span class="slide__window"></span>
+    <span class="slide__foot"><span class="slide__place" data-i18n="cn_singapore">Singapore</span></span>
+  </span>
+</a>
+<a class="slide slide--l slide--empty" href="../countries/vietnam.html">
+  <span class="slide__mount">
+    <span class="slide__where"><span data-i18n="cd_vietnam">2026.8</span></span>
+    <span class="slide__window"></span>
+    <span class="slide__foot"><span class="slide__place" data-i18n="cn_vietnam">Vietnam</span></span>
+  </span>
+</a>
+<a class="slide slide--l slide--empty" href="../countries/dubai.html">
+  <span class="slide__mount">
+    <span class="slide__where"><span data-i18n="cd_dubai">2024 summer</span></span>
+    <span class="slide__window"></span>
+    <span class="slide__foot"><span class="slide__place" data-i18n="cn_dubai">UAE · Dubai</span></span>
+  </span>
+</a>
     </div>
   </section>
+</div>
+</main>
 
-  <footer class="site-footer">
-    <div class="wrap footer-inner">
-      <a class="logo" href="../index.html">
-        <span class="aperture" aria-hidden="true"></span>
-        <span>tuan photography</span>
-        <span class="logo-cjk">陳亮元</span>
-      </a>
-      <ul class="footer-links">
-        <li><a href="../destinations.html" data-i18n="navDestinations">Destinations</a></li>
+<footer class="close">
+  <div class="wrap">
+    <div class="follow">
+      <h2 data-i18n="followTitle">@tuan_1127</h2>
+      <a class="btn" href="https://www.instagram.com/tuan_1127/" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-ig"/></svg><span data-i18n="followCta">Follow on Instagram</span></a>
+    </div>
+    <div class="foot">
+      <ul>
         <li><a href="../gallery.html" data-i18n="navGallery">Gallery</a></li>
+        <li><a href="../destinations.html" data-i18n="navDestinations">Destinations</a></li>
         <li><a href="../blog.html" data-i18n="navBlog">Blog</a></li>
         <li><a href="../skills.html" data-i18n="navSkills">Skills</a></li>
         <li><a href="../about.html" data-i18n="navAbout">About</a></li>
-        <li><a href="#" data-i18n="footInstagram">Instagram</a></li>
       </ul>
-      <p class="footer-note" data-i18n="footNote">© 2026 tuan photography 陳亮元 — All photographs are my own.</p>
+      <p data-i18n="footNote">© 2026 tuan photography 陳亮元 — All photographs are my own.</p>
     </div>
-  </footer>
+  </div>
+</footer>
 
-  <script>
-  window.pageI18n = {
-  "en": {
-    "pTitle": "Asia",
-    "pSub": "Temple mornings, neon nights, and seasons that change what you shoot.",
-    "cn_taiwan": "Taiwan",
-    "cnote_taiwan": "Home base — city ridgelines, night markets, izakaya nights.",
-    "cs_taiwan": "Ongoing",
-    "cn_japan": "Japan",
-    "cnote_japan": "Osaka · Kyoto · Mt. Fuji · Tokyo · Hokkaido",
-    "cs_japan": "2025.1",
-    "cn_south-korea": "South Korea",
-    "cnote_south-korea": "Busan · Seoul · Jeju",
-    "cs_south-korea": "2025.8",
-    "cn_hong-kong": "Hong Kong",
-    "cnote_hong-kong": "Harbour nights and peak lookouts.",
-    "cs_hong-kong": "2025.5",
-    "cn_china": "China",
-    "cnote_china": "Shanghai · Hangzhou · Zhangjiajie · Chongqing",
-    "cs_china": "2026.6",
-    "cn_singapore": "Singapore",
-    "cnote_singapore": "City gardens and evening light shows.",
-    "cs_singapore": "2026.4",
-    "cn_vietnam": "Vietnam",
-    "cnote_vietnam": "Hanoi · Ha Long Bay · Sapa · Da Nang",
-    "cs_vietnam": "2026.8 · upcoming",
-    "cn_dubai": "UAE · Dubai",
-    "cnote_dubai": "Desert light and impossible skylines.",
-    "cs_dubai": "2024 summer"
-  },
-  "zh": {
-    "pTitle": "亞洲",
-    "pSub": "清晨的寺廟、深夜的霓虹,以及會改變拍攝主題的四季。",
-    "cn_taiwan": "台灣",
-    "cnote_taiwan": "大本營——城市稜線、夜市,與居酒屋之夜。",
-    "cs_taiwan": "持續拍攝中",
-    "cn_japan": "日本",
-    "cnote_japan": "大阪・京都・富士山・東京・北海道",
-    "cs_japan": "2025.1",
-    "cn_south-korea": "韓國",
-    "cnote_south-korea": "釜山・首爾・濟州島",
-    "cs_south-korea": "2025.8",
-    "cn_hong-kong": "香港",
-    "cnote_hong-kong": "維港夜色與山頂觀景。",
-    "cs_hong-kong": "2025.5",
-    "cn_china": "中國",
-    "cnote_china": "上海・杭州・張家界・重慶",
-    "cs_china": "2026.6",
-    "cn_singapore": "新加坡",
-    "cnote_singapore": "城市花園與夜間燈光秀。",
-    "cs_singapore": "2026.4",
-    "cn_vietnam": "越南",
-    "cnote_vietnam": "河內・下龍灣・沙壩・峴港",
-    "cs_vietnam": "2026.8 · 即將出發",
-    "cn_dubai": "杜拜",
-    "cnote_dubai": "沙漠的光與不可思議的天際線。",
-    "cs_dubai": "2024 夏"
-  }
+<script type="application/json" id="slides-data">[]</script>
+<script>
+window.pageI18n = {
+ "en": {
+  "pTitle": "Asia",
+  "pSub": "Temple mornings, neon nights, and seasons that change what you shoot.",
+  "pathDest": "Destinations",
+  "cn_taiwan": "Taiwan",
+  "cd_taiwan": "Ongoing",
+  "cn_japan": "Japan",
+  "cd_japan": "2025.1",
+  "cn_south-korea": "South Korea",
+  "cd_south-korea": "2025.8",
+  "cn_hong-kong": "Hong Kong",
+  "cd_hong-kong": "2025.5",
+  "cn_china": "China",
+  "cd_china": "2026.6",
+  "cn_singapore": "Singapore",
+  "cd_singapore": "2026.4",
+  "cn_vietnam": "Vietnam",
+  "cd_vietnam": "2026.8",
+  "cn_dubai": "UAE · Dubai",
+  "cd_dubai": "2024 summer",
+  "docTitle": "Asia — tuan photography 陳亮元"
+ },
+ "zh": {
+  "pTitle": "亞洲",
+  "pSub": "清晨的寺廟、深夜的霓虹,以及會改變拍攝主題的四季。",
+  "pathDest": "目的地",
+  "cn_taiwan": "台灣",
+  "cd_taiwan": "持續拍攝中",
+  "cn_japan": "日本",
+  "cd_japan": "2025.1",
+  "cn_south-korea": "韓國",
+  "cd_south-korea": "2025.8",
+  "cn_hong-kong": "香港",
+  "cd_hong-kong": "2025.5",
+  "cn_china": "中國",
+  "cd_china": "2026.6",
+  "cn_singapore": "新加坡",
+  "cd_singapore": "2026.4",
+  "cn_vietnam": "越南",
+  "cd_vietnam": "2026.8",
+  "cn_dubai": "杜拜",
+  "cd_dubai": "2024 夏",
+  "docTitle": "亞洲 — tuan photography 陳亮元"
+ }
 };
-  </script>
-  <script src="../js/main.js"></script>
+</script>
+<script src="../js/main.js"></script>
 </body>
 </html>

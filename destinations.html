@@ -1,167 +1,170 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-root="">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Destinations — tuan photography 陳亮元</title>
-  <meta name="description" content="Destination guides for photographers: where to shoot, what to eat, and how to plan each trip.">
+  <meta name="description" content="Every place photographed and researched by 陳亮元 Thomas Chen, by continent and country.">
+  <meta name="theme-color" content="#eef0ef">
+  <script>try{if(!sessionStorage.getItem('lamp')){document.documentElement.classList.add('strike');sessionStorage.setItem('lamp','1')}}catch(e){}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+TC:wght@300;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Iansui&family=Libre+Franklin:ital,wght@0,400..800;1,400&family=Noto+Sans+TC:wght@400;600;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
-  <header class="site-header">
-    <nav class="nav">
-      <a class="logo" href="index.html">
-        <span class="aperture" aria-hidden="true"></span>
-        <span>tuan photography</span>
-        <span class="logo-cjk">陳亮元</span>
-      </a>
-      <button class="nav-toggle" aria-label="Menu" aria-expanded="false">☰</button>
-      <ul class="nav-links">
-        <li><a href="destinations.html" class="active" data-i18n="navDestinations">Destinations</a></li>
+<svg width="0" height="0" class="sr" aria-hidden="true" focusable="false">
+  <symbol id="i-right" viewBox="0 0 24 24"><path d="M4 12h15M13 6l6 6-6 6"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="M20 12H5M11 6l-6 6 6 6"/></symbol>
+  <symbol id="i-out" viewBox="0 0 24 24"><path d="M8 16 18 6M9 6h9v9"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+  <symbol id="i-ig" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4.5"/><circle cx="12" cy="12" r="4"/><path d="M17.2 6.8h.01"/></symbol>
+</svg>
+<header class="wrap edge">
+  <a class="name" href="index.html">tuan photography <span>陳亮元</span></a>
+  <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu"><svg class="icon" aria-hidden="true"><use href="#i-menu"/></svg><span data-i18n="navMenu">Menu</span></button>
+  <nav class="menu" id="menu" aria-label="Site">
+    <ul>
         <li><a href="gallery.html" data-i18n="navGallery">Gallery</a></li>
+        <li><a href="destinations.html" data-i18n="navDestinations" aria-current="page">Destinations</a></li>
         <li><a href="blog.html" data-i18n="navBlog">Blog</a></li>
         <li><a href="skills.html" data-i18n="navSkills">Skills</a></li>
         <li><a href="about.html" data-i18n="navAbout">About</a></li>
-      </ul>
-      <div class="lang-switch" role="group" aria-label="Language">
-        <button id="lang-en" class="on">EN</button>
-        <button id="lang-zh">中</button>
-      </div>
-    </nav>
+    </ul>
+    <a class="ig" href="https://www.instagram.com/tuan_1127/" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-ig"/></svg><span data-i18n="footInstagram">Instagram</span></a>
+    <div class="lang" role="group" aria-label="Language">
+      <button id="lang-en" type="button" aria-pressed="true" lang="en">EN</button><i></i><button id="lang-zh" type="button" aria-pressed="false" lang="zh-Hant">中文</button>
+    </div>
+  </nav>
+</header>
+<main>
+<div class="wrap">
+  <header class="page-top">
+    <h1 data-i18n="pTitle">Destinations</h1>
+    <p data-i18n="pSub">Every place I&#x27;ve photographed, researched, eaten through, and written up — pick a continent to explore.</p>
   </header>
-
-  <div class="page-header">
-    <h1 data-i18n="destTitle">Destinations</h1>
-    <p data-i18n="destSub">Every place I've photographed, researched, eaten through, and written up — organized by country.</p>
-  </div>
-
-  <section class="section" style="padding-top: 24px;">
-    <div class="wrap">
-
-      <!-- Seven continents, three per row — click one to enter it -->
-      <div class="continent-grid">
-
-        <a class="continent reveal" href="continents/europe.html">
-          <div class="photo"><img src="images/web/spain-casa-batllo-facade.jpg" alt="Europe"></div>
-          <h2 data-i18n="contEurope">Europe</h2>
-          <p class="note" data-i18n="contEuropeNote">Blue domes, marble lanes, and evenings where the golden hour never seems to end.</p>
-          <span class="stat" data-i18n="statEurope">5 countries</span>
-        </a>
-
-        <a class="continent reveal" href="continents/asia.html">
-          <div class="photo"><img src="images/continent-asia.svg" alt="Asia"></div>
-          <h2 data-i18n="contAsia">Asia</h2>
-          <p class="note" data-i18n="contAsiaNote">Temple mornings, neon nights, and seasons that change what you shoot.</p>
-          <span class="stat" data-i18n="statAsia">8 countries</span>
-        </a>
-
-        <a class="continent reveal" href="continents/africa.html">
-          <div class="photo"><img src="images/continent-africa.svg" alt="Africa"></div>
-          <h2 data-i18n="contAfrica">Africa</h2>
-          <p class="note" data-i18n="contAfricaNote">Savanna light, red dust, and horizons that never quite end.</p>
-          <span class="stat" data-i18n="statSoon">Coming soon</span>
-        </a>
-
-        <a class="continent reveal" href="continents/north-america.html">
-          <div class="photo"><img src="images/continent-north-america.svg" alt="North America"></div>
-          <h2 data-i18n="contNA">North America</h2>
-          <p class="note" data-i18n="contNANote">Skylines coast to coast, one long summer.</p>
-          <span class="stat" data-i18n="statNA">1 country</span>
-        </a>
-
-        <a class="continent reveal" href="continents/south-america.html">
-          <div class="photo"><img src="images/continent-south-america.svg" alt="South America"></div>
-          <h2 data-i18n="contSA">South America</h2>
-          <p class="note" data-i18n="contSANote">Uruguay, Argentina, Chile, Peru — the research has already started.</p>
-          <span class="stat" data-i18n="statSA">In research</span>
-        </a>
-
-        <a class="continent reveal" href="continents/oceania.html">
-          <div class="photo"><img src="images/continent-oceania.svg" alt="Oceania"></div>
-          <h2 data-i18n="contOceania">Oceania</h2>
-          <p class="note" data-i18n="contOceaniaNote">Reefs, ridgelines, and the southern stars after dark.</p>
-          <span class="stat" data-i18n="statOceania">2 countries</span>
-        </a>
-
-        <a class="continent reveal" href="continents/antarctica.html">
-          <div class="photo"><img src="images/continent-antarctica.svg" alt="Antarctica"></div>
-          <h2 data-i18n="contAntarctica">Antarctica</h2>
-          <p class="note" data-i18n="contAntarcticaNote">The white silence at the end of the map.</p>
-          <span class="stat" data-i18n="statSoon">Coming soon</span>
-        </a>
-
-      </div>
-
+  <section class="part">
+    <div class="rows">
+      <a class="row" href="continents/europe.html">
+        <span><span class="row__name" data-i18n="k_europe">Europe</span><span class="row__strip" aria-hidden="true"><span class="pip pip--on"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></span></span>
+        <span class="row__note" data-i18n="ks_europe">Old stones, alpine light, and cities that reward walking.</span>
+        <span class="row__end num"><span data-i18n="kn_europe">5 countries</span><svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></span>
+      </a>
+      <a class="row" href="continents/asia.html">
+        <span><span class="row__name" data-i18n="k_asia">Asia</span><span class="row__strip" aria-hidden="true"><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span></span></span>
+        <span class="row__note" data-i18n="ks_asia">Temple mornings, neon nights, and seasons that change what you shoot.</span>
+        <span class="row__end num"><span data-i18n="kn_asia">8 countries</span><svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></span>
+      </a>
+      <a class="row" href="continents/oceania.html">
+        <span><span class="row__name" data-i18n="k_oceania">Oceania</span><span class="row__strip" aria-hidden="true"><span class="pip"></span><span class="pip pip--on"></span></span></span>
+        <span class="row__note" data-i18n="ks_oceania">Reefs, ridgelines, and the southern stars after dark.</span>
+        <span class="row__end num"><span data-i18n="kn_oceania">2 countries</span><svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></span>
+      </a>
+      <a class="row" href="continents/north-america.html">
+        <span><span class="row__name" data-i18n="k_north-america">North America</span><span class="row__strip" aria-hidden="true"><span class="pip"></span></span></span>
+        <span class="row__note" data-i18n="ks_north-america">Skylines coast to coast, one long summer.</span>
+        <span class="row__end num"><span data-i18n="kn_north-america">1 country</span><svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></span>
+      </a>
+      <a class="row" href="continents/south-america.html">
+        <span><span class="row__name" data-i18n="k_south-america">South America</span></span>
+        <span class="row__note" data-i18n="ks_south-america">Uruguay, Argentina, Chile, Peru — the research has already started.</span>
+        <span class="row__end num"><span data-i18n="kn_south-america">In research</span><svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></span>
+      </a>
+      <a class="row" href="continents/africa.html">
+        <span><span class="row__name" data-i18n="k_africa">Africa</span></span>
+        <span class="row__note" data-i18n="ks_africa">Savanna light, red dust, and horizons that never quite end.</span>
+        <span class="row__end num"><span data-i18n="kn_africa">No trips yet</span><svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></span>
+      </a>
+      <a class="row" href="continents/antarctica.html">
+        <span><span class="row__name" data-i18n="k_antarctica">Antarctica</span></span>
+        <span class="row__note" data-i18n="ks_antarctica">The white silence at the end of the map.</span>
+        <span class="row__end num"><span data-i18n="kn_antarctica">No trips yet</span><svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></span>
+      </a>
     </div>
   </section>
+</div>
+</main>
 
-  <footer class="site-footer">
-    <div class="wrap footer-inner">
-      <a class="logo" href="index.html">
-        <span class="aperture" aria-hidden="true"></span>
-        <span>tuan photography</span>
-        <span class="logo-cjk">陳亮元</span>
-      </a>
-      <ul class="footer-links">
-        <li><a href="destinations.html" data-i18n="navDestinations">Destinations</a></li>
+<footer class="close">
+  <div class="wrap">
+    <div class="follow">
+      <h2 data-i18n="followTitle">@tuan_1127</h2>
+      <a class="btn" href="https://www.instagram.com/tuan_1127/" target="_blank" rel="noopener"><svg class="icon" aria-hidden="true"><use href="#i-ig"/></svg><span data-i18n="followCta">Follow on Instagram</span></a>
+    </div>
+    <div class="foot">
+      <ul>
         <li><a href="gallery.html" data-i18n="navGallery">Gallery</a></li>
+        <li><a href="destinations.html" data-i18n="navDestinations">Destinations</a></li>
         <li><a href="blog.html" data-i18n="navBlog">Blog</a></li>
         <li><a href="skills.html" data-i18n="navSkills">Skills</a></li>
         <li><a href="about.html" data-i18n="navAbout">About</a></li>
-        <li><a href="#" data-i18n="footInstagram">Instagram</a></li>
       </ul>
-      <p class="footer-note" data-i18n="footNote">© 2026 tuan photography 陳亮元 — All photographs are my own.</p>
+      <p data-i18n="footNote">© 2026 tuan photography 陳亮元 — All photographs are my own.</p>
     </div>
-  </footer>
+  </div>
+</footer>
 
-  <script>
-  window.pageI18n = {
-    en: {
-      destTitle: 'Destinations',
-      destSub: "Every place I've photographed, researched, eaten through, and written up — pick a continent to explore.",
-      contEurope: 'Europe', contAsia: 'Asia', contAfrica: 'Africa',
-      contNA: 'North America', contSA: 'South America',
-      contOceania: 'Oceania', contAntarctica: 'Antarctica',
-      contEuropeNote: 'Blue domes, marble lanes, and evenings where the golden hour never seems to end.',
-      contAsiaNote: 'Temple mornings, neon nights, and seasons that change what you shoot.',
-      contAfricaNote: 'Savanna light, red dust, and horizons that never quite end.',
-      contNANote: 'Skylines coast to coast, one long summer.',
-      contSANote: 'Uruguay, Argentina, Chile, Peru — the research has already started.',
-      contOceaniaNote: 'Reefs, ridgelines, and the southern stars after dark.',
-      contAntarcticaNote: 'The white silence at the end of the map.',
-      statEurope: '5 countries',
-      statAsia: '8 countries',
-      statOceania: '2 countries',
-      statNA: '1 country',
-      statSA: 'In research',
-      statSoon: 'Coming soon'
-    },
-    zh: {
-      destTitle: '目的地',
-      destSub: '每一個我拍攝過、研究過、吃遍也寫成指南的地方——選一個大洲開始探索。',
-      contEurope: '歐洲', contAsia: '亞洲', contAfrica: '非洲',
-      contNA: '北美洲', contSA: '南美洲',
-      contOceania: '大洋洲', contAntarctica: '南極洲',
-      contEuropeNote: '藍頂教堂、大理石巷弄,以及彷彿不會結束的黃金時刻。',
-      contAsiaNote: '清晨的寺廟、深夜的霓虹,以及會改變拍攝主題的四季。',
-      contAfricaNote: '莽原的光線、赭紅的塵土,以及望不到盡頭的地平線。',
-      contNANote: '橫跨東西岸的天際線,一整個漫長的夏天。',
-      contSANote: '烏拉圭、阿根廷、智利、秘魯——功課已經開始做了。',
-      contOceaniaNote: '珊瑚礁、稜線,以及入夜後的南半球星空。',
-      contAntarcticaNote: '地圖盡頭的白色寂靜。',
-      statEurope: '5 個國家',
-      statAsia: '8 個國家',
-      statOceania: '2 個國家',
-      statNA: '1 個國家',
-      statSA: '研究中',
-      statSoon: '即將推出'
-    }
-  };
-  </script>
-  <script src="js/main.js"></script>
+<script type="application/json" id="slides-data">[]</script>
+<script>
+window.pageI18n = {
+ "en": {
+  "pTitle": "Destinations",
+  "pSub": "Every place I've photographed, researched, eaten through, and written up — pick a continent to explore.",
+  "open": "Open",
+  "k_europe": "Europe",
+  "ks_europe": "Old stones, alpine light, and cities that reward walking.",
+  "kn_europe": "5 countries",
+  "k_asia": "Asia",
+  "ks_asia": "Temple mornings, neon nights, and seasons that change what you shoot.",
+  "kn_asia": "8 countries",
+  "k_oceania": "Oceania",
+  "ks_oceania": "Reefs, ridgelines, and the southern stars after dark.",
+  "kn_oceania": "2 countries",
+  "k_north-america": "North America",
+  "ks_north-america": "Skylines coast to coast, one long summer.",
+  "kn_north-america": "1 country",
+  "k_south-america": "South America",
+  "ks_south-america": "Uruguay, Argentina, Chile, Peru — the research has already started.",
+  "kn_south-america": "In research",
+  "k_africa": "Africa",
+  "ks_africa": "Savanna light, red dust, and horizons that never quite end.",
+  "kn_africa": "No trips yet",
+  "k_antarctica": "Antarctica",
+  "ks_antarctica": "The white silence at the end of the map.",
+  "kn_antarctica": "No trips yet",
+  "docTitle": "Destinations — tuan photography 陳亮元"
+ },
+ "zh": {
+  "pTitle": "目的地",
+  "pSub": "每一個我拍攝過、研究過、吃遍也寫成指南的地方——選一個大洲開始探索。",
+  "open": "打開",
+  "k_europe": "歐洲",
+  "ks_europe": "古老的石牆、阿爾卑斯的光,以及值得步行的城市。",
+  "kn_europe": "5 個國家",
+  "k_asia": "亞洲",
+  "ks_asia": "清晨的寺廟、深夜的霓虹,以及會改變拍攝主題的四季。",
+  "kn_asia": "8 個國家",
+  "k_oceania": "大洋洲",
+  "ks_oceania": "珊瑚礁、稜線,以及入夜後的南半球星空。",
+  "kn_oceania": "2 個國家",
+  "k_north-america": "北美洲",
+  "ks_north-america": "橫跨東西岸的天際線,一整個漫長的夏天。",
+  "kn_north-america": "1 個國家",
+  "k_south-america": "南美洲",
+  "ks_south-america": "烏拉圭、阿根廷、智利、秘魯——功課已經開始做了。",
+  "kn_south-america": "研究中",
+  "k_africa": "非洲",
+  "ks_africa": "莽原的光線、赭紅的塵土,以及望不到盡頭的地平線。",
+  "kn_africa": "還沒去過",
+  "k_antarctica": "南極洲",
+  "ks_antarctica": "地圖盡頭的白色寂靜。",
+  "kn_antarctica": "還沒去過",
+  "docTitle": "目的地 — tuan photography 陳亮元"
+ }
+};
+</script>
+<script src="js/main.js"></script>
 </body>
 </html>

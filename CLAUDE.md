@@ -3,6 +3,21 @@
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
 Bilingual EN / 繁體中文. Owner is not a developer — explain in plain English, handle all tech.
 
+## ⚠ This folder is the Impeccable trial (branch `impeccable-trial`)
+
+Owner decision, 2026-09-27: rebuild the whole site here with the Impeccable skill, **with full
+freedom on the visual direction**, to compare side by side with the original.
+
+- The original lives untouched in `~/Desktop/travel website` (branch `main`, preview `:8642`).
+  This copy previews on `:8643`. **Never edit the original from a trial session.**
+- On this branch these sections below are **suspended**: *The brief → Mood / Restraint /
+  References*, *Design system*, *Component vocabulary*, and the `<frontend_aesthetics>` block.
+  Impeccable's `PRODUCT.md`, the surface briefs and (after the build) `DESIGN.md` are the
+  authority instead. The old look is evidence of what the site is, not a rule.
+- Still binding here: plain place-name titles, the bilingual rule, the photo rules, real content
+  only. The 15 country pages without content stay empty shells.
+- Do not merge this branch into `main` unless he says so after comparing.
+
 ## The brief (owner-decided — these win over any generic guidance)
 
 - **Mood:** warm editorial magazine × photographer's field journal.

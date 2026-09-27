@@ -14,3 +14,8 @@ images/*.jpg
 images/*.jpeg
 images/*.png
 images/*.heic
+
+# Impeccable working files: review screenshots and decision-page payloads stay local
+.impeccable/review/
+.impeccable/decision/
+.impeccable/briefs-src/
