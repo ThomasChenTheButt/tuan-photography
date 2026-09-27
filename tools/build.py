@@ -90,7 +90,7 @@ def no_dash_zh(text):
         start = max(left.rfind("。"), left.rfind(">"), left.rfind("！"), left.rfind("？"))
         sentence = left[start + 1:]
         rest = m.string[m.end():]
-        if rest[:1] in "而或但也":
+        if rest[:1] in "而或但也因所":
             return "，"
         if len(sentence) <= 14 and not re.search("[，：,:]", sentence):
             return "："
@@ -158,7 +158,57 @@ def opens(sid, root, en, zh):
             f'aria-label="{e(en[f"sl_{sid}"])}" data-i18n-aria="sl_{sid}"')
 
 
-def rows_of(ids, per_row=3.5):
+def camera(s):
+    parts = [s["focal"], s["aperture"], s["shutter"], "ISO " + s["iso"]]
+    return '<span class="data">' + "".join(f"<span>{e(p)}</span>" for p in parts) + "</span>"
+
+
+def piece(sid, root, en, zh, sizes, first=False, anchor=False, flex=False, data=False):
+    """A photograph with its place name under it. Opening it shows how it was made."""
+    s = SLIDES[sid]
+    strings(s, en, zh)
+    en[f"sw_{sid}"], zh[f"sw_{sid}"] = s["where"]["en"], s["where"]["zh"]
+    attrs = (f' id="s-{sid}"' if anchor else "") + (f' style="--ar: {ratio(s)}"' if flex else "")
+    second = camera(s) if data else f'<span data-i18n="sw_{sid}">{e(s["where"]["en"])}</span>'
+    return (f'<figure class="piece"{attrs}><a {opens(sid, root, en, zh)}>{img(s, root, sizes, first)}</a>'
+            f'<figcaption><b data-i18n="sp_{sid}">{e(s["place"]["en"])}</b>{second}</figcaption></figure>')
+
+
+def hang(ids, root, en, zh):
+    """Set photographs like an exhibition: which ones share a wall, and how they sit on it."""
+    def land(i):
+        return SLIDES[i]["w"] >= SLIDES[i]["h"]
+    q, spreads = list(ids), []
+    while q:
+        a = q.pop(0)
+        flip = len(spreads) % 2 == 1
+        if land(a):
+            p = next((x for x in q if not land(x)), None)
+            if p and len(spreads) % 3 != 2:
+                q.remove(p)
+                kind, group = ("duo-flip" if flip else "duo"), [a, p]
+            elif q and land(q[0]):
+                kind, group = "pair-l", [a, q.pop(0)]
+            else:
+                kind, group = ("solo-flip" if flip else "solo"), [a]
+        else:
+            ports = [x for x in q if not land(x)][:2]
+            for x in ports:
+                q.remove(x)
+            kind, group = {2: "trio", 1: "pair-p", 0: "solo-p"}[len(ports)], [a] + ports
+        spreads.append((kind, group))
+    out = []
+    for kind, group in spreads:
+        items = []
+        for n, sid in enumerate(group):
+            big = n == 0 and kind in ("duo", "duo-flip", "solo", "solo-flip", "pair-l")
+            sizes = "(max-width: 48rem) 92vw, " + ("62vw" if big else "34vw")
+            items.append("    " + piece(sid, root, en, zh, sizes))
+        out.append(f'  <div class="spread spread--{kind}">\n' + "\n".join(items) + "\n  </div>")
+    return '<div class="hang">\n' + "\n".join(out) + "\n</div>"
+
+
+def rows_of(ids, per_row=3.2):
     """Split photographs into rows of nearly equal total width, so every row fills the page
     and no photograph is cropped. per_row is how many 'widths of a square' a row should hold."""
     ars = [SLIDES[i]["w"] / SLIDES[i]["h"] for i in ids]
@@ -177,32 +227,18 @@ def rows_of(ids, per_row=3.5):
     return best[(n, k)][1]
 
 
-def wall(ids, root, en, zh, per_row=3.5, anchors=False):
+def wall(ids, root, en, zh, per_row=3.2, anchors=False):
     out = []
     for row in rows_of(ids, per_row):
-        items = []
-        for sid in row:
-            s = SLIDES[sid]
-            strings(s, en, zh)
-            anchor = f' id="s-{sid}"' if anchors else ""
-            items.append(f'    <a class="wall__item"{anchor} style="--ar: {ratio(s)}" {opens(sid, root, en, zh)}>'
-                         f'{img(s, root, "(max-width: 40rem) 92vw, 45vw")}</a>')
+        items = ["    " + piece(sid, root, en, zh, "(max-width: 40rem) 92vw, 45vw", anchor=anchors, flex=True)
+                 for sid in row]
         out.append('  <div class="wall__row">\n' + "\n".join(items) + "\n  </div>")
     return '<div class="wall">\n' + "\n".join(out) + "\n</div>"
 
 
-def camera(s):
-    parts = [s["focal"], s["aperture"], s["shutter"], "ISO " + s["iso"]]
-    return '<span class="data">' + "".join(f"<span>{e(p)}</span>" for p in parts) + "</span>"
-
-
 def shot(sid, root, en, zh):
     """A photograph inside a guide, with its camera data under it."""
-    s = SLIDES[sid]
-    strings(s, en, zh)
-    return (f'<figure class="shot" id="s-{sid}" style="--ar: {ratio(s)}">'
-            f'<a {opens(sid, root, en, zh)}>{img(s, root, "(max-width: 40rem) 60vw, 22rem")}</a>'
-            f'<figcaption><span data-i18n="sp_{sid}">{e(s["place"]["en"])}</span> {camera(s)}</figcaption></figure>')
+    return piece(sid, root, en, zh, "(max-width: 40rem) 92vw, 22rem", anchor=True, flex=True, data=True)
 
 
 # ------------------------------------------------------------------ page frame
@@ -325,22 +361,22 @@ def has_work(c):
     return any(s["country"] == c["id"] for s in DATA["slides"]) or any(g["country"] == c["id"] for g in DATA["guides"])
 
 
-def guide_feature(g, root, en, zh, with_country=True):
+def guide_row(g, root, en, zh, with_country=True):
     gid = g["id"]
     c = COUNTRIES[g["country"]]
-    s = SLIDES[g["lead"]]
-    strings(s, en, zh)
+    ph = SLIDES[g["lead"]]
+    strings(ph, en, zh)
     en[f"g_{gid}"], zh[f"g_{gid}"] = g["title"]["en"], g["title"]["zh"]
     en[f"gf_{gid}"] = (c["en"] + ", " if with_country else "") + g["facts"]["en"].replace(" · ", ", ")
     zh[f"gf_{gid}"] = (c["zh"] + "、" if with_country else "") + g["facts"]["zh"].replace(" · ", "、")
     en["guideOpen"], zh["guideOpen"] = "Read the guide", "閱讀攻略"
-    return f"""<a class="feature" href="{root}{g['href']}">
-      <span class="feature__photo">{img(s, root, "(max-width: 52rem) 92vw, 56vw")}</span>
+    return f"""<a class="guide-row" href="{root}{g['href']}">
+      <span class="guide-row__photo">{img(ph, root, "11rem")}</span>
       <span>
-        <h3 data-i18n="g_{gid}">{e(g['title']['en'])}</h3>
-        <p class="num" data-i18n="gf_{gid}">{e(en[f'gf_{gid}'])}</p>
-        <span class="link" data-i18n="guideOpen">Read the guide</span>
+        <span class="guide-row__name" data-i18n="g_{gid}">{e(g['title']['en'])}</span>
+        <span class="guide-row__facts num" data-i18n="gf_{gid}">{e(en[f'gf_{gid}'])}</span>
       </span>
+      <span class="guide-row__go" data-i18n="guideOpen">Read the guide</span>
     </a>"""
 
 
@@ -349,8 +385,7 @@ def guide_feature(g, root, en, zh, with_country=True):
 def build_home():
     en, zh = {}, {}
     root = ""
-    lead = SLIDES[DATA["lead"]]
-    strings(lead, en, zh)
+    lead = DATA["lead"]
     en.update(heroLine="Travel like a photographer.",
               heroSay="Landscape photographs by Thomas Chen 陳亮元. Open any one to see how it was made.",
               guidesCta="Read the guides",
@@ -363,31 +398,31 @@ def build_home():
               workTitle="作品", guidesTitle="攻略",
               moreText=f"還有 {len(COUNTRIES) - 1} 個國家的攻略還沒寫。",
               moreCta="看所有目的地")
-    others = [s["id"] for s in DATA["slides"] if s["id"] != lead["id"]]
-    features = "\n".join(guide_feature(g, root, en, zh) for g in DATA["guides"])
-    body = f"""<section class="hero">
-  <a class="hero__photo" {opens(lead['id'], root, en, zh)}>{img(lead, root, "100vw", first=True)}</a>
-  <div class="wrap hero__say">
-    <div>
-      <h1 data-i18n-html="heroLine">Travel like a photographer.</h1>
-      <p data-i18n="heroSay">{e(en['heroSay'])}</p>
+    others = [x["id"] for x in DATA["slides"] if x["id"] != lead]
+    rows = "\n".join(guide_row(g, root, en, zh) for g in DATA["guides"])
+    body = f"""<div class="wrap">
+  <section class="hero arrive">
+    <div class="hero__say">
+      <h1 class="rise" style="--i: 0" data-i18n-html="heroLine">Travel like a photographer.</h1>
+      <p class="rise" style="--i: 1" data-i18n="heroSay">{e(en['heroSay'])}</p>
+      <div class="hero__acts rise" style="--i: 2">
+        <a class="btn" href="{IG['url']}" target="_blank" rel="noopener" data-i18n="followCta">Follow on Instagram</a>
+        <a class="btn btn--line" href="#guides-h" data-i18n="guidesCta">Read the guides</a>
+      </div>
     </div>
-    <div class="hero__acts">
-      <a class="btn" href="{IG['url']}" target="_blank" rel="noopener" data-i18n="followCta">Follow on Instagram</a>
-      <a class="btn btn--line" href="{root}destinations.html" data-i18n="guidesCta">Read the guides</a>
-    </div>
-  </div>
-</section>
+    {piece(lead, root, en, zh, "(max-width: 60rem) 92vw, 48vw", first=True)}
+  </section>
 
-<div class="wrap">
-  <section class="part" aria-labelledby="work-h">
+  <section aria-labelledby="work-h">
     <h2 class="sr" id="work-h" data-i18n="workTitle">Photographs</h2>
-    {wall(others, root, en, zh, 3.4)}
+    {hang(others, root, en, zh)}
   </section>
 
   <section class="part" aria-labelledby="guides-h">
     <div class="part__head"><h2 id="guides-h" data-i18n="guidesTitle">Guides</h2></div>
-    {features}
+    <div class="guides">
+    {rows}
+    </div>
     <p class="after"><span data-i18n="moreText">{e(en['moreText'])}</span> <a href="{root}destinations.html" data-i18n="moreCta">See every destination</a></p>
   </section>
 </div>"""
@@ -540,10 +575,12 @@ def build_countries():
         parts = [page_top("pTitle", c["en"], "pSub", c["note"]["en"], path, when)]
         if guides:
             en["guidesTitle"], zh["guidesTitle"] = "Guides", "攻略"
-            features = "\n".join(guide_feature(g, root, en, zh, with_country=False) for g in guides)
+            rows = "\n".join(guide_row(g, root, en, zh, with_country=False) for g in guides)
             parts.append(f"""  <section class="part" aria-labelledby="guides-h">
-    <h2 class="sr" id="guides-h" data-i18n="guidesTitle">Guides</h2>
-    {features}
+    <div class="part__head"><h2 id="guides-h" data-i18n="guidesTitle">Guides</h2></div>
+    <div class="guides">
+    {rows}
+    </div>
   </section>""")
         if own:
             en["workTitle"], zh["workTitle"] = "Photographs", "作品"
@@ -631,12 +668,14 @@ def build_about():
               fHome="大本營", fHomeV="台灣",
               fCamera="相機", fLens="鏡頭", fIg="Instagram")
     body = f"""<div class="wrap">
-  <section class="about">
-    <h1 data-i18n="abTitle">{e(en['abTitle'])}</h1>
-    <p class="lede" data-i18n="abLede">{e(en['abLede'])}</p>
-    <p data-i18n="abBody1">{e(en['abBody1'])}</p>
-    <a class="btn" href="{IG['url']}" target="_blank" rel="noopener" data-i18n="followCta">Follow on Instagram</a>
-    <dl class="facts">
+  <section class="about arrive">
+    <h1 class="rise" style="--i: 0" data-i18n="abTitle">{e(en['abTitle'])}</h1>
+    <div class="about__say rise" style="--i: 1">
+      <p class="lede" data-i18n="abLede">{e(en['abLede'])}</p>
+      <p data-i18n="abBody1">{e(en['abBody1'])}</p>
+      <a class="btn" href="{IG['url']}" target="_blank" rel="noopener" data-i18n="followCta">Follow on Instagram</a>
+    </div>
+    <dl class="facts rise" style="--i: 2">
       <div><dt data-i18n="fCountries">Countries</dt><dd class="num" data-i18n="fCountriesV">{e(en['fCountriesV'])}</dd></div>
       <div><dt data-i18n="fHome">Home base</dt><dd data-i18n="fHomeV">Taiwan</dd></div>
       <div><dt data-i18n="fCamera">Camera</dt><dd>{e(', '.join(cams))}</dd></div>
@@ -656,12 +695,9 @@ def build_guide(name, title_en, title_zh, desc):
     body = (ROOT / "content" / f"{name}.body.html").read_text(encoding="utf-8")
     body = body.replace("{root}", root)
 
-    def lead(m):
-        s = SLIDES[m.group(1)]
-        strings(s, en, zh)
-        return f'<a class="lead" {opens(s["id"], root, en, zh)}>{img(s, root, "(max-width: 90rem) 92vw, 83rem", first=True)}</a>'
-    body = re.sub(r'<figure class="plate" id="[^"]+">\s*\{plate:([a-z0-9-]+)\}\s*</figure>', lead, body)
-    body = re.sub(r'<div class="shots shots--3">', '<div class="wall__row shots">', body)
+    body = re.sub(r"\{plate:([a-z0-9-]+)\}",
+                  lambda m: piece(m.group(1), root, en, zh, "(max-width: 60rem) 92vw, 60vw", first=True, data=True), body)
+    body = body.replace('<div class="shots shots--3">', '<div class="wall__row shots">')
     body = re.sub(r"\{shot:([a-z0-9-]+)\}", lambda m: shot(m.group(1), root, en, zh), body)
     body = re.sub(r"\{map:([^}]+)\}",
                   lambda m: f'<a href="{m.group(1)}" target="_blank" rel="noopener" data-i18n="mapLink">Map</a>', body)

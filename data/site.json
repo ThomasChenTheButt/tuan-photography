@@ -1,105 +1,563 @@
 {
-  "instagram": {"handle": "tuan_1127", "url": "https://www.instagram.com/tuan_1127/"},
+  "instagram": {
+    "handle": "tuan_1127",
+    "url": "https://www.instagram.com/tuan_1127/"
+  },
   "email": "thomaslychen@gmail.com",
-  "lead": "bunkers",
+  "lead": "aoraki",
   "slides": [
-    {"id": "bunkers", "file": "spain-bunkers-carmel-sunset.jpg", "w": 2200, "h": 1466, "country": "spain",
-     "place": {"en": "Bunkers del Carmel", "zh": "Bunkers del Carmel 觀景點"},
-     "where": {"en": "Barcelona, Spain", "zh": "西班牙 巴賽隆納"},
-     "alt": {"en": "Barcelona and the Sagrada Família seen from Bunkers del Carmel at golden hour", "zh": "黃金時刻從 Bunkers del Carmel 俯瞰巴賽隆納與聖家堂"},
-     "guide": "posts/barcelona.html",
-     "best": {"en": "Sunset · dawn", "zh": "日落 · 清晨"},
-     "note": {"en": "360° city panorama. Best light at sunset or early morning; near Park Güell.", "zh": "360° 城市全景。日落或清晨光線最好;離奎爾公園不遠。"},
-     "map": "https://maps.app.goo.gl/beZrhWtCBGaPC3tY8",
-     "camera": "Canon EOS R6 Mark II", "lens": "RF 70-200mm F2.8 L IS USM", "focal": "81mm", "aperture": "f/4", "shutter": "1/250s", "iso": "125"},
-    {"id": "aoraki", "file": "new-zealand-aoraki-window.jpg", "w": 2600, "h": 1818, "country": "new-zealand",
-     "place": {"en": "Aoraki / Mount Cook", "zh": "庫克山"},
-     "where": {"en": "New Zealand", "zh": "紐西蘭"},
-     "alt": {"en": "Aoraki / Mount Cook above a turquoise lake, framed by a car window", "zh": "從車窗望出去,土耳其藍湖面後方的庫克山"},
-     "camera": "Canon EOS R6 Mark II", "lens": "RF 70-200mm F2.8 L IS USM", "focal": "135mm", "aperture": "f/5.6", "shutter": "1/500s", "iso": "125"},
-    {"id": "park-guell", "file": "spain-park-guell-framed.jpg", "w": 1459, "h": 2200, "country": "spain",
-     "place": {"en": "Park Güell", "zh": "奎爾公園"},
-     "where": {"en": "Barcelona, Spain", "zh": "西班牙 巴賽隆納"},
-     "alt": {"en": "The Sagrada Família seen through a ring of ironwork at Park Güell", "zh": "從奎爾公園的鐵花窗圓框中看見聖家堂"},
-     "guide": "posts/barcelona.html",
-     "camera": "Canon EOS R6 Mark II", "lens": "RF 70-200mm F2.8 L IS USM", "focal": "200mm", "aperture": "f/7.1", "shutter": "1/1250s", "iso": "500"},
-    {"id": "stained-glass", "file": "spain-sagrada-stained-glass.jpg", "w": 1466, "h": 2200, "country": "spain",
-     "place": {"en": "Sagrada Família, inside", "zh": "聖家堂內部"},
-     "where": {"en": "Barcelona, Spain", "zh": "西班牙 巴賽隆納"},
-     "alt": {"en": "Afternoon light through the stained glass inside the Sagrada Família", "zh": "下午的光穿過聖家堂內的彩繪玻璃"},
-     "guide": "posts/barcelona.html",
-     "best": {"en": "~15:00", "zh": "約 15:00"},
-     "note": {"en": "Book a ~13:00 entry and stay — the stained-glass light peaks around 3 pm.", "zh": "訂 13:00 左右入場然後待著——彩繪玻璃的光線在下午 3 點最美。"},
-     "map": "https://maps.app.goo.gl/xreFhk6ZWjxfWd989",
-     "camera": "Canon EOS R6 Mark II", "lens": "RF 24-105mm F4 L IS USM", "focal": "95mm", "aperture": "f/5", "shutter": "1/200s", "iso": "2000"},
-    {"id": "palau", "file": "spain-palau-musica-ceiling.jpg", "w": 2200, "h": 1466, "country": "spain",
-     "place": {"en": "Palau de la Música", "zh": "加泰隆尼亞音樂宮"},
-     "where": {"en": "Barcelona, Spain", "zh": "西班牙 巴賽隆納"},
-     "alt": {"en": "The stained-glass skylight of the Palau de la Música Catalana", "zh": "加泰隆尼亞音樂宮的彩繪玻璃天窗"},
-     "guide": "posts/barcelona.html",
-     "camera": "Canon EOS R6 Mark II", "lens": "RF 70-200mm F2.8 L IS USM", "focal": "128mm", "aperture": "f/4", "shutter": "1/160s", "iso": "1250"},
-    {"id": "gothic", "file": "spain-gothic-cathedral-street.jpg", "w": 1567, "h": 2200, "country": "spain",
-     "place": {"en": "Gothic Quarter", "zh": "哥德區"},
-     "where": {"en": "Barcelona, Spain", "zh": "西班牙 巴賽隆納"},
-     "alt": {"en": "The Cathedral spire at the end of a Gothic Quarter street at golden hour", "zh": "黃金時刻,哥德區街道盡頭的主教座堂尖塔"},
-     "guide": "posts/barcelona.html",
-     "camera": "Canon EOS R6 Mark II", "lens": "RF 24-105mm F4 L IS USM", "focal": "70mm", "aperture": "f/5.6", "shutter": "1/200s", "iso": "160"},
-    {"id": "sagrada-plaza", "file": "spain-sagrada-familia-plaza.jpg", "w": 2400, "h": 1610, "country": "spain",
-     "place": {"en": "Sagrada Família", "zh": "聖家堂"},
-     "where": {"en": "Barcelona, Spain", "zh": "西班牙 巴賽隆納"},
-     "alt": {"en": "The Sagrada Família seen from the plaza on Carrer de Mallorca", "zh": "從 Carrer de Mallorca 的廣場看聖家堂"},
-     "guide": "posts/barcelona.html",
-     "camera": "Canon EOS R6 Mark II", "lens": "RF 24-105mm F4 L IS USM", "focal": "35mm", "aperture": "f/4", "shutter": "1/640s", "iso": "125"},
-    {"id": "casa-batllo", "file": "spain-casa-batllo-facade.jpg", "w": 1466, "h": 2200, "country": "spain",
-     "place": {"en": "Casa Batlló", "zh": "巴特由之家"},
-     "where": {"en": "Barcelona, Spain", "zh": "西班牙 巴賽隆納"},
-     "alt": {"en": "The mosaic facade and bone-shaped balconies of Casa Batlló", "zh": "巴特由之家的馬賽克立面與骨骼造型陽台"},
-     "guide": "posts/barcelona.html",
-     "best": {"en": "Exterior", "zh": "只看外觀"},
-     "note": {"en": "Honest verdict: the facade from the street is enough — I skipped the ticket.", "zh": "誠實心得:街上看立面就夠了——門票錢我省下來了。"},
-     "map": "https://maps.app.goo.gl/s44FTLPJo5vFc7bv9",
-     "camera": "Canon EOS R6 Mark II", "lens": "RF 70-200mm F2.8 L IS USM", "focal": "135mm", "aperture": "f/4.5", "shutter": "1/800s", "iso": "125"}
+    {
+      "id": "bunkers",
+      "file": "spain-bunkers-carmel-sunset.jpg",
+      "w": 2200,
+      "h": 1466,
+      "country": "spain",
+      "place": {
+        "en": "Bunkers del Carmel",
+        "zh": "Bunkers del Carmel 觀景點"
+      },
+      "where": {
+        "en": "Barcelona, Spain",
+        "zh": "西班牙 巴賽隆納"
+      },
+      "alt": {
+        "en": "Barcelona and the Sagrada Família seen from Bunkers del Carmel at golden hour",
+        "zh": "黃金時刻從 Bunkers del Carmel 俯瞰巴賽隆納與聖家堂"
+      },
+      "guide": "posts/barcelona.html",
+      "best": {
+        "en": "Sunset · dawn",
+        "zh": "日落 · 清晨"
+      },
+      "note": {
+        "en": "360° city panorama. Best light at sunset or early morning; near Park Güell.",
+        "zh": "360° 城市全景。日落或清晨光線最好;離奎爾公園不遠。"
+      },
+      "map": "https://maps.app.goo.gl/beZrhWtCBGaPC3tY8",
+      "camera": "Canon EOS R6 Mark II",
+      "lens": "RF 70-200mm F2.8 L IS USM",
+      "focal": "81mm",
+      "aperture": "f/4",
+      "shutter": "1/250s",
+      "iso": "125"
+    },
+    {
+      "id": "aoraki",
+      "file": "new-zealand-aoraki-window.jpg",
+      "w": 2600,
+      "h": 1818,
+      "country": "new-zealand",
+      "place": {
+        "en": "Aoraki / Mount Cook",
+        "zh": "庫克山"
+      },
+      "where": {
+        "en": "New Zealand",
+        "zh": "紐西蘭"
+      },
+      "alt": {
+        "en": "Aoraki / Mount Cook above a turquoise lake, framed by a car window",
+        "zh": "從車窗望出去,土耳其藍湖面後方的庫克山"
+      },
+      "camera": "Canon EOS R6 Mark II",
+      "lens": "RF 70-200mm F2.8 L IS USM",
+      "focal": "135mm",
+      "aperture": "f/5.6",
+      "shutter": "1/500s",
+      "iso": "125"
+    },
+    {
+      "id": "park-guell",
+      "file": "spain-park-guell-framed.jpg",
+      "w": 1459,
+      "h": 2200,
+      "country": "spain",
+      "place": {
+        "en": "Park Güell",
+        "zh": "奎爾公園"
+      },
+      "where": {
+        "en": "Barcelona, Spain",
+        "zh": "西班牙 巴賽隆納"
+      },
+      "alt": {
+        "en": "The Sagrada Família seen through a ring of ironwork at Park Güell",
+        "zh": "從奎爾公園的鐵花窗圓框中看見聖家堂"
+      },
+      "guide": "posts/barcelona.html",
+      "camera": "Canon EOS R6 Mark II",
+      "lens": "RF 70-200mm F2.8 L IS USM",
+      "focal": "200mm",
+      "aperture": "f/7.1",
+      "shutter": "1/1250s",
+      "iso": "500"
+    },
+    {
+      "id": "stained-glass",
+      "file": "spain-sagrada-stained-glass.jpg",
+      "w": 1466,
+      "h": 2200,
+      "country": "spain",
+      "place": {
+        "en": "Sagrada Família, inside",
+        "zh": "聖家堂內部"
+      },
+      "where": {
+        "en": "Barcelona, Spain",
+        "zh": "西班牙 巴賽隆納"
+      },
+      "alt": {
+        "en": "Afternoon light through the stained glass inside the Sagrada Família",
+        "zh": "下午的光穿過聖家堂內的彩繪玻璃"
+      },
+      "guide": "posts/barcelona.html",
+      "best": {
+        "en": "~15:00",
+        "zh": "約 15:00"
+      },
+      "note": {
+        "en": "Book a ~13:00 entry and stay — the stained-glass light peaks around 3 pm.",
+        "zh": "訂 13:00 左右入場然後待著——彩繪玻璃的光線在下午 3 點最美。"
+      },
+      "map": "https://maps.app.goo.gl/xreFhk6ZWjxfWd989",
+      "camera": "Canon EOS R6 Mark II",
+      "lens": "RF 24-105mm F4 L IS USM",
+      "focal": "95mm",
+      "aperture": "f/5",
+      "shutter": "1/200s",
+      "iso": "2000"
+    },
+    {
+      "id": "palau",
+      "file": "spain-palau-musica-ceiling.jpg",
+      "w": 2200,
+      "h": 1466,
+      "country": "spain",
+      "place": {
+        "en": "Palau de la Música",
+        "zh": "加泰隆尼亞音樂宮"
+      },
+      "where": {
+        "en": "Barcelona, Spain",
+        "zh": "西班牙 巴賽隆納"
+      },
+      "alt": {
+        "en": "The stained-glass skylight of the Palau de la Música Catalana",
+        "zh": "加泰隆尼亞音樂宮的彩繪玻璃天窗"
+      },
+      "guide": "posts/barcelona.html",
+      "camera": "Canon EOS R6 Mark II",
+      "lens": "RF 70-200mm F2.8 L IS USM",
+      "focal": "128mm",
+      "aperture": "f/4",
+      "shutter": "1/160s",
+      "iso": "1250"
+    },
+    {
+      "id": "gothic",
+      "file": "spain-gothic-cathedral-street.jpg",
+      "w": 1567,
+      "h": 2200,
+      "country": "spain",
+      "place": {
+        "en": "Gothic Quarter",
+        "zh": "哥德區"
+      },
+      "where": {
+        "en": "Barcelona, Spain",
+        "zh": "西班牙 巴賽隆納"
+      },
+      "alt": {
+        "en": "The Cathedral spire at the end of a Gothic Quarter street at golden hour",
+        "zh": "黃金時刻,哥德區街道盡頭的主教座堂尖塔"
+      },
+      "guide": "posts/barcelona.html",
+      "camera": "Canon EOS R6 Mark II",
+      "lens": "RF 24-105mm F4 L IS USM",
+      "focal": "70mm",
+      "aperture": "f/5.6",
+      "shutter": "1/200s",
+      "iso": "160"
+    },
+    {
+      "id": "sagrada-plaza",
+      "file": "spain-sagrada-familia-plaza.jpg",
+      "w": 2400,
+      "h": 1610,
+      "country": "spain",
+      "place": {
+        "en": "Sagrada Família",
+        "zh": "聖家堂"
+      },
+      "where": {
+        "en": "Barcelona, Spain",
+        "zh": "西班牙 巴賽隆納"
+      },
+      "alt": {
+        "en": "The Sagrada Família seen from the plaza on Carrer de Mallorca",
+        "zh": "從 Carrer de Mallorca 的廣場看聖家堂"
+      },
+      "guide": "posts/barcelona.html",
+      "camera": "Canon EOS R6 Mark II",
+      "lens": "RF 24-105mm F4 L IS USM",
+      "focal": "35mm",
+      "aperture": "f/4",
+      "shutter": "1/640s",
+      "iso": "125"
+    },
+    {
+      "id": "casa-batllo",
+      "file": "spain-casa-batllo-facade.jpg",
+      "w": 1466,
+      "h": 2200,
+      "country": "spain",
+      "place": {
+        "en": "Casa Batlló",
+        "zh": "巴特由之家"
+      },
+      "where": {
+        "en": "Barcelona, Spain",
+        "zh": "西班牙 巴賽隆納"
+      },
+      "alt": {
+        "en": "The mosaic facade and bone-shaped balconies of Casa Batlló",
+        "zh": "巴特由之家的馬賽克立面與骨骼造型陽台"
+      },
+      "guide": "posts/barcelona.html",
+      "best": {
+        "en": "Exterior",
+        "zh": "只看外觀"
+      },
+      "note": {
+        "en": "Honest verdict: the facade from the street is enough — I skipped the ticket.",
+        "zh": "誠實心得:街上看立面就夠了——門票錢我省下來了。"
+      },
+      "map": "https://maps.app.goo.gl/s44FTLPJo5vFc7bv9",
+      "camera": "Canon EOS R6 Mark II",
+      "lens": "RF 70-200mm F2.8 L IS USM",
+      "focal": "135mm",
+      "aperture": "f/4.5",
+      "shutter": "1/800s",
+      "iso": "125"
+    }
   ],
   "guides": [
-    {"id": "barcelona", "href": "posts/barcelona.html", "country": "spain", "lead": "sagrada-plaza",
-     "title": {"en": "Barcelona", "zh": "巴賽隆納"},
-     "facts": {"en": "11 photo spots · 4 days · travelled July 2026", "zh": "11 個機位 · 4 天 · 2026 年 7 月"}}
+    {
+      "id": "barcelona",
+      "href": "posts/barcelona.html",
+      "country": "spain",
+      "lead": "sagrada-plaza",
+      "title": {
+        "en": "Barcelona",
+        "zh": "巴賽隆納"
+      },
+      "facts": {
+        "en": "11 photo spots · 4 days · travelled July 2026",
+        "zh": "11 個機位 · 4 天 · 2026 年 7 月"
+      }
+    }
   ],
   "continents": [
-    {"id": "europe", "en": "Europe", "zh": "歐洲",
-     "sub": {"en": "Old stones, alpine light, and cities that reward walking.", "zh": "古老的石牆、阿爾卑斯的光,以及值得步行的城市。"}},
-    {"id": "asia", "en": "Asia", "zh": "亞洲",
-     "sub": {"en": "Temple mornings, neon nights, and seasons that change what you shoot.", "zh": "清晨的寺廟、深夜的霓虹,以及會改變拍攝主題的四季。"}},
-    {"id": "oceania", "en": "Oceania", "zh": "大洋洲",
-     "sub": {"en": "Reefs, ridgelines, and the southern stars after dark.", "zh": "珊瑚礁、稜線,以及入夜後的南半球星空。"}},
-    {"id": "north-america", "en": "North America", "zh": "北美洲",
-     "sub": {"en": "Skylines coast to coast, one long summer.", "zh": "橫跨東西岸的天際線,一整個漫長的夏天。"}},
-    {"id": "south-america", "en": "South America", "zh": "南美洲",
-     "sub": {"en": "Uruguay, Argentina, Chile, Peru — the research has already started.", "zh": "烏拉圭、阿根廷、智利、秘魯——功課已經開始做了。"},
-     "state": {"en": "In research", "zh": "研究中"}},
-    {"id": "africa", "en": "Africa", "zh": "非洲",
-     "sub": {"en": "Savanna light, red dust, and horizons that never quite end.", "zh": "莽原的光線、赭紅的塵土,以及望不到盡頭的地平線。"},
-     "state": {"en": "No trips yet", "zh": "還沒去過"}},
-    {"id": "antarctica", "en": "Antarctica", "zh": "南極洲",
-     "sub": {"en": "The white silence at the end of the map.", "zh": "地圖盡頭的白色寂靜。"},
-     "state": {"en": "No trips yet", "zh": "還沒去過"}}
+    {
+      "id": "europe",
+      "en": "Europe",
+      "zh": "歐洲",
+      "sub": {
+        "en": "Old stones, alpine light, and cities that reward walking.",
+        "zh": "古老的石牆、阿爾卑斯的光,以及值得步行的城市。"
+      }
+    },
+    {
+      "id": "asia",
+      "en": "Asia",
+      "zh": "亞洲",
+      "sub": {
+        "en": "Temple mornings, neon nights, and seasons that change what you shoot.",
+        "zh": "清晨的寺廟、深夜的霓虹,以及會改變拍攝主題的四季。"
+      }
+    },
+    {
+      "id": "oceania",
+      "en": "Oceania",
+      "zh": "大洋洲",
+      "sub": {
+        "en": "Reefs, ridgelines, and the southern stars after dark.",
+        "zh": "珊瑚礁、稜線,以及入夜後的南半球星空。"
+      }
+    },
+    {
+      "id": "north-america",
+      "en": "North America",
+      "zh": "北美洲",
+      "sub": {
+        "en": "Skylines coast to coast, one long summer.",
+        "zh": "橫跨東西岸的天際線,一整個漫長的夏天。"
+      }
+    },
+    {
+      "id": "south-america",
+      "en": "South America",
+      "zh": "南美洲",
+      "sub": {
+        "en": "Uruguay, Argentina, Chile, Peru — the research has already started.",
+        "zh": "烏拉圭、阿根廷、智利、秘魯——功課已經開始做了。"
+      },
+      "state": {
+        "en": "In research",
+        "zh": "研究中"
+      }
+    },
+    {
+      "id": "africa",
+      "en": "Africa",
+      "zh": "非洲",
+      "sub": {
+        "en": "Savanna light, red dust, and horizons that never quite end.",
+        "zh": "莽原的光線、赭紅的塵土,以及望不到盡頭的地平線。"
+      },
+      "state": {
+        "en": "No trips yet",
+        "zh": "還沒去過"
+      }
+    },
+    {
+      "id": "antarctica",
+      "en": "Antarctica",
+      "zh": "南極洲",
+      "sub": {
+        "en": "The white silence at the end of the map.",
+        "zh": "地圖盡頭的白色寂靜。"
+      },
+      "state": {
+        "en": "No trips yet",
+        "zh": "還沒去過"
+      }
+    }
   ],
   "countries": [
-    {"id": "spain", "continent": "europe", "en": "Spain", "zh": "西班牙", "note": {"en": "Barcelona — Gaudí and golden streets.", "zh": "巴賽隆納——高第與金色街道。"}, "date": {"en": "2026.7", "zh": "2026.7"}},
-    {"id": "uk", "continent": "europe", "en": "United Kingdom", "zh": "英國", "note": {"en": "London, twice — there is always more of it.", "zh": "倫敦,去了兩次——它永遠看不完。"}, "date": {"en": "2024 · 2026", "zh": "2024 · 2026"}},
-    {"id": "france", "continent": "europe", "en": "France", "zh": "法國", "note": {"en": "The South of France in high summer.", "zh": "盛夏的南法。"}, "date": {"en": "2026.7", "zh": "2026.7"}},
-    {"id": "germany", "continent": "europe", "en": "Germany", "zh": "德國", "note": {"en": "Summer cities and castle country.", "zh": "夏日城市與城堡之路。"}, "date": {"en": "2024 summer", "zh": "2024 夏"}},
-    {"id": "switzerland", "continent": "europe", "en": "Switzerland", "zh": "瑞士", "note": {"en": "Alpine lakes and mountain rail lines.", "zh": "高山湖泊與登山鐵道。"}, "date": {"en": "2024 summer", "zh": "2024 夏"}},
-    {"id": "taiwan", "continent": "asia", "en": "Taiwan", "zh": "台灣", "note": {"en": "Home base — city ridgelines, night markets, izakaya nights.", "zh": "大本營——城市稜線、夜市,與居酒屋之夜。"}, "date": {"en": "Ongoing", "zh": "持續拍攝中"}},
-    {"id": "japan", "continent": "asia", "en": "Japan", "zh": "日本", "note": {"en": "Osaka · Kyoto · Mt. Fuji · Tokyo · Hokkaido", "zh": "大阪・京都・富士山・東京・北海道"}, "date": {"en": "2025.1", "zh": "2025.1"}},
-    {"id": "south-korea", "continent": "asia", "en": "South Korea", "zh": "韓國", "note": {"en": "Busan · Seoul · Jeju", "zh": "釜山・首爾・濟州島"}, "date": {"en": "2025.8", "zh": "2025.8"}},
-    {"id": "hong-kong", "continent": "asia", "en": "Hong Kong", "zh": "香港", "note": {"en": "Harbour nights and peak lookouts.", "zh": "維港夜色與山頂觀景。"}, "date": {"en": "2025.5", "zh": "2025.5"}},
-    {"id": "china", "continent": "asia", "en": "China", "zh": "中國", "note": {"en": "Shanghai · Hangzhou · Zhangjiajie · Chongqing", "zh": "上海・杭州・張家界・重慶"}, "date": {"en": "2026.6", "zh": "2026.6"}},
-    {"id": "singapore", "continent": "asia", "en": "Singapore", "zh": "新加坡", "note": {"en": "City gardens and evening light shows.", "zh": "城市花園與夜間燈光秀。"}, "date": {"en": "2026.4", "zh": "2026.4"}},
-    {"id": "vietnam", "continent": "asia", "en": "Vietnam", "zh": "越南", "note": {"en": "Hanoi · Ha Long Bay · Sapa · Da Nang", "zh": "河內・下龍灣・沙壩・峴港"}, "date": {"en": "2026.8", "zh": "2026.8"}},
-    {"id": "dubai", "continent": "asia", "en": "UAE · Dubai", "zh": "杜拜", "note": {"en": "Desert light and impossible skylines.", "zh": "沙漠的光與不可思議的天際線。"}, "date": {"en": "2024 summer", "zh": "2024 夏"}},
-    {"id": "australia", "continent": "oceania", "en": "Australia", "zh": "澳洲", "note": {"en": "Coastlines and southern summer light.", "zh": "海岸線與南半球的夏日光線。"}, "date": {"en": "2026.1", "zh": "2026.1"}},
-    {"id": "new-zealand", "continent": "oceania", "en": "New Zealand", "zh": "紐西蘭", "note": {"en": "Landscapes that look color-graded by nature.", "zh": "彷彿大自然親自調色的地景。"}, "date": {"en": "2026.1", "zh": "2026.1"}},
-    {"id": "usa", "continent": "north-america", "en": "United States", "zh": "美國", "note": {"en": "New York · Boston · D.C. · San Francisco · L.A.", "zh": "紐約・波士頓・華盛頓・舊金山・洛杉磯"}, "date": {"en": "2025.6–8", "zh": "2025.6–8"}}
+    {
+      "id": "spain",
+      "continent": "europe",
+      "en": "Spain",
+      "zh": "西班牙",
+      "note": {
+        "en": "Barcelona — Gaudí and golden streets.",
+        "zh": "巴賽隆納——高第與金色街道。"
+      },
+      "date": {
+        "en": "2026.7",
+        "zh": "2026.7"
+      }
+    },
+    {
+      "id": "uk",
+      "continent": "europe",
+      "en": "United Kingdom",
+      "zh": "英國",
+      "note": {
+        "en": "London, twice — there is always more of it.",
+        "zh": "倫敦,去了兩次——它永遠看不完。"
+      },
+      "date": {
+        "en": "2024 · 2026",
+        "zh": "2024 · 2026"
+      }
+    },
+    {
+      "id": "france",
+      "continent": "europe",
+      "en": "France",
+      "zh": "法國",
+      "note": {
+        "en": "The South of France in high summer.",
+        "zh": "盛夏的南法。"
+      },
+      "date": {
+        "en": "2026.7",
+        "zh": "2026.7"
+      }
+    },
+    {
+      "id": "germany",
+      "continent": "europe",
+      "en": "Germany",
+      "zh": "德國",
+      "note": {
+        "en": "Summer cities and castle country.",
+        "zh": "夏日城市與城堡之路。"
+      },
+      "date": {
+        "en": "2024 summer",
+        "zh": "2024 夏"
+      }
+    },
+    {
+      "id": "switzerland",
+      "continent": "europe",
+      "en": "Switzerland",
+      "zh": "瑞士",
+      "note": {
+        "en": "Alpine lakes and mountain rail lines.",
+        "zh": "高山湖泊與登山鐵道。"
+      },
+      "date": {
+        "en": "2024 summer",
+        "zh": "2024 夏"
+      }
+    },
+    {
+      "id": "taiwan",
+      "continent": "asia",
+      "en": "Taiwan",
+      "zh": "台灣",
+      "note": {
+        "en": "Home base — city ridgelines, night markets, izakaya nights.",
+        "zh": "大本營——城市稜線、夜市,與居酒屋之夜。"
+      },
+      "date": {
+        "en": "Ongoing",
+        "zh": "持續拍攝中"
+      }
+    },
+    {
+      "id": "japan",
+      "continent": "asia",
+      "en": "Japan",
+      "zh": "日本",
+      "note": {
+        "en": "Osaka · Kyoto · Mt. Fuji · Tokyo · Hokkaido",
+        "zh": "大阪・京都・富士山・東京・北海道"
+      },
+      "date": {
+        "en": "2025.1",
+        "zh": "2025.1"
+      }
+    },
+    {
+      "id": "south-korea",
+      "continent": "asia",
+      "en": "South Korea",
+      "zh": "韓國",
+      "note": {
+        "en": "Busan · Seoul · Jeju",
+        "zh": "釜山・首爾・濟州島"
+      },
+      "date": {
+        "en": "2025.8",
+        "zh": "2025.8"
+      }
+    },
+    {
+      "id": "hong-kong",
+      "continent": "asia",
+      "en": "Hong Kong",
+      "zh": "香港",
+      "note": {
+        "en": "Harbour nights and peak lookouts.",
+        "zh": "維港夜色與山頂觀景。"
+      },
+      "date": {
+        "en": "2025.5",
+        "zh": "2025.5"
+      }
+    },
+    {
+      "id": "china",
+      "continent": "asia",
+      "en": "China",
+      "zh": "中國",
+      "note": {
+        "en": "Shanghai · Hangzhou · Zhangjiajie · Chongqing",
+        "zh": "上海・杭州・張家界・重慶"
+      },
+      "date": {
+        "en": "2026.6",
+        "zh": "2026.6"
+      }
+    },
+    {
+      "id": "singapore",
+      "continent": "asia",
+      "en": "Singapore",
+      "zh": "新加坡",
+      "note": {
+        "en": "City gardens and evening light shows.",
+        "zh": "城市花園與夜間燈光秀。"
+      },
+      "date": {
+        "en": "2026.4",
+        "zh": "2026.4"
+      }
+    },
+    {
+      "id": "vietnam",
+      "continent": "asia",
+      "en": "Vietnam",
+      "zh": "越南",
+      "note": {
+        "en": "Hanoi · Ha Long Bay · Sapa · Da Nang",
+        "zh": "河內・下龍灣・沙壩・峴港"
+      },
+      "date": {
+        "en": "2026.8",
+        "zh": "2026.8"
+      }
+    },
+    {
+      "id": "dubai",
+      "continent": "asia",
+      "en": "UAE · Dubai",
+      "zh": "杜拜",
+      "note": {
+        "en": "Desert light and impossible skylines.",
+        "zh": "沙漠的光與不可思議的天際線。"
+      },
+      "date": {
+        "en": "2024 summer",
+        "zh": "2024 夏"
+      }
+    },
+    {
+      "id": "australia",
+      "continent": "oceania",
+      "en": "Australia",
+      "zh": "澳洲",
+      "note": {
+        "en": "Coastlines and southern summer light.",
+        "zh": "海岸線與南半球的夏日光線。"
+      },
+      "date": {
+        "en": "2026.1",
+        "zh": "2026.1"
+      }
+    },
+    {
+      "id": "new-zealand",
+      "continent": "oceania",
+      "en": "New Zealand",
+      "zh": "紐西蘭",
+      "note": {
+        "en": "Landscapes that look color-graded by nature.",
+        "zh": "彷彿大自然親自調色的地景。"
+      },
+      "date": {
+        "en": "2026.1",
+        "zh": "2026.1"
+      }
+    },
+    {
+      "id": "usa",
+      "continent": "north-america",
+      "en": "United States",
+      "zh": "美國",
+      "note": {
+        "en": "New York · Boston · D.C. · San Francisco · L.A.",
+        "zh": "紐約・波士頓・華盛頓・舊金山・洛杉磯"
+      },
+      "date": {
+        "en": "2025.6–8",
+        "zh": "2025.6–8"
+      }
+    }
   ]
 }
