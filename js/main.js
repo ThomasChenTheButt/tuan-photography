@@ -1,6 +1,6 @@
 /* ==========================================================
-   tuan photography 陳亮元 — site behavior
-   1. EN / 中文 switcher   2. Menu   3. Picking a slide up
+   tuan photography 陳亮元: site behavior
+   1. EN / 中文 switcher   2. Menu   3. Looking at one photograph
    4. Guide contents marker
    ========================================================== */
 
@@ -19,12 +19,8 @@ const i18n = {
     navSkills: 'Skills',
     navAbout: 'About',
     navMenu: 'Menu',
-    footInstagram: 'Instagram',
-    footNote: '© 2026 tuan photography 陳亮元 — All photographs are my own.',
-    followTitle: '@tuan_1127',
+    footNote: '© 2026 tuan photography 陳亮元. All photographs are my own.',
     followCta: 'Follow on Instagram',
-    slideHow: 'How this was made',
-    slideOpen: 'how this was made',
     vMaking: 'How it was made',
     vCamera: 'Camera',
     vLens: 'Lens',
@@ -36,9 +32,9 @@ const i18n = {
     vGuide: 'Read the guide',
     vNoGuide: 'The guide for this place is not written yet.',
     vMap: 'Open the map pin',
-    vClose: 'Put the slide back',
-    vPrev: 'Previous slide',
-    vNext: 'Next slide'
+    vClose: 'Close',
+    vPrev: 'Previous',
+    vNext: 'Next'
   },
   zh: {
     navGallery: '作品集',
@@ -47,12 +43,8 @@ const i18n = {
     navSkills: '攝影技巧',
     navAbout: '關於我',
     navMenu: '選單',
-    footInstagram: 'Instagram',
-    footNote: '© 2026 tuan photography 陳亮元——所有照片皆為本人拍攝。',
-    followTitle: '@tuan_1127',
-    followCta: '在 Instagram 追蹤',
-    slideHow: '這張怎麼拍',
-    slideOpen: '這張怎麼拍',
+    footNote: '© 2026 tuan photography 陳亮元。所有照片皆為本人拍攝。',
+    followCta: '追蹤 Instagram',
     vMaking: '這張怎麼拍',
     vCamera: '相機',
     vLens: '鏡頭',
@@ -64,7 +56,7 @@ const i18n = {
     vGuide: '閱讀攻略',
     vNoGuide: '這個地方的攻略還沒寫。',
     vMap: '打開地圖座標',
-    vClose: '把片子放回去',
+    vClose: '關閉',
     vPrev: '上一張',
     vNext: '下一張'
   }
@@ -118,10 +110,10 @@ menuBtn?.addEventListener('click', () => {
   menuBtn.setAttribute('aria-expanded', String(open));
 });
 
-/* ---------- 3. Picking a slide up ----------
-   The slides on this page are listed in a JSON block (#slides-data).
-   Picking one turns the lamp off and shows how it was made.
-   Every slide has its own address: page.html#view-<id> */
+/* ---------- 3. Looking at one photograph ----------
+   The photographs on this page are listed in a JSON block (#slides-data).
+   Opening one shows it large, with how it was made beside it.
+   Every photograph has its own address: page.html#view-<id> */
 
 const root = document.documentElement.dataset.root || '';
 const dataEl = document.getElementById('slides-data');
@@ -139,10 +131,10 @@ function buildViewer() {
   viewer.innerHTML = `
     <div class="viewer__bar">
       <div>
-        <button class="viewer__btn" id="viewer-prev" type="button"><svg class="icon" aria-hidden="true"><use href="#i-left"/></svg></button>
-        <button class="viewer__btn" id="viewer-next" type="button"><svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></button>
+        <button id="viewer-prev" type="button"></button>
+        <button id="viewer-next" type="button"></button>
       </div>
-      <button class="viewer__btn" id="viewer-close" type="button"><svg class="icon" aria-hidden="true"><use href="#i-close"/></svg></button>
+      <button id="viewer-close" type="button"></button>
     </div>
     <div class="viewer__photo"><img id="viewer-img" alt=""></div>
     <div class="viewer__side">
@@ -167,7 +159,6 @@ function buildViewer() {
   });
   viewer.addEventListener('close', () => {
     if (location.hash.startsWith('#view-')) history.replaceState(null, '', location.pathname + location.search);
-    markPicked(current);
     document.querySelector(`[data-slide="${current}"]`)?.focus({ preventScroll: true });
   });
 }
@@ -199,24 +190,15 @@ function renderViewer() {
   note.textContent = s.note?.[lang] ?? (s.guide ? '' : t('vNoGuide'));
   note.hidden = !note.textContent;
   const acts = [];
-  if (s.guide) {
-    acts.push(`<a class="btn" href="${root}${s.guide}#s-${s.id}">${t('vGuide')}<svg class="icon" aria-hidden="true"><use href="#i-right"/></svg></a>`);
-  }
-  if (s.map) {
-    acts.push(`<a class="go" href="${s.map}" target="_blank" rel="noopener">${t('vMap')}<svg class="icon" aria-hidden="true"><use href="#i-out"/></svg></a>`);
-  }
+  if (s.guide) acts.push(`<a class="btn" href="${root}${s.guide}#s-${s.id}">${t('vGuide')}</a>`);
+  if (s.map) acts.push(`<a href="${s.map}" target="_blank" rel="noopener">${t('vMap')}</a>`);
   viewer.querySelector('#viewer-acts').innerHTML = acts.join('');
-  viewer.querySelector('#viewer-close').setAttribute('aria-label', t('vClose'));
-  viewer.querySelector('#viewer-prev').setAttribute('aria-label', t('vPrev'));
-  viewer.querySelector('#viewer-next').setAttribute('aria-label', t('vNext'));
+  viewer.querySelector('#viewer-close').textContent = t('vClose');
+  viewer.querySelector('#viewer-prev').textContent = t('vPrev');
+  viewer.querySelector('#viewer-next').textContent = t('vNext');
   const many = order.length > 1;
   viewer.querySelector('#viewer-prev').hidden = !many;
   viewer.querySelector('#viewer-next').hidden = !many;
-}
-
-function markPicked(id) {
-  document.querySelectorAll('.slide.is-picked').forEach(el => el.classList.remove('is-picked'));
-  document.querySelectorAll(`[data-slide="${id}"]`).forEach(el => el.classList.add('is-picked'));
 }
 
 function pick(id, from) {

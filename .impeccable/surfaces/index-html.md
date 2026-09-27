@@ -32,7 +32,15 @@ email (removed from this build); whether a newsletter is wanted (removed from th
 whether the typefaces may be downloaded and hosted with the site instead of loaded from
 Google Fonts.
 
-## Direction contract
+## Superseded on 2026-09-27
+
+The owner looked at the Light Table build and did not like it. The site was redesigned the same
+day with the design-taste skill as a quiet gallery: bare photographs with no mounts, rows that
+fill the page without cropping, one neutral sans, light and dark following the system, no icons,
+no long dashes. The Light Table build is kept at git tag `light-table-v1`. The contract below
+describes that earlier build and is no longer the target.
+
+## Direction contract (Light Table, superseded)
 
 THESIS: A picture editor's light table. The photographs are the only things that glow; every
 other element is table, mount or pencil. It refuses the category's full-bleed hero slideshow
