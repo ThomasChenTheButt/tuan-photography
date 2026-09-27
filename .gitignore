@@ -1,6 +1,9 @@
 # macOS system files
 .DS_Store
 
+# Python's compiled leftovers from running tools/
+__pycache__/
+
 # Claude Code local tooling (skills, preview config) — not part of the website
 .claude/
 
