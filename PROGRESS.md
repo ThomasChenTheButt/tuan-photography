@@ -64,4 +64,5 @@ the file, but because the design lives in the shared CSS.
 ## 如何接續 How to resume
 
 Say **"continue the travel website"**. Preview runs at `localhost:8642` (I start it
-automatically). If the browser looks stale, hit **Cmd+Shift+R**.
+automatically). To open the site yourself without Claude, double-click **`start.command`**
+in the project folder — same address. A normal reload now shows the latest changes.

@@ -152,6 +152,9 @@ at the top of this file, the brief wins — the owner has already made those cal
 ## Working habits
 
 - Commit and push after every meaningful change (owner treats GitHub as autosave).
-- Verify visually in the preview before saying something is done. The browser caches hard —
-  `fetch(url, {cache:'reload'})` then reload, or tell him Cmd+Shift+R.
-- Preview: `.claude/launch.json` → "travel-site" on port 8642.
+- Verify visually in the preview before saying something is done.
+- **Local server:** `serve.py` on port 8642 — `http.server` plus a no-cache header, so a plain
+  reload shows the latest CSS/JS. Bound to 127.0.0.1 on purpose (site isn't public, originals
+  live in the folder). He starts it himself by double-clicking `start.command`.
+- Preview: `.claude/launch.json` → "travel-site" runs the same `serve.py`. If port 8642 is
+  already serving (he launched it himself), open the preview by URL instead of by name.
