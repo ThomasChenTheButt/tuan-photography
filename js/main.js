@@ -219,7 +219,8 @@ function pick(id, from) {
       big.style.viewTransitionName = 'picked';
       show();
     });
-    vt.finished.finally(() => { big.style.viewTransitionName = ''; });
+    vt.ready.catch(() => {});
+    vt.finished.catch(() => {}).finally(() => { big.style.viewTransitionName = ''; });
   } else {
     show();
   }
