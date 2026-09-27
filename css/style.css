@@ -265,10 +265,11 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 .hero-sub {
   font-weight: 300;
-  font-size: 1.2rem;
-  max-width: 540px;
-  color: rgba(253,250,244,0.88);
-  margin-bottom: 28px;
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 600px;
+  color: rgba(253,250,244,0.82);
+  margin-bottom: 26px;
 }
 
 /* EXIF strip under hero text */
