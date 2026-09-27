@@ -461,12 +461,13 @@ def build_continents():
         top = page_top("pTitle", k["en"], "pSub", k["sub"]["en"],
                        crumbs([(f"{root}destinations.html", "pathDest", "Destinations")]))
         if own:
-            grid = "\n".join(country_slide(c, root, en, zh) for c in own)
+            has = lambda c: any(x["country"] == c["id"] for x in DATA["slides"])
+            full = "\n".join(country_slide(c, root, en, zh) for c in own if has(c))
+            bare = "\n".join(country_slide(c, root, en, zh) for c in own if not has(c))
+            grids = (f'    <div class="slides">\n{full}\n    </div>\n' if full else "") \
+                + (f'    <div class="slides slides--small">\n{bare}\n    </div>\n' if bare else "")
             body = top + f"""  <section class="part">
-    <div class="slides">
-{grid}
-    </div>
-  </section>
+{grids}  </section>
 </div>"""
         else:
             en.update(emptyLabel=k["state"]["en"], emptyText="There are no photographs or guides from this continent yet.")

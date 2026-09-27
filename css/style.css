@@ -378,6 +378,7 @@ a.slide:hover .slide__mount {
   gap: clamp(1.1rem, 2.6vw, 2.5rem);
 }
 .slides--small { grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr)); gap: clamp(0.8rem, 1.6vw, 1.4rem); }
+.slides + .slides--small { margin-top: var(--s-4); }
 
 @media (max-width: 48rem) and (min-width: 34.01rem) {
   .slides { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -421,11 +422,11 @@ a.slide:hover .slide__mount {
   padding-block: clamp(0.25rem, 1.5vh, 1.25rem) var(--s-5);
 }
 .first .slide { width: 100%; max-width: 125dvh; }
-.first__say { max-width: 31rem; }
-.first__say h1 { margin-top: -0.12em; font-size: var(--t-2xl); font-weight: 750; letter-spacing: -0.04em; line-height: 0.98; }
+.first__say { container-type: inline-size; }
+.first__say h1 { margin-top: -0.12em; font-size: clamp(2.2rem, 15.4cqi, 5rem); font-weight: 750; letter-spacing: -0.04em; line-height: 0.98; }
 :lang(zh-Hant) .first__say h1 { margin-top: -0.2em; letter-spacing: 0.01em; line-height: 1.16; font-weight: 800; }
 .nb { display: inline-block; }
-.first__say p { margin-top: var(--s-3); font-size: var(--t-l); line-height: 1.45; color: var(--ink-2); }
+.first__say p { max-width: 31rem; margin-top: var(--s-3); font-size: var(--t-l); line-height: 1.45; color: var(--ink-2); }
 :lang(zh-Hant) .first__say p { line-height: 1.75; }
 .first__say .btn { margin-top: var(--s-4); }
 
@@ -450,7 +451,7 @@ a.slide:hover .slide__mount {
 .row__name { font-size: var(--t-xl); font-weight: 700; letter-spacing: -0.025em; line-height: 1.05; }
 :lang(zh-Hant) .row__name { letter-spacing: 0; }
 .row__note { color: var(--ink-2); }
-.row__end { display: inline-flex; align-items: center; gap: 0.5rem; font-size: var(--t-s); color: var(--ink-2); white-space: nowrap; }
+.row__end { justify-self: end; display: inline-flex; align-items: center; gap: 0.5rem; font-size: var(--t-s); color: var(--ink-2); white-space: nowrap; }
 a.row .row__end { color: var(--ink); font-weight: 600; }
 a.row:hover .row__name { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.14em; }
 
