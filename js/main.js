@@ -150,17 +150,19 @@ function buildViewer() {
       <div class="viewer__acts" id="viewer-acts"></div>
     </div>`;
   document.body.append(viewer);
-  viewer.querySelector('#viewer-close').addEventListener('click', () => viewer.close());
+  const tidy = () => {
+    if (location.hash.startsWith('#view-')) history.replaceState(null, '', location.pathname + location.search);
+    document.querySelector(`[data-slide="${current}"]`)?.focus({ preventScroll: true });
+  };
+  viewer.querySelector('#viewer-close').addEventListener('click', () => { viewer.close(); tidy(); });
   viewer.querySelector('#viewer-prev').addEventListener('click', () => step(-1));
   viewer.querySelector('#viewer-next').addEventListener('click', () => step(1));
   viewer.addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft') step(-1);
     if (e.key === 'ArrowRight') step(1);
+    if (e.key === 'Escape') setTimeout(tidy, 0);
   });
-  viewer.addEventListener('close', () => {
-    if (location.hash.startsWith('#view-')) history.replaceState(null, '', location.pathname + location.search);
-    document.querySelector(`[data-slide="${current}"]`)?.focus({ preventScroll: true });
-  });
+  viewer.addEventListener('close', tidy);
 }
 
 function row(label, value) {
