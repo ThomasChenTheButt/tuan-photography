@@ -10,10 +10,12 @@ the output is ordinary static pages.
 To add a photograph: put the web-sized file in images/web/, add an entry to
 "slides" in data/site.json, and run this script again.
 """
+import hashlib
 import html
 import json
 import re
 import subprocess
+import sys
 import time
 from pathlib import Path
 
@@ -116,18 +118,28 @@ def clean_zh(text):
 # ------------------------------------------------------------------ photographs
 
 def make_sizes():
-    """Smaller copies of each photograph for phones and grids, converted to sRGB."""
-    for width in SIZES:
-        out_dir = ROOT / "images" / "web" / str(width)
-        out_dir.mkdir(exist_ok=True)
-        for s in DATA["slides"]:
-            src = ROOT / "images" / "web" / s["file"]
-            out = out_dir / s["file"]
-            if out.exists() and out.stat().st_mtime >= src.stat().st_mtime:
+    """Smaller copies of each photograph for phones and grids, converted to sRGB.
+
+    A copy is remade only when its photograph has changed. That is judged by the photograph's
+    contents, noted in images/web/sizes.json, because file dates change whenever the project
+    is copied or restored and would remake every copy for nothing.
+    """
+    web = ROOT / "images" / "web"
+    note = web / "sizes.json"
+    made = json.loads(note.read_text(encoding="utf-8")) if note.exists() else {}
+    for s in DATA["slides"]:
+        src = web / s["file"]
+        mark = hashlib.sha1(src.read_bytes()).hexdigest()
+        for width in SIZES:
+            out = web / str(width) / s["file"]
+            if out.exists() and made.get(s["file"]) == mark:
                 continue
+            out.parent.mkdir(exist_ok=True)
             subprocess.run(["sips", "--resampleWidth", str(width), "-m", SRGB,
                             "--setProperty", "formatOptions", "68", str(src), "--out", str(out)],
                            check=True, capture_output=True)
+        made[s["file"]] = mark
+    note.write_text(json.dumps(made, indent=1, sort_keys=True) + "\n", encoding="utf-8")
 
 
 def ratio(s):
@@ -729,3 +741,6 @@ if __name__ == "__main__":
     build_guide("barcelona", f"Barcelona - {SITE}", f"巴賽隆納 - {SITE}",
                 "A photographer's real 4-day Barcelona guide: Gaudí photo spots with best light, Bunkers del Carmel sunset, Tibidabo, day-by-day route, and a tested tapas list.")
     print("Done.")
+    # the owner's private photo list follows the site; a problem there never stops a build
+    if (ROOT / "originals").is_dir():
+        subprocess.run([sys.executable, str(ROOT / "tools" / "photo_list.py")], check=False)

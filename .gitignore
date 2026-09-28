@@ -7,8 +7,13 @@ __pycache__/
 # Claude Code local tooling (skills, preview config) — not part of the website
 .claude/
 
-# Original full-res photos stay on your Mac only — the website uses the
+# Your original full-res photos stay on your Mac only — the website uses the
 # web-sized copies in images/web/. Keeps the repo small and your originals private.
+# The photo list inside is private too: it can show photos that aren't published.
+originals/*
+!originals/README.md
+
+# Safety net: a folder dropped into images/ by mistake stays private as well
 images/*/
 !images/web/
 

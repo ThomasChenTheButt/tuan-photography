@@ -26,11 +26,14 @@
   ideas inbox and the local server carried over from the earlier site.
 - Fonts moved from Google to the site's own `fonts/` folder.
 - Email removed from the site's data. About biography stays as written.
+- **Photo folders split by owner:** his originals are in `originals/`, the site's copies in
+  `images/`. A private photo list (double-click `photo-list.command`) shows which photo is
+  for what.
 - Earlier the same day: the PT site icon, the ideas inbox (`IDEAS.md`), the weekly report.
 
 ## 接下來 Next up
 
-**Pick the country for the second guide**, then drop its originals into `images/<country>/`.
+**Pick the country for the second guide**, then drop its originals into `originals/<country>/`.
 The first move in the files is a new entry under `"guides"` and `"slides"` in
 `data/site.json`, plus `content/<name>.body.html` and `content/<name>.i18n.json`, modelled on
 the Barcelona pair.

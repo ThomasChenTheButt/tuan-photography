@@ -93,15 +93,29 @@ live in `data/site.json` and `content/*.i18n.json` as `en` / `zh` pairs; wording
 every page (menu, footer, viewer) is in `js/main.js` (`i18n.en` / `i18n.zh`). The build writes
 each page's strings into a `window.pageI18n` block and fixes 中文 punctuation on the way.
 
-## Photos
+## Photos — `originals/` is his, `images/` is the site's
 
-- Owner drops full-res originals into `images/<country>/`. Those are **gitignored** — they stay
-  on his Mac.
-- The site uses web-sized copies in `images/web/`, named `<country>-<subject>.jpg`,
-  long edge 2400px, JPEG quality ~62 (aim under ~1 MB).
-  `sips -Z 2400 in.jpeg --setProperty formatOptions 62 --out images/web/name.jpg`
-- To publish one: add the file, add an entry under `"slides"` in `data/site.json`, rebuild.
-  The build makes the smaller copies in `images/web/640/` and `images/web/1280/` itself.
+Split by owner on 2026-09-28, at his request, so he can tell at a glance which photo is for
+what.
+
+| Folder | Whose | What it holds |
+|---|---|---|
+| `originals/<country>/` | **his** | full-res files he drops in. **Gitignored** — they stay on his Mac |
+| `originals/portfolio/` | **his** | shots he most wants in the Gallery |
+| `images/web/` | the site's | web-sized copies, made by Claude. He never needs to open it |
+
+- **Keep every country folder, empty or not.** He asked for this: the empty ones are where he
+  will drop photos later. Don't tidy them away. A new country gets a new folder.
+- Web copies are named `<country>-<subject>.jpg`, long edge 2400px, JPEG quality ~62 (aim under
+  ~1 MB). `sips -Z 2400 in.jpeg --setProperty formatOptions 62 --out images/web/name.jpg`
+- To publish one: make the web copy, add an entry under `"slides"` in `data/site.json`,
+  rebuild. The build makes the smaller copies in `images/web/640/` and `images/web/1280/`.
+- **The photo list** — `originals/photo-list.html`, written by `tools/photo_list.py`. For each
+  photo on the site it shows the original it came from and the pages that use it, then the
+  originals not yet used, then a count per folder. It is private (it can show unpublished
+  photos) and is refreshed by every build. He opens it by double-clicking
+  `photo-list.command`. **Rerun it whenever he adds originals.** Originals are matched to web
+  copies by the capture time both files carry, so never strip that from a web copy.
 - Camera data shown on the site is read from the photograph's own file. Never invent it.
 - Only publish photos he confirms are his own — some "sample pic" links in his planning docs
   are other people's reference shots.
