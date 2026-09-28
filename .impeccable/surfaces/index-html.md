@@ -16,56 +16,54 @@ one of them at home before a trip. English and 繁體中文 readers equally.
 
 Actions wanted: follow on Instagram (`tuan_1127`); open the guide behind a photograph.
 
-Fixed: continent → country → guide hierarchy. Everything else redesigned.
-Would feel wrong even if polished: the design upstaging the photographs.
+Fixed: continent → country → guide hierarchy; the photograph viewer ("how it was made") and
+its addresses; both languages; real content only.
 
-Content on hand: 8 photographs with real camera data embedded in the files; the complete
-Barcelona guide in both languages. 15 countries have no content and stay empty.
+Would feel wrong even if polished: words laid across the opening photograph (the owner asked
+for them to be removed from the original site because they blocked the image).
 
-Adaptation: the lead slide on the home page and the plate at the top of a guide take the
-photograph's own shape instead of the square mount, because they are the two places a
-photograph is shown large outside the viewer.
+Content on hand: 8 photographs with real camera data; the complete Barcelona guide in both
+languages. 15 countries have no content and stay empty.
 
-Unresolved, waiting on the owner: next guide's country; About's real story (the current
-biography is unconfirmed copy carried over from the old site); whether to publish a contact
-email (removed from this build); whether a newsletter is wanted (removed from this build);
-whether the typefaces may be downloaded and hosted with the site instead of loaded from
-Google Fonts.
+Unresolved, waiting on the owner: next guide's country; About's real story; whether to publish
+a contact email; whether the typefaces may be hosted with the site instead of Google Fonts.
 
-## Superseded on 2026-09-27
+## History
 
-The owner looked at the Light Table build and did not like it. The site was redesigned the same
-day with the design-taste skill as a quiet gallery: bare photographs with no mounts, rows that
-fill the page without cropping, one neutral sans, light and dark following the system, no icons,
-no long dashes. The Light Table build is kept at git tag `light-table-v1`. The contract below
-describes that earlier build and is no longer the target.
+- 2026-09-27, Light Table build: owner did not like it. Kept at git tag `light-table-v1`.
+- 2026-09-27, Exhibition hang (dark ground, glacier-blue accent, one sans): kept at git tag
+  `exhibition-hang-v2`. Superseded on 2026-09-28 by the contract below.
 
-## Direction contract (Light Table, superseded)
+## Direction contract
 
-THESIS: A picture editor's light table. The photographs are the only things that glow; every
-other element is table, mount or pencil. It refuses the category's full-bleed hero slideshow
-over a white masonry grid, and its moody dark-serif opposite.
+Kind: canon, chosen by the owner. On 2026-09-28 he supplied 13 reference sites and asked for
+them to be the template. Asked which to sit alongside, he chose **Along Dusty Roads** and
+**The Common Wanderer**, a **warm light ground**, and the **whole site**. Their craft level is
+the bar. Seed key: canon-adr-tcw-20260928.
 
-OWN-WORLD: cool opal-white lit ground that brightens toward the centre; graphite slide mounts
-with square proportions and a cut window; place names written on the mount by hand; printed
-captions in a newspaper picture-desk grotesque; tabular figures for camera data; one
-grease-pencil orange used only to mark the slide that is selected. Empty mounts stand in for
-work that does not exist yet. No cream, no serif, no film-strip ornament, no mono labels.
+THESIS: A travel journal that opens like a printed magazine: one photograph fills the window
+with nothing written across it, and everything else is quiet serif and small sans on warm
+paper. It refuses the dark portfolio with a neon accent that the previous build was.
 
-STORY: I see a photograph. I learn who made it. I find out exactly how it was made, and that a
-guide exists for the place. I follow him, or I open the guide.
+OWN-WORLD: warm paper ground and a stone band that alternate by section; ink in warm
+near-black; links in clay; three earth colours (clay, olive, slate) used as flat blocks, never
+as decoration. A high-contrast display serif for names and headings, centred; a plain sans for
+reading; navigation in small tracked capitals. Square corners everywhere, rectangular buttons
+with capital labels. Photographs bare and uncropped in rows, captions beneath.
 
-FIRST VIEWPORT: the lit table fills the screen. Left of centre, one large mounted slide
-(Bunkers del Carmel, Barcelona), about two thirds of the viewport height, its place name
-written on the mount and its single control "How this was made" on the mount's lower edge.
-To the right, top-aligned with the mount: the line "Travel like a photographer", one sentence
-saying what the site is, and the Instagram follow as the one primary button. The name and a
-five-item menu sit small along the table's top edge.
+STORY: I see a photograph at full size. I read one line about who made it. I walk a wall of
+his photographs and open one to see how it was made. I find the guide and read it.
 
-FORM: light table and slide mounts, candidate 5 of 7 on the grounded list. Seed key 1181db73.
-Signature interaction: picking up a slide. The room goes dark, the slide is held up large, and
-its making (camera, lens, settings, place, guide) is read beside it; every slide has its own
-address. Motion grammar: the table's lamp strikes once on arrival; nothing else moves unless
-the visitor picks something up.
+FIRST VIEWPORT: the lead photograph edge to edge and top to bottom of the window. The name at
+top left and the menu at top right sit on the photograph in paper white. The place name is a
+small line at the bottom left. No headline, no button, no panel on the photograph.
 
-FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+FORM: magazine opening, then a centred intro on paper, three flat colour doors to the main
+sections on stone, the wall of photographs, the guide as a feature. The guide page is one
+centred column: serif title, dates, a wide lead photograph, contents, then sections with
+centred serif headings; the quick facts are a paper card overlapping a portrait photograph.
+Signature interaction: opening a photograph to read how it was made (kept). Motion: the
+opening photograph settles once on arrival; photographs rise as they enter view.
+
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review,
+the verdict, and DESIGN.md rewritten from the built pages.

@@ -28,7 +28,9 @@ SRGB = "/System/Library/ColorSync/Profiles/sRGB Profile.icc"
 SITE = "tuan photography 陳亮元"
 STAMP = time.strftime("%Y%m%d%H%M")   # added to the stylesheet and script addresses so browsers never show a stale copy
 
-FONTS = "https://fonts.googleapis.com/css2?family=Geist:wght@400..600&family=Noto+Sans+TC:wght@400..600&display=swap"
+FONTS = ("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400..600"
+         "&family=Noto+Serif+TC:wght@500..600&family=Noto+Sans+TC:wght@400..600&display=swap")
+PAPER = "#f7f2e9"   # the page ground, for the browser's own bars
 
 NAV = [("gallery", "navGallery", "Gallery", "gallery.html"),
        ("destinations", "navDestinations", "Destinations", "destinations.html"),
@@ -174,40 +176,6 @@ def piece(sid, root, en, zh, sizes, first=False, anchor=False, flex=False, data=
             f'<figcaption><b data-i18n="sp_{sid}">{e(s["place"]["en"])}</b>{second}</figcaption></figure>')
 
 
-def hang(ids, root, en, zh):
-    """Set photographs like an exhibition: which ones share a wall, and how they sit on it."""
-    def land(i):
-        return SLIDES[i]["w"] >= SLIDES[i]["h"]
-    q, spreads = list(ids), []
-    while q:
-        a = q.pop(0)
-        flip = len(spreads) % 2 == 1
-        if land(a):
-            p = next((x for x in q if not land(x)), None)
-            if p and len(spreads) % 3 != 2:
-                q.remove(p)
-                kind, group = ("duo-flip" if flip else "duo"), [a, p]
-            elif q and land(q[0]):
-                kind, group = "pair-l", [a, q.pop(0)]
-            else:
-                kind, group = ("solo-flip" if flip else "solo"), [a]
-        else:
-            ports = [x for x in q if not land(x)][:2]
-            for x in ports:
-                q.remove(x)
-            kind, group = {2: "trio", 1: "pair-p", 0: "solo-p"}[len(ports)], [a] + ports
-        spreads.append((kind, group))
-    out = []
-    for kind, group in spreads:
-        items = []
-        for n, sid in enumerate(group):
-            big = n == 0 and kind in ("duo", "duo-flip", "solo", "solo-flip", "pair-l")
-            sizes = "(max-width: 48rem) 92vw, " + ("62vw" if big else "34vw")
-            items.append("    " + piece(sid, root, en, zh, sizes))
-        out.append(f'  <div class="spread spread--{kind}">\n' + "\n".join(items) + "\n  </div>")
-    return '<div class="hang">\n' + "\n".join(out) + "\n</div>"
-
-
 def rows_of(ids, per_row=3.2):
     """Split photographs into rows of nearly equal total width, so every row fills the page
     and no photograph is cropped. per_row is how many 'widths of a square' a row should hold."""
@@ -238,7 +206,17 @@ def wall(ids, root, en, zh, per_row=3.2, anchors=False):
 
 def shot(sid, root, en, zh):
     """A photograph inside a guide, with its camera data under it."""
-    return piece(sid, root, en, zh, "(max-width: 40rem) 92vw, 22rem", anchor=True, flex=True, data=True)
+    return piece(sid, root, en, zh, "(max-width: 50rem) 92vw, 50rem", anchor=True, flex=True, data=True)
+
+
+def cover(sid, root, en, zh):
+    """The opening photograph of the home page: the whole window, nothing written across it."""
+    s = SLIDES[sid]
+    strings(s, en, zh)
+    en[f"sw_{sid}"], zh[f"sw_{sid}"] = s["where"]["en"], s["where"]["zh"]
+    return (f'<figure class="cover arrive"><a {opens(sid, root, en, zh)}>{img(s, root, "100vw", first=True)}</a>'
+            f'<figcaption><b data-i18n="sp_{sid}">{e(s["place"]["en"])}</b>'
+            f'<span data-i18n="sw_{sid}">{e(s["where"]["en"])}</span></figcaption></figure>')
 
 
 # ------------------------------------------------------------------ page frame
@@ -251,8 +229,7 @@ def head(title, desc, root):
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{e(title)}</title>
   <meta name="description" content="{e(clean_en(desc))}">
-  <meta name="theme-color" content="#fafafb" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#0e0f11" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="{PAPER}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="{FONTS}" rel="stylesheet">
@@ -262,12 +239,13 @@ def head(title, desc, root):
 """
 
 
-def header(root, current):
+def header(root, current, over=False):
     items = "\n".join(
         f'        <li><a href="{root}{href}" data-i18n="{key}"'
         + (' aria-current="page"' if current == nid else "") + f">{label}</a></li>"
         for nid, key, label, href in NAV)
-    return f"""<header class="wrap top">
+    cls = "wrap top top--over" if over else "wrap top"
+    return f"""<header class="{cls}">
   <a class="name" href="{root}index.html">tuan photography <span>陳亮元</span></a>
   <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" data-i18n="navMenu">Menu</button>
   <nav class="menu" id="menu" aria-label="Site">
@@ -296,16 +274,16 @@ def footer(root, used, en, zh):
     blob = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
     page = json.dumps({"en": en, "zh": zh}, ensure_ascii=False, indent=1).replace("</", "<\\/")
     return f"""
-<footer class="wrap foot">
-  <div class="foot__row">
+<footer class="foot">
+  <div class="wrap">
     <a class="foot__handle" href="{IG['url']}" target="_blank" rel="noopener">@{IG['handle']}</a>
-    <a class="btn" href="{IG['url']}" target="_blank" rel="noopener" data-i18n="followCta">Follow on Instagram</a>
-  </div>
-  <div class="foot__row foot__small">
-    <ul>
+    <p><a class="btn" href="{IG['url']}" target="_blank" rel="noopener" data-i18n="followCta">Follow on Instagram</a></p>
+    <div class="foot__small">
+      <ul>
 {links}
-    </ul>
-    <p data-i18n="footNote">© 2026 tuan photography 陳亮元. All photographs are my own.</p>
+      </ul>
+      <p data-i18n="footNote">© 2026 tuan photography 陳亮元. All photographs are my own.</p>
+    </div>
   </div>
 </footer>
 
@@ -319,7 +297,7 @@ window.pageI18n = {page};
 """
 
 
-def write(path, title, zh_title, desc, current, body, en, zh):
+def write(path, title, zh_title, desc, current, body, en, zh, over=False):
     root = "../" * (len(Path(path).parts) - 1)
     en["docTitle"], zh["docTitle"] = title, zh_title
     for k in list(en):
@@ -337,7 +315,7 @@ def write(path, title, zh_title, desc, current, body, en, zh):
     body = re.sub(r'aria-label="[^"]*" data-i18n-aria="([^"]+)"',
                   lambda m: f'aria-label="{e(en[m.group(1)])}" data-i18n-aria="{m.group(1)}"', body)
     used = list(dict.fromkeys(re.findall(r'data-slide="([^"]+)"', body)))
-    out = head(title, desc, root) + header(root, current) + "<main>\n" + body + "\n</main>\n" \
+    out = head(title, desc, root) + header(root, current, over) + "<main>\n" + body + "\n</main>\n" \
         + footer(root, used, en, zh)
     (ROOT / path).write_text(out, encoding="utf-8")
     print("  wrote", path)
@@ -361,7 +339,8 @@ def has_work(c):
     return any(s["country"] == c["id"] for s in DATA["slides"]) or any(g["country"] == c["id"] for g in DATA["guides"])
 
 
-def guide_row(g, root, en, zh, with_country=True):
+def feature(g, root, en, zh, with_country=True):
+    """A guide shown large: its photograph beside its name."""
     gid = g["id"]
     c = COUNTRIES[g["country"]]
     ph = SLIDES[g["lead"]]
@@ -370,13 +349,13 @@ def guide_row(g, root, en, zh, with_country=True):
     en[f"gf_{gid}"] = (c["en"] + ", " if with_country else "") + g["facts"]["en"].replace(" · ", ", ")
     zh[f"gf_{gid}"] = (c["zh"] + "、" if with_country else "") + g["facts"]["zh"].replace(" · ", "、")
     en["guideOpen"], zh["guideOpen"] = "Read the guide", "閱讀攻略"
-    return f"""<a class="guide-row" href="{root}{g['href']}">
-      <span class="guide-row__photo">{img(ph, root, "11rem")}</span>
-      <span>
-        <span class="guide-row__name" data-i18n="g_{gid}">{e(g['title']['en'])}</span>
-        <span class="guide-row__facts num" data-i18n="gf_{gid}">{e(en[f'gf_{gid}'])}</span>
+    return f"""<a class="feature" href="{root}{g['href']}">
+      <span class="feature__photo">{img(ph, root, "(max-width: 52rem) 92vw, 56vw")}</span>
+      <span class="feature__say">
+        <span class="feature__name" data-i18n="g_{gid}">{e(g['title']['en'])}</span>
+        <span class="feature__facts num" data-i18n="gf_{gid}">{e(en[f'gf_{gid}'])}</span>
+        <span class="feature__go" data-i18n="guideOpen">Read the guide</span>
       </span>
-      <span class="guide-row__go" data-i18n="guideOpen">Read the guide</span>
     </a>"""
 
 
@@ -386,41 +365,56 @@ def build_home():
     en, zh = {}, {}
     root = ""
     lead = DATA["lead"]
+    n_photos, n_places = len(DATA["slides"]), len(COUNTRIES)
     en.update(heroLine="Travel like a photographer.",
               heroSay="Landscape photographs by Thomas Chen 陳亮元. Open any one to see how it was made.",
               guidesCta="Read the guides",
-              workTitle="Photographs", guidesTitle="Guides",
-              moreText=f"Guides for {len(COUNTRIES) - 1} more countries are not written yet.",
+              workTitle="Photographs", workCta="See the gallery", guidesTitle="Guides",
+              doorsLabel="Sections",
+              doorGallery=f"{n_photos} photographs", doorPlaces=f"{n_places} countries", doorAbout="The photographer",
+              moreText=f"Guides for {n_places - 1} more countries are not written yet.",
               moreCta="See every destination")
     zh.update(heroLine='<span class="nb">像攝影師</span><span class="nb">一樣旅行。</span>',
               heroSay="陳亮元的風景攝影。點開任何一張，看它是怎麼拍的。",
               guidesCta="閱讀攻略",
-              workTitle="作品", guidesTitle="攻略",
-              moreText=f"還有 {len(COUNTRIES) - 1} 個國家的攻略還沒寫。",
+              workTitle="作品", workCta="看全部作品", guidesTitle="攻略",
+              doorsLabel="主要單元",
+              doorGallery=f"{n_photos} 張照片", doorPlaces=f"{n_places} 個國家", doorAbout="攝影師",
+              moreText=f"還有 {n_places - 1} 個國家的攻略還沒寫。",
               moreCta="看所有目的地")
     others = [x["id"] for x in DATA["slides"] if x["id"] != lead]
-    rows = "\n".join(guide_row(g, root, en, zh) for g in DATA["guides"])
-    body = f"""<div class="wrap">
-  <section class="hero arrive">
-    <div class="hero__say">
-      <h1 class="rise" style="--i: 0" data-i18n-html="heroLine">Travel like a photographer.</h1>
-      <p class="rise" style="--i: 1" data-i18n="heroSay">{e(en['heroSay'])}</p>
-      <div class="hero__acts rise" style="--i: 2">
-        <a class="btn" href="{IG['url']}" target="_blank" rel="noopener" data-i18n="followCta">Follow on Instagram</a>
-        <a class="btn btn--line" href="#guides-h" data-i18n="guidesCta">Read the guides</a>
-      </div>
+    rows = "\n".join(feature(g, root, en, zh) for g in DATA["guides"])
+    body = f"""{cover(lead, root, en, zh)}
+
+<section class="wrap intro arrive">
+  <h1 class="rise" style="--i: 0" data-i18n-html="heroLine">Travel like a photographer.</h1>
+  <p class="rise" style="--i: 1" data-i18n="heroSay">{e(en['heroSay'])}</p>
+  <div class="intro__acts rise" style="--i: 2">
+    <a class="btn" href="{IG['url']}" target="_blank" rel="noopener" data-i18n="followCta">Follow on Instagram</a>
+    <a class="btn btn--line" href="#guides-h" data-i18n="guidesCta">Read the guides</a>
+  </div>
+</section>
+
+<div class="band">
+  <nav class="wrap part part--tight" aria-label="Sections" data-i18n-aria="doorsLabel">
+    <div class="doors">
+      <a class="door door--clay" href="gallery.html"><b data-i18n="navGallery">Gallery</b><span class="num" data-i18n="doorGallery">{e(en['doorGallery'])}</span></a>
+      <a class="door door--olive" href="destinations.html"><b data-i18n="navDestinations">Destinations</b><span class="num" data-i18n="doorPlaces">{e(en['doorPlaces'])}</span></a>
+      <a class="door door--slate" href="about.html"><b data-i18n="navAbout">About</b><span data-i18n="doorAbout">{e(en['doorAbout'])}</span></a>
     </div>
-    {piece(lead, root, en, zh, "(max-width: 60rem) 92vw, 48vw", first=True)}
-  </section>
+  </nav>
+</div>
 
-  <section aria-labelledby="work-h">
-    <h2 class="sr" id="work-h" data-i18n="workTitle">Photographs</h2>
-    {hang(others, root, en, zh)}
-  </section>
+<section class="wrap part" aria-labelledby="work-h">
+  <div class="part__head"><h2 id="work-h" data-i18n="workTitle">Photographs</h2></div>
+  {wall(others, root, en, zh)}
+  <p class="part__more"><a class="btn btn--line" href="gallery.html" data-i18n="workCta">See the gallery</a></p>
+</section>
 
-  <section class="part" aria-labelledby="guides-h">
+<div class="band">
+  <section class="wrap part" aria-labelledby="guides-h">
     <div class="part__head"><h2 id="guides-h" data-i18n="guidesTitle">Guides</h2></div>
-    <div class="guides">
+    <div class="features">
     {rows}
     </div>
     <p class="after"><span data-i18n="moreText">{e(en['moreText'])}</span> <a href="{root}destinations.html" data-i18n="moreCta">See every destination</a></p>
@@ -429,7 +423,7 @@ def build_home():
     write("index.html", f"{SITE} - Landscape photographs and how each one was made",
           f"{SITE} - 風景攝影，以及每一張是怎麼拍的",
           "Landscape photographs by 陳亮元 Thomas Chen, each with the account of how it was made: camera data, where to stand, and the guide to the place.",
-          None, body, en, zh)
+          None, body, en, zh, over=True)
 
 
 def build_gallery():
@@ -454,7 +448,7 @@ def build_gallery():
         cid = c["id"]
         en[f"cn_{cid}"], zh[f"cn_{cid}"] = c["en"], c["zh"]
         names.append(f'<a href="countries/{cid}.html" data-i18n="cn_{cid}">{e(c["en"])}</a>')
-    parts.append(f"""  <section class="part" aria-labelledby="rest-h">
+    parts.append(f"""  <section class="part bleed" aria-labelledby="rest-h">
     <div class="part__head"><h2 id="rest-h" data-i18n="restTitle">Not photographed for the site yet</h2></div>
     <div class="names">{''.join(names)}</div>
   </section>
@@ -537,7 +531,7 @@ def build_continents():
                 body += f'  <section class="part">\n    <div class="tiles">{"".join(tiles)}</div>\n  </section>\n'
             if names:
                 en["restTitle"], zh["restTitle"] = "Not photographed for the site yet", "還沒有放上照片的地方"
-                body += f"""  <section class="part" aria-labelledby="rest-h">
+                body += f"""  <section class="part bleed" aria-labelledby="rest-h">
     <div class="part__head"><h2 id="rest-h" data-i18n="restTitle">Not photographed for the site yet</h2></div>
     <div class="names">{''.join(names)}</div>
   </section>
@@ -575,10 +569,10 @@ def build_countries():
         parts = [page_top("pTitle", c["en"], "pSub", c["note"]["en"], path, when)]
         if guides:
             en["guidesTitle"], zh["guidesTitle"] = "Guides", "攻略"
-            rows = "\n".join(guide_row(g, root, en, zh, with_country=False) for g in guides)
+            rows = "\n".join(feature(g, root, en, zh, with_country=False) for g in guides)
             parts.append(f"""  <section class="part" aria-labelledby="guides-h">
     <div class="part__head"><h2 id="guides-h" data-i18n="guidesTitle">Guides</h2></div>
-    <div class="guides">
+    <div class="features">
     {rows}
     </div>
   </section>""")
@@ -670,6 +664,7 @@ def build_about():
     body = f"""<div class="wrap">
   <section class="about arrive">
     <h1 class="rise" style="--i: 0" data-i18n="abTitle">{e(en['abTitle'])}</h1>
+    <div class="about__cols">
     <div class="about__say rise" style="--i: 1">
       <p class="lede" data-i18n="abLede">{e(en['abLede'])}</p>
       <p data-i18n="abBody1">{e(en['abBody1'])}</p>
@@ -682,6 +677,7 @@ def build_about():
       <div><dt data-i18n="fLens">Lenses</dt><dd>{'<br>'.join(e(x) for x in lenses)}</dd></div>
       <div><dt data-i18n="fIg">Instagram</dt><dd><a href="{IG['url']}" target="_blank" rel="noopener">@{IG['handle']}</a></dd></div>
     </dl>
+    </div>
   </section>
 </div>"""
     write("about.html", f"About - {SITE}", f"關於我 - {SITE}",
@@ -696,8 +692,10 @@ def build_guide(name, title_en, title_zh, desc):
     body = body.replace("{root}", root)
 
     body = re.sub(r"\{plate:([a-z0-9-]+)\}",
-                  lambda m: piece(m.group(1), root, en, zh, "(max-width: 60rem) 92vw, 60vw", first=True, data=True), body)
-    body = body.replace('<div class="shots shots--3">', '<div class="wall__row shots">')
+                  lambda m: piece(m.group(1), root, en, zh, "(max-width: 80rem) 92vw, 74rem", first=True, data=True), body)
+    body = re.sub(r"\{side:([a-z0-9-]+)\}",
+                  lambda m: piece(m.group(1), root, en, zh, "(max-width: 46rem) 92vw, 30rem", data=True), body)
+    body = body.replace('<div class="shots">', '<div class="wall__row shots">')
     body = re.sub(r"\{shot:([a-z0-9-]+)\}", lambda m: shot(m.group(1), root, en, zh), body)
     body = re.sub(r"\{map:([^}]+)\}",
                   lambda m: f'<a href="{m.group(1)}" target="_blank" rel="noopener" data-i18n="mapLink">Map</a>', body)
