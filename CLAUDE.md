@@ -30,13 +30,13 @@ The design is recorded in two files at the root. **Read them before any visual c
 | `DESIGN.md` | colours, type, layout, motion, every component, the do's and don'ts |
 | `PRODUCT.md` | who the site is for, what it promises, what evidence exists |
 
-Where `DESIGN.md` and `css/style.css` disagree, the stylesheet is right and `DESIGN.md` needs
+Where `DESIGN.md` and `site/css/style.css` disagree, the stylesheet is right and `DESIGN.md` needs
 updating in the same commit. The short version:
 
 | Thing | Rule |
 |---|---|
 | Ground | warm paper and a stone band alternate by section. **Light only**, no dark theme |
-| Colour | eleven tokens in `css/style.css` `:root`. Never hard-code a colour |
+| Colour | eleven tokens in `site/css/style.css` `:root`. Never hard-code a colour |
 | Earth colours | clay, olive, slate: whole flat blocks only (the three doors, the footer) |
 | Links | deep clay is the only colour that means "this can be followed" |
 | Names and headings | Playfair Display, weight 400, centred (中文: Noto Serif TC, 500) |
@@ -52,15 +52,35 @@ updating in the same commit. The short version:
 - **Build from the components in `DESIGN.md`.** A new page should introduce almost no new CSS.
 - **Never use inline `style="…"`.** Inline styling is how a page silently drifts away from the
   stylesheet and stops responding to design changes.
-- If something genuinely new is needed, add it to `css/style.css` as a **reusable class**, and
+- If something genuinely new is needed, add it to `site/css/style.css` as a **reusable class**, and
   record it in `DESIGN.md` in the same commit.
+
+## Folder layout — his things, the website, what it is built from
+
+Arranged on 2026-09-28 at his request, so the top level reads at a glance. Keep it this way:
+**nothing new at the top level without a reason he would recognise.**
+
+| At the top level | Whose | What it is |
+|---|---|---|
+| `start.command`, `photo-list.command` | his | double-click launchers |
+| `originals/`, `ideas/`, `IDEAS.md`, `experiments/` | his | his photos, his ideas, trials |
+| `site/` | visitors' | **the whole website and nothing else.** Only this folder is ever published or served |
+| `data/`, `content/`, `tools/` | Claude's | what the pages are built from, and the scripts |
+| `CLAUDE.md`, `DESIGN.md`, `PRODUCT.md`, `PROGRESS.md` | Claude's | notes. They stay at the top: tools look for them there |
+
+- Anything a visitor's browser needs goes in `site/`. Anything else stays out of it: no
+  notes, no originals, no scripts, no README.
+- After any change to the layout, run `python3 tools/check_site.py`. It follows every link,
+  photo, font and icon on every page and reports what leads nowhere. Before a risky change use
+  `--save`, after it `--compare`.
 
 ## Structure — the pages are built, not hand-written
 
 Nav: Gallery 作品集 · Destinations 目的地 · Blog 網誌 · Skills 攝影技巧 · About 關於我.
-Destinations drills down: 7 continents → country pages → guides (`posts/`).
+Destinations drills down: 7 continents → country pages → guides (`site/posts/`).
 
-**Every `.html` page is written out by `python3 tools/build.py`. Never hand-edit the HTML** —
+**Every `.html` page in `site/` is written out by `python3 tools/build.py`. Never hand-edit the
+HTML** —
 the next build overwrites it. Change the source, then rebuild:
 
 | To change | Edit |
@@ -68,12 +88,12 @@ the next build overwrites it. Change the source, then rebuild:
 | photographs, countries, continents, guides, shared wording | `data/site.json` |
 | a guide's text | `content/<name>.body.html` and `content/<name>.i18n.json` |
 | page layout, the `<head>`, top bar, footer | `tools/build.py` |
-| how anything looks | `css/style.css` |
-| behaviour (language switch, photo viewer) | `js/main.js` |
+| how anything looks | `site/css/style.css` |
+| behaviour (language switch, photo viewer) | `site/js/main.js` |
 
-**Typefaces live with the site**, in `fonts/` (his permission, 2026-09-28). Pages never contact
-Google Fonts. `css/fonts.css` is written by `tools/fonts.py`; don't edit it by hand. To change
-a typeface or weight, edit `FAMILIES` in that script, delete `fonts/`, and rerun it. Each
+**Typefaces live with the site**, in `site/fonts/` (his permission, 2026-09-28). Pages never contact
+Google Fonts. `site/css/fonts.css` is written by `tools/fonts.py`; don't edit it by hand. To change
+a typeface or weight, edit `FAMILIES` in that script, delete `site/fonts/`, and rerun it. Each
 folder keeps its `OFL.txt`, which the font licence requires.
 
 **Site icon — "PT"** (photography tuan), settled 2026-09-28 after three rounds. It sits in his
@@ -82,18 +102,18 @@ square, two geometric sans letters — and adds a strip of landscape: a dark rid
 from the Aoraki photo, a red sun, warm paper sky. Both halves are his call: plain
 dark-and-gold letters read as "too techy", and a full illustrated scene with serif letters
 didn't look like a sibling of the other two. The icon keeps its own colours, set in
-`tools/icons.py`; they are not the site's tokens. Files live in `icons/`, plus `favicon.ico`
-and `site.webmanifest` at the root. Don't edit the images by hand: change `tools/icons.py` and
-rerun it. The `<head>` tags that point at the icon are written by `tools/build.py`.
+`tools/icons.py`; they are not the site's tokens. Files live in `site/icons/`, plus
+`site/favicon.ico` and `site/site.webmanifest`. Don't edit the images by hand: change
+`tools/icons.py` and rerun it. The `<head>` tags that point at the icon are written by `tools/build.py`.
 
 ## Bilingual rule
 
 **Every user-facing string goes in BOTH languages** — never ship English-only copy. Strings
 live in `data/site.json` and `content/*.i18n.json` as `en` / `zh` pairs; wording shared by
-every page (menu, footer, viewer) is in `js/main.js` (`i18n.en` / `i18n.zh`). The build writes
+every page (menu, footer, viewer) is in `site/js/main.js` (`i18n.en` / `i18n.zh`). The build writes
 each page's strings into a `window.pageI18n` block and fixes 中文 punctuation on the way.
 
-## Photos — `originals/` is his, `images/` is the site's
+## Photos — `originals/` is his, `site/images/` is the site's
 
 Split by owner on 2026-09-28, at his request, so he can tell at a glance which photo is for
 what.
@@ -102,14 +122,14 @@ what.
 |---|---|---|
 | `originals/<country>/` | **his** | full-res files he drops in. **Gitignored** — they stay on his Mac |
 | `originals/portfolio/` | **his** | shots he most wants in the Gallery |
-| `images/web/` | the site's | web-sized copies, made by Claude. He never needs to open it |
+| `site/images/web/` | the site's | web-sized copies, made by Claude. He never needs to open it |
 
 - **Keep every country folder, empty or not.** He asked for this: the empty ones are where he
   will drop photos later. Don't tidy them away. A new country gets a new folder.
 - Web copies are named `<country>-<subject>.jpg`, long edge 2400px, JPEG quality ~62 (aim under
-  ~1 MB). `sips -Z 2400 in.jpeg --setProperty formatOptions 62 --out images/web/name.jpg`
+  ~1 MB). `sips -Z 2400 in.jpeg --setProperty formatOptions 62 --out site/images/web/name.jpg`
 - To publish one: make the web copy, add an entry under `"slides"` in `data/site.json`,
-  rebuild. The build makes the smaller copies in `images/web/640/` and `images/web/1280/`.
+  rebuild. The build makes the smaller copies in `site/images/web/640/` and `site/images/web/1280/`.
 - **The photo list** — `originals/photo-list.html`, written by `tools/photo_list.py`. For each
   photo on the site it shows the original it came from and the pages that use it, then the
   originals not yet used, then a count per folder. It is private (it can show unpublished
@@ -214,7 +234,7 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
   he'll keep it, don't edit the real site. From this folder run
   `git worktree add experiments/<name> -b exp/<name>`. One folder and one branch per experiment.
 - **Preview** — each experiment gets its own port, counting up from 8643, as an entry in
-  `.claude/launch.json`: `"runtimeArgs": ["serve.py", "<port>", "experiments/<name>"]`.
+  `.claude/launch.json`: `"runtimeArgs": ["tools/serve.py", "<port>", "experiments/<name>/site"]`.
   The real site stays on 8642 so he can compare side by side.
 - **Inside an experiment** — put a short note at the top of its `CLAUDE.md`: what is being
   tried, which skill, and which rules of this file are suspended there. Commit on its branch.
@@ -245,8 +265,9 @@ until he says he is interested in an item. Nothing it finds gets installed witho
 - After changing `data/`, `content/` or `tools/build.py`, run `python3 tools/build.py` before
   looking at the result.
 - Verify visually in the preview before saying something is done.
-- **Local server:** `serve.py` on port 8642 — `http.server` plus a no-cache header, so a plain
-  reload shows the latest CSS/JS. Bound to 127.0.0.1 on purpose (site isn't public, originals
-  live in the folder). He starts it himself by double-clicking `start.command`.
-- Preview: `.claude/launch.json` → "travel-site" runs the same `serve.py`. If port 8642 is
+- **Local server:** `tools/serve.py` on port 8642 — `http.server` plus a no-cache header, so a
+  plain reload shows the latest CSS/JS. It serves `site/` only, so notes and originals are out
+  of its reach, and it is bound to 127.0.0.1 on purpose (site isn't public). He starts it
+  himself by double-clicking `start.command`.
+- Preview: `.claude/launch.json` → "travel-site" runs the same `tools/serve.py`. If port 8642 is
   already serving (he launched it himself), open the preview by URL instead of by name.

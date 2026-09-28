@@ -13,19 +13,19 @@ __pycache__/
 originals/*
 !originals/README.md
 
-# Safety net: a folder dropped into images/ by mistake stays private as well
-images/*/
-!images/web/
+# Safety net: a folder dropped into the site's images by mistake stays private as well
+site/images/*/
+!site/images/web/
 
 # Saved reference images and videos — often other people's work, and this
 # repo is public, so they stay on your Mac. IDEAS.md (the notes) is still saved.
 ideas/
 
-# loose originals dropped straight into images/ (not the web copies)
-images/*.jpg
-images/*.jpeg
-images/*.png
-images/*.heic
+# loose originals dropped straight into the site's images (not the web copies)
+site/images/*.jpg
+site/images/*.jpeg
+site/images/*.png
+site/images/*.heic
 
 # Impeccable working files: review screenshots and decision-page payloads stay local
 .impeccable/review/

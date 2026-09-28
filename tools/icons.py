@@ -17,7 +17,8 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parent.parent
-ICONS = ROOT / 'icons'
+SITE = ROOT / 'site'
+ICONS = SITE / 'icons'
 
 PAPER = '#f6efe3'
 INK = '#241d15'
@@ -94,7 +95,7 @@ def build_icons():
     ICONS.mkdir(exist_ok=True)
     (ICONS / 'favicon.svg').write_text(svg(), encoding='utf-8')
     draw(96).save(ICONS / 'favicon-96x96.png')
-    draw(256).save(ROOT / 'favicon.ico', sizes=[(16, 16), (32, 32), (48, 48)])
+    draw(256).save(SITE / 'favicon.ico', sizes=[(16, 16), (32, 32), (48, 48)])
     # Phones round the corners themselves, so these are full-bleed squares.
     draw(180, rounded=False).convert('RGB').save(ICONS / 'apple-touch-icon.png')
     for px in (192, 512):
@@ -113,7 +114,7 @@ def build_icons():
         'background_color': PAPER,
         'display': 'standalone',
     }
-    (ROOT / 'site.webmanifest').write_text(
+    (SITE / 'site.webmanifest').write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
 
 

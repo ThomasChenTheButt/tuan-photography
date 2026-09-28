@@ -4,10 +4,10 @@
     python3 tools/build.py
 
 Reads data/site.json (photographs, countries, guides) and content/ (hand-written
-page bodies), and writes plain HTML files. Nothing here runs on the live site:
-the output is ordinary static pages.
+page bodies), and writes plain HTML files into site/. Nothing here runs on the live
+site: the output is ordinary static pages. site/ is the whole website and nothing else.
 
-To add a photograph: put the web-sized file in images/web/, add an entry to
+To add a photograph: put the web-sized file in site/images/web/, add an entry to
 "slides" in data/site.json, and run this script again.
 """
 import hashlib
@@ -20,6 +20,7 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+OUT = ROOT / "site"   # the website itself: everything a visitor receives
 DATA = json.loads((ROOT / "data" / "site.json").read_text(encoding="utf-8"))
 SLIDES = {s["id"]: s for s in DATA["slides"]}
 COUNTRIES = {c["id"]: c for c in DATA["countries"]}
@@ -121,10 +122,10 @@ def make_sizes():
     """Smaller copies of each photograph for phones and grids, converted to sRGB.
 
     A copy is remade only when its photograph has changed. That is judged by the photograph's
-    contents, noted in images/web/sizes.json, because file dates change whenever the project
+    contents, noted in site/images/web/sizes.json, because file dates change whenever the project
     is copied or restored and would remake every copy for nothing.
     """
-    web = ROOT / "images" / "web"
+    web = OUT / "images" / "web"
     note = web / "sizes.json"
     made = json.loads(note.read_text(encoding="utf-8")) if note.exists() else {}
     for s in DATA["slides"]:
@@ -333,7 +334,7 @@ def write(path, title, zh_title, desc, current, body, en, zh, over=False):
     used = list(dict.fromkeys(re.findall(r'data-slide="([^"]+)"', body)))
     out = head(title, desc, root) + header(root, current, over) + "<main>\n" + body + "\n</main>\n" \
         + footer(root, used, en, zh)
-    (ROOT / path).write_text(out, encoding="utf-8")
+    (OUT / path).write_text(out, encoding="utf-8")
     print("  wrote", path)
 
 

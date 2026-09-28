@@ -12,7 +12,7 @@
 - **Pages are built, not hand-written.** Edit `data/site.json` or `content/`, then run
   `python3 tools/build.py`. The design is recorded in `DESIGN.md` and `PRODUCT.md`.
 - **8 real photos live** — 7 from Barcelona, 1 from New Zealand (Aoraki, the opening photo).
-- **Typefaces are stored with the site** in `fonts/`. No page contacts Google.
+- **Typefaces are stored with the site** in `site/fonts/`. No page contacts Google.
 - **No email on the site.** Instagram `tuan_1127` is the contact.
 - **Not public.** GitHub Pages stays off — his call, 2026-08-08.
 
@@ -24,11 +24,13 @@
   drop. The routine is in `CLAUDE.md`.
 - He said **keep** to the redesign. It was merged into the real site, with the PT icon, the
   ideas inbox and the local server carried over from the earlier site.
-- Fonts moved from Google to the site's own `fonts/` folder.
+- Fonts moved from Google to the site's own `site/fonts/` folder.
 - Email removed from the site's data. About biography stays as written.
 - **Photo folders split by owner:** his originals are in `originals/`, the site's copies in
-  `images/`. A private photo list (double-click `photo-list.command`) shows which photo is
+  `site/images/`. A private photo list (double-click `photo-list.command`) shows which photo is
   for what.
+- **The whole website now lives in `site/`.** The top level went from 33 items to 14, and
+  only `site/` would ever be published. `tools/check_site.py` is the health check.
 - Earlier the same day: the PT site icon, the ideas inbox (`IDEAS.md`), the weekly report.
 
 ## 接下來 Next up

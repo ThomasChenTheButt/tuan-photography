@@ -9,7 +9,7 @@ originals/           ← 你的。只存在你的電腦，不會上 GitHub
   portfolio/                       最想放進作品集的照片
   photo-list.html                  照片清單（自動產生）
 
-images/              ← 網站的。Claude 做的縮小版，你不用打開
+site/                ← 整個網站。Claude 管的，你不用打開
 ```
 
 ## 看照片清單 · The photo list

@@ -56,11 +56,11 @@ to stand there.
 
 - Plain static HTML, CSS and JavaScript. No framework. The pages are written out by
   `tools/build.py` from `data/site.json` and `content/`; nothing runs on a server.
-- Bilingual switch on every page. Shared strings live in `js/main.js` (`i18n.en` / `i18n.zh`),
+- Bilingual switch on every page. Shared strings live in `site/js/main.js` (`i18n.en` / `i18n.zh`),
   per-page strings in a `window.pageI18n` block. Every user-facing string exists in both
   languages.
 - Titles are plain place names ("Barcelona"). Descriptive detail goes in the small meta line.
-- One finished guide exists: Barcelona (`posts/barcelona.html`), with 11 photo spots and a
+- One finished guide exists: Barcelona (`site/posts/barcelona.html`), with 11 photo spots and a
   day-by-day route.
 - 15 of the 16 country pages have no content yet and **stay empty shells** (owner, 2026-09-27).
 - The photo library will grow. The owner adds photographs later by dropping files into the
@@ -91,7 +91,7 @@ to stand there.
 
 ## Evidence on Hand
 
-- 8 photographs by the author, web-sized, in `images/web/`: 7 from Barcelona (city and
+- 8 photographs by the author, web-sized, in `site/images/web/`: 7 from Barcelona (city and
   architecture), 1 from New Zealand (Aoraki / Mount Cook through a car window). The owner chose
   to start with these 8 and add more later.
 - Real camera data embedded in each photo file: body (Canon EOS R6 Mark II), lens, focal

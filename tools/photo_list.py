@@ -23,10 +23,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 ORIGINALS = ROOT / "originals"
 THUMBS = ORIGINALS / ".thumbs"
-WEB = ROOT / "images" / "web"
+SITE = ROOT / "site"
+WEB = SITE / "images" / "web"
 OUT = ORIGINALS / "photo-list.html"
 KINDS = {".jpg", ".jpeg", ".png", ".heic", ".tif", ".tiff"}
-SKIP = {"experiments", "originals", "content", "ideas", ".impeccable", ".claude", ".git"}
 
 
 def e(text):
@@ -55,10 +55,8 @@ def thumb(path):
 def pages():
     """Every page of the site with its name in both languages and its text."""
     found = []
-    for page in sorted(ROOT.rglob("*.html")):
-        rel = page.relative_to(ROOT)
-        if rel.parts[0] in SKIP:
-            continue
+    for page in sorted(SITE.rglob("*.html")):
+        rel = page.relative_to(SITE)
         text = page.read_text(encoding="utf-8")
         names = {}
         for lang in ("en", "zh"):
@@ -93,9 +91,9 @@ def main():
                 label = f'{names["zh"]} {names["en"]}'
                 if rel == "index.html" and s["id"] == data.get("lead"):
                     label += "（開場照片 opening photo）"
-                where.append(f'<li><a href="../{e(rel)}">{e(label)}</a></li>')
+                where.append(f'<li><a href="../site/{e(rel)}">{e(label)}</a></li>')
         rows.append(f"""        <tr>
-          <td><img class="pl-thumb" src="../images/web/640/{e(s["file"])}" alt="" loading="lazy"></td>
+          <td><img class="pl-thumb" src="../site/images/web/640/{e(s["file"])}" alt="" loading="lazy"></td>
           <td><b class="pl-name">{e(s["place"]["zh"])}</b><span class="quiet">{e(s["place"]["en"])}</span></td>
           <td class="num">{"<br>".join(e(p.relative_to(ORIGINALS).as_posix()) for p in sources)
                            or '<span class="quiet">找不到原檔 not found</span>'}</td>
@@ -132,8 +130,8 @@ def main():
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
   <title>照片清單 - tuan photography 陳亮元</title>
-  <link rel="stylesheet" href="../css/fonts.css">
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../site/css/fonts.css">
+  <link rel="stylesheet" href="../site/css/style.css">
   <style>
     /* This page only. It borrows the site's colours, type and table; these few rules lay out the list. */
     .pl-thumb {{ width: 9rem; max-width: none; height: auto; background: var(--band); }}

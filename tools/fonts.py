@@ -3,24 +3,24 @@
 
     python3 tools/fonts.py
 
-Downloads every font file the pages need into fonts/ and writes css/fonts.css, which
+Downloads every font file the pages need into site/fonts/ and writes site/css/fonts.css, which
 names them. Run it again only when a typeface or a weight changes: edit FAMILIES below,
-delete fonts/, and rerun. Files already downloaded are left alone.
+delete site/fonts/, and rerun. Files already downloaded are left alone.
 
 The Chinese faces come as about a hundred small slices each. A browser fetches only the
 slices holding characters that are on the page, so the size of the folder is not the
 size of a page load.
 
 All four families are under the SIL Open Font License, which asks that the licence
-travels with the files: each folder in fonts/ carries its own OFL.txt.
+travels with the files: each folder in site/fonts/ carries its own OFL.txt.
 """
 import re
 import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-FONTS = ROOT / "fonts"
-SHEET = ROOT / "css" / "fonts.css"
+FONTS = ROOT / "site" / "fonts"
+SHEET = ROOT / "site" / "css" / "fonts.css"
 
 FAMILIES = ("family=Playfair+Display&family=Geist:wght@400..600"
             "&family=Noto+Serif+TC:wght@500..600&family=Noto+Sans+TC:wght@400..600")
@@ -72,7 +72,7 @@ def main():
         "/* Written by tools/fonts.py. Do not edit by hand. */\n" + "\n".join(out) + "\n",
         encoding="utf-8")
     size = sum(f.stat().st_size for f in FONTS.rglob("*.woff2")) / 1e6
-    print(f"fonts: {got} downloaded, {kept} already here, {size:.1f} MB in fonts/")
+    print(f"fonts: {got} downloaded, {kept} already here, {size:.1f} MB in site/fonts/")
 
 
 if __name__ == "__main__":
