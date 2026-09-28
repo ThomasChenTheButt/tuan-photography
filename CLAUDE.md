@@ -159,6 +159,14 @@ at the top of this file, the brief wins — the owner has already made those cal
     handoff note, not a changelog — `git log` is the changelog.
 - Then commit and push it along with the day's work.
 
+## Ideas inbox — IDEAS.md
+
+`IDEAS.md` is where his loose ideas and links to sites he likes are collected (started
+2026-09-28). When he drops a URL or an idea, add it there in 繁體中文 with the date and **what
+he likes about it** in his own words — ask if he didn't say. Collecting is not a request to
+build: don't change the site because of an entry until he asks. A liked site is a source of
+qualities, never a template to copy.
+
 ## Working habits
 
 - Commit and push after every meaningful change (owner treats GitHub as autosave).
