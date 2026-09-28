@@ -173,6 +173,11 @@ saved references are usually other people's work, so they stay on his Mac. Only 
 `IDEAS.md` are pushed. Videos can't be watched by Claude: record the link and ask him which
 moment he liked.
 
+He reads the list as a Word file, `ideas/靈感整理.docx`, grouped by 類型. It is generated:
+**after every change to `IDEAS.md`, rerun `python3 tools/ideas_doc.py`** and never edit the
+Word file by hand. Each entry is a `###` heading followed by `- 欄位: 內容` lines; `類型` sets
+the group and `圖片` names a file in `ideas/`.
+
 ## Working habits
 
 - Commit and push after every meaningful change (owner treats GitHub as autosave).
