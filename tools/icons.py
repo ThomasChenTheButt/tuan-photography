@@ -130,6 +130,9 @@ STYLESHEET = re.compile(r'^[ \t]*<link rel="stylesheet" href="((?:\.\./)*)css/st
 def wire_pages():
     added, skipped, missed = 0, 0, []
     for page in sorted(ROOT.rglob('*.html')):
+        # experiments/ holds trial copies on their own branches — never touch them from here
+        if 'experiments' in page.relative_to(ROOT).parts:
+            continue
         html = page.read_text(encoding='utf-8')
         if 'rel="icon"' in html:
             skipped += 1

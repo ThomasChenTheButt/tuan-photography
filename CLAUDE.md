@@ -185,6 +185,32 @@ line, written as **one short phrase** (about 15 characters), and `狀態` is one
 in `IDEAS.md` and are not shown in Word. Don't add the same thing twice: check the list first
 and merge into the existing entry.
 
+## Experiments 試作 — `experiments/`
+
+He is the manager: he discovers a skill or an idea, has it tried on a **copy** of the site,
+reviews it, then says keep or drop (set up 2026-09-28). The real site is never the test bed.
+
+- **Start** — when he says "try X as an experiment", or when a change is big and he isn't sure
+  he'll keep it, don't edit the real site. From this folder run
+  `git worktree add experiments/<name> -b exp/<name>`. One folder and one branch per experiment.
+- **Preview** — each experiment gets its own port, counting up from 8643, as an entry in
+  `.claude/launch.json`: `"runtimeArgs": ["serve.py", "<port>", "experiments/<name>"]`.
+  The real site stays on 8642 so he can compare side by side.
+- **Inside an experiment** — put a short note at the top of its `CLAUDE.md`: what is being
+  tried, which skill, and which rules of this file are suspended there. Commit on its branch.
+  Branches stay **local** unless he asks for a backup — the GitHub repo is public.
+- **Keep** — only on his word. Merge `exp/<name>` into `main`, check the real site in the
+  preview, then remove the folder and the branch.
+- **Drop** — `git worktree remove experiments/<name>` and `git branch -D exp/<name>`.
+  Never drag the folder to the Trash; that leaves a broken link behind.
+- `experiments/` is gitignored on `main`, and anything that scans the site for pages must skip
+  it (`tools/icons.py` does).
+- Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
+  harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
+
+Open now: `experiments/impeccable` (branch `impeccable-trial`, port 8643), a full rebuild made
+with the Impeccable and taste skills. It predates the `exp/` naming. Waiting on his verdict.
+
 ## Working habits
 
 - Commit and push after every meaningful change (owner treats GitHub as autosave).

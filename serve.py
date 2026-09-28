@@ -29,6 +29,9 @@ class NoCacheHandler(http.server.SimpleHTTPRequestHandler):
 def main():
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8642
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
+    # 第二個參數：要預覽的子資料夾，給 experiments/ 裡的試作版用（例：serve.py 8643 experiments/impeccable）
+    if len(sys.argv) > 2:
+        os.chdir(sys.argv[2])
     handler = functools.partial(NoCacheHandler, directory=os.getcwd())
     with http.server.ThreadingHTTPServer(('127.0.0.1', port), handler) as httpd:
         httpd.serve_forever()

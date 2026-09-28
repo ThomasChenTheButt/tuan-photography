@@ -56,6 +56,10 @@ the file, but because the design lives in the shared CSS.
 
 ## 等你決定 Waiting on you
 
+- **試作版 `experiments/impeccable`** (added 2026-09-28) — a full redesign on its 4th look,
+  preview at `localhost:8643`. Keep it or drop it? Until then the real site is untouched.
+  How experiments work is in `CLAUDE.md` → Experiments 試作.
+
 - **紐西蘭暫緩** — parked on his call 2026-08-08. When it restarts, the first move is dropping
   his NZ originals into `images/new-zealand/`; only one NZ photo exists today.
 - **Which country after Barcelona?** 15 of 16 country pages are still empty shells.

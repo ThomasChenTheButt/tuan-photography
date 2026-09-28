@@ -21,3 +21,7 @@ images/*.jpg
 images/*.jpeg
 images/*.png
 images/*.heic
+
+# Experiments — trial copies of the site, each on its own branch (see CLAUDE.md).
+# The folders live here; their contents belong to their own branches, not to main.
+experiments/
