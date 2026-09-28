@@ -8,11 +8,16 @@ the type they belong to. The Word file lives in ideas/, which is gitignored: it 
 people's images and the repo is public.
 
 Run from anywhere:  python3 tools/ideas_doc.py
+The same layout serves the weekly web-design report. Give it a list written in the same format
+and where to put the Word file:
+                    python3 tools/ideas_doc.py ideas/weekly/2026-09-28.md ideas/weekly/2026-09-28.docx
+The title of the Word file is the first "# " line of the list.
 Safe to rerun — the Word file is overwritten. Never edit the Word file by hand; edit IDEAS.md.
 Needs Pillow (pip install pillow). Writes the .docx directly, no Word library required.
 """
 import io
 import re
+import sys
 import zipfile
 from datetime import date
 from pathlib import Path
@@ -42,7 +47,9 @@ IMAGE_W = CONTENT_W * EMU_PER_DXA
 UNSORTED = '未分類'
 # The order the tables appear in. A type not listed here follows, in the order it first appears.
 ORDER = ['設計 Skill', '工具與連接', '找靈感的地方', '攝影師網站', '攻略網站', '教學影片',
-         '做法筆記', '互動效果']
+         '做法筆記', '互動效果',
+         # the weekly report's own types
+         'Skill 與外掛', 'AI 設計工具', '本週新聞', '靈感與資源']
 # The one line shown for an entry: the first of these fields that has something to say.
 POINT = ['重點', '喜歡它什麼', '想法', '這是什麼']
 EMPTY = {'', '待補'}
@@ -243,12 +250,12 @@ def styles():
         + '</w:styles>')
 
 
-def build(entries):
+def build(entries, title='靈感整理', source='IDEAS.md'):
     doc = Doc()
     groups = by_type(entries)
-    doc.add('靈感整理', 'Title')
+    doc.add(title, 'Title')
     doc.add(f'最後更新 {date.today().isoformat()}  ·  {len(entries)} 項  ·  '
-            f'{len(groups)} 個類型  ·  來源 IDEAS.md', 'Meta')
+            f'{len(groups)} 個類型  ·  來源 {source}', 'Meta')
     anchors = {kind: f'type{n}' for n, kind in enumerate(groups, 1)}
     doc.table([['目錄(點類型跳到那張表)', '數量']]
               + [[(f'#{anchors[kind]}', kind), str(len(found))] for kind, found in groups.items()],
@@ -286,11 +293,14 @@ def build(entries):
     return doc
 
 
-def main():
-    entries = parse(SOURCE.read_text(encoding='utf-8'))
-    doc = build(entries)
-    IDEAS.mkdir(exist_ok=True)
-    with zipfile.ZipFile(OUT, 'w', zipfile.ZIP_DEFLATED) as z:
+def main(source=SOURCE, out=OUT):
+    text = source.read_text(encoding='utf-8')
+    entries = parse(text)
+    heading = re.search(r'^# (.+)$', text, re.M)
+    title = '靈感整理' if source == SOURCE else (heading.group(1).strip() if heading else out.stem)
+    doc = build(entries, title, source.name)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as z:
         z.writestr('[Content_Types].xml',
                    '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
                    '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
@@ -319,8 +329,13 @@ def main():
         z.writestr('word/styles.xml', styles())
         for name, data in doc.media:
             z.writestr(f'word/media/{name}', data)
-    print(f'{OUT.relative_to(ROOT)} — {len(entries)} 項, {len(by_type(entries))} 個類型')
+    print(f'{out} — {len(entries)} 項, {len(by_type(entries))} 個類型')
 
 
 if __name__ == '__main__':
-    main()
+    if len(sys.argv) == 3:
+        main(Path(sys.argv[1]).resolve(), Path(sys.argv[2]).resolve())
+    elif len(sys.argv) == 1:
+        main()
+    else:
+        sys.exit('usage: python3 tools/ideas_doc.py [list.md output.docx]')

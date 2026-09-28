@@ -213,6 +213,13 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 Open now: `experiments/impeccable` (branch `impeccable-trial`, port 8643), a full rebuild made
 with the Impeccable and taste skills. It predates the `exp/` naming. Waiting on his verdict.
 
+**Weekly report 週報** (set up 2026-09-28). A scheduled task, `weekly-web-design-report`, runs
+every Monday about 9:00 and searches the web for the week's new AI web-design tools, skills,
+plugins and news. It writes `ideas/weekly/<date>.md` and builds `ideas/weekly/<date>.docx` with
+the same generator (`python3 tools/ideas_doc.py <list.md> <out.docx>`), then hands him the Word
+file in the chat. **The report is a menu, not the inbox:** nothing from it goes into `IDEAS.md`
+until he says he is interested in an item. Nothing it finds gets installed without his say.
+
 ## Working habits
 
 - Commit and push after every meaningful change (owner treats GitHub as autosave).
