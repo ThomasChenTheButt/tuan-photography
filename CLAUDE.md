@@ -167,6 +167,12 @@ he likes about it** in his own words — ask if he didn't say. Collecting is not
 build: don't change the site because of an entry until he asks. A liked site is a source of
 qualities, never a template to copy.
 
+Two kinds of entry: (1) ideas about this site, (2) collected links / images / videos.
+Image and video files go in `ideas/`, which is **gitignored** — the GitHub repo is public and
+saved references are usually other people's work, so they stay on his Mac. Only the notes in
+`IDEAS.md` are pushed. Videos can't be watched by Claude: record the link and ask him which
+moment he liked.
+
 ## Working habits
 
 - Commit and push after every meaningful change (owner treats GitHub as autosave).

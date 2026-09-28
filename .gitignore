@@ -12,6 +12,10 @@ __pycache__/
 images/*/
 !images/web/
 
+# Saved reference images and videos — often other people's work, and this
+# repo is public, so they stay on your Mac. IDEAS.md (the notes) is still saved.
+ideas/
+
 # loose originals dropped straight into images/ (not the web copies)
 images/*.jpg
 images/*.jpeg
