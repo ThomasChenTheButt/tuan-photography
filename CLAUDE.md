@@ -173,10 +173,17 @@ saved references are usually other people's work, so they stay on his Mac. Only 
 `IDEAS.md` are pushed. Videos can't be watched by Claude: record the link and ask him which
 moment he liked.
 
-He reads the list as a Word file, `ideas/靈感整理.docx`, grouped by 類型. It is generated:
+He reads the list as a Word file, `ideas/靈感整理.docx`. It is generated:
 **after every change to `IDEAS.md`, rerun `python3 tools/ideas_doc.py`** and never edit the
 Word file by hand. Each entry is a `###` heading followed by `- 欄位: 內容` lines; `類型` sets
 the group and `圖片` names a file in `ideas/`.
+
+He asked (2026-09-28) for the Word file to be **readable at a glance**: one table per 類型,
+one row per entry, showing only 名稱, 重點, 狀態 and a link. So every entry needs a `重點`
+line, written as **one short phrase** (about 15 characters), and `狀態` is one or two words
+(已安裝, 已存檔, 已移除, 未註冊, 收集中). Longer explanation goes in other fields, which stay
+in `IDEAS.md` and are not shown in Word. Don't add the same thing twice: check the list first
+and merge into the existing entry.
 
 ## Working habits
 

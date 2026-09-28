@@ -2,8 +2,10 @@
 """靈感整理產生器 — rebuilds ideas/靈感整理.docx from IDEAS.md.
 
 IDEAS.md is the running list and the only place entries are typed. This turns it into a Word
-file grouped by 類型, with saved images placed next to the idea they belong to. The Word file
-lives in ideas/, which is gitignored: it carries other people's images and the repo is public.
+file that can be scanned at a glance: one table per 類型, one row per entry, showing only
+名稱, 重點, 狀態 and a link. Everything else stays in IDEAS.md. Saved images follow the table of
+the type they belong to. The Word file lives in ideas/, which is gitignored: it carries other
+people's images and the repo is public.
 
 Run from anywhere:  python3 tools/ideas_doc.py
 Safe to rerun — the Word file is overwritten. Never edit the Word file by hand; edit IDEAS.md.
@@ -36,8 +38,12 @@ EMU_PER_DXA = 635
 IMAGE_W = CONTENT_W * EMU_PER_DXA
 
 UNSORTED = '未分類'
-# Fields shown on their own rather than as a row in the entry's table.
-HIDDEN = {'類型', '圖片'}
+# The order the tables appear in. A type not listed here follows, in the order it first appears.
+ORDER = ['設計 Skill', '工具與連接', '找靈感的地方', '攝影師網站', '攻略網站', '教學影片',
+         '做法筆記', '互動效果']
+# The one line shown for an entry: the first of these fields that has something to say.
+POINT = ['重點', '喜歡它什麼', '想法', '這是什麼']
+EMPTY = {'', '待補'}
 
 NS = ('xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" '
       'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" '
@@ -62,10 +68,19 @@ def parse(text):
 
 
 def by_type(entries):
-    groups = {}
+    found = {}
     for entry in entries:
-        groups.setdefault(entry['fields'].get('類型', UNSORTED), []).append(entry)
-    return groups
+        found.setdefault(entry['fields'].get('類型', UNSORTED), []).append(entry)
+    return {kind: found[kind] for kind in ORDER + list(found) if kind in found}
+
+
+def point(fields):
+    return next((fields[name] for name in POINT if fields.get(name, '') not in EMPTY), '')
+
+
+def url(fields):
+    link = re.search(r'https?://\S+', fields.get('網址', ''))
+    return link.group(0) if link else ''
 
 
 class Doc:
@@ -96,6 +111,10 @@ class Doc:
                 out.append(self.run(part))
         return ''.join(out)
 
+    def link(self, target, label):
+        rid = self.rel('hyperlink', target, external=True)
+        return f'<w:hyperlink r:id="{rid}">{self.run(label, "Link")}</w:hyperlink>'
+
     def para(self, runs, style=None):
         props = f'<w:pPr><w:pStyle w:val="{style}"/></w:pPr>' if style else ''
         return f'<w:p>{props}{runs}</w:p>'
@@ -118,16 +137,19 @@ class Doc:
         for i, row in enumerate(rows):
             out.append('<w:tr><w:trPr><w:cantSplit/></w:trPr>')
             for j, (cell, width) in enumerate(zip(row, widths)):
-                label = j == 0 or (header and i == 0)
-                content = (self.para(self.run(cell), 'Label') if label
-                           else self.para(self.text(cell), 'Cell'))
+                if header and i == 0:
+                    content = self.para(self.run(cell), 'Label')
+                elif isinstance(cell, tuple):          # (address, words to show)
+                    content = self.para(self.link(*cell) if cell[0] else '', 'Cell')
+                else:
+                    content = self.para(self.text(cell), 'Name' if j == 0 else 'Cell')
                 out.append(f'<w:tc><w:tcPr><w:tcW w:w="{width}" w:type="dxa"/></w:tcPr>'
                            f'{content}</w:tc>')
             out.append('</w:tr>')
         out.append('</w:tbl>')
         self.body.append(''.join(out))
 
-    def image(self, path, alt):
+    def image(self, path, alt, scale=1.0):
         # Word can't show WebP, and phone screenshots are huge — store a plain JPEG.
         picture = Image.open(path).convert('RGB')
         picture.thumbnail((1800, 1800))
@@ -137,7 +159,8 @@ class Doc:
         self.media.append((name, data.getvalue()))
         rid = self.rel('image', f'media/{name}')
         n = len(self.media)
-        cx, cy = IMAGE_W, round(IMAGE_W * picture.height / picture.width)
+        cx = round(IMAGE_W * scale)
+        cy = round(cx * picture.height / picture.width)
         a = 'http://schemas.openxmlformats.org/drawingml/2006/main'
         pic = 'http://schemas.openxmlformats.org/drawingml/2006/picture'
         self.body.append(
@@ -200,6 +223,7 @@ def styles():
         + style('Label', 'Label', para='<w:spacing w:after="0"/>',
                 run=f'{mono}<w:color w:val="{MUTED}"/><w:sz w:val="17"/>')
         + style('Cell', 'Cell', para='<w:spacing w:after="0"/>')
+        + style('Name', 'Name', para='<w:spacing w:after="0"/>', run='<w:b/>')
         + style('Picture', 'Picture',
                 para='<w:keepNext/><w:spacing w:before="160" w:after="200" w:line="240" '
                      'w:lineRule="auto"/>')
@@ -214,23 +238,38 @@ def build(entries):
     doc.add('靈感整理', 'Title')
     doc.add(f'最後更新 {date.today().isoformat()}  ·  {len(entries)} 項  ·  '
             f'{len(groups)} 個類型  ·  來源 IDEAS.md', 'Meta')
-    doc.table([['類型', '數量', '項目']]
-              + [[kind, str(len(found)), '、'.join(e['title'] for e in found)]
-                 for kind, found in groups.items()],
-              [LABEL_W, 1000, CONTENT_W - LABEL_W - 1000], header=True)
+    doc.table([['類型', '數量']] + [[kind, str(len(found))] for kind, found in groups.items()],
+              [CONTENT_W - 1000, 1000], header=True)
 
     for kind, found in groups.items():
         doc.add(kind, 'Heading1')
+        # a column appears only when some entry of this type has something to put in it
+        status = any(e['fields'].get('狀態') for e in found)
+        links = any(url(e['fields']) for e in found)
+        name_w, status_w, link_w = 2500, 1300 * status, 900 * links
+        widths = [name_w, CONTENT_W - name_w - status_w - link_w]
+        head = ['名稱', '重點']
+        if status:
+            widths.append(status_w)
+            head.append('狀態')
+        if links:
+            widths.append(link_w)
+            head.append('連結')
+        rows = [head]
         for entry in found:
             fields = entry['fields']
-            doc.add(entry['title'], 'Heading2')
-            doc.add(entry['section'], 'Label')
-            picture = IDEAS / fields.get('圖片', '')
+            row = [entry['title'], point(fields)]
+            if status:
+                row.append(fields.get('狀態', ''))
+            if links:
+                row.append((url(fields), '開啟'))
+            rows.append(row)
+        doc.table(rows, widths, header=True)
+        for entry in found:
+            picture = IDEAS / entry['fields'].get('圖片', '')
             if picture.is_file():
-                doc.image(picture, entry['title'])
-            rows = [[label, value] for label, value in fields.items() if label not in HIDDEN]
-            if rows:
-                doc.table(rows, [LABEL_W, CONTENT_W - LABEL_W])
+                doc.add(entry['title'], 'Label')
+                doc.image(picture, entry['title'], scale=0.6)
     return doc
 
 

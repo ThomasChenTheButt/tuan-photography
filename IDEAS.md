@@ -6,13 +6,15 @@
 依類型整理好的 Word 版:`ideas/靈感整理.docx`(只在你的 Mac 上)。
 每次這份清單有更動,跑一次 `python3 tools/ideas_doc.py` 就會重做。
 
-<!-- 格式:每一項是一個 ### 標題,下面接「- 欄位: 內容」。Word 版依「類型」分組。 -->
+<!-- 格式:每一項是一個 ### 標題,下面接「- 欄位: 內容」。Word 版依「類型」分組,每一類一張表,
+     只顯示 名稱、重點、狀態、連結。「重點」請寫成一句短話;其他欄位只留在這份檔案裡。 -->
 
 ## 一、關於這個網站的想法 Ideas for the site
 
 ### 攻略變成書架上的書
 - 類型: 互動效果
 - 日期: 2026-09-28
+- 重點: 滑鼠指到哪本,那本就彈出來
 - 狀態: 收集中
 - 想法: 每一篇攻略是書架上的一本書。滑鼠指到哪一本,那一本就從書架上彈出來。
 - 來源: Foliom 的書架畫面(影片截圖)
@@ -24,12 +26,14 @@
 ### wilhelmchang.com
 - 類型: 攝影師網站
 - 日期: 建站初期
+- 重點: 滿版首圖、依國家分的圖磚
 - 網址: https://wilhelmchang.com
 - 喜歡它什麼: 呈現方式 — 固定的滿版首圖、依國家分的圖磚。取它的安靜與乾淨,不照抄。
 
 ### Hannes Becker — Greenland
 - 類型: 攝影師網站
 - 日期: 2026-09-28
+- 重點: 一句話開頭,其餘全是照片
 - 網址: https://www.hannesbecker.com/greenland-1
 - 這是什麼: 攝影師 Hannes Becker 的格陵蘭專題頁。開頭一句話交代這趟東格陵蘭帆船遠征,其餘全是照片。選單把 Travel 依地點分開。
 - 喜歡它什麼: 待補
@@ -37,6 +41,7 @@
 ### Hello Emilie
 - 類型: 攝影師網站
 - 日期: 2026-09-28
+- 重點: 作品、網誌、書、商店全在一站
 - 網址: https://helloemilie.com/
 - 這是什麼: 攝影師 Emilie 的個人網站。作品集、網誌、自己的攝影書、商店、接案服務都在同一個地方。
 - 喜歡它什麼: 待補
@@ -44,6 +49,7 @@
 ### Jimmy Chin — Stills
 - 類型: 攝影師網站
 - 日期: 2026-09-28
+- 重點: 整面照片,可依主題篩選
 - 網址: https://jimmychin.com/stills/
 - 這是什麼: 攝影師 Jimmy Chin 的靜態作品頁。一整面照片,可以依主題篩選(探險、人像、地點等)。
 - 喜歡它什麼: 待補
@@ -51,12 +57,14 @@
 ### ourtravel.tw
 - 類型: 攻略網站
 - 日期: 建站初期
+- 重點: 比較表、器材清單、時間情報
 - 網址: https://ourtravel.tw
 - 喜歡它什麼: 實用的攻略內容 — 比較表、器材清單、時間情報。
 
 ### Find Us Lost
 - 類型: 攻略網站
 - 日期: 2026-09-28
+- 重點: 攻略卡片標出照片張數
 - 網址: https://finduslost.com/
 - 這是什麼: 旅遊攻略網誌。每張攻略卡片都標出裡面有幾張照片,首頁有一個「哪座希臘小島適合你」的小測驗。
 - 喜歡它什麼: 待補
@@ -64,6 +72,7 @@
 ### Salt in our Hair
 - 類型: 攻略網站
 - 日期: 2026-09-28
+- 重點: 依國家或月份找目的地
 - 網址: https://www.saltinourhair.com/
 - 這是什麼: 旅遊攻略網站。可以依國家找,也可以依月份找「現在適合去哪」,旁邊附當地氣溫。
 - 喜歡它什麼: 待補
@@ -71,6 +80,7 @@
 ### The Common Wanderer
 - 類型: 攻略網站
 - 日期: 2026-09-28
+- 重點: 深度攻略,真人親身經驗
 - 網址: https://www.thecommonwanderer.com/
 - 這是什麼: 旅遊攻略刊物。深度的目的地攻略和城市行程,強調內容都是真人親身經驗寫的。
 - 喜歡它什麼: 待補
@@ -78,6 +88,7 @@
 ### Along Dusty Roads
 - 類型: 攻略網站
 - 日期: 2026-09-28
+- 重點: 路線、故事、地點三個入口
 - 網址: https://www.alongdustyroads.com/
 - 這是什麼: Andrew 和 Emily 兩人的旅遊網站。首頁分成路線、故事、地點三個入口,攻略和攝影並重。
 - 喜歡它什麼: 待補
@@ -85,90 +96,102 @@
 ### Impeccable
 - 類型: 設計 Skill
 - 日期: 2026-09-28
+- 重點: 設計指令加自動檢查
 - 網址: https://github.com/pbakaus/impeccable
-- 狀態: 已安裝,已用來做試驗版網站
+- 狀態: 已安裝
+- 狀態說明: 已安裝,已用來做試驗版網站
 - 這是什麼: 一套設計指令(審查、打磨、排字、產生變體等),附自動檢查工具。
 - 喜歡它什麼: 待補
 
 ### Taste skill
 - 類型: 設計 Skill
 - 日期: 2026-09-28
+- 重點: 避免 AI 模板感的規則
 - 網址: https://github.com/leonxlnx/taste-skill
-- 狀態: 已安裝其中三個(design-taste-frontend、redesign-existing-projects、minimalist-ui)
+- 狀態: 已安裝
+- 狀態說明: 已安裝其中三個(design-taste-frontend、redesign-existing-projects、minimalist-ui)
 - 這是什麼: 一份設計規則手冊,目的是讓做出來的網頁不像 AI 套模板。
 - 喜歡它什麼: 待補
 
 ### Scroll-craft
 - 類型: 設計 Skill
 - 日期: 2026-09-28
+- 重點: 捲動式網站
 - 網址: https://youtu.be/QUI6Ug4cHnE
-- 狀態: 已存在 ~/Desktop/scroll-craft,留給之後的專案,不用在旅遊網站
+- 狀態: 已存檔
+- 狀態說明: 已存在 ~/Desktop/scroll-craft,留給之後的專案,不用在旅遊網站
 - 這是什麼: 影片「I Built The Ultimate Claude Website Design Skill (steal this)」介紹的捲動式網站 skill。
 - 喜歡它什麼: 待補
 
 ### 10K Websites
 - 類型: 設計 Skill
 - 日期: 2026-09-28
+- 重點: AI 影片首頁,隨捲動播放
 - 網址: https://www.youtube.com/watch?v=snErQUyqwCU&t=896s
-- 狀態: 裝過又移除,因為需要 Higgsfield 帳號
+- 狀態: 已移除
+- 狀態說明: 裝過又移除,因為需要 Higgsfield 帳號
 - 這是什麼: 影片「How to Build $10K Websites in Minutes (Claude AI)」的 skill。用 AI 生成的影片做首頁,隨捲動播放。
 - 喜歡它什麼: 待補
 
 ### Higgsfield
 - 類型: 工具與連接
 - 日期: 2026-09-28
+- 重點: AI 生成圖片和影片,付費
 - 網址: https://higgsfield.ai
-- 狀態: 還沒有帳號。要付費(以點數計)
+- 狀態: 未註冊
+- 狀態說明: 還沒有帳號。要付費(以點數計)
 - 這是什麼: AI 生成圖片和影片的服務,可以用 MCP 接到 Claude。10K Websites 需要它。
 - 喜歡它什麼: 待補
 
 ### Turn Claude Into A Design GENIUS In 3 Simple Steps
 - 類型: 教學影片
 - 日期: 2026-09-28
+- 重點: 三步驟讓 Claude 做出好設計
 - 網址: https://youtu.be/7FU98O0JLHs
-- 喜歡哪一段: 待補(Claude 看不了影片,請告訴我你記得的重點)
-
-### I Built The Ultimate Claude Website Design Skill (steal this)
-- 類型: 教學影片
-- 日期: 2026-09-28
-- 網址: https://youtube.com/watch?v=QUI6Ug4cHnE
-- 作者: 你筆記上寫的是 Nale Jerk
 - 喜歡哪一段: 待補(Claude 看不了影片,請告訴我你記得的重點)
 
 ### Pinterest
 - 類型: 找靈感的地方
 - 日期: 2026-09-28
+- 重點: 搜尋詞要具體,否則偏時尚商品
 - 網址: https://www.pinterest.com
 - Claude 備註: 找網頁設計時容易被帶去時尚和商品照。搜尋詞用 photography portfolio website、editorial web design 比較準。
 
 ### Dribbble
 - 類型: 找靈感的地方
 - 日期: 2026-09-28
+- 重點: 多為概念稿,不一定有上線
 - 網址: https://dribbble.com
 - Claude 備註: 多半是設計師的概念稿,不一定是真的上線的網站。
 
 ### Refero Styles
 - 類型: 找靈感的地方
 - 日期: 2026-09-28
+- 重點: 以產品和 App 介面為主
 - 網址: https://refero.design
 - Claude 備註: 以產品和 App 介面為主,攝影和個人品牌的例子少。
 
 ### 21st.dev
 - 類型: 找靈感的地方
 - 日期: 2026-09-28
+- 重點: React 元件庫,只能參考樣子
 - 網址: https://21st.dev
 - Claude 備註: 現成的網頁元件庫,以 React 為主。你的網站是純 HTML,只能參考樣子,不能直接拿來用。
 
-### 下指令的方法
+### 附上參考網站
 - 類型: 做法筆記
 - 日期: 2026-09-28
-- 方法一: 附上參考網站
-- 方法二: 請它一次做五個版本,再自己挑
+- 重點: 下指令時給它看例子
 
-### 做網站的流程
+### 一次做五個版本
 - 類型: 做法筆記
 - 日期: 2026-09-28
-- 第一步: 先有想法,去找讓你感興趣的網頁
+- 重點: 讓它多做幾版,自己再挑
+
+### 先找感興趣的網頁
+- 類型: 做法筆記
+- 日期: 2026-09-28
+- 重點: 有想法後,先找參考再動手
 
 ## 三、已採用/已放棄 Used or dropped
 
