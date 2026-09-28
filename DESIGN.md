@@ -1,289 +1,489 @@
 ---
 name: tuan photography 陳亮元
-description: A quiet gallery. Photographs are shown bare and large; type stays small.
+description: A travel journal set like a printed magazine. One photograph opens the site with nothing written across it; everything else is serif names and small sans on warm paper.
 colors:
-  bg: "oklch(98.6% 0.002 250)"
-  surface: "oklch(96.2% 0.003 250)"
-  line: "oklch(89% 0.004 250)"
-  text: "oklch(21% 0.006 250)"
-  text-2: "oklch(46% 0.008 250)"
-  on-text: "oklch(98.6% 0.002 250)"
-  bg-dark: "oklch(15.5% 0.004 250)"
-  surface-dark: "oklch(19.5% 0.005 250)"
-  line-dark: "oklch(29% 0.006 250)"
-  text-dark: "oklch(94% 0.003 250)"
-  text-2-dark: "oklch(70% 0.006 250)"
-  on-text-dark: "oklch(15.5% 0.004 250)"
+  bg: "oklch(96.6% 0.011 82)"
+  band: "oklch(91.8% 0.013 80)"
+  card: "oklch(98.8% 0.005 85)"
+  line: "oklch(84.5% 0.015 78)"
+  text: "oklch(25% 0.012 60)"
+  text-2: "oklch(45% 0.017 62)"
+  accent: "oklch(46% 0.092 47)"
+  paper: "oklch(97.5% 0.008 85)"
+  clay: "oklch(53% 0.088 47)"
+  olive: "oklch(49% 0.052 95)"
+  slate: "oklch(41% 0.03 195)"
 typography:
   display:
-    fontFamily: "Geist, Noto Sans TC, system-ui, sans-serif"
-    fontSize: "clamp(2rem, 1.2rem + 3vw, 3.5rem)"
-    fontWeight: 500
-    lineHeight: 1.1
-    letterSpacing: "-0.035em"
+    fontFamily: "Playfair Display, Noto Serif TC, Georgia, serif"
+    fontSize: "clamp(2.3rem, 1.45rem + 3.4vw, 4.25rem)"
+    fontWeight: 400
+    lineHeight: 1.14
+    letterSpacing: "0.005em"
   headline:
-    fontFamily: "Geist, Noto Sans TC, system-ui, sans-serif"
-    fontSize: "clamp(1.5rem, 1.2rem + 1.1vw, 2rem)"
-    fontWeight: 500
-    lineHeight: 1.1
-    letterSpacing: "-0.025em"
+    fontFamily: "Playfair Display, Noto Serif TC, Georgia, serif"
+    fontSize: "clamp(1.75rem, 1.3rem + 1.5vw, 2.4rem)"
+    fontWeight: 400
+    lineHeight: 1.14
+    letterSpacing: "0.005em"
   title:
-    fontFamily: "Geist, Noto Sans TC, system-ui, sans-serif"
+    fontFamily: "Playfair Display, Noto Serif TC, Georgia, serif"
+    fontSize: "1.5rem"
+    fontWeight: 400
+    lineHeight: 1.2
+    letterSpacing: "0.005em"
+  lead:
+    fontFamily: "Playfair Display, Noto Serif TC, Georgia, serif"
     fontSize: "1.25rem"
-    fontWeight: 500
-    lineHeight: 1.25
-    letterSpacing: "-0.012em"
+    fontWeight: 400
+    lineHeight: 1.4
   body:
     fontFamily: "Geist, Noto Sans TC, system-ui, sans-serif"
     fontSize: "1.0625rem"
     fontWeight: 400
-    lineHeight: 1.6
-  label:
+    lineHeight: 1.65
+  small:
     fontFamily: "Geist, Noto Sans TC, system-ui, sans-serif"
     fontSize: "0.9375rem"
     fontWeight: 400
-  label-strong:
-    fontFamily: "Geist, Noto Sans TC, system-ui, sans-serif"
-    fontSize: "0.9375rem"
-    fontWeight: 500
-    lineHeight: 1.2
+    lineHeight: 1.55
   caption:
     fontFamily: "Geist, Noto Sans TC, system-ui, sans-serif"
     fontSize: "0.8125rem"
     fontWeight: 400
     fontFeature: "tnum, lnum"
+  capitals:
+    fontFamily: "Geist, Noto Sans TC, system-ui, sans-serif"
+    fontSize: "0.78rem"
+    fontWeight: 500
+    lineHeight: 1.3
+    letterSpacing: "0.1em"
 rounded:
   none: "0"
-  pill: "999px"
 spacing:
   s-1: "0.5rem"
   s-2: "1rem"
   s-3: "1.5rem"
   s-4: "2.5rem"
-  s-5: "4.5rem"
-  s-6: "8rem"
-  gap: "6px"
-  edge: "clamp(1.15rem, 4vw, 3.5rem)"
-  wide: "90rem"
+  s-5: "5rem"
+  s-6: "clamp(6rem, 11vw, 9.5rem)"
+  gap: "0.75rem"
+  col-gap: "clamp(1rem, 2.4vw, 2.5rem)"
+  edge: "clamp(1.15rem, 4.5vw, 4rem)"
+  wide: "88rem"
 components:
+  top-bar:
+    textColor: "{colors.text}"
+    typography: "{typography.capitals}"
+    height: "5.5rem"
+  top-bar-over-photograph:
+    backgroundColor: "transparent"
+    textColor: "{colors.paper}"
+    typography: "{typography.capitals}"
+    height: "5.5rem"
   button-primary:
     backgroundColor: "{colors.text}"
-    textColor: "{colors.on-text}"
-    typography: "{typography.label-strong}"
-    rounded: "{rounded.pill}"
-    padding: "0.85rem 1.4rem"
+    textColor: "{colors.paper}"
+    typography: "{typography.capitals}"
+    rounded: "{rounded.none}"
+    padding: "1rem 1.7rem"
+  button-primary-hover:
+    backgroundColor: "{colors.accent}"
+    textColor: "{colors.paper}"
   button-line:
     backgroundColor: "transparent"
     textColor: "{colors.text}"
-    typography: "{typography.label-strong}"
-    rounded: "{rounded.pill}"
-    padding: "0.85rem 1.4rem"
-  photograph:
-    backgroundColor: "{colors.surface}"
+    typography: "{typography.capitals}"
     rounded: "{rounded.none}"
+    padding: "1rem 1.7rem"
+  button-line-hover:
+    backgroundColor: "{colors.text}"
+    textColor: "{colors.paper}"
+  button-footer:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.slate}"
+    typography: "{typography.capitals}"
+    rounded: "{rounded.none}"
+    padding: "1rem 1.7rem"
+  button-footer-hover:
+    backgroundColor: "transparent"
+    textColor: "{colors.paper}"
+  photograph:
+    backgroundColor: "{colors.band}"
+    textColor: "{colors.text}"
+    typography: "{typography.small}"
+    rounded: "{rounded.none}"
+  opening-photograph:
+    backgroundColor: "{colors.slate}"
+    textColor: "{colors.paper}"
+    rounded: "{rounded.none}"
+    height: "100svh"
+  intro:
+    backgroundColor: "{colors.bg}"
+    textColor: "{colors.text}"
+    typography: "{typography.display}"
+    padding: "clamp(5.5rem, 12vw, 10rem) 0"
+  door-clay:
+    backgroundColor: "{colors.clay}"
+    textColor: "{colors.paper}"
+    rounded: "{rounded.none}"
+    padding: "1.5rem"
+  door-olive:
+    backgroundColor: "{colors.olive}"
+    textColor: "{colors.paper}"
+    rounded: "{rounded.none}"
+    padding: "1.5rem"
+  door-slate:
+    backgroundColor: "{colors.slate}"
+    textColor: "{colors.paper}"
+    rounded: "{rounded.none}"
+    padding: "1.5rem"
+  feature:
+    textColor: "{colors.text}"
+    typography: "{typography.display}"
+    rounded: "{rounded.none}"
+  wall:
+    backgroundColor: "{colors.band}"
+    rounded: "{rounded.none}"
+  index:
+    textColor: "{colors.text-2}"
+    typography: "{typography.headline}"
+    width: "72rem"
+  index-place-with-work:
+    textColor: "{colors.text}"
+    typography: "{typography.headline}"
+  tile:
+    backgroundColor: "{colors.band}"
+    textColor: "{colors.text}"
+    typography: "{typography.title}"
+    rounded: "{rounded.none}"
+  names:
+    textColor: "{colors.text-2}"
+    typography: "{typography.lead}"
+    width: "52rem"
+  guide-column:
+    textColor: "{colors.text}"
+    typography: "{typography.body}"
+    width: "50rem"
+  contents-list:
+    backgroundColor: "{colors.band}"
+    textColor: "{colors.text}"
+    typography: "{typography.small}"
+    rounded: "{rounded.none}"
+    padding: "1.75rem 2rem 1.6rem"
+  contents-list-current:
+    textColor: "{colors.accent}"
+  quick-facts-card:
+    backgroundColor: "{colors.card}"
+    textColor: "{colors.text}"
+    typography: "{typography.small}"
+    rounded: "{rounded.none}"
+    padding: "2rem 2.1rem 1.5rem"
+  sheet:
+    textColor: "{colors.text}"
+    typography: "{typography.small}"
+    rounded: "{rounded.none}"
+    padding: "0.9rem 1.1rem 0.9rem 0"
   note:
-    backgroundColor: "{colors.surface}"
+    backgroundColor: "{colors.band}"
     textColor: "{colors.text}"
     rounded: "{rounded.none}"
-    padding: "1.3rem 1.5rem 1.45rem"
+    padding: "1.6rem 1.8rem 1.7rem"
+  day:
+    textColor: "{colors.text}"
+    typography: "{typography.body}"
+    padding: "1.75rem 0"
   viewer:
     backgroundColor: "{colors.bg}"
     textColor: "{colors.text}"
     rounded: "{rounded.none}"
+  footer:
+    backgroundColor: "{colors.slate}"
+    textColor: "{colors.paper}"
+    typography: "{typography.display}"
+    padding: "clamp(6rem, 11vw, 9.5rem) 0 1.5rem"
 ---
 
 # Design System: tuan photography 陳亮元
 
+This file was written on 2026-09-28 from the built site (`css/style.css`, `tools/build.py`, `js/main.js` and the pages they produce), after the rebuild that followed the owner's reference sites. It replaces the record of the earlier dark build, which is kept at the git tag `exhibition-hang-v2`. Where this file and the stylesheet ever disagree, the stylesheet is right and this file needs updating.
+
 ## Overview
 
-**Creative North Star: "The Quiet Gallery"**
+**Creative North Star: "The Printed Travel Journal"**
 
-The site is a quiet gallery. Photographs are shown bare and large, with no frames around them and no labels on top of them. Everything that is not a photograph is small ink on a neutral ground: one sans-serif face, two text colours, hairlines, and a great deal of empty space. The design's job is to stay out of the way. The owner's stated fear is the design upstaging the photographs, and every rule below follows from that.
+The site is a travel journal set like a printed magazine. It opens with one photograph that fills the whole window, with no headline, no sentence and no button on it. After that, everything is quiet: place names and headings in a serif, centred; reading text in a plain sans; the menu and the buttons in small spaced capitals; all of it on warm paper. The owner chose this direction on 2026-09-28, naming Along Dusty Roads and The Common Wanderer as the template, a warm light ground, and the whole site.
 
-There are no icons and no accent colour. Controls are words ("Menu", "Previous", "Next", "Close", "Read the guide"). Links are ink with a thin underline. The only colour on a page comes from the photographs themselves. Light and dark follow the visitor's system setting, and the same rules hold in both.
+The site is light only. The stylesheet declares `color-scheme: light` and there is no dark theme in this build. Visitors whose devices are set to dark still see the warm paper site.
 
-Motion is a response, never a greeting. Nothing animates when a page loads and nothing reveals on scroll. A photograph dims slightly under the pointer; opening one carries it from its place in the row to a large view with the account of how it was made beside it. Work that does not exist yet is said in one plain sentence, never filled with a stand-in.
+Colour is used in two ways. The ground alternates between warm paper and a slightly darker stone band, section by section. Three earth colours (clay, olive and slate) appear as flat blocks: the three doors on the home page and the footer. Links and hover states are a deep clay. There are no icons: every control is a word.
+
+Photographs are shown bare. In a row they keep their own shape and are never trimmed; their names sit beneath them, never on them. Opening any photograph shows it whole, with the account of how it was made beside it.
 
 **Key Characteristics:**
-- Bare photographs: no frames, no mounts, no captions or labels laid over them.
-- Rows of photographs fill the width and are never cropped; on a phone they stack one per row.
-- Ink on a neutral ground, light and dark. No accent colour.
-- No icons. Every control is a word.
-- One sans-serif family in three weights (400, 500, 600).
-- Square corners on photographs and surfaces; the two kinds of button are pills.
-- Flat: no shadows and no gradients. Structure is drawn with 1px hairlines and space.
-- Both languages are first-class; Chinese has its own line-height, tracking, weight and full-width punctuation.
+- One opening photograph fills the window; nothing is written across it.
+- Warm paper and a stone band alternate by section. Light only.
+- Serif for names and headings, centred. Plain sans for reading. Small spaced capitals for the menu, buttons and labels.
+- Clay, olive and slate as flat blocks: three doors and the footer.
+- Every corner is square. Buttons are rectangles with capital labels.
+- Photographs are bare and untrimmed in rows, with captions beneath.
+- No icons. Every control is a word, in both languages.
+- Both languages are first-class. Chinese has its own sizes, spacing, weight and punctuation.
+- Motion has two reasons only, arriving and walking the wall, and all of it stops under "reduce motion".
 
 ## Colors
 
-A neutral palette with a barely perceptible cool cast (hue 250, chroma at or below 0.008), in a light set and a dark set that swap under `prefers-color-scheme`. The stylesheet uses six token names; the dark set redefines the same six.
+A warm, low-colour palette: paper, stone and ink that all lean toward brown, one deep clay for links, and three muted earth colours for flat blocks. The values in the front matter are the ones in `css/style.css` and are the only source.
+
+### Primary
+- **Deep Clay** (`accent`): links inside guide text, the colour a link or word control turns under the pointer, the fill a primary button turns under the pointer, the keyboard focus ring, the section being read in the contents list, and the map link in the viewer.
+
+### Secondary
+- **Clay** (`clay`): the first door on the home page, the ground of selected text, and the thin underline beneath a place name in the destinations index when that place has work on the site.
+- **Olive** (`olive`): the second door on the home page.
+- **Slate** (`slate`): the third door, the footer that closes every page, and the colour behind the opening photograph while its file loads.
 
 ### Neutral
-- **Gallery Wall** (`bg` / `bg-dark`): the page ground, the viewer's ground and its backdrop.
-- **Holding Grey** (`surface` / `surface-dark`): the fill of a note box, and the colour a photograph's place shows while the file is still loading.
-- **Hairline** (`line` / `line-dark`): 1px rules between rows, the rule above the footer and above each continent in the index, the outline of the line button, the divider in the language switch, the slash in a breadcrumb.
-- **Ink** (`text` / `text-dark`): reading text, headings, the fill of the primary button, the focus ring, the text selection ground.
-- **Second Ink** (`text-2` / `text-2-dark`): quiet text. Sentences under titles, meta lines, menu items at rest, captions, table headers, labels in data lists, places in the index that have no work yet.
-- **Reversed Ink** (`on-text` / `on-text-dark`): lettering on an Ink fill (the primary button, selected text).
+- **Warm Paper** (`bg`): the page ground, the viewer's ground, and the top bar when the phone menu is opened over the opening photograph.
+- **Stone** (`band`): the alternating band, the contents box and the notes in a guide, and the resting colour of a photograph's place while its file loads.
+- **Card Paper** (`card`): the quick facts card in a guide, and nothing else.
+- **Hairline** (`line`): 1px rules between rows, the rule that opens each continent in the index, the resting underline of a link, the slash in the breadcrumb.
+- **Warm Ink** (`text`): reading text, headings, the fill of the primary button, the outline of the line button, the rule under a table's header row.
+- **Second Ink** (`text-2`): quiet text. Sentences under titles, dates, the second line of a caption, camera data, table headers, labels, and places in the index that have no work yet.
+- **Paper White** (`paper`): lettering on a colour block, on an ink button, and on the opening photograph; the fill of the footer button.
 
-Measured contrast from the built tokens. Light: Ink on Gallery Wall 17.0:1, Second Ink on Gallery Wall 6.8:1, Second Ink on Holding Grey 6.4:1. Dark: 16.4:1, 7.3:1, 6.9:1. Hairline against the ground measures 1.3:1 to 1.4:1 and is decorative.
+Measured contrast, worked out from the built tokens. Warm Ink on Warm Paper is about 14.5:1, on Stone 12.6:1, on Card Paper 15.5:1. Second Ink is about 6.8:1 on Warm Paper, 5.9:1 on Stone and 7.2:1 on Card Paper. Deep Clay is about 6.7:1 on Warm Paper and 5.8:1 on Stone. Paper White is about 5.1:1 on Clay, 5.8:1 on Olive, 8.1:1 on Slate and 14.9:1 on Warm Ink. The small print in the footer is about 5.9:1 on Slate. Hairline measures 1.3:1 to 1.5:1 against its ground and is decoration only; nothing depends on it to be understood.
 
 ### Named Rules
-**The No Accent Rule.** There is no accent colour, by the owner's decision. Emphasis is made with Ink against Second Ink, with weight, or with an underline. A colour that is not in the six tokens does not appear in the interface.
+**The Light Only Rule.** The site has one theme, light, on warm paper. There is no dark theme and no theme switch. A dark version would be a new decision for the owner, not an extension of this system.
 
-**The Photographs Carry The Colour Rule.** Every saturated colour on a page belongs to a photograph. Surfaces, rules and lettering stay neutral in both themes.
+**The Paper And Stone Rule.** Sections alternate between Warm Paper and Stone. A change of ground is how one section is told from the next; there are no boxes drawn around sections and no rules between them.
 
-**The Same In The Dark Rule.** Dark is not a second design. It is the same six roles with their values exchanged, chosen by the visitor's system setting. There is no theme switch on the page.
+**The Flat Block Rule.** Clay, Olive and Slate are used as whole flat blocks with Paper White lettering: the three doors and the footer. They are not used for text on paper, for borders, for tints or for gradients. The build has two small exceptions for Clay, recorded under Open Decisions.
+
+**The One Link Colour Rule.** Deep Clay is the only colour that means "this can be followed". It appears on links in reading text and on hover. It is never used as a fill at rest.
 
 ## Typography
 
-**Display Font:** Geist (with Noto Sans TC for Chinese, then system-ui, sans-serif)
-**Body Font:** Geist (same stack)
-**Label/Mono Font:** none. Labels use the same face. Figures use tabular lining numerals.
+**Display Font:** Playfair Display (with Noto Serif TC for Chinese, then Georgia, serif)
+**Body Font:** Geist (with Noto Sans TC for Chinese, then system-ui, sans-serif)
+**Label/Mono Font:** none. Labels are Geist in small spaced capitals. Figures use lining numerals, and tabular numerals wherever numbers line up.
 
-**Character:** One plain, modern sans-serif at medium weight, set tight for names and open for reading. Hierarchy comes from size and from the two inks, not from a second typeface or heavy weights.
+**Character:** A high-contrast book serif for the names of places, against a plain modern sans for everything that is read. The serif is always weight 400 in English; emphasis comes from size and from centring, not from bold.
+
+The pages load Playfair Display at weight 400, Geist at 400 to 600, Noto Serif TC at 500 to 600 and Noto Sans TC at 400 to 600, from Google Fonts.
 
 ### Hierarchy
-- **Display** (500, `clamp(2rem, 1.2rem + 3vw, 3.5rem)`, line-height 1.1, tracking -0.035em): page titles, the home page line, and the name of a guide shown as a feature. In Chinese: weight 600, line-height 1.3, tracking 0.02em.
-- **Headline** (500, `clamp(1.5rem, 1.2rem + 1.1vw, 2rem)`, line-height 1.1, tracking -0.025em): section headings, headings inside a guide, the place name in the viewer. The same size at weight 400 and tracking -0.02em sets the country names in the destinations index and the Instagram handle in the footer.
-- **Title** (500, 1.25rem, tracking -0.01em to -0.012em, line-height 1.1 to 1.25): continent names in the index, sub-headings in a guide; at weight 400, the name under a tile and the opening paragraph of About (line-height 1.5).
-- **Body** (400, 1.0625rem, line-height 1.6): reading text. Paragraphs in a guide are at most 68ch; sentences under a title at most 46ch to 56ch. Emphasis is weight 600. In Chinese: line-height 1.85.
-- **Label** (400, 0.9375rem): menu, language switch, breadcrumb, meta lines, table cells, contents list, viewer data, footer. Button labels are the same size at weight 500, line-height 1.2.
-- **Caption** (400, 0.8125rem, Second Ink): photograph captions with camera data, table header cells, the "eaten" mark.
+- **Display** (serif, 400, `clamp(2.3rem, 1.45rem + 3.4vw, 4.25rem)`, line-height 1.14): page titles, the home page line, the name of a guide shown as a feature (line-height 1.1), the Instagram handle in the footer (line-height 1).
+- **Headline** (serif, 400, `clamp(1.75rem, 1.3rem + 1.5vw, 2.4rem)`, line-height 1.14): section headings, headings inside a guide, the place name in the viewer, country names in the destinations index (line-height 1.3).
+- **Title** (serif, 400, 1.5rem, line-height 1.2): continent names in the index, the name under a tile, the heading of the quick facts card. Smaller serif names step down from here: sub-headings in a guide (1.4rem), day numbers and note headings (1.3rem), the site name in the top bar (1.45rem), a photograph's name in its caption (1.05rem to 1.15rem).
+- **Lead** (serif, 400, 1.25rem, line-height 1.4): the flowing list of place names without work, and plain rows. The opening paragraph of About is the same voice at 1.45rem.
+- **Body** (sans, 400, 1.0625rem, line-height 1.65): reading text. Paragraphs in a guide are at most 40rem wide; sentences under a title are held to between 42 and 54 characters a line. Emphasis is weight 600.
+- **Small** (sans, 400, 0.9375rem): tables (line-height 1.55), dates under a title, captions (line-height 1.4), the contents list, viewer data.
+- **Caption** (sans, 400, 0.8125rem, Second Ink, tabular figures): the second line of a caption, camera data, the area under a day number, the footer's small print. At weight 500, in capitals with 0.08em spacing, it labels a fact (quick facts, About's facts, "How it was made").
+- **Capitals** (sans, 500, 0.78rem, 0.1em spacing, capitals, line-height 1.3): the menu, the language switch, the word "Menu", buttons, the breadcrumb, the small line on a door, "Read the guide" on a feature, table header cells, the contents heading, the viewer's Previous, Next and Close.
+
+### Chinese
+Chinese is set by its own rules, switched on when the page language is `zh-Hant`. These are built, not planned.
+
+- Reading text opens to line-height 1.9; tables to 1.75.
+- Headings use Noto Serif TC at weight 500, with 0.05em spacing and line-height 1.35. Every serif name in the system (feature, tile, door, caption, day, quick facts heading) steps to weight 500 and gains 0.04em to 0.08em spacing in Chinese.
+- Small capitals become 0.875rem with 0.14em spacing, since Chinese has no capitals and needs the size.
+- 陳亮元 beside the site name is Noto Serif TC at weight 500, 0.9rem, 0.22em spacing, in Second Ink.
+- Chinese strings are set with full-width punctuation and brackets; numbers, times and Latin words keep their own. The build does this for every string (`zh_punct` in `tools/build.py`).
+- A phrase that must not break across lines is held together (`.nb`), as in the home page line, which can only break between 像攝影師 and 一樣旅行。
 
 ### Named Rules
-**The One Face Rule.** Everything is set in Geist, with Noto Sans TC for Chinese. No second family, no serif, no handwriting, no monospace. Weights are 400, 500 and 600 only, which are the weights the pages load.
+**The Plain Name Rule.** A title is the place's name: "Barcelona", "Spain", "Europe". Descriptive detail goes in the small line under it.
 
-**The Real Figures Rule.** Camera data, times, dates and prices use tabular lining figures, and every camera value shown is read from the photograph's own file. Capture clock time is not shown.
+**The Serif For Names Rule.** The serif is for names and headings, and they are centred. Reading text, tables, labels and controls are sans. The serif is not used for paragraphs, except the one opening paragraph on About.
 
-**The Plain Name Rule.** A title is the place's name ("Barcelona", "Spain"). Descriptive detail goes in the small line under it.
+**The Words Not Icons Rule.** Controls are words: "Menu", "Previous", "Next", "Close", "Read the guide", "Map". There are no icons, arrows or pictograms on controls anywhere in the build.
+
+**The Real Figures Rule.** Camera data, times, dates and prices use tabular lining figures, and every camera value shown is read from the photograph's own file. The capture clock time is not shown.
 
 **The Quiet Punctuation Rule.** No long dashes in either language: a dash that introduces becomes a colon, one that adds on becomes a comma, and ranges use a plain hyphen. At most one middle dot in a line; a list of places reads as a list, with commas. The build applies this to every string (`no_dash_en`, `no_dash_zh`, `few_dots` in `tools/build.py`).
 
-**The Full-Width Rule.** Chinese strings are set with full-width punctuation and brackets; numbers, times and Latin words keep their own (`zh_punct`). Chinese headings drop the negative tracking, open their line-height and step up to weight 600.
+**The Two Languages Rule.** Every string exists in English and in 繁體中文, and neither is a translation afterthought. Nothing ships in one language only.
 
 ## Layout
 
-Content sits in one centred column, 90rem at its widest, with a fluid side margin (`clamp(1.15rem, 4vw, 3.5rem)`). Spacing uses a six-step scale (0.5, 1, 1.5, 2.5, 4.5, 8rem). Sections are padded 4.5rem top and bottom with no rule between them; a section's heading sits 2.5rem above its content. The page is generous with empty space and spare with elements.
+Content sits in one centred column, 88rem at its widest, with a side margin that grows with the window (`clamp(1.15rem, 4.5vw, 4rem)`). Most things inside it are centred and narrower than the column, so the page reads like a magazine spread with wide margins. Spacing uses a six-step scale (0.5, 1, 1.5, 2.5, 5rem, and a large step of 6rem to 9.5rem that grows with the window).
 
-- **Top bar:** the name at the left, a five-item menu and the language switch at the right, all small, in a bar 4.25rem high. Below 52rem the menu collapses behind the word "Menu".
-- **Home:** one photograph across the full width of the window (66dvh, between 18rem and 46rem), then the line, one sentence and the two buttons beneath it on the ground, never over the photograph. One column below 52rem, where the photograph is 54dvh.
-- **Rows of photographs:** rows are worked out when the pages are built (`rows_of()` in `tools/build.py`). Photographs are split into rows of nearly equal total width, about 3.5 square-widths each, and every photograph grows in proportion to its own shape, so each row fills the column at one height and nothing is cropped. The gap is 6px in both directions. A photograph alone in its row is held to 60rem. Below 40rem photographs stack one per row at full width.
-- **Feature:** a guide is shown as a photograph (1.55fr) beside its name (1fr), bottom-aligned. One column below 52rem.
-- **Index:** destinations are a list in type. Each continent is a band under a hairline: its name and one sentence in a 16rem column, its countries flowing beside it at Headline size.
-- **Reading (guide):** a 14rem sticky contents list beside a text column of at most 46rem. Below 62rem the contents list moves above the text and sets in two columns, one below 30rem.
-- **Tables on a phone:** below 40rem each table row becomes a short stack (name, then its facts); the header row is hidden from sight and kept for screen readers.
-- **Viewer:** the photograph at the left at its full shape, a 17rem to 22rem column at the right. Below 56rem the photograph comes first and the column follows it.
-- **Footer:** a hairline, the Instagram handle at Headline size with the follow button opposite, then a small row with the menu and the copyright line.
+- **Sections:** padded by the large step top and bottom (5rem for the doors). A section's heading is centred and sits 5rem above its content. Two sections that follow each other on the same ground share one gap, not two.
+- **Bands:** a Stone band always reaches both edges of the window, even when the section sits inside the page column.
+- **Home:** the opening photograph, then the centred intro on paper, the three doors on stone, the wall of photographs on paper, the guide as a feature on stone, the footer.
+- **Rows of photographs:** rows are worked out when the pages are built (`rows_of()` in `tools/build.py`). Photographs are split into rows of nearly equal total width, about 3.2 square widths each, and every photograph grows in proportion to its own shape, so each row fills the column at one height and nothing is trimmed. The gap between photographs is 0.75rem; rows are 2.5rem apart to leave room for captions. A photograph alone in its row is held to 58rem and centred.
+- **Feature:** a twelve-column grid. The photograph takes seven columns and the name takes four, with one column of air between them. Every second feature is mirrored.
+- **Guide:** the title and lead photograph (up to 74rem wide), then one centred column of 50rem. Paragraphs, lists and notes inside it are held to 40rem. Rows of photographs in a guide break out of the column to 74rem.
+- **About:** a twelve-column grid, the text on six columns and the facts on three.
+
+How the layout changes on smaller windows, as built:
+
+| Window width | What changes |
+|---|---|
+| below 60rem | About's text and facts stack |
+| below 56rem | the menu collapses behind the word "Menu"; the viewer stacks, photograph first |
+| below 52rem | features and the destinations index become one column |
+| below 46rem | the quick facts card sits under its photograph instead of overlapping it |
+| below 44rem | the three doors stack and become short bands |
+| below 40rem | photographs stack one per row; tables become short stacks; days become one column |
+| below 34rem | the contents list becomes one column |
+| below 26rem | the site name steps down in size |
 
 ## Elevation & Depth
 
-The system is flat. There are no shadows and no gradients anywhere in the stylesheet. Depth is not simulated: a photograph sits directly on the ground, and the only tonal step is Holding Grey, used for the note box and as the resting colour of a photograph's place. The viewer is not a layer above the page; it replaces the page with the same ground.
+The system is flat. Nothing casts a shadow, at rest or on hover. Depth comes from three things only: the change of ground between paper and stone, the quick facts card laid over the edge of a photograph, and the viewer, which replaces the page with the same paper ground.
+
+There is one place with gradients: the opening photograph has a soft darkening at its top edge (14rem tall) and at its bottom edge (11rem tall), so the site name, the menu and the place name can be read in Paper White on any photograph. These are warm near-black fading to nothing (`oklch(20% 0.02 60)` at 50% and 64%). They are not decoration and are not used anywhere else.
+
+### Motion
+Motion has two reasons only, in the stylesheet's own words: arriving, and walking the wall. Everything uses one ease-out curve, `cubic-bezier(0.16, 1, 0.3, 1)`.
+
+- **Arriving, the photograph:** on the home page the opening photograph settles into place once, from very slightly enlarged to its true size, over 2.2 seconds. At the top of a guide the lead photograph is uncovered from its top edge over 1.1 seconds while it settles over 1.6 seconds.
+- **Arriving, the words:** the words under or beside that photograph rise into place after it (0.9 seconds each, the first after 0.2 seconds, each next one 0.09 seconds later). Used for the home intro, the guide's title block and About.
+- **Walking the wall:** photographs in a wall, features, tiles and doors rise gently as they enter the window. This is tied to scrolling itself and only happens in browsers that support it; in others they are simply there.
+- **Under the pointer:** a photograph enlarges very slightly inside its own frame (2%, over 0.9 seconds); a door brightens; a button changes fill; links change colour. Pressing a button moves it down 1px.
+- **Opening a photograph:** the photograph travels from its place in the row to its place in the viewer (0.46 seconds).
+- **Reduce motion:** when the visitor's device asks for reduced motion, none of the above happens. Arriving and rising are not loaded at all, every transition is switched off, and the viewer opens at once.
 
 ### Named Rules
-**The Flat Rule.** Nothing casts a shadow, at rest or on hover. Separation is made with space first and a 1px hairline second.
+**The Flat Rule.** No shadows. Separation is made with a change of ground first, space second, and a 1px hairline third.
 
-**The Answer Only Rule.** Motion answers the visitor and is never an entrance. Built motion: menu and index colours (200ms), button opacity and press (200ms), a photograph dimming under the pointer (260ms), the viewer appearing (320ms fade), a photograph travelling from its row to the viewer (420ms view transition). All use one ease-out curve, `cubic-bezier(0.16, 1, 0.3, 1)`, and all are switched off under `prefers-reduced-motion`.
+**The Two Reasons Rule.** Something moves only when the visitor arrives or when a photograph comes into view, plus the small answers to the pointer. Nothing loops, nothing moves on its own, and all of it stops under "reduce motion".
 
 ## Shapes
 
-Photographs and surfaces are square-cornered. The two kinds of button are pills (999px). Nothing else in the system has a radius: the note box, the viewer, table cells and the focus ring are all square.
+Every corner is square. Photographs, buttons, doors, cards, notes, the contents box, the viewer and the focus ring all have no rounding. There is no rounded shape anywhere in the build.
 
-Lines are 1px and Hairline-coloured. They separate rows in a list, open each continent in the index, and sit above the footer. There are no boxes drawn with borders except the outline of the line button.
+Lines are 1px. They separate rows in a list or table, open each continent in the index, and divide the language switch. The only boxes drawn with an outline are the buttons. The rule under a table's header row is Warm Ink; every other rule is Hairline.
 
-There are no icons, by the owner's decision. The breadcrumb separator is a typed slash, and the language switch is divided by a 1px line. Keyboard focus is a 2px Ink outline at a 3px offset.
+Keyboard focus is a 2px Deep Clay outline set 3px away from the element; on the Slate footer it is Paper White.
 
 ## Components
 
+### Top bar
+The site name at the left in the serif with 陳亮元 beside it; five menu words and the language switch at the right in small capitals. The bar is 5.5rem tall and scrolls away with the page.
+- **Current page:** a 1px underline beneath the word. The same underline appears under a word on hover.
+- **Language switch:** EN and 中文 divided by a 1px line. The one in use is full strength, the other is at 60%.
+- **Over the photograph (home page only):** the bar sits on top of the opening photograph with all its lettering in Paper White and no ground of its own.
+- **Small windows (below 56rem):** the word "Menu" opens the menu as a full-width stack under a hairline. On the home page the bar then turns to Warm Paper with Warm Ink lettering so the menu can be read.
+- **Breadcrumb:** on continent, country and guide pages, the way back up (Destinations / Europe / Spain) sits above the title in small capitals, Second Ink, divided by typed slashes. Each word is a link.
+
 ### Buttons
-Two kinds, both pills, both labelled with words only.
-- **Shape:** pill (999px), padding 0.85rem by 1.4rem, label at 0.9375rem weight 500, never wrapping.
-- **Primary:** Ink fill with Reversed Ink lettering. Used for the Instagram follow and, in the viewer, "Read the guide".
-- **Line:** transparent with a 1px Hairline outline and Ink lettering. Used for the second action on the home page and the way out of an empty page.
-- **Hover / Active:** primary drops to 86% opacity; the line button's outline turns to Ink. Pressing moves either down 1px. Transitions 200ms.
-- **Text controls:** the menu word, the language switch and the viewer's Previous, Next and Close are plain words with no fill or outline; Second Ink at rest, Ink on hover or when active.
+Rectangles with capital labels. Padding 1rem by 1.7rem, a 1px outline, labels never wrap.
+- **Primary:** Warm Ink fill, Paper White label. Turns Deep Clay under the pointer. Used for "Follow on Instagram" and, in the viewer, "Read the guide".
+- **Line:** no fill, Warm Ink outline and label. Fills with Warm Ink under the pointer. Used for the second action on the home page, "See the gallery", and the way out of an empty page.
+- **Footer:** Paper White fill with a Slate label. Under the pointer it empties to an outline with a Paper White label.
+- **Word controls:** the menu, the language switch and the viewer's Previous, Next and Close are words only, with no fill or outline.
 
-### Navigation
-- **Name:** "tuan photography" at weight 500 with 陳亮元 beside it in Second Ink, tracked 0.1em. No logo mark.
-- **Menu:** Label size, Second Ink at rest, Ink on hover and for the current page. No underline, no marker.
-- **Language switch:** two words, EN and 中文, divided by a 1px line; the active one is Ink.
-- **Small screens (below 52rem):** the word "Menu" opens a full-width stack under a hairline; items are Body size in Ink.
-- **Path:** on continent, country and guide pages a small breadcrumb in Second Ink sits above the title, separated by typed slashes.
-- **Links in text:** inherit the text colour with a 1px underline in Second Ink, offset 0.24em; the underline turns to the text colour on hover.
+### Photograph with caption
+The unit of the whole site. A bare photograph, no frame, no border, no rounding, nothing on top of it. Beneath it, its name in the serif and a second line in small Second Ink: the country on listing pages, the camera data (focal length, aperture, shutter, ISO) inside a guide. Every photograph is a real link to its place in the gallery, so it works without the script; with the script it opens the viewer.
 
-### Photograph wall (signature)
-The unit of the whole site: bare photographs in rows that fill the column.
-- **Rows:** computed at build time, each photograph carrying its own aspect ratio (`--ar`), so a row is one height and its photographs keep their shapes.
-- **Surface:** no frame, no border, no radius, no caption, no overlay. Holding Grey shows only while the file loads.
-- **Hover:** the photograph dims (82% opacity) over 260ms. Nothing moves or grows.
-- **Link:** every photograph is a real link to its place in the gallery, so it works without the script; with the script it opens the viewer. Its spoken label is the place name and "how this was made".
-- **Phone:** below 40rem the rows dissolve and photographs stack one per row.
+### Opening photograph
+The first thing on the home page. It fills the window edge to edge and top to bottom (never shorter than 34rem, never taller than 75rem). Nothing is written across it: no headline, no sentence, no button, no panel. The only lettering on it is the top bar, and one small line at the bottom left giving the place and the country. It opens the viewer like any other photograph.
 
-### Viewer (looking at one photograph)
-A full-screen dialog on the page's own ground. The photograph is shown whole, as large as the window allows. Beside it: Previous, Next and Close as words, the place name at Headline size, where it is in Second Ink, then "How it was made" as a ruled list (best time, focal length, aperture, shutter, ISO, lens, camera) with labels in Second Ink and values in tabular figures. Below the list, a short note, the primary button to the guide, and a quiet link to the map pin. Arrow keys step between photographs, every photograph has its own address (`#view-<id>`), and closing returns focus to the photograph it came from. Below 56rem the word bar sticks to the top.
+### Intro
+Directly under the opening photograph, on paper, centred: the line "Travel like a photographer." at Display size, one sentence in Second Ink held to 42 characters a line, and two buttons (primary and line) side by side.
+
+### Doors
+Three flat colour blocks on a Stone band, side by side, each a tall rectangle (2 wide by 3 tall): Clay for Gallery, Olive for Destinations, Slate for About. Each holds the section's name in the serif and one small line in capitals beneath it that states a real count or fact ("8 photographs", "16 countries"). The counts are worked out by the build, not typed. The whole block is the link and brightens slightly under the pointer. Below 44rem they stack as short bands.
 
 ### Feature (a guide)
-A photograph beside the guide's name at Display size, one line of facts in Second Ink with tabular figures, and the underlined words "Read the guide". The whole block is the link; the photograph dims to 86% on hover.
+A guide shown large: its photograph beside its plain name at Display size, one line of facts in Second Ink, and the words "Read the guide" in small capitals with a rule beneath. The whole block is the link. The photograph keeps its own shape.
 
-### Index and names
-- **Destinations index:** continents as bands under hairlines. Countries with work on the site are Ink and underlined; countries without are Second Ink. A continent with no countries says so in a short phrase.
-- **Names:** a flowing list of place names at Headline size in Second Ink, used in the gallery for places that have no photographs yet.
-- **Tiles:** on continent pages, a country shown as a photograph in a 3:2 opening with its name centred beneath it, never over it.
+### Wall of rows
+Rows of photographs with captions, as described under Layout. In a row every caption is set the same way: the name, then the place under it. Used on the home page, the gallery (one wall per country) and country pages.
 
-### Sheet (table)
-Comparison tables in a guide. No fills, no vertical lines, no outer border. Caption at weight 500 in Second Ink, header cells at Caption size with one hairline beneath, a hairline between rows, first column at weight 500 (minimum 9.5rem). The recommended cell is marked by weight 500 only. Times and prices do not wrap and use tabular figures.
+### Index (destinations)
+Destinations are a list in type, not a grid of pictures. Each continent opens under a hairline: its name and one sentence in a 17rem column, its countries flowing beside it at Headline size in the serif. A country with work on the site is Warm Ink with a thin Clay underline; a country without is Second Ink. A continent with no countries says so in a short plain phrase.
 
-### Photographs in a guide
-A row of figures that follows the same proportional rule as the wall. Each has a caption beneath it at Caption size: the place name, then focal length, aperture, shutter and ISO in tabular figures.
+### Tiles
+On a continent page, each country with work is a photograph in a 3 by 2 opening with its name centred beneath in the serif. Tiles are 20rem to 28rem wide and centred as a group.
 
-### Note
-An aside in a guide: Holding Grey fill, no border, square corners, padding 1.3rem by 1.5rem, a heading at Body size weight 500, text below.
+### Names
+A centred, flowing list of place names in the serif, in Second Ink, on a Stone band. It lists the places that have no photographs on the site yet, under a plain heading that says so.
 
-### Ruled lists
-Days in a route (an 8rem column for the day number and its area, then the text, then a quiet line of light times), practical notes, the facts on About (a 9rem label column), and plain rows all share one pattern: 0.75rem to 1.5rem of vertical padding and a hairline between rows, none above the first.
+### Guide column
+A guide is one centred column: breadcrumb, serif title, the dates in small Second Ink, a wide lead photograph with its caption, the contents list, then sections. Section headings are centred serif at Headline size with generous space above. Links in the text are Deep Clay with a lighter underline. Plain lists are rows divided by hairlines.
 
 ### Contents list
-Numbered with tabular figures, Label size, Second Ink; the section being read is Ink.
+A Stone box at the top of a guide. A small capital heading, then the sections numbered with tabular figures in two columns. The section being read turns Deep Clay.
 
-### Empty state
-One sentence in Second Ink, at most 46ch, and a line button that leads somewhere with work. No image, no illustration.
+### Quick facts card
+The guide's quick facts are a Card Paper card laid over the right edge of a portrait photograph, set 3rem lower than the photograph's top. Inside: a serif heading, then each fact as a small capital label with its answer beneath, divided by hairlines. Below 46rem the card sits under the photograph. A fact with no answer is left out by the build.
+
+### Sheet (table)
+Comparison tables in a guide. No fills, no vertical lines, no outer border. Header cells in small capitals over a Warm Ink rule; a hairline between rows; the first column at weight 500. The recommended cell is marked by weight 500 only. Times and prices do not wrap and use tabular figures. Below 40rem each row becomes a short stack and the header row is hidden from sight but kept for screen readers.
+
+### Notes
+An aside in a guide: a Stone box with square corners and no border, a serif heading (1.3rem) and text beneath.
+
+### Days
+The route, one block per day, divided by hairlines. At the left in an 8.5rem column, the day in the serif with its area beneath in small Second Ink; at the right the text, then a quiet line of light times in tabular figures.
+
+### Viewer
+Opening a photograph shows it whole on the page's own paper ground, filling the window. The photograph is at the left, as large as the window allows. At the right, a column 17rem to 23rem wide: Previous, Next and Close as words, the place name at Headline size, where it is, then "How it was made" as a ruled list (best time, focal length, aperture, shutter, ISO, lens, camera). Below that a short note, the primary button to the guide, and a Deep Clay link to the map pin. Arrow keys step between photographs, every photograph has its own address (`#view-<id>`), and closing returns focus to the photograph it came from. Below 56rem the photograph comes first and the word bar stays at the top.
+
+### Footer
+A flat Slate block closes every page. Centred: the Instagram handle at Display size in the serif, the footer button beneath it, then a thin rule and a small row with the menu at the left and the copyright line at the right.
+
+### Empty state and plain rows
+A page with no work says so in one centred sentence in Second Ink, at most 46 characters a line, with a line button that leads somewhere with work. Planned articles are plain rows: the title in the serif at the left, "Not written yet" at the right, divided by hairlines. No stand-in images.
 
 ## Do's and Don'ts
 
 ### Do:
-- **Do** show photographs bare, on the ground, with their words beneath or beside them.
-- **Do** let `rows_of()` lay out any row of photographs, so each row fills the column and no photograph is cropped.
-- **Do** take every colour from the six tokens, so light and dark both hold.
-- **Do** label every control with a word, in both languages.
-- **Do** keep photographs and surfaces square, and buttons as pills.
-- **Do** separate with space first, then a 1px hairline.
+- **Do** keep the opening photograph clear: the top bar and one small place line are the only lettering on it.
+- **Do** show photographs bare, with their names beneath them.
+- **Do** let `rows_of()` lay out any row of photographs, so each row fills the column and no photograph is trimmed.
+- **Do** call a place by its plain name, and put detail in the small line under it.
+- **Do** write every string in both languages, and set Chinese by its own rules: open line-height, weight 500 serif, full-width punctuation.
+- **Do** alternate paper and stone to tell sections apart.
+- **Do** use clay, olive and slate as whole flat blocks with Paper White lettering.
+- **Do** take every colour from the eleven tokens in the stylesheet.
+- **Do** keep every corner square.
+- **Do** label every control with a word.
 - **Do** set camera data, times, dates and prices in tabular lining figures, and show only values read from the photograph's file.
-- **Do** write every string in both languages, with full-width punctuation and open line-height in Chinese.
 - **Do** say plainly, in one sentence, when work does not exist yet.
-- **Do** switch off every transition under `prefers-reduced-motion`.
+- **Do** keep all motion inside the "reduce motion" switch.
 - **Do** edit `data/site.json`, `content/` and `tools/build.py`, then rebuild; the HTML pages are written out by the build.
 
 ### Don't:
-- **Don't** add an accent colour, a tinted link or a coloured button.
-- **Don't** add icons, arrows or pictograms to controls or lists.
-- **Don't** frame, mount, round, border or shadow a photograph.
-- **Don't** set text, labels, badges or gradients on top of a photograph.
-- **Don't** crop a photograph in a row to make a grid even.
-- **Don't** add a second typeface, or weights outside 400, 500 and 600.
-- **Don't** add shadows or gradients to any surface.
-- **Don't** add entrance animations, scroll reveals or looping motion.
+- **Don't** write a headline, a sentence, a button or a panel across the opening photograph. The owner asked for this on his original site because the words blocked the image.
+- **Don't** set names, labels or badges on top of any photograph.
+- **Don't** trim a photograph in a row to make a grid even.
+- **Don't** frame, round, border or shadow a photograph.
+- **Don't** add a dark theme or a theme switch.
+- **Don't** add icons, arrows or pictograms to controls.
+- **Don't** round anything, including buttons.
+- **Don't** add shadows, or gradients other than the two on the opening photograph.
+- **Don't** use clay, olive or slate for reading text or as tints.
+- **Don't** put a small capital line above a heading as decoration. The only line that sits above a title is the breadcrumb, and it is made of real links.
+- **Don't** add a third typeface, or bold the serif in English.
+- **Don't** add motion that loops or plays on its own.
 - **Don't** use long dashes, or more than one middle dot in a line.
-- **Don't** fill an empty place with a stand-in image, an invented guide or invented camera data.
-- **Don't** round anything except the two buttons.
+- **Don't** fill an empty place with a stand-in image, an invented guide, invented camera data, or a claim the site cannot yet support.
 
 ## Open Decisions and Known Gaps
 
 These are recorded as open. None of them is a settled part of the system.
 
-- **Typeface hosting (waiting on the owner).** Geist and Noto Sans TC (weights 400 to 600) load from fonts.googleapis.com on every page. Hosting the files with the site needs the owner's permission to download them. The families are in use; their delivery is not decided.
-- **About biography (waiting on the owner).** The text on the About page is copy carried over from the previous site and has not been confirmed by the owner as his own words. It is not a model for the site's voice.
-- **Contact email (waiting on the owner).** No email address is published anywhere on the site. Whether to publish one is undecided.
-- **Where a photograph is trimmed.** Rows never crop. Three places fit a photograph to a fixed opening and can trim its edges: the home page photograph (a full-width band), the photograph at the top of a guide (when taller than 82dvh), and tiles on continent pages (3:2). The whole photograph is always available in the viewer. Recorded as built, not as a rule to extend.
-- **Hover dimming.** Photographs in a wall dim to 82%; features, tiles and guide figures dim to 86%. One value was probably intended.
-- **Line button outline.** The outline is Hairline, 1.3:1 against the ground. The label carries the control; the outline alone would not.
-- **Untokenised values.** Each page's browser theme colour is a literal hex pair in the HTML head (`#fafafb` light, `#0e0f11` dark), and neither is an exact conversion of the ground token.
+### Waiting on the owner
+- **Typeface hosting.** Playfair Display, Geist, Noto Serif TC and Noto Sans TC load from Google Fonts on every page. Hosting the files with the site needs the owner's permission to download them. The families are in use; how they are delivered is not decided.
+- **About biography.** The text on the About page is copy carried over from the previous site and has not been confirmed by the owner as his own words. It is not a model for the site's voice.
+- **Contact email.** No email address is published anywhere on the site. Whether to publish one is undecided.
+- **Destinations lead sentence and continent taglines.** The sentence under "Destinations" ("Every place I've photographed, researched, eaten through, and written up") and the one-line taglines for continents he has not yet visited (Africa, Antarctica, South America) read as claims the site cannot yet support: 15 of 16 countries have no guide, and those continents have no trips. They are the owner's copy to confirm or change.
+- **The guide's "SIM / data" fact.** It has no value yet. The build leaves the row out of the page until he supplies one, so the quick facts card shows only facts that have answers.
+- **Carried from the product notes:** which country gets the next guide, and whether a newsletter sign-up is wanted.
+
+### Recorded as built, not as rules to extend
+- **Where a photograph is trimmed.** Two places, not three. The opening photograph is fitted to the window, so its edges are trimmed to the window's shape (on a phone held upright, a good deal of its width). Tiles on continent pages are fitted to a 3 by 2 opening. The feature photograph is not trimmed; it keeps its own shape, as do the guide's lead photograph, the quick facts photograph and every photograph in a row. The whole photograph is always available in the viewer. Neither trim is a licence to trim elsewhere.
+- **The hover enlargement.** A photograph grows 2% inside its frame under the pointer, which hides a sliver of its edges for that moment.
+- **Clay outside the blocks.** The stylesheet's own rule says clay, olive and slate appear only as flat blocks. Clay is also the ground of selected text and the underline beneath index names that have work. Both are small and built; they are not a reason to use the earth colours as accents.
+- **The breadcrumb on continent pages.** There it holds one word ("Destinations") in small capitals above the title, and at a glance it looks like a decorative label. It is a working link back to Destinations. It is recorded as navigation only.
+- **Rising on scroll.** It depends on a browser feature that not every browser has. Where it is missing, photographs are simply in place.
+- **The browser's bar colour.** Each page sets it with a typed value (`#f7f2e9`) in `tools/build.py`. It is a close match to Warm Paper, not taken from the token.
+- **The darkening on the opening photograph.** Its colour is typed into the stylesheet and is not one of the eleven tokens.
+- **Unused helpers.** The stylesheet defines two small helpers (`.caps`, `.quiet`) that no page uses at present.
+- **Placeholder titles.** The Skills page lists three planned articles and says on the page that their titles are placeholders.

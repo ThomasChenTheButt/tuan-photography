@@ -1,298 +1,337 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-09-27T21:45:00+08:00",
+  "generatedAt": "2026-09-28T15:00:00+08:00",
   "title": "Design System: tuan photography 陳亮元",
   "extensions": {
     "colorMeta": {
       "bg": {
         "role": "neutral",
-        "displayName": "Gallery Wall",
-        "canonical": "oklch(98.6% 0.002 250)",
+        "displayName": "Warm Paper",
+        "canonical": "oklch(96.6% 0.011 82)",
         "tonalRamp": [
-          "oklch(15% 0.002 250)",
-          "oklch(27% 0.002 250)",
-          "oklch(39% 0.002 250)",
-          "oklch(50% 0.002 250)",
-          "oklch(62% 0.002 250)",
-          "oklch(73% 0.002 250)",
-          "oklch(85% 0.002 250)",
-          "oklch(95% 0.002 250)"
+          "oklch(15% 0.011 82)",
+          "oklch(27% 0.011 82)",
+          "oklch(39% 0.011 82)",
+          "oklch(50% 0.011 82)",
+          "oklch(62% 0.011 82)",
+          "oklch(73% 0.011 82)",
+          "oklch(85% 0.011 82)",
+          "oklch(95% 0.011 82)"
         ]
       },
-      "surface": {
+      "band": {
         "role": "neutral",
-        "displayName": "Holding Grey",
-        "canonical": "oklch(96.2% 0.003 250)",
+        "displayName": "Stone",
+        "canonical": "oklch(91.8% 0.013 80)",
         "tonalRamp": [
-          "oklch(15% 0.003 250)",
-          "oklch(27% 0.003 250)",
-          "oklch(39% 0.003 250)",
-          "oklch(50% 0.003 250)",
-          "oklch(62% 0.003 250)",
-          "oklch(73% 0.003 250)",
-          "oklch(85% 0.003 250)",
-          "oklch(95% 0.003 250)"
+          "oklch(15% 0.013 80)",
+          "oklch(27% 0.013 80)",
+          "oklch(39% 0.013 80)",
+          "oklch(50% 0.013 80)",
+          "oklch(62% 0.013 80)",
+          "oklch(73% 0.013 80)",
+          "oklch(85% 0.013 80)",
+          "oklch(95% 0.013 80)"
+        ]
+      },
+      "card": {
+        "role": "neutral",
+        "displayName": "Card Paper",
+        "canonical": "oklch(98.8% 0.005 85)",
+        "tonalRamp": [
+          "oklch(15% 0.005 85)",
+          "oklch(27% 0.005 85)",
+          "oklch(39% 0.005 85)",
+          "oklch(50% 0.005 85)",
+          "oklch(62% 0.005 85)",
+          "oklch(73% 0.005 85)",
+          "oklch(85% 0.005 85)",
+          "oklch(95% 0.005 85)"
         ]
       },
       "line": {
         "role": "neutral",
         "displayName": "Hairline",
-        "canonical": "oklch(89% 0.004 250)",
+        "canonical": "oklch(84.5% 0.015 78)",
         "tonalRamp": [
-          "oklch(15% 0.004 250)",
-          "oklch(27% 0.004 250)",
-          "oklch(39% 0.004 250)",
-          "oklch(50% 0.004 250)",
-          "oklch(62% 0.004 250)",
-          "oklch(73% 0.004 250)",
-          "oklch(85% 0.004 250)",
-          "oklch(95% 0.004 250)"
+          "oklch(15% 0.015 78)",
+          "oklch(27% 0.015 78)",
+          "oklch(39% 0.015 78)",
+          "oklch(50% 0.015 78)",
+          "oklch(62% 0.015 78)",
+          "oklch(73% 0.015 78)",
+          "oklch(85% 0.015 78)",
+          "oklch(95% 0.015 78)"
         ]
       },
       "text": {
         "role": "neutral",
-        "displayName": "Ink",
-        "canonical": "oklch(21% 0.006 250)",
+        "displayName": "Warm Ink",
+        "canonical": "oklch(25% 0.012 60)",
         "tonalRamp": [
-          "oklch(15% 0.006 250)",
-          "oklch(27% 0.006 250)",
-          "oklch(39% 0.006 250)",
-          "oklch(50% 0.006 250)",
-          "oklch(62% 0.006 250)",
-          "oklch(73% 0.006 250)",
-          "oklch(85% 0.006 250)",
-          "oklch(95% 0.006 250)"
+          "oklch(15% 0.012 60)",
+          "oklch(27% 0.012 60)",
+          "oklch(39% 0.012 60)",
+          "oklch(50% 0.012 60)",
+          "oklch(62% 0.012 60)",
+          "oklch(73% 0.012 60)",
+          "oklch(85% 0.012 60)",
+          "oklch(95% 0.012 60)"
         ]
       },
       "text-2": {
         "role": "neutral",
         "displayName": "Second Ink",
-        "canonical": "oklch(46% 0.008 250)",
+        "canonical": "oklch(45% 0.017 62)",
         "tonalRamp": [
-          "oklch(15% 0.008 250)",
-          "oklch(27% 0.008 250)",
-          "oklch(39% 0.008 250)",
-          "oklch(50% 0.008 250)",
-          "oklch(62% 0.008 250)",
-          "oklch(73% 0.008 250)",
-          "oklch(85% 0.008 250)",
-          "oklch(95% 0.008 250)"
+          "oklch(15% 0.017 62)",
+          "oklch(27% 0.017 62)",
+          "oklch(39% 0.017 62)",
+          "oklch(50% 0.017 62)",
+          "oklch(62% 0.017 62)",
+          "oklch(73% 0.017 62)",
+          "oklch(85% 0.017 62)",
+          "oklch(95% 0.017 62)"
         ]
       },
-      "on-text": {
-        "role": "neutral",
-        "displayName": "Reversed Ink",
-        "canonical": "oklch(98.6% 0.002 250)",
+      "accent": {
+        "role": "primary",
+        "displayName": "Deep Clay",
+        "canonical": "oklch(46% 0.092 47)",
         "tonalRamp": [
-          "oklch(15% 0.002 250)",
-          "oklch(27% 0.002 250)",
-          "oklch(39% 0.002 250)",
-          "oklch(50% 0.002 250)",
-          "oklch(62% 0.002 250)",
-          "oklch(73% 0.002 250)",
-          "oklch(85% 0.002 250)",
-          "oklch(95% 0.002 250)"
+          "oklch(15% 0.092 47)",
+          "oklch(27% 0.092 47)",
+          "oklch(39% 0.092 47)",
+          "oklch(50% 0.092 47)",
+          "oklch(62% 0.092 47)",
+          "oklch(73% 0.092 47)",
+          "oklch(85% 0.092 47)",
+          "oklch(95% 0.092 47)"
         ]
       },
-      "bg-dark": {
+      "paper": {
         "role": "neutral",
-        "displayName": "Gallery Wall, dark",
-        "canonical": "oklch(15.5% 0.004 250)",
+        "displayName": "Paper White",
+        "canonical": "oklch(97.5% 0.008 85)",
         "tonalRamp": [
-          "oklch(15% 0.004 250)",
-          "oklch(27% 0.004 250)",
-          "oklch(39% 0.004 250)",
-          "oklch(50% 0.004 250)",
-          "oklch(62% 0.004 250)",
-          "oklch(73% 0.004 250)",
-          "oklch(85% 0.004 250)",
-          "oklch(95% 0.004 250)"
+          "oklch(15% 0.008 85)",
+          "oklch(27% 0.008 85)",
+          "oklch(39% 0.008 85)",
+          "oklch(50% 0.008 85)",
+          "oklch(62% 0.008 85)",
+          "oklch(73% 0.008 85)",
+          "oklch(85% 0.008 85)",
+          "oklch(95% 0.008 85)"
         ]
       },
-      "surface-dark": {
-        "role": "neutral",
-        "displayName": "Holding Grey, dark",
-        "canonical": "oklch(19.5% 0.005 250)",
+      "clay": {
+        "role": "secondary",
+        "displayName": "Clay",
+        "canonical": "oklch(53% 0.088 47)",
         "tonalRamp": [
-          "oklch(15% 0.005 250)",
-          "oklch(27% 0.005 250)",
-          "oklch(39% 0.005 250)",
-          "oklch(50% 0.005 250)",
-          "oklch(62% 0.005 250)",
-          "oklch(73% 0.005 250)",
-          "oklch(85% 0.005 250)",
-          "oklch(95% 0.005 250)"
+          "oklch(15% 0.088 47)",
+          "oklch(27% 0.088 47)",
+          "oklch(39% 0.088 47)",
+          "oklch(50% 0.088 47)",
+          "oklch(62% 0.088 47)",
+          "oklch(73% 0.088 47)",
+          "oklch(85% 0.088 47)",
+          "oklch(95% 0.088 47)"
         ]
       },
-      "line-dark": {
-        "role": "neutral",
-        "displayName": "Hairline, dark",
-        "canonical": "oklch(29% 0.006 250)",
+      "olive": {
+        "role": "secondary",
+        "displayName": "Olive",
+        "canonical": "oklch(49% 0.052 95)",
         "tonalRamp": [
-          "oklch(15% 0.006 250)",
-          "oklch(27% 0.006 250)",
-          "oklch(39% 0.006 250)",
-          "oklch(50% 0.006 250)",
-          "oklch(62% 0.006 250)",
-          "oklch(73% 0.006 250)",
-          "oklch(85% 0.006 250)",
-          "oklch(95% 0.006 250)"
+          "oklch(15% 0.052 95)",
+          "oklch(27% 0.052 95)",
+          "oklch(39% 0.052 95)",
+          "oklch(50% 0.052 95)",
+          "oklch(62% 0.052 95)",
+          "oklch(73% 0.052 95)",
+          "oklch(85% 0.052 95)",
+          "oklch(95% 0.052 95)"
         ]
       },
-      "text-dark": {
-        "role": "neutral",
-        "displayName": "Ink, dark",
-        "canonical": "oklch(94% 0.003 250)",
+      "slate": {
+        "role": "secondary",
+        "displayName": "Slate",
+        "canonical": "oklch(41% 0.03 195)",
         "tonalRamp": [
-          "oklch(15% 0.003 250)",
-          "oklch(27% 0.003 250)",
-          "oklch(39% 0.003 250)",
-          "oklch(50% 0.003 250)",
-          "oklch(62% 0.003 250)",
-          "oklch(73% 0.003 250)",
-          "oklch(85% 0.003 250)",
-          "oklch(95% 0.003 250)"
-        ]
-      },
-      "text-2-dark": {
-        "role": "neutral",
-        "displayName": "Second Ink, dark",
-        "canonical": "oklch(70% 0.006 250)",
-        "tonalRamp": [
-          "oklch(15% 0.006 250)",
-          "oklch(27% 0.006 250)",
-          "oklch(39% 0.006 250)",
-          "oklch(50% 0.006 250)",
-          "oklch(62% 0.006 250)",
-          "oklch(73% 0.006 250)",
-          "oklch(85% 0.006 250)",
-          "oklch(95% 0.006 250)"
-        ]
-      },
-      "on-text-dark": {
-        "role": "neutral",
-        "displayName": "Reversed Ink, dark",
-        "canonical": "oklch(15.5% 0.004 250)",
-        "tonalRamp": [
-          "oklch(15% 0.004 250)",
-          "oklch(27% 0.004 250)",
-          "oklch(39% 0.004 250)",
-          "oklch(50% 0.004 250)",
-          "oklch(62% 0.004 250)",
-          "oklch(73% 0.004 250)",
-          "oklch(85% 0.004 250)",
-          "oklch(95% 0.004 250)"
+          "oklch(15% 0.03 195)",
+          "oklch(27% 0.03 195)",
+          "oklch(39% 0.03 195)",
+          "oklch(50% 0.03 195)",
+          "oklch(62% 0.03 195)",
+          "oklch(73% 0.03 195)",
+          "oklch(85% 0.03 195)",
+          "oklch(95% 0.03 195)"
         ]
       }
     },
     "typographyMeta": {
       "display": {
         "displayName": "Display",
-        "purpose": "Page titles, the home page line, and the name of a guide shown as a feature."
+        "purpose": "Page titles, the home page line, the name of a guide shown as a feature, the Instagram handle in the footer."
       },
       "headline": {
         "displayName": "Headline",
-        "purpose": "Section headings, headings inside a guide, the place name in the viewer. At weight 400: country names in the index and the footer handle."
+        "purpose": "Section headings, headings inside a guide, the place name in the viewer, country names in the destinations index."
       },
       "title": {
         "displayName": "Title",
-        "purpose": "Continent names in the index and sub-headings in a guide."
+        "purpose": "Continent names in the index, the name under a tile, the heading of the quick facts card."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "The flowing list of place names without work, and plain rows."
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Reading text, at most 68ch in a guide. Emphasis is weight 600. Chinese line-height 1.85."
+        "purpose": "Reading text. Paragraphs in a guide are at most 40rem wide. Emphasis is weight 600. Chinese line-height 1.9."
       },
-      "label": {
-        "displayName": "Label",
-        "purpose": "Menu, language switch, breadcrumb, meta lines, table cells, contents list, viewer data, footer."
-      },
-      "label-strong": {
-        "displayName": "Label, strong",
-        "purpose": "Button labels."
+      "small": {
+        "displayName": "Small",
+        "purpose": "Tables, dates under a title, captions, the contents list, viewer data."
       },
       "caption": {
         "displayName": "Caption",
-        "purpose": "Photograph captions with camera data, table header cells. Tabular lining figures."
+        "purpose": "The second line of a caption, camera data, the footer's small print. Tabular lining figures."
+      },
+      "capitals": {
+        "displayName": "Capitals",
+        "purpose": "The menu, the language switch, buttons, the breadcrumb, table header cells. Set in capitals. In Chinese: 0.875rem with 0.14em spacing."
       }
     },
     "shadows": [],
+    "scrims": [
+      {
+        "name": "opening-photograph-top",
+        "value": "linear-gradient(to bottom, oklch(20% 0.02 60 / 0.5), oklch(20% 0.02 60 / 0)), 14rem tall",
+        "purpose": "Keeps the site name and menu readable in paper white on the opening photograph. Used nowhere else."
+      },
+      {
+        "name": "opening-photograph-bottom",
+        "value": "linear-gradient(to top, oklch(20% 0.02 60 / 0.64), oklch(20% 0.02 60 / 0)), 11rem tall",
+        "purpose": "Keeps the small place line readable on the opening photograph. Used nowhere else."
+      }
+    ],
     "motion": [
       {
         "name": "out",
         "value": "cubic-bezier(0.16, 1, 0.3, 1)",
-        "purpose": "The one easing curve, used by every transition."
+        "purpose": "The one easing curve, used by every transition and arrival."
       },
       {
-        "name": "colour",
-        "value": "200ms color",
-        "purpose": "Menu items and index names turning from second ink to ink."
+        "name": "settle-opening",
+        "value": "2200ms, scale 1.06 to 1",
+        "purpose": "The opening photograph settling into place once on arrival."
+      },
+      {
+        "name": "uncover-lead",
+        "value": "1100ms clip from the top edge, with a 1600ms settle",
+        "purpose": "The lead photograph at the top of a guide being uncovered on arrival."
+      },
+      {
+        "name": "rise-words",
+        "value": "900ms, opacity 0 to 1 and 1.5rem upward, delay 200ms plus 90ms per item",
+        "purpose": "The words under a title coming up after the photograph: home intro, guide title block, About."
+      },
+      {
+        "name": "rise-in-view",
+        "value": "scroll-driven, animation-timeline: view(), entry 0% to 36%",
+        "purpose": "Photographs in a wall, features, tiles and doors rising as they enter the window. Only where the browser supports it."
+      },
+      {
+        "name": "photograph-hover",
+        "value": "900ms transform, scale 1.02",
+        "purpose": "A photograph enlarging very slightly inside its own frame under the pointer."
+      },
+      {
+        "name": "door-hover",
+        "value": "320ms filter, brightness 1.08",
+        "purpose": "A door brightening under the pointer."
       },
       {
         "name": "button",
-        "value": "200ms opacity and transform",
-        "purpose": "Button hover (86% opacity) and press (1px down)."
+        "value": "260ms background, border, colour; 1px down when pressed",
+        "purpose": "Button hover and press."
       },
       {
-        "name": "photograph-dim",
-        "value": "260ms opacity",
-        "purpose": "A photograph dimming under the pointer: 82% in a wall, 86% in features, tiles and guide figures."
-      },
-      {
-        "name": "viewer-show",
-        "value": "320ms opacity fade",
-        "purpose": "The viewer appearing."
+        "name": "link",
+        "value": "200ms colour and underline colour",
+        "purpose": "Links and word controls changing colour under the pointer."
       },
       {
         "name": "picked",
-        "value": "420ms view transition",
+        "value": "460ms view transition",
         "purpose": "A photograph travelling from its row to the viewer."
       },
       {
         "name": "reduced-motion",
         "value": "none",
-        "purpose": "Every transition and the view transition are switched off under prefers-reduced-motion."
+        "purpose": "Under prefers-reduced-motion every arrival, rise, transition and view transition is switched off."
       }
     ],
     "breakpoints": [
       {
-        "name": "reading",
-        "value": "62rem"
+        "name": "about-stack",
+        "value": "60rem"
       },
       {
-        "name": "viewer",
+        "name": "menu-and-viewer",
         "value": "56rem"
       },
       {
-        "name": "menu-home-feature-index",
+        "name": "feature-and-index",
         "value": "52rem"
       },
       {
-        "name": "wall-stack-table-stack-days",
+        "name": "quick-facts",
+        "value": "46rem"
+      },
+      {
+        "name": "doors",
+        "value": "44rem"
+      },
+      {
+        "name": "wall-tables-days",
         "value": "40rem"
       },
       {
-        "name": "contents-and-facts",
-        "value": "30rem"
+        "name": "contents",
+        "value": "34rem"
+      },
+      {
+        "name": "site-name",
+        "value": "26rem"
       }
     ],
     "themes": {
-      "selector": "prefers-color-scheme",
-      "light": {
-        "bg": "bg",
-        "surface": "surface",
-        "line": "line",
-        "text": "text",
-        "text-2": "text-2",
-        "on-text": "on-text"
-      },
-      "dark": {
-        "bg": "bg-dark",
-        "surface": "surface-dark",
-        "line": "line-dark",
-        "text": "text-dark",
-        "text-2": "text-2-dark",
-        "on-text": "on-text-dark"
-      }
+      "colorScheme": "light",
+      "dark": false,
+      "note": "Light only. The stylesheet declares color-scheme: light and there is no dark theme in this build."
+    },
+    "chinese": {
+      "selector": ":lang(zh-Hant)",
+      "bodyLineHeight": 1.9,
+      "tableLineHeight": 1.75,
+      "headingWeight": 500,
+      "headingLetterSpacing": "0.05em",
+      "headingLineHeight": 1.35,
+      "capitalsFontSize": "0.875rem",
+      "capitalsLetterSpacing": "0.14em",
+      "punctuation": "full-width, applied by zh_punct in tools/build.py"
+    },
+    "fonts": {
+      "delivery": "Google Fonts (open decision: hosting with the site)",
+      "families": [
+        "Playfair Display 400",
+        "Geist 400..600",
+        "Noto Serif TC 500..600",
+        "Noto Sans TC 400..600"
+      ]
     }
   },
   "components": [
@@ -300,125 +339,152 @@
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Ink pill with a word on it. The Instagram follow, and Read the guide in the viewer.",
+      "description": "An ink rectangle with a capital label. The Instagram follow, and Read the guide in the viewer.",
       "html": "<a class=\"ds-btn\" href=\"#\">Follow on Instagram</a>",
-      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; font-family: var(--f); font-size: var(--t-s); font-weight: 500; line-height: 1.2; white-space: nowrap; text-decoration: none; color: var(--on-text); background: var(--text); border: 1px solid var(--text); border-radius: 999px; padding: 0.85rem 1.4rem; cursor: pointer; transition: opacity 200ms var(--out), transform 200ms var(--out); } .ds-btn:hover { opacity: 0.86; } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }"
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; text-decoration: none; font-family: var(--sans); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.3; color: var(--paper); background: var(--text); border: 1px solid var(--text); border-radius: 0; padding: 1rem 1.7rem; cursor: pointer; transition: background-color 260ms var(--out), border-color 260ms var(--out), color 260ms var(--out), transform 260ms var(--out); } .ds-btn:hover { color: var(--paper); background: var(--accent); border-color: var(--accent); } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }"
     },
     {
       "name": "Line Button",
       "kind": "button",
       "refersTo": "button-line",
-      "description": "Outlined pill for the second action and the way out of an empty page.",
+      "description": "An outlined rectangle for the second action and the way out of an empty page. Fills with ink under the pointer.",
       "html": "<a class=\"ds-btn ds-btn--line\" href=\"#\">Read the guides</a>",
-      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; font-family: var(--f); font-size: var(--t-s); font-weight: 500; line-height: 1.2; white-space: nowrap; text-decoration: none; color: var(--on-text); background: var(--text); border: 1px solid var(--text); border-radius: 999px; padding: 0.85rem 1.4rem; cursor: pointer; transition: opacity 200ms var(--out), transform 200ms var(--out); } .ds-btn:hover { opacity: 0.86; } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; } .ds-btn--line { color: var(--text); background: transparent; border-color: var(--line); } .ds-btn--line:hover { opacity: 1; border-color: var(--text); }"
+      "css": ".ds-btn { display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; text-decoration: none; font-family: var(--sans); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.3; color: var(--paper); background: var(--text); border: 1px solid var(--text); border-radius: 0; padding: 1rem 1.7rem; cursor: pointer; transition: background-color 260ms var(--out), border-color 260ms var(--out), color 260ms var(--out), transform 260ms var(--out); } .ds-btn:hover { color: var(--paper); background: var(--accent); border-color: var(--accent); } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; } .ds-btn--line { color: var(--text); background: transparent; } .ds-btn--line:hover { color: var(--paper); background: var(--text); border-color: var(--text); }"
     },
     {
       "name": "Top Bar",
       "kind": "nav",
-      "refersTo": "",
-      "description": "The name, the five-item menu and the language switch. Words only.",
+      "refersTo": "top-bar",
+      "description": "The site name in the serif, five menu words and the language switch in small capitals. On the home page it sits on the opening photograph in paper white.",
       "html": "<header class=\"ds-top\"><a class=\"ds-name\" href=\"#\">tuan photography <span>陳亮元</span></a><nav class=\"ds-menu\"><ul><li><a href=\"#\" aria-current=\"page\">Gallery</a></li><li><a href=\"#\">Destinations</a></li><li><a href=\"#\">Blog</a></li><li><a href=\"#\">Skills</a></li><li><a href=\"#\">About</a></li></ul><div class=\"ds-lang\"><button type=\"button\" aria-pressed=\"true\">EN</button><i></i><button type=\"button\" aria-pressed=\"false\">中文</button></div></nav></header>",
-      "css": ".ds-top { display: flex; align-items: center; gap: var(--s-3); min-height: 4.25rem; font-family: var(--f); color: var(--text); } .ds-name { display: inline-flex; align-items: baseline; gap: 0.6rem; text-decoration: none; color: inherit; font-weight: 500; letter-spacing: -0.01em; white-space: nowrap; } .ds-name span { letter-spacing: 0.1em; font-size: 0.94em; color: var(--text-2); } .ds-menu { margin-left: auto; display: flex; align-items: center; gap: 2.25rem; } .ds-menu ul { display: flex; gap: 2.1rem; margin: 0; padding: 0; list-style: none; } .ds-menu a { font-size: var(--t-s); color: var(--text-2); text-decoration: none; white-space: nowrap; padding-block: 0.4rem; transition: color 200ms var(--out); } .ds-menu a:hover, .ds-menu a[aria-current=\"page\"] { color: var(--text); } .ds-lang { display: flex; align-items: center; font-size: var(--t-s); } .ds-lang button { font: inherit; color: var(--text-2); background: none; border: 0; padding: 0.4rem 0.45rem; cursor: pointer; } .ds-lang button[aria-pressed=\"true\"] { color: var(--text); } .ds-lang i { width: 1px; height: 0.9em; background: var(--line); } .ds-top :focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }"
+      "css": ".ds-top { display: flex; align-items: center; gap: var(--s-3); min-height: 5.5rem; color: var(--text); } .ds-name { display: inline-flex; align-items: baseline; gap: 0.7rem; text-decoration: none; color: inherit; font-family: var(--serif); font-size: 1.45rem; line-height: 1; white-space: nowrap; } .ds-name span { font-family: \"Noto Serif TC\", serif; font-size: 0.9rem; font-weight: 500; letter-spacing: 0.22em; color: var(--text-2); } .ds-menu { margin-left: auto; display: flex; align-items: center; gap: 2.25rem; } .ds-menu ul { display: flex; gap: 2rem; margin: 0; padding: 0; list-style: none; } .ds-menu a { font-family: var(--sans); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.3; color: inherit; text-decoration: none; white-space: nowrap; padding-block: 0.5rem; border-bottom: 1px solid transparent; } .ds-menu a:hover, .ds-menu a[aria-current=\"page\"] { border-bottom-color: currentColor; } .ds-lang { display: flex; align-items: center; } .ds-lang button { font-family: var(--sans); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.3; color: inherit; opacity: 0.6; background: none; border: 0; padding: 0.5rem 0.45rem; cursor: pointer; } .ds-lang button[aria-pressed=\"true\"] { opacity: 1; } .ds-lang i { width: 1px; height: 0.9em; background: currentColor; opacity: 0.35; } .ds-top :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }"
     },
     {
-      "name": "Photograph Wall",
+      "name": "Photograph With Caption",
       "kind": "custom",
       "refersTo": "photograph",
-      "description": "Bare photographs in a row that fills the width. Each grows in proportion to its own shape, so nothing is cropped.",
-      "html": "<div class=\"ds-wall\"><div class=\"ds-wall__row\"><a class=\"ds-wall__item\" style=\"--ar: 1.5007\" href=\"#\"><img src=\"images/web/640/spain-bunkers-carmel-sunset.jpg\" width=\"2200\" height=\"1466\" alt=\"Barcelona and the Sagrada Família seen from Bunkers del Carmel at golden hour\"></a><a class=\"ds-wall__item\" style=\"--ar: 0.6632\" href=\"#\"><img src=\"images/web/640/spain-park-guell-framed.jpg\" width=\"1459\" height=\"2200\" alt=\"The Sagrada Família seen through a ring of ironwork at Park Güell\"></a><a class=\"ds-wall__item\" style=\"--ar: 1.5007\" href=\"#\"><img src=\"images/web/640/spain-palau-musica-ceiling.jpg\" width=\"2200\" height=\"1466\" alt=\"The stained-glass skylight of the Palau de la Música Catalana\"></a></div></div>",
-      "css": ".ds-wall { display: grid; gap: var(--gap); } .ds-wall__row { display: flex; gap: var(--gap); } .ds-wall__item { flex: var(--ar) 1 0; min-width: 0; aspect-ratio: var(--ar); display: block; overflow: hidden; background: var(--surface); } .ds-wall__item img { display: block; width: 100%; height: 100%; object-fit: cover; transition: opacity 260ms var(--out); } a.ds-wall__item:hover img { opacity: 0.82; } .ds-wall__item:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }"
+      "description": "The unit of the site: a bare photograph at its own shape with its name in the serif and one quiet line beneath.",
+      "html": "<figure class=\"ds-piece\" style=\"--ar: 1.5007\"><a href=\"#\"><img src=\"images/web/640/spain-bunkers-carmel-sunset.jpg\" width=\"2200\" height=\"1466\" alt=\"Barcelona and the Sagrada Família seen from Bunkers del Carmel at golden hour\"></a><figcaption><b>Bunkers del Carmel</b><span>Barcelona, Spain</span></figcaption></figure>",
+      "css": ".ds-piece { margin: 0; max-width: 26rem; } .ds-piece a { display: block; overflow: hidden; aspect-ratio: var(--ar); background: var(--band); } .ds-piece img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 900ms var(--out); } .ds-piece a:hover img { transform: scale(1.02); } .ds-piece figcaption { margin-top: 0.75rem; font-family: var(--sans); font-size: var(--t-s); line-height: 1.4; color: var(--text); } .ds-piece figcaption b { display: block; font-family: var(--serif); font-weight: 400; font-size: 1.05rem; line-height: 1.25; } .ds-piece figcaption span { color: var(--text-2); font-size: var(--t-xs); } .ds-piece a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }"
+    },
+    {
+      "name": "Doors",
+      "kind": "custom",
+      "refersTo": "door-clay",
+      "description": "Three flat colour blocks on a stone band, leading to the main sections. Each states a real count beneath its name.",
+      "html": "<div class=\"ds-doors\"><a class=\"ds-door ds-door--clay\" href=\"#\"><b>Gallery</b><span>8 photographs</span></a><a class=\"ds-door ds-door--olive\" href=\"#\"><b>Destinations</b><span>16 countries</span></a><a class=\"ds-door ds-door--slate\" href=\"#\"><b>About</b><span>The photographer</span></a></div>",
+      "css": ".ds-doors { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); max-width: 40rem; padding: var(--s-3); background: var(--band); } .ds-door { display: grid; place-content: center; justify-items: center; gap: 0.6rem; aspect-ratio: 2 / 3; padding: var(--s-3); text-align: center; text-decoration: none; color: var(--paper); transition: filter 320ms var(--out); } .ds-door:hover { filter: brightness(1.08); } .ds-door b { font-family: var(--serif); font-weight: 400; font-size: 1.6rem; line-height: 1.15; } .ds-door span { font-family: var(--sans); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.3; font-variant-numeric: tabular-nums lining-nums; } .ds-door--clay { background: var(--clay); } .ds-door--olive { background: var(--olive); } .ds-door--slate { background: var(--slate); } .ds-door:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }"
     },
     {
       "name": "Guide Feature",
       "kind": "card",
-      "refersTo": "",
-      "description": "A guide shown as a photograph beside its plain name, one line of facts, and the words that open it.",
-      "html": "<a class=\"ds-feature\" href=\"#\"><span class=\"ds-feature__photo\"><img src=\"images/web/640/spain-sagrada-familia-plaza.jpg\" width=\"2400\" height=\"1610\" alt=\"The Sagrada Família seen from the plaza on Carrer de Mallorca\"></span><span><h3>Barcelona</h3><p>Spain, 11 photo spots, 4 days, travelled July 2026</p><span class=\"ds-link\">Read the guide</span></span></a>",
-      "css": ".ds-feature { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); align-items: end; gap: var(--s-4); text-decoration: none; font-family: var(--f); color: var(--text); } .ds-feature__photo { display: block; overflow: hidden; background: var(--surface); } .ds-feature__photo img { display: block; width: 100%; height: auto; transition: opacity 260ms var(--out); } .ds-feature:hover .ds-feature__photo img { opacity: 0.86; } .ds-feature h3 { margin: 0; font-size: var(--t-2xl); font-weight: 500; line-height: 1.1; letter-spacing: -0.035em; } .ds-feature p { margin: 0.7rem 0 0; color: var(--text-2); font-variant-numeric: tabular-nums lining-nums; } .ds-link { display: inline-block; margin-top: var(--s-3); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.24em; } .ds-feature:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }"
+      "refersTo": "feature",
+      "description": "A guide shown large: its photograph at its own shape beside its plain name, one line of facts, and the words that open it.",
+      "html": "<a class=\"ds-feature\" href=\"#\"><span class=\"ds-feature__photo\"><img src=\"images/web/640/spain-sagrada-familia-plaza.jpg\" width=\"2400\" height=\"1610\" alt=\"The Sagrada Família seen from the plaza on Carrer de Mallorca\"></span><span class=\"ds-feature__say\"><span class=\"ds-feature__name\">Barcelona</span><span class=\"ds-feature__facts\">Spain, 11 photo spots, 4 days, travelled July 2026</span><span class=\"ds-feature__go\">Read the guide</span></span></a>",
+      "css": ".ds-feature { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--col-gap); align-items: center; text-decoration: none; color: var(--text); } .ds-feature__photo { grid-column: 1 / span 7; display: block; overflow: hidden; background: var(--line); } .ds-feature__photo img { display: block; width: 100%; height: auto; transition: transform 900ms var(--out); } .ds-feature:hover .ds-feature__photo img { transform: scale(1.02); } .ds-feature__say { grid-column: 9 / span 4; } .ds-feature__name { display: block; font-family: var(--serif); font-size: var(--t-2xl); line-height: 1.1; } .ds-feature__facts { display: block; margin-top: 0.9rem; font-family: var(--sans); color: var(--text-2); font-size: var(--t-s); font-variant-numeric: tabular-nums lining-nums; } .ds-feature__go { display: inline-block; margin-top: var(--s-4); padding-bottom: 0.35rem; border-bottom: 1px solid currentColor; font-family: var(--sans); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.3; transition: color 200ms var(--out); } .ds-feature:hover .ds-feature__go { color: var(--accent); } .ds-feature:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }"
     },
     {
       "name": "Destinations Index",
       "kind": "custom",
-      "refersTo": "",
-      "description": "A continent as a band under a hairline. Countries with work are ink and underlined; the rest are second ink.",
+      "refersTo": "index",
+      "description": "A continent under a hairline. Countries with work are ink with a thin clay underline; the rest are second ink.",
       "html": "<section class=\"ds-index\"><h2><a href=\"#\">Europe</a></h2><p>Old stones, alpine light, and cities that reward walking.</p><div class=\"ds-index__list\"><a class=\"ds-has\" href=\"#\">Spain</a><a href=\"#\">United Kingdom</a><a href=\"#\">France</a><a href=\"#\">Germany</a><a href=\"#\">Switzerland</a></div></section>",
-      "css": ".ds-index { display: grid; grid-template-columns: minmax(0, 16rem) minmax(0, 1fr); gap: var(--s-2) var(--s-4); padding-top: var(--s-3); border-top: 1px solid var(--line); font-family: var(--f); color: var(--text); } .ds-index h2 { margin: 0; font-size: var(--t-l); font-weight: 500; letter-spacing: -0.01em; line-height: 1.1; } .ds-index h2 a { color: inherit; text-decoration: none; } .ds-index p { margin: 0; grid-column: 1; color: var(--text-2); font-size: var(--t-s); line-height: 1.6; } .ds-index__list { grid-column: 2; grid-row: 1 / span 2; display: flex; flex-wrap: wrap; gap: 0.35rem 1.75rem; align-content: start; font-size: var(--t-xl); letter-spacing: -0.02em; line-height: 1.25; } .ds-index__list a { text-decoration: none; color: var(--text-2); transition: color 200ms var(--out); } .ds-index__list a:hover, .ds-index__list a.ds-has { color: var(--text); } .ds-index__list a.ds-has { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; } .ds-index a:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }"
+      "css": ".ds-index { display: grid; grid-template-columns: minmax(0, 17rem) minmax(0, 1fr); grid-template-rows: auto 1fr; gap: 0.5rem var(--s-4); padding-top: var(--s-3); border-top: 1px solid var(--line); color: var(--text); } .ds-index h2 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: 1.5rem; line-height: 1.14; letter-spacing: 0.005em; } .ds-index h2 a { color: inherit; text-decoration: none; } .ds-index p { margin: 0; grid-column: 1; font-family: var(--sans); color: var(--text-2); font-size: var(--t-s); line-height: 1.65; } .ds-index__list { grid-column: 2; grid-row: 1 / span 2; display: flex; flex-wrap: wrap; gap: 0.3rem 1.9rem; align-content: start; font-family: var(--serif); font-size: var(--t-xl); line-height: 1.3; } .ds-index__list a { text-decoration: none; color: var(--text-2); transition: color 200ms var(--out); } .ds-index__list a.ds-has { color: var(--text); text-decoration: underline; text-decoration-thickness: 1px; text-decoration-color: var(--clay); text-underline-offset: 0.18em; } .ds-index__list a:hover { color: var(--accent); } .ds-index a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }"
+    },
+    {
+      "name": "Quick Facts Card",
+      "kind": "card",
+      "refersTo": "quick-facts-card",
+      "description": "The guide's quick facts: a paper card laid over the edge of a portrait photograph. A fact with no answer is left out.",
+      "html": "<div class=\"ds-glance\"><figure class=\"ds-glance__photo\"><img src=\"images/web/640/spain-gothic-cathedral-street.jpg\" width=\"1567\" height=\"2200\" alt=\"The Cathedral spire at the end of a Gothic Quarter street at golden hour\"></figure><div class=\"ds-glance__card\"><h3>Quick facts</h3><dl><div><dt>Visa</dt><dd>Taiwan passport: visa-free in the Schengen area, up to 90 days in any 180.</dd></div><div><dt>Weather &amp; light</dt><dd>July sunrise 6:35, sunset 21:25.</dd></div></dl></div></div>",
+      "css": ".ds-glance { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: start; max-width: 50rem; } .ds-glance__photo { grid-column: 1 / span 6; grid-row: 1; margin: 0; background: var(--band); } .ds-glance__photo img { display: block; width: 100%; height: auto; } .ds-glance__card { grid-column: 6 / span 7; grid-row: 1; z-index: 1; margin-top: 3rem; padding: 2rem 2.1rem 1.5rem; background: var(--card); color: var(--text); font-family: var(--sans); font-size: var(--t-s); line-height: 1.55; } .ds-glance__card h3 { margin: 0 0 0.9rem; font-family: var(--serif); font-size: 1.5rem; line-height: 1.2; font-weight: 400; } .ds-glance__card dl { margin: 0; } .ds-glance__card div { padding-block: 0.8rem; } .ds-glance__card div + div { border-top: 1px solid var(--line); } .ds-glance__card dt { font-size: var(--t-xs); font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-2); } .ds-glance__card dd { margin: 0.15rem 0 0; }"
     },
     {
       "name": "Sheet",
       "kind": "custom",
-      "refersTo": "",
-      "description": "A comparison table in a guide. Hairlines only; the recommended cell is marked by weight.",
+      "refersTo": "sheet",
+      "description": "A comparison table in a guide. Rules only; header cells in small capitals over an ink rule; the recommended cell is marked by weight.",
       "html": "<div class=\"ds-sheet-wrap\"><table class=\"ds-sheet\"><caption>Photo spots</caption><thead><tr><th>Spot</th><th>Best time</th><th>Notes</th></tr></thead><tbody><tr><td>Bunkers del Carmel</td><td class=\"ds-t ds-best\">Sunset, dawn</td><td>360° city panorama.</td></tr><tr><td>Arc de Triomf</td><td class=\"ds-t\">Dusk</td><td>Warm brick glows at dusk.</td></tr></tbody></table></div>",
-      "css": ".ds-sheet-wrap { overflow-x: auto; font-family: var(--f); color: var(--text); } .ds-sheet { width: 100%; border-collapse: collapse; font-size: var(--t-s); line-height: 1.5; } .ds-sheet caption { caption-side: top; text-align: left; font-weight: 500; color: var(--text-2); padding-bottom: 0.4rem; } .ds-sheet th, .ds-sheet td { text-align: left; vertical-align: top; padding: 0.8rem 1.1rem 0.8rem 0; } .ds-sheet thead th { font-weight: 400; font-size: var(--t-xs); color: var(--text-2); white-space: nowrap; border-bottom: 1px solid var(--line); padding-block: 0.5rem; } .ds-sheet tbody tr + tr td { border-top: 1px solid var(--line); } .ds-sheet td:first-child { font-weight: 500; min-width: 9.5rem; } .ds-sheet .ds-best { font-weight: 500; } .ds-sheet .ds-t { white-space: nowrap; font-variant-numeric: tabular-nums lining-nums; }"
-    },
-    {
-      "name": "Guide Photograph",
-      "kind": "custom",
-      "refersTo": "photograph",
-      "description": "A photograph inside a guide with its caption beneath: the place, then real camera data in tabular figures.",
-      "html": "<figure class=\"ds-shot\" style=\"--ar: 1.5007\"><a href=\"#\"><img src=\"images/web/640/spain-bunkers-carmel-sunset.jpg\" width=\"2200\" height=\"1466\" alt=\"Barcelona and the Sagrada Família seen from Bunkers del Carmel at golden hour\"></a><figcaption><span>Bunkers del Carmel</span> <span class=\"ds-data\"><span>81mm</span><span>f/4</span><span>1/250s</span><span>ISO 125</span></span></figcaption></figure>",
-      "css": ".ds-shot { margin: 0; max-width: 22rem; font-family: var(--f); } .ds-shot a { display: block; aspect-ratio: var(--ar); overflow: hidden; background: var(--surface); } .ds-shot img { display: block; width: 100%; height: 100%; object-fit: cover; transition: opacity 260ms var(--out); } .ds-shot a:hover img { opacity: 0.86; } .ds-shot figcaption { margin-top: 0.55rem; font-size: var(--t-xs); color: var(--text-2); line-height: 1.6; } .ds-data { display: flex; flex-wrap: wrap; gap: 0 0.9rem; font-variant-numeric: tabular-nums lining-nums; } .ds-shot a:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }"
+      "css": ".ds-sheet-wrap { overflow-x: auto; font-family: var(--sans); color: var(--text); } .ds-sheet { width: 100%; border-collapse: collapse; font-size: var(--t-s); line-height: 1.55; } .ds-sheet caption { caption-side: top; text-align: left; font-weight: 500; color: var(--text-2); padding-bottom: 0.4rem; } .ds-sheet th, .ds-sheet td { text-align: left; vertical-align: top; padding: 0.9rem 1.1rem 0.9rem 0; } .ds-sheet thead th { font-family: var(--sans); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.3; color: var(--text-2); white-space: nowrap; border-bottom: 1px solid var(--text); padding-block: 0.6rem; } .ds-sheet tbody tr + tr td { border-top: 1px solid var(--line); } .ds-sheet td:first-child { font-weight: 500; min-width: 9.5rem; } .ds-sheet .ds-best { font-weight: 500; } .ds-sheet .ds-t { white-space: nowrap; font-variant-numeric: tabular-nums lining-nums; }"
     },
     {
       "name": "Note",
       "kind": "card",
       "refersTo": "note",
-      "description": "An aside in a guide: a square grey field, no border.",
+      "description": "An aside in a guide: a square stone box with a serif heading, no border.",
       "html": "<div class=\"ds-note\"><h3>What I skipped, and would skip again</h3><p>Casa Batlló: the facade from the street is the shot; the interior ticket is steep.</p></div>",
-      "css": ".ds-note { padding: 1.3rem 1.5rem 1.45rem; background: var(--surface); font-family: var(--f); font-size: var(--t-m); line-height: 1.6; color: var(--text); } .ds-note h3 { margin: 0; font-size: var(--t-m); font-weight: 500; letter-spacing: 0; line-height: 1.1; } .ds-note p { margin: 0.4rem 0 0; }"
+      "css": ".ds-note { max-width: 40rem; padding: 1.6rem 1.8rem 1.7rem; background: var(--band); font-family: var(--sans); font-size: var(--t-m); line-height: 1.65; color: var(--text); } .ds-note h3 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: 1.3rem; line-height: 1.14; letter-spacing: 0.005em; } .ds-note p { margin: 0.5rem 0 0; }"
     },
     {
       "name": "Viewer Data",
       "kind": "custom",
       "refersTo": "viewer",
       "description": "The column beside a photograph being looked at: word controls, the place, and how it was made.",
-      "html": "<div class=\"ds-viewer\"><div class=\"ds-viewer__bar\"><div><button type=\"button\">Previous</button><button type=\"button\">Next</button></div><button type=\"button\">Close</button></div><h2>Sagrada Família, inside</h2><p class=\"ds-viewer__where\">Barcelona, Spain</p><h3>How it was made</h3><dl><div><dt>Best time</dt><dd>~15:00</dd></div><div><dt>Focal length</dt><dd>95mm</dd></div><div><dt>Aperture</dt><dd>f/5</dd></div><div><dt>Shutter</dt><dd>1/200s</dd></div><div><dt>ISO</dt><dd>2000</dd></div></dl></div>",
-      "css": ".ds-viewer { background: var(--bg); color: var(--text); padding: 1.5rem; max-width: 22rem; font-family: var(--f); } .ds-viewer__bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-4); font-size: var(--t-s); } .ds-viewer__bar div { display: flex; gap: 1.1rem; } .ds-viewer__bar button { font: inherit; color: var(--text-2); background: none; border: 0; padding: 0.4rem 0; cursor: pointer; } .ds-viewer__bar button:hover { color: var(--text); } .ds-viewer h2 { margin: 0; font-size: var(--t-xl); font-weight: 500; line-height: 1.1; letter-spacing: -0.025em; } .ds-viewer__where { margin: 0.3rem 0 var(--s-3); color: var(--text-2); } .ds-viewer h3 { margin: 0; font-size: var(--t-s); font-weight: 400; letter-spacing: 0; color: var(--text-2); } .ds-viewer dl { margin: 0.4rem 0 0; font-size: var(--t-s); } .ds-viewer dl div { display: grid; grid-template-columns: 7rem minmax(0, 1fr); gap: 0.75rem; padding-block: 0.5rem; } .ds-viewer dl div + div { border-top: 1px solid var(--line); } .ds-viewer dt { color: var(--text-2); } .ds-viewer dd { margin: 0; font-variant-numeric: tabular-nums lining-nums; } .ds-viewer button:focus-visible { outline: 2px solid var(--text); outline-offset: 3px; }"
+      "html": "<div class=\"ds-viewer\"><div class=\"ds-viewer__bar\"><div><button type=\"button\">Previous</button><button type=\"button\">Next</button></div><button type=\"button\">Close</button></div><h2>Bunkers del Carmel</h2><p class=\"ds-viewer__where\">Barcelona, Spain</p><h3>How it was made</h3><dl><div><dt>Focal length</dt><dd>81mm</dd></div><div><dt>Aperture</dt><dd>f/4</dd></div><div><dt>Shutter</dt><dd>1/250s</dd></div><div><dt>ISO</dt><dd>125</dd></div><div><dt>Lens</dt><dd>RF 70-200mm F2.8 L IS USM</dd></div><div><dt>Camera</dt><dd>Canon EOS R6 Mark II</dd></div></dl><div class=\"ds-viewer__acts\"><a class=\"ds-viewer__btn\" href=\"#\">Read the guide</a><a class=\"ds-viewer__map\" href=\"#\">Open the map pin</a></div></div>",
+      "css": ".ds-viewer { background: var(--bg); color: var(--text); padding: 1.5rem; max-width: 23rem; font-family: var(--sans); } .ds-viewer__bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-4); } .ds-viewer__bar div { display: flex; gap: 1.2rem; } .ds-viewer__bar button { font-family: var(--sans); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.3; color: var(--text-2); background: none; border: 0; padding: 0.5rem 0; cursor: pointer; } .ds-viewer__bar button:hover { color: var(--accent); } .ds-viewer h2 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: var(--t-xl); line-height: 1.14; letter-spacing: 0.005em; } .ds-viewer__where { margin: 0.4rem 0 var(--s-3); color: var(--text-2); font-size: var(--t-s); } .ds-viewer h3 { margin: 0; font-size: var(--t-xs); font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-2); } .ds-viewer dl { margin: 0.5rem 0 0; font-size: var(--t-s); } .ds-viewer dl div { display: grid; grid-template-columns: 7rem minmax(0, 1fr); gap: 0.75rem; padding-block: 0.55rem; } .ds-viewer dl div + div { border-top: 1px solid var(--line); } .ds-viewer dt { color: var(--text-2); } .ds-viewer dd { margin: 0; font-variant-numeric: tabular-nums lining-nums; } .ds-viewer__acts { display: flex; flex-direction: column; align-items: flex-start; gap: 0.9rem; margin-top: var(--s-4); } .ds-viewer__btn { display: inline-flex; font-family: var(--sans); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.3; text-decoration: none; color: var(--paper); background: var(--text); border: 1px solid var(--text); padding: 1rem 1.7rem; transition: background-color 260ms var(--out), border-color 260ms var(--out); } .ds-viewer__btn:hover { background: var(--accent); border-color: var(--accent); } .ds-viewer__map { font-size: var(--t-s); color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 0.24em; } .ds-viewer :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }"
+    },
+    {
+      "name": "Footer",
+      "kind": "custom",
+      "refersTo": "footer",
+      "description": "A flat slate block closes every page: the Instagram handle in the serif, a paper button, then the menu and the copyright line.",
+      "html": "<footer class=\"ds-foot\"><a class=\"ds-foot__handle\" href=\"#\">@tuan_1127</a><p><a class=\"ds-foot__btn\" href=\"#\">Follow on Instagram</a></p><div class=\"ds-foot__small\"><ul><li><a href=\"#\">Gallery</a></li><li><a href=\"#\">Destinations</a></li><li><a href=\"#\">About</a></li></ul><p>© 2026 tuan photography 陳亮元. All photographs are my own.</p></div></footer>",
+      "css": ".ds-foot { padding: var(--s-5) var(--s-4) var(--s-3); text-align: center; color: var(--paper); background: var(--slate); font-family: var(--sans); } .ds-foot a { color: inherit; } .ds-foot__handle { display: inline-block; font-family: var(--serif); font-size: var(--t-2xl); line-height: 1; text-decoration: none; } .ds-foot p { margin: 0; } .ds-foot__btn { display: inline-flex; margin-top: var(--s-3); font-family: var(--sans); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1.3; text-decoration: none; color: var(--slate) !important; background: var(--paper); border: 1px solid var(--paper); padding: 1rem 1.7rem; transition: background-color 260ms var(--out), color 260ms var(--out); } .ds-foot__btn:hover { color: var(--paper) !important; background: transparent; } .ds-foot__small { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-2) var(--s-4); margin-top: var(--s-5); padding-top: var(--s-3); border-top: 1px solid color-mix(in oklch, var(--paper) 28%, transparent); color: color-mix(in oklch, var(--paper) 82%, var(--slate)); font-size: var(--t-xs); text-align: left; } .ds-foot__small ul { display: flex; flex-wrap: wrap; gap: 0.4rem 1.5rem; margin: 0; padding: 0; list-style: none; } .ds-foot__small a { text-decoration: none; } .ds-foot__small a:hover { text-decoration: underline; } .ds-foot :focus-visible { outline: 2px solid var(--paper); outline-offset: 3px; }"
     }
   ],
   "narrative": {
-    "northStar": "The Quiet Gallery",
-    "overview": "The site is a quiet gallery. Photographs are shown bare and large, with no frames around them and no labels on top of them. Everything that is not a photograph is small ink on a neutral ground: one sans-serif face, two text colours, hairlines, and a great deal of empty space. The design's job is to stay out of the way. The owner's stated fear is the design upstaging the photographs, and every rule below follows from that.\n\nThere are no icons and no accent colour. Controls are words (\"Menu\", \"Previous\", \"Next\", \"Close\", \"Read the guide\"). Links are ink with a thin underline. The only colour on a page comes from the photographs themselves. Light and dark follow the visitor's system setting, and the same rules hold in both.\n\nMotion is a response, never a greeting. Nothing animates when a page loads and nothing reveals on scroll. A photograph dims slightly under the pointer; opening one carries it from its place in the row to a large view with the account of how it was made beside it. Work that does not exist yet is said in one plain sentence, never filled with a stand-in.",
+    "northStar": "The Printed Travel Journal",
+    "overview": "The site is a travel journal set like a printed magazine. It opens with one photograph that fills the whole window, with no headline, no sentence and no button on it. After that, everything is quiet: place names and headings in a serif, centred; reading text in a plain sans; the menu and the buttons in small spaced capitals; all of it on warm paper. The owner chose this direction on 2026-09-28, naming Along Dusty Roads and The Common Wanderer as the template, a warm light ground, and the whole site.\n\nThe site is light only. The stylesheet declares `color-scheme: light` and there is no dark theme in this build. Visitors whose devices are set to dark still see the warm paper site.\n\nColour is used in two ways. The ground alternates between warm paper and a slightly darker stone band, section by section. Three earth colours (clay, olive and slate) appear as flat blocks: the three doors on the home page and the footer. Links and hover states are a deep clay. There are no icons: every control is a word.\n\nPhotographs are shown bare. In a row they keep their own shape and are never trimmed; their names sit beneath them, never on them. Opening any photograph shows it whole, with the account of how it was made beside it.",
     "keyCharacteristics": [
-      "Bare photographs: no frames, no mounts, no captions or labels laid over them.",
-      "Rows of photographs fill the width and are never cropped; on a phone they stack one per row.",
-      "Ink on a neutral ground, light and dark. No accent colour.",
-      "No icons. Every control is a word.",
-      "One sans-serif family in three weights (400, 500, 600).",
-      "Square corners on photographs and surfaces; the two kinds of button are pills.",
-      "Flat: no shadows and no gradients. Structure is drawn with 1px hairlines and space.",
-      "Both languages are first-class; Chinese has its own line-height, tracking, weight and full-width punctuation."
+      "One opening photograph fills the window; nothing is written across it.",
+      "Warm paper and a stone band alternate by section. Light only.",
+      "Serif for names and headings, centred. Plain sans for reading. Small spaced capitals for the menu, buttons and labels.",
+      "Clay, olive and slate as flat blocks: three doors and the footer.",
+      "Every corner is square. Buttons are rectangles with capital labels.",
+      "Photographs are bare and untrimmed in rows, with captions beneath.",
+      "No icons. Every control is a word, in both languages.",
+      "Both languages are first-class. Chinese has its own sizes, spacing, weight and punctuation.",
+      "Motion has two reasons only, arriving and walking the wall, and all of it stops under \"reduce motion\"."
     ],
     "rules": [
       {
-        "name": "The No Accent Rule",
-        "body": "There is no accent colour, by the owner's decision. Emphasis is made with Ink against Second Ink, with weight, or with an underline. A colour that is not in the six tokens does not appear in the interface.",
+        "name": "The Light Only Rule",
+        "body": "The site has one theme, light, on warm paper. There is no dark theme and no theme switch. A dark version would be a new decision for the owner, not an extension of this system.",
         "section": "colors"
       },
       {
-        "name": "The Photographs Carry The Colour Rule",
-        "body": "Every saturated colour on a page belongs to a photograph. Surfaces, rules and lettering stay neutral in both themes.",
+        "name": "The Paper And Stone Rule",
+        "body": "Sections alternate between Warm Paper and Stone. A change of ground is how one section is told from the next; there are no boxes drawn around sections and no rules between them.",
         "section": "colors"
       },
       {
-        "name": "The Same In The Dark Rule",
-        "body": "Dark is not a second design. It is the same six roles with their values exchanged, chosen by the visitor's system setting. There is no theme switch on the page.",
+        "name": "The Flat Block Rule",
+        "body": "Clay, Olive and Slate are used as whole flat blocks with Paper White lettering: the three doors and the footer. They are not used for text on paper, for borders, for tints or for gradients. The build has two small exceptions for Clay, recorded under Open Decisions.",
         "section": "colors"
       },
       {
-        "name": "The One Face Rule",
-        "body": "Everything is set in Geist, with Noto Sans TC for Chinese. No second family, no serif, no handwriting, no monospace. Weights are 400, 500 and 600 only, which are the weights the pages load.",
+        "name": "The One Link Colour Rule",
+        "body": "Deep Clay is the only colour that means \"this can be followed\". It appears on links in reading text and on hover. It is never used as a fill at rest.",
+        "section": "colors"
+      },
+      {
+        "name": "The Plain Name Rule",
+        "body": "A title is the place's name: \"Barcelona\", \"Spain\", \"Europe\". Descriptive detail goes in the small line under it.",
+        "section": "typography"
+      },
+      {
+        "name": "The Serif For Names Rule",
+        "body": "The serif is for names and headings, and they are centred. Reading text, tables, labels and controls are sans. The serif is not used for paragraphs, except the one opening paragraph on About.",
+        "section": "typography"
+      },
+      {
+        "name": "The Words Not Icons Rule",
+        "body": "Controls are words: \"Menu\", \"Previous\", \"Next\", \"Close\", \"Read the guide\", \"Map\". There are no icons, arrows or pictograms on controls anywhere in the build.",
         "section": "typography"
       },
       {
         "name": "The Real Figures Rule",
-        "body": "Camera data, times, dates and prices use tabular lining figures, and every camera value shown is read from the photograph's own file. Capture clock time is not shown.",
-        "section": "typography"
-      },
-      {
-        "name": "The Plain Name Rule",
-        "body": "A title is the place's name (\"Barcelona\", \"Spain\"). Descriptive detail goes in the small line under it.",
+        "body": "Camera data, times, dates and prices use tabular lining figures, and every camera value shown is read from the photograph's own file. The capture clock time is not shown.",
         "section": "typography"
       },
       {
@@ -427,63 +493,129 @@
         "section": "typography"
       },
       {
-        "name": "The Full-Width Rule",
-        "body": "Chinese strings are set with full-width punctuation and brackets; numbers, times and Latin words keep their own (`zh_punct`). Chinese headings drop the negative tracking, open their line-height and step up to weight 600.",
+        "name": "The Two Languages Rule",
+        "body": "Every string exists in English and in 繁體中文, and neither is a translation afterthought. Nothing ships in one language only.",
         "section": "typography"
       },
       {
         "name": "The Flat Rule",
-        "body": "Nothing casts a shadow, at rest or on hover. Separation is made with space first and a 1px hairline second.",
+        "body": "No shadows. Separation is made with a change of ground first, space second, and a 1px hairline third.",
         "section": "elevation"
       },
       {
-        "name": "The Answer Only Rule",
-        "body": "Motion answers the visitor and is never an entrance. Built motion: menu and index colours (200ms), button opacity and press (200ms), a photograph dimming under the pointer (260ms), the viewer appearing (320ms fade), a photograph travelling from its row to the viewer (420ms view transition). All use one ease-out curve, `cubic-bezier(0.16, 1, 0.3, 1)`, and all are switched off under `prefers-reduced-motion`.",
+        "name": "The Two Reasons Rule",
+        "body": "Something moves only when the visitor arrives or when a photograph comes into view, plus the small answers to the pointer. Nothing loops, nothing moves on its own, and all of it stops under \"reduce motion\".",
         "section": "elevation"
       }
     ],
     "dos": [
-      "Do show photographs bare, on the ground, with their words beneath or beside them.",
-      "Do let `rows_of()` lay out any row of photographs, so each row fills the column and no photograph is cropped.",
-      "Do take every colour from the six tokens, so light and dark both hold.",
-      "Do label every control with a word, in both languages.",
-      "Do keep photographs and surfaces square, and buttons as pills.",
-      "Do separate with space first, then a 1px hairline.",
+      "Do keep the opening photograph clear: the top bar and one small place line are the only lettering on it.",
+      "Do show photographs bare, with their names beneath them.",
+      "Do let `rows_of()` lay out any row of photographs, so each row fills the column and no photograph is trimmed.",
+      "Do call a place by its plain name, and put detail in the small line under it.",
+      "Do write every string in both languages, and set Chinese by its own rules: open line-height, weight 500 serif, full-width punctuation.",
+      "Do alternate paper and stone to tell sections apart.",
+      "Do use clay, olive and slate as whole flat blocks with Paper White lettering.",
+      "Do take every colour from the eleven tokens in the stylesheet.",
+      "Do keep every corner square.",
+      "Do label every control with a word.",
       "Do set camera data, times, dates and prices in tabular lining figures, and show only values read from the photograph's file.",
-      "Do write every string in both languages, with full-width punctuation and open line-height in Chinese.",
       "Do say plainly, in one sentence, when work does not exist yet.",
-      "Do switch off every transition under `prefers-reduced-motion`.",
+      "Do keep all motion inside the \"reduce motion\" switch.",
       "Do edit `data/site.json`, `content/` and `tools/build.py`, then rebuild; the HTML pages are written out by the build."
     ],
     "donts": [
-      "Don't add an accent colour, a tinted link or a coloured button.",
-      "Don't add icons, arrows or pictograms to controls or lists.",
-      "Don't frame, mount, round, border or shadow a photograph.",
-      "Don't set text, labels, badges or gradients on top of a photograph.",
-      "Don't crop a photograph in a row to make a grid even.",
-      "Don't add a second typeface, or weights outside 400, 500 and 600.",
-      "Don't add shadows or gradients to any surface.",
-      "Don't add entrance animations, scroll reveals or looping motion.",
+      "Don't write a headline, a sentence, a button or a panel across the opening photograph. The owner asked for this on his original site because the words blocked the image.",
+      "Don't set names, labels or badges on top of any photograph.",
+      "Don't trim a photograph in a row to make a grid even.",
+      "Don't frame, round, border or shadow a photograph.",
+      "Don't add a dark theme or a theme switch.",
+      "Don't add icons, arrows or pictograms to controls.",
+      "Don't round anything, including buttons.",
+      "Don't add shadows, or gradients other than the two on the opening photograph.",
+      "Don't use clay, olive or slate for reading text or as tints.",
+      "Don't put a small capital line above a heading as decoration. The only line that sits above a title is the breadcrumb, and it is made of real links.",
+      "Don't add a third typeface, or bold the serif in English.",
+      "Don't add motion that loops or plays on its own.",
       "Don't use long dashes, or more than one middle dot in a line.",
-      "Don't fill an empty place with a stand-in image, an invented guide or invented camera data.",
-      "Don't round anything except the two buttons."
+      "Don't fill an empty place with a stand-in image, an invented guide, invented camera data, or a claim the site cannot yet support."
     ]
   },
   "openDecisions": [
     {
       "name": "Typeface hosting",
       "status": "waiting on the owner",
-      "body": "Geist and Noto Sans TC (weights 400 to 600) load from fonts.googleapis.com on every page. Hosting the files with the site needs the owner's permission to download them."
+      "body": "Playfair Display, Geist, Noto Serif TC and Noto Sans TC load from Google Fonts on every page. Hosting the files with the site needs the owner's permission to download them. The families are in use; how they are delivered is not decided."
     },
     {
       "name": "About biography",
       "status": "waiting on the owner",
-      "body": "The About text is copy carried over from the previous site and has not been confirmed by the owner as his own words."
+      "body": "The text on the About page is copy carried over from the previous site and has not been confirmed by the owner as his own words. It is not a model for the site's voice."
     },
     {
       "name": "Contact email",
       "status": "waiting on the owner",
       "body": "No email address is published anywhere on the site. Whether to publish one is undecided."
+    },
+    {
+      "name": "Destinations lead sentence and continent taglines",
+      "status": "waiting on the owner",
+      "body": "The sentence under \"Destinations\" (\"Every place I've photographed, researched, eaten through, and written up\") and the one-line taglines for continents he has not yet visited (Africa, Antarctica, South America) read as claims the site cannot yet support: 15 of 16 countries have no guide, and those continents have no trips. They are the owner's copy to confirm or change."
+    },
+    {
+      "name": "The guide's \"SIM / data\" fact",
+      "status": "waiting on the owner",
+      "body": "It has no value yet. The build leaves the row out of the page until he supplies one, so the quick facts card shows only facts that have answers."
+    },
+    {
+      "name": "Carried from the product notes",
+      "status": "waiting on the owner",
+      "body": "which country gets the next guide, and whether a newsletter sign-up is wanted."
+    },
+    {
+      "name": "Where a photograph is trimmed",
+      "status": "recorded as built, not a rule to extend",
+      "body": "Two places, not three. The opening photograph is fitted to the window, so its edges are trimmed to the window's shape (on a phone held upright, a good deal of its width). Tiles on continent pages are fitted to a 3 by 2 opening. The feature photograph is not trimmed; it keeps its own shape, as do the guide's lead photograph, the quick facts photograph and every photograph in a row. The whole photograph is always available in the viewer. Neither trim is a licence to trim elsewhere."
+    },
+    {
+      "name": "The hover enlargement",
+      "status": "recorded as built, not a rule to extend",
+      "body": "A photograph grows 2% inside its frame under the pointer, which hides a sliver of its edges for that moment."
+    },
+    {
+      "name": "Clay outside the blocks",
+      "status": "recorded as built, not a rule to extend",
+      "body": "The stylesheet's own rule says clay, olive and slate appear only as flat blocks. Clay is also the ground of selected text and the underline beneath index names that have work. Both are small and built; they are not a reason to use the earth colours as accents."
+    },
+    {
+      "name": "The breadcrumb on continent pages",
+      "status": "recorded as built, not a rule to extend",
+      "body": "There it holds one word (\"Destinations\") in small capitals above the title, and at a glance it looks like a decorative label. It is a working link back to Destinations. It is recorded as navigation only."
+    },
+    {
+      "name": "Rising on scroll",
+      "status": "recorded as built, not a rule to extend",
+      "body": "It depends on a browser feature that not every browser has. Where it is missing, photographs are simply in place."
+    },
+    {
+      "name": "The browser's bar colour",
+      "status": "recorded as built, not a rule to extend",
+      "body": "Each page sets it with a typed value (`#f7f2e9`) in `tools/build.py`. It is a close match to Warm Paper, not taken from the token."
+    },
+    {
+      "name": "The darkening on the opening photograph",
+      "status": "recorded as built, not a rule to extend",
+      "body": "Its colour is typed into the stylesheet and is not one of the eleven tokens."
+    },
+    {
+      "name": "Unused helpers",
+      "status": "recorded as built, not a rule to extend",
+      "body": "The stylesheet defines two small helpers (`.caps`, `.quiet`) that no page uses at present."
+    },
+    {
+      "name": "Placeholder titles",
+      "status": "recorded as built, not a rule to extend",
+      "body": "The Skills page lists three planned articles and says on the page that their titles are placeholders."
     }
   ]
 }
