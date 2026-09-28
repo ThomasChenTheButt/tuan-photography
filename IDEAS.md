@@ -82,6 +82,94 @@
 - 這是什麼: Andrew 和 Emily 兩人的旅遊網站。首頁分成路線、故事、地點三個入口,攻略和攝影並重。
 - 喜歡它什麼: 待補
 
+### Impeccable
+- 類型: 設計 Skill
+- 日期: 2026-09-28
+- 網址: https://github.com/pbakaus/impeccable
+- 狀態: 已安裝,已用來做試驗版網站
+- 這是什麼: 一套設計指令(審查、打磨、排字、產生變體等),附自動檢查工具。
+- 喜歡它什麼: 待補
+
+### Taste skill
+- 類型: 設計 Skill
+- 日期: 2026-09-28
+- 網址: https://github.com/leonxlnx/taste-skill
+- 狀態: 已安裝其中三個(design-taste-frontend、redesign-existing-projects、minimalist-ui)
+- 這是什麼: 一份設計規則手冊,目的是讓做出來的網頁不像 AI 套模板。
+- 喜歡它什麼: 待補
+
+### Scroll-craft
+- 類型: 設計 Skill
+- 日期: 2026-09-28
+- 網址: https://youtu.be/QUI6Ug4cHnE
+- 狀態: 已存在 ~/Desktop/scroll-craft,留給之後的專案,不用在旅遊網站
+- 這是什麼: 影片「I Built The Ultimate Claude Website Design Skill (steal this)」介紹的捲動式網站 skill。
+- 喜歡它什麼: 待補
+
+### 10K Websites
+- 類型: 設計 Skill
+- 日期: 2026-09-28
+- 網址: https://www.youtube.com/watch?v=snErQUyqwCU&t=896s
+- 狀態: 裝過又移除,因為需要 Higgsfield 帳號
+- 這是什麼: 影片「How to Build $10K Websites in Minutes (Claude AI)」的 skill。用 AI 生成的影片做首頁,隨捲動播放。
+- 喜歡它什麼: 待補
+
+### Higgsfield
+- 類型: 工具與連接
+- 日期: 2026-09-28
+- 網址: https://higgsfield.ai
+- 狀態: 還沒有帳號。要付費(以點數計)
+- 這是什麼: AI 生成圖片和影片的服務,可以用 MCP 接到 Claude。10K Websites 需要它。
+- 喜歡它什麼: 待補
+
+### Turn Claude Into A Design GENIUS In 3 Simple Steps
+- 類型: 教學影片
+- 日期: 2026-09-28
+- 網址: https://youtu.be/7FU98O0JLHs
+- 喜歡哪一段: 待補(Claude 看不了影片,請告訴我你記得的重點)
+
+### I Built The Ultimate Claude Website Design Skill (steal this)
+- 類型: 教學影片
+- 日期: 2026-09-28
+- 網址: https://youtube.com/watch?v=QUI6Ug4cHnE
+- 作者: 你筆記上寫的是 Nale Jerk
+- 喜歡哪一段: 待補(Claude 看不了影片,請告訴我你記得的重點)
+
+### Pinterest
+- 類型: 找靈感的地方
+- 日期: 2026-09-28
+- 網址: https://www.pinterest.com
+- Claude 備註: 找網頁設計時容易被帶去時尚和商品照。搜尋詞用 photography portfolio website、editorial web design 比較準。
+
+### Dribbble
+- 類型: 找靈感的地方
+- 日期: 2026-09-28
+- 網址: https://dribbble.com
+- Claude 備註: 多半是設計師的概念稿,不一定是真的上線的網站。
+
+### Refero Styles
+- 類型: 找靈感的地方
+- 日期: 2026-09-28
+- 網址: https://refero.design
+- Claude 備註: 以產品和 App 介面為主,攝影和個人品牌的例子少。
+
+### 21st.dev
+- 類型: 找靈感的地方
+- 日期: 2026-09-28
+- 網址: https://21st.dev
+- Claude 備註: 現成的網頁元件庫,以 React 為主。你的網站是純 HTML,只能參考樣子,不能直接拿來用。
+
+### 下指令的方法
+- 類型: 做法筆記
+- 日期: 2026-09-28
+- 方法一: 附上參考網站
+- 方法二: 請它一次做五個版本,再自己挑
+
+### 做網站的流程
+- 類型: 做法筆記
+- 日期: 2026-09-28
+- 第一步: 先有想法,去找讓你感興趣的網頁
+
 ## 三、已採用/已放棄 Used or dropped
 
 *(做了或決定不做的搬到這裡,留一句原因,之後才不會重複討論)*
