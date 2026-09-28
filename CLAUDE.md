@@ -3,104 +3,95 @@
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
 Bilingual EN / 繁體中文. Owner is not a developer — explain in plain English, handle all tech.
 
-## ⚠ This folder is the Impeccable trial (branch `impeccable-trial`)
-
-Owner decision, 2026-09-27: rebuild the whole site here with the Impeccable skill, **with full
-freedom on the visual direction**, to compare side by side with the original.
-
-- This copy lives at `experiments/impeccable/` inside the original's folder
-  (`~/Desktop/travel website`, branch `main`, preview `:8642`), moved there 2026-09-28.
-  This copy previews on `:8643`. **Never edit the original from a trial session.**
-- On this branch these sections below are **suspended**: *The brief → Mood / Restraint /
-  References*, *Design system*, *Component vocabulary*, and the `<frontend_aesthetics>` block.
-  Impeccable's `PRODUCT.md`, the surface briefs and (after the build) `DESIGN.md` are the
-  authority instead. The old look is evidence of what the site is, not a rule.
-- Still binding here: plain place-name titles, the bilingual rule, the photo rules, real content
-  only. The 15 country pages without content stay empty shells.
-- Do not merge this branch into `main` unless he says so after comparing.
-- **The design system for this folder is `DESIGN.md`**, not the tables below. Pages here are
-  generated: edit `data/site.json` or `content/`, then run `python3 tools/build.py`. Don't
-  hand-edit the generated HTML.
-
 ## The brief (owner-decided — these win over any generic guidance)
 
-- **Mood:** warm editorial magazine × photographer's field journal.
+- **Who he is:** a landscape photographer (旅途中的風景 — nature and cities). Not a travel
+  blogger, not a studio for hire. The photograph is the entrance; the guide is what it leads to.
+- **Look:** "The Printed Travel Journal" — a travel journal set like a printed magazine, on
+  warm paper. He chose this on 2026-09-28 after comparing it with the earlier site, naming
+  Along Dusty Roads and The Common Wanderer as the bar for craft.
 - **Restraint:** clean, minimal, generous white space. Photos talk; text stays quiet.
-  When in doubt, remove an element rather than add one.
+  When in doubt, remove an element rather than add one. His biggest fear is the design
+  upstaging the photographs.
+- **Nothing is written across the opening photograph.** No headline, sentence or button on it.
 - **Titles:** plain place names ("Barcelona", not "Barcelona for Photographers: Four Days of…").
-  Descriptive detail belongs in the small meta line.
-- **References the owner likes:** wilhelmchang.com (presentation, pinned hero, by-country tiles),
-  ourtravel.tw (practical guide content: comparison tables, gear lists, timing intel).
+  Descriptive detail belongs in the small line under it.
+- **References are sources of qualities, never templates.** He rejected an earlier look for
+  copying wilhelmchang.com. The site keeps its own identity.
+- **No email on the site** (his call, 2026-09-28). The way to reach him is Instagram,
+  `tuan_1127`. The About biography stays as written (his call, same day).
 
-## Design system (css/style.css `:root`)
+## Design system — `DESIGN.md` and `PRODUCT.md`
 
-| Token | Value | Use |
-|---|---|---|
-| `--paper` | `#f6efe3` | page background |
-| `--ink` | `#241d15` | body text |
-| `--kodak-red` | `#c22c1e` | primary accent, section rules, links |
-| `--frame-gold` | `#d9a441` | accent on dark sections |
-| `--darkroom` | `#191410` | dark pages (Gallery), footer |
-| `--display` | Instrument Serif | headings |
-| `--body` | Noto Serif TC | body (also carries 中文) |
-| `--mono` | JetBrains Mono | EXIF-style labels, meta, nav |
+The design is recorded in two files at the root. **Read them before any visual change.**
 
-Never hard-code colors in components — use the variables.
-
-## Component vocabulary 元件清單 (build from these — don't invent)
-
-The design already lives in `css/style.css` (~1,335 lines). There is **no template file** and
-none is wanted: pages are assembled from these shared classes, so changing one rule in the
-stylesheet updates every page at once. A guide page is mostly *content*, not design.
-
-**Guide/article anatomy** (`posts/*.html` — `posts/barcelona.html` is the reference build):
-
-| Class | What it is |
+| File | What it holds |
 |---|---|
-| `.article-hero` | pinned full-bleed hero photo above the article |
-| `.article` | article body wrapper (measure, rhythm, heading styles) |
-| `.meta` | small line under the title — last-updated · travel dates |
-| `.toc` | numbered table of contents, two columns |
-| `.table-scroll` > `.info-table` | comparison table; wrapper makes it scroll on mobile |
-| `.info-table.facts` | the compact "facts" variant (label column, no wrap) |
-| `.best` | highlights the recommended cell in a table |
-| `.photo-tip` > `.tip-label` | boxed 📍 shooting tip — label line + body |
-| `.day` > `.day-no` | one block per day in 我的路線 |
-| `.gear-list` | bullet list for gear / practical notes |
-| `.exif` | mono EXIF strip (f-stop, shutter, ISO, focal length, place) |
-| `.faq` | FAQ block |
+| `DESIGN.md` | colours, type, layout, motion, every component, the do's and don'ts |
+| `PRODUCT.md` | who the site is for, what it promises, what evidence exists |
 
-**Shared chrome, on every page**: `.site-header`, `.nav`, `.logo` / `.logo-cjk`, `.nav-links`,
-`.nav-toggle`, `.lang-switch`, `.site-footer`, `.wrap`, `.section`, `.reveal` (load animation).
+Where `DESIGN.md` and `css/style.css` disagree, the stylesheet is right and `DESIGN.md` needs
+updating in the same commit. The short version:
 
-**Listing pages**: `.country-tile`, `.country-grid`, `.guide-grid`, `.continent-grid`,
-`.gallery-wall`, `.portfolio-grid`, `.spot` / `.pin-badge`, `.empty-state`.
+| Thing | Rule |
+|---|---|
+| Ground | warm paper and a stone band alternate by section. **Light only**, no dark theme |
+| Colour | eleven tokens in `css/style.css` `:root`. Never hard-code a colour |
+| Earth colours | clay, olive, slate: whole flat blocks only (the three doors, the footer) |
+| Links | deep clay is the only colour that means "this can be followed" |
+| Names and headings | Playfair Display, weight 400, centred (中文: Noto Serif TC, 500) |
+| Reading text | Geist (中文: Noto Sans TC) |
+| Labels, menu, buttons | Geist in small spaced capitals. No mono face |
+| Corners | square, everywhere |
+| Controls | words, never icons or arrows |
+| Photographs | bare, untrimmed in rows, names beneath and never on top |
+| Punctuation | no long dashes; at most one middle dot in a line; 中文 uses full-width marks |
 
 ### Rules
 
-- **Reuse these classes.** A new page should introduce almost no new CSS.
-- **Never use inline `style="…"`** except a hero's `background-image`. Inline styling is how a
-  page silently drifts away from the stylesheet and stops responding to design changes.
-- If something genuinely new is needed, add it to `css/style.css` as a **reusable class** —
-  never as a one-off on a single page.
-- Keeping this list accurate matters: it is read at the start of every session, and by any
-  teammate agent. If a component is added or renamed, update this table in the same commit.
+- **Build from the components in `DESIGN.md`.** A new page should introduce almost no new CSS.
+- **Never use inline `style="…"`.** Inline styling is how a page silently drifts away from the
+  stylesheet and stops responding to design changes.
+- If something genuinely new is needed, add it to `css/style.css` as a **reusable class**, and
+  record it in `DESIGN.md` in the same commit.
 
-## Structure
+## Structure — the pages are built, not hand-written
 
-Nav: Destinations 目的地 · Gallery 作品集 · Blog 網誌 · Skills 攝影技巧 · About 關於我.
+Nav: Gallery 作品集 · Destinations 目的地 · Blog 網誌 · Skills 攝影技巧 · About 關於我.
 Destinations drills down: 7 continents → country pages → guides (`posts/`).
-Continent/country pages were generated once by a `gen_pages.py` script that lived in a temp
-folder and **no longer exists anywhere** (confirmed 2026-08-08 by a full-disk search). They are
-**hand-maintained** now. Edit them directly; there is nothing to rerun. If a change has to hit
-many of them at once, write a fresh script **inside the repo** so it survives — don't put it in
-a scratchpad again.
+
+**Every `.html` page is written out by `python3 tools/build.py`. Never hand-edit the HTML** —
+the next build overwrites it. Change the source, then rebuild:
+
+| To change | Edit |
+|---|---|
+| photographs, countries, continents, guides, shared wording | `data/site.json` |
+| a guide's text | `content/<name>.body.html` and `content/<name>.i18n.json` |
+| page layout, the `<head>`, top bar, footer | `tools/build.py` |
+| how anything looks | `css/style.css` |
+| behaviour (language switch, photo viewer) | `js/main.js` |
+
+**Typefaces live with the site**, in `fonts/` (his permission, 2026-09-28). Pages never contact
+Google Fonts. `css/fonts.css` is written by `tools/fonts.py`; don't edit it by hand. To change
+a typeface or weight, edit `FAMILIES` in that script, delete `fonts/`, and rerun it. Each
+folder keeps its `OFL.txt`, which the font licence requires.
+
+**Site icon — "PT"** (photography tuan), settled 2026-09-28 after three rounds. It sits in his
+bookmarks bar beside FinTuan's FT and BodyTuan's BT, so it shares their format — rounded
+square, two geometric sans letters — and adds a strip of landscape: a dark ridgeline traced
+from the Aoraki photo, a red sun, warm paper sky. Both halves are his call: plain
+dark-and-gold letters read as "too techy", and a full illustrated scene with serif letters
+didn't look like a sibling of the other two. The icon keeps its own colours, set in
+`tools/icons.py`; they are not the site's tokens. Files live in `icons/`, plus `favicon.ico`
+and `site.webmanifest` at the root. Don't edit the images by hand: change `tools/icons.py` and
+rerun it. The `<head>` tags that point at the icon are written by `tools/build.py`.
 
 ## Bilingual rule
 
-Shared strings live in `js/main.js` (`i18n.en` / `i18n.zh`); per-page strings in a
-`window.pageI18n` block before the script tag. **Every new user-facing string goes in BOTH
-languages** — never ship English-only copy.
+**Every user-facing string goes in BOTH languages** — never ship English-only copy. Strings
+live in `data/site.json` and `content/*.i18n.json` as `en` / `zh` pairs; wording shared by
+every page (menu, footer, viewer) is in `js/main.js` (`i18n.en` / `i18n.zh`). The build writes
+each page's strings into a `window.pageI18n` block and fixes 中文 punctuation on the way.
 
 ## Photos
 
@@ -109,6 +100,9 @@ languages** — never ship English-only copy.
 - The site uses web-sized copies in `images/web/`, named `<country>-<subject>.jpg`,
   long edge 2400px, JPEG quality ~62 (aim under ~1 MB).
   `sips -Z 2400 in.jpeg --setProperty formatOptions 62 --out images/web/name.jpg`
+- To publish one: add the file, add an entry under `"slides"` in `data/site.json`, rebuild.
+  The build makes the smaller copies in `images/web/640/` and `images/web/1280/` itself.
+- Camera data shown on the site is read from the photograph's own file. Never invent it.
 - Only publish photos he confirms are his own — some "sample pic" links in his planning docs
   are other people's reference shots.
 
@@ -148,7 +142,8 @@ critical that you think outside the box!
 </frontend_aesthetics>
 
 Note: the aesthetics block above is general guidance. Where it conflicts with **the brief**
-at the top of this file, the brief wins — the owner has already made those calls deliberately.
+at the top of this file or with `DESIGN.md`, those win — the owner has already made those calls
+deliberately.
 
 ## Session log — PROGRESS.md (READ FIRST, WRITE LAST)
 
@@ -168,10 +163,76 @@ at the top of this file, the brief wins — the owner has already made those cal
     handoff note, not a changelog — `git log` is the changelog.
 - Then commit and push it along with the day's work.
 
+## Ideas inbox — IDEAS.md
+
+`IDEAS.md` is where his loose ideas and links to sites he likes are collected (started
+2026-09-28). When he drops a URL or an idea, add it there in 繁體中文 with the date and **what
+he likes about it** in his own words — ask if he didn't say. Collecting is not a request to
+build: don't change the site because of an entry until he asks. A liked site is a source of
+qualities, never a template to copy.
+
+Two kinds of entry: (1) ideas about this site, (2) collected links / images / videos.
+Image and video files go in `ideas/`, which is **gitignored** — the GitHub repo is public and
+saved references are usually other people's work, so they stay on his Mac. Only the notes in
+`IDEAS.md` are pushed. Videos can't be watched by Claude: record the link and ask him which
+moment he liked.
+
+He reads the list as a Word file, `ideas/靈感整理.docx`. It is generated:
+**after every change to `IDEAS.md`, rerun `python3 tools/ideas_doc.py`** and never edit the
+Word file by hand. Each entry is a `###` heading followed by `- 欄位: 內容` lines; `類型` sets
+the group and `圖片` names a file in `ideas/`.
+
+He asked (2026-09-28) for the Word file to be **readable at a glance**: one table per 類型,
+one row per entry, showing only 名稱, 重點, 狀態 and a link. He also wants it **dense**
+(about 20 rows a page: single line spacing, small type), tables with a **full drawn frame**,
+and the contents table at the top **linked** to each type's table. So every entry needs a `重點`
+line, written as **one short phrase** (about 15 characters), and `狀態` is one or two words
+(已安裝, 已存檔, 已移除, 未註冊, 收集中). Longer explanation goes in other fields, which stay
+in `IDEAS.md` and are not shown in Word. Don't add the same thing twice: check the list first
+and merge into the existing entry.
+
+## Experiments 試作 — `experiments/`
+
+He is the manager: he discovers a skill or an idea, has it tried on a **copy** of the site,
+reviews it, then says keep or drop (set up 2026-09-28). The real site is never the test bed.
+
+- **Start** — when he says "try X as an experiment", or when a change is big and he isn't sure
+  he'll keep it, don't edit the real site. From this folder run
+  `git worktree add experiments/<name> -b exp/<name>`. One folder and one branch per experiment.
+- **Preview** — each experiment gets its own port, counting up from 8643, as an entry in
+  `.claude/launch.json`: `"runtimeArgs": ["serve.py", "<port>", "experiments/<name>"]`.
+  The real site stays on 8642 so he can compare side by side.
+- **Inside an experiment** — put a short note at the top of its `CLAUDE.md`: what is being
+  tried, which skill, and which rules of this file are suspended there. Commit on its branch.
+  Branches stay **local** unless he asks for a backup — the GitHub repo is public.
+- **Keep** — only on his word. Merge `exp/<name>` into `main`, check the real site in the
+  preview, then remove the folder and the branch.
+- **Drop** — `git worktree remove experiments/<name>` and `git branch -D exp/<name>`.
+  Never drag the folder to the Trash; that leaves a broken link behind.
+- `experiments/` is gitignored on `main`, and anything that scans the site for pages must skip
+  it (`tools/build.py` only writes the pages it names).
+- Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
+  harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
+
+Open now: none. The first experiment, `impeccable` (a full rebuild made with the Impeccable
+and taste skills), was **kept** on 2026-09-28 and is now the site. Its three earlier looks are
+in the history at the tags `light-table-v1` and `exhibition-hang-v2`.
+
+**Weekly report 週報** (set up 2026-09-28). A scheduled task, `weekly-web-design-report`, runs
+every Monday about 9:00 and searches the web for the week's new AI web-design tools, skills,
+plugins and news. It writes `ideas/weekly/<date>.md` and builds `ideas/weekly/<date>.docx` with
+the same generator (`python3 tools/ideas_doc.py <list.md> <out.docx>`), then hands him the Word
+file in the chat. **The report is a menu, not the inbox:** nothing from it goes into `IDEAS.md`
+until he says he is interested in an item. Nothing it finds gets installed without his say.
+
 ## Working habits
 
 - Commit and push after every meaningful change (owner treats GitHub as autosave).
-- Verify visually in the preview before saying something is done. The browser caches hard —
-  `fetch(url, {cache:'reload'})` then reload, or tell him Cmd+Shift+R.
-- Preview: "travel-site-impeccable" on port 8643, defined in the original folder's
-  `.claude/launch.json`.
+- After changing `data/`, `content/` or `tools/build.py`, run `python3 tools/build.py` before
+  looking at the result.
+- Verify visually in the preview before saying something is done.
+- **Local server:** `serve.py` on port 8642 — `http.server` plus a no-cache header, so a plain
+  reload shows the latest CSS/JS. Bound to 127.0.0.1 on purpose (site isn't public, originals
+  live in the folder). He starts it himself by double-clicking `start.command`.
+- Preview: `.claude/launch.json` → "travel-site" runs the same `serve.py`. If port 8642 is
+  already serving (he launched it himself), open the preview by URL instead of by name.

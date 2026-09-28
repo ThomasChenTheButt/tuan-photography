@@ -230,6 +230,12 @@ def head(title, desc, root):
   <title>{e(title)}</title>
   <meta name="description" content="{e(clean_en(desc))}">
   <meta name="theme-color" content="{PAPER}">
+  <link rel="icon" type="image/png" href="{root}icons/favicon-96x96.png" sizes="96x96">
+  <link rel="icon" type="image/svg+xml" href="{root}icons/favicon.svg">
+  <link rel="shortcut icon" href="{root}favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="{root}icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="PT">
+  <link rel="manifest" href="{root}site.webmanifest">
   <link rel="stylesheet" href="{root}css/fonts.css?v={STAMP}">
   <link rel="stylesheet" href="{root}css/style.css?v={STAMP}">
 </head>

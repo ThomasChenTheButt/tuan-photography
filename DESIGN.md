@@ -271,7 +271,7 @@ Measured contrast, worked out from the built tokens. Warm Ink on Warm Paper is a
 
 **Character:** A high-contrast book serif for the names of places, against a plain modern sans for everything that is read. The serif is always weight 400 in English; emphasis comes from size and from centring, not from bold.
 
-The pages load Playfair Display at weight 400, Geist at 400 to 600, Noto Serif TC at 500 to 600 and Noto Sans TC at 400 to 600, from Google Fonts.
+The pages load Playfair Display at weight 400, Geist at 400 to 600, Noto Serif TC at 500 to 600 and Noto Sans TC at 400 to 600. The files are kept with the site in `fonts/` and named in `css/fonts.css`, which `tools/fonts.py` writes; no page contacts Google Fonts. The Chinese faces are cut into about a hundred slices each, and a browser fetches only the slices a page needs.
 
 ### Hierarchy
 - **Display** (serif, 400, `clamp(2.3rem, 1.45rem + 3.4vw, 4.25rem)`, line-height 1.14): page titles, the home page line, the name of a guide shown as a feature (line-height 1.1), the Instagram handle in the footer (line-height 1).
@@ -470,12 +470,14 @@ A page with no work says so in one centred sentence in Second Ink, at most 46 ch
 These are recorded as open. None of them is a settled part of the system.
 
 ### Waiting on the owner
-- **Typeface hosting.** Playfair Display, Geist, Noto Serif TC and Noto Sans TC load from Google Fonts on every page. Hosting the files with the site needs the owner's permission to download them. The families are in use; how they are delivered is not decided.
-- **About biography.** The text on the About page is copy carried over from the previous site and has not been confirmed by the owner as his own words. It is not a model for the site's voice.
-- **Contact email.** No email address is published anywhere on the site. Whether to publish one is undecided.
 - **Destinations lead sentence and continent taglines.** The sentence under "Destinations" ("Every place I've photographed, researched, eaten through, and written up") and the one-line taglines for continents he has not yet visited (Africa, Antarctica, South America) read as claims the site cannot yet support: 15 of 16 countries have no guide, and those continents have no trips. They are the owner's copy to confirm or change.
 - **The guide's "SIM / data" fact.** It has no value yet. The build leaves the row out of the page until he supplies one, so the quick facts card shows only facts that have answers.
 - **Carried from the product notes:** which country gets the next guide, and whether a newsletter sign-up is wanted.
+
+### Decided by the owner on 2026-09-28
+- **Typeface hosting.** The typefaces are kept with the site, in `fonts/`.
+- **About biography.** The text on the About page stays as it is.
+- **Contact email.** No email address is published. Instagram is the way to reach him.
 
 ### Recorded as built, not as rules to extend
 - **Where a photograph is trimmed.** Two places, not three. The opening photograph is fitted to the window, so its edges are trimmed to the window's shape (on a phone held upright, a good deal of its width). Tiles on continent pages are fitted to a 3 by 2 opening. The feature photograph is not trimmed; it keeps its own shape, as do the guide's lead photograph, the quick facts photograph and every photograph in a row. The whole photograph is always available in the viewer. Neither trim is a licence to trim elsewhere.

@@ -1,6 +1,9 @@
 # macOS system files
 .DS_Store
 
+# Python's compiled leftovers from running tools/
+__pycache__/
+
 # Claude Code local tooling (skills, preview config) — not part of the website
 .claude/
 
@@ -8,6 +11,10 @@
 # web-sized copies in images/web/. Keeps the repo small and your originals private.
 images/*/
 !images/web/
+
+# Saved reference images and videos — often other people's work, and this
+# repo is public, so they stay on your Mac. IDEAS.md (the notes) is still saved.
+ideas/
 
 # loose originals dropped straight into images/ (not the web copies)
 images/*.jpg
@@ -19,3 +26,7 @@ images/*.heic
 .impeccable/review/
 .impeccable/decision/
 .impeccable/briefs-src/
+
+# Experiments — trial copies of the site, each on its own branch (see CLAUDE.md).
+# The folders live here; their contents belong to their own branches, not to main.
+experiments/
