@@ -29,9 +29,11 @@ INK = '241D15'          # --ink
 KODAK_RED = 'C22C1E'    # --kodak-red
 MUTED = '7A6F62'        # --ink lightened; Word only
 RULE = 'D9CFBF'         # --paper darkened; Word only
+FRAME = '8C8174'        # table lines: dark enough to read as a drawn frame
+HEAD = 'EFE7D8'         # header row fill
 
-# A4 with 1" margins, in DXA (1440 = 1 inch).
-PAGE_W, PAGE_H, MARGIN = 11906, 16838, 1440
+# A4 with 0.75" margins, in DXA (1440 = 1 inch).
+PAGE_W, PAGE_H, MARGIN = 11906, 16838, 1080
 CONTENT_W = PAGE_W - 2 * MARGIN
 LABEL_W = 1900
 EMU_PER_DXA = 635
@@ -112,8 +114,18 @@ class Doc:
         return ''.join(out)
 
     def link(self, target, label):
+        if target.startswith('#'):          # a heading inside this file
+            return (f'<w:hyperlink w:anchor={quoteattr(target[1:])} w:history="1">'
+                    f'{self.run(label, "Link")}</w:hyperlink>')
         rid = self.rel('hyperlink', target, external=True)
         return f'<w:hyperlink r:id="{rid}">{self.run(label, "Link")}</w:hyperlink>'
+
+    def heading(self, text, anchor, number):
+        """A section heading that the list of contents can jump to."""
+        self.body.append(
+            '<w:p><w:pPr><w:pStyle w:val="Heading1"/></w:pPr>'
+            f'<w:bookmarkStart w:id="{number}" w:name={quoteattr(anchor)}/>'
+            f'{self.run(text)}<w:bookmarkEnd w:id="{number}"/></w:p>')
 
     def para(self, runs, style=None):
         props = f'<w:pPr><w:pStyle w:val="{style}"/></w:pPr>' if style else ''
@@ -126,24 +138,25 @@ class Doc:
         grid = ''.join(f'<w:gridCol w:w="{w}"/>' for w in widths)
         out = [f'<w:tbl><w:tblPr><w:tblW w:w="{sum(widths)}" w:type="dxa"/>'
                '<w:tblBorders>'
-               f'<w:top w:val="single" w:sz="4" w:color="{RULE}"/>'
-               f'<w:bottom w:val="single" w:sz="4" w:color="{RULE}"/>'
-               f'<w:insideH w:val="single" w:sz="4" w:color="{RULE}"/>'
-               '</w:tblBorders><w:tblLayout w:type="fixed"/>'
-               '<w:tblCellMar><w:top w:w="90" w:type="dxa"/>'
-               '<w:left w:w="0" w:type="dxa"/><w:bottom w:w="90" w:type="dxa"/>'
-               '<w:right w:w="160" w:type="dxa"/></w:tblCellMar></w:tblPr>'
+               + ''.join(f'<w:{side} w:val="single" w:sz="6" w:space="0" w:color="{FRAME}"/>'
+                         for side in ('top', 'left', 'bottom', 'right', 'insideH', 'insideV'))
+               + '</w:tblBorders><w:tblLayout w:type="fixed"/>'
+               '<w:tblCellMar><w:top w:w="30" w:type="dxa"/>'
+               '<w:left w:w="100" w:type="dxa"/><w:bottom w:w="30" w:type="dxa"/>'
+               '<w:right w:w="100" w:type="dxa"/></w:tblCellMar></w:tblPr>'
                f'<w:tblGrid>{grid}</w:tblGrid>']
         for i, row in enumerate(rows):
             out.append('<w:tr><w:trPr><w:cantSplit/></w:trPr>')
             for j, (cell, width) in enumerate(zip(row, widths)):
+                shade = ''
                 if header and i == 0:
                     content = self.para(self.run(cell), 'Label')
+                    shade = f'<w:shd w:val="clear" w:color="auto" w:fill="{HEAD}"/>'
                 elif isinstance(cell, tuple):          # (address, words to show)
                     content = self.para(self.link(*cell) if cell[0] else '', 'Cell')
                 else:
                     content = self.para(self.text(cell), 'Name' if j == 0 else 'Cell')
-                out.append(f'<w:tc><w:tcPr><w:tcW w:w="{width}" w:type="dxa"/></w:tcPr>'
+                out.append(f'<w:tc><w:tcPr><w:tcW w:w="{width}" w:type="dxa"/>{shade}</w:tcPr>'
                            f'{content}</w:tc>')
             out.append('</w:tr>')
         out.append('</w:tbl>')
@@ -198,30 +211,28 @@ def styles():
     fonts = ('<w:rFonts w:ascii="Georgia" w:hAnsi="Georgia" w:eastAsia="Songti TC" '
              'w:cs="Georgia"/>')
     mono = '<w:rFonts w:ascii="Menlo" w:hAnsi="Menlo" w:eastAsia="Songti TC"/>'
-    rule = (f'<w:pBdr><w:bottom w:val="single" w:sz="8" w:space="6" '
-            f'w:color="{KODAK_RED}"/></w:pBdr>')
     return (
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
         f'<w:styles {NS}><w:docDefaults><w:rPrDefault><w:rPr>{fonts}'
-        f'<w:color w:val="{INK}"/><w:sz w:val="22"/><w:szCs w:val="22"/>'
+        f'<w:color w:val="{INK}"/><w:sz w:val="19"/><w:szCs w:val="19"/>'
         '<w:lang w:val="en-US" w:eastAsia="zh-TW"/></w:rPr></w:rPrDefault>'
-        '<w:pPrDefault><w:pPr><w:spacing w:after="120" w:line="320" w:lineRule="auto"/>'
+        '<w:pPrDefault><w:pPr><w:spacing w:after="60" w:line="240" w:lineRule="auto"/>'
         '</w:pPr></w:pPrDefault></w:docDefaults>'
         + style('Normal', 'Normal', based=None)
-        + style('Title', 'Title', para='<w:spacing w:after="60"/>',
-                run='<w:sz w:val="64"/><w:szCs w:val="64"/>')
-        + style('Meta', 'Meta', para='<w:spacing w:after="480"/>',
-                run=f'{mono}<w:color w:val="{MUTED}"/><w:sz w:val="17"/>')
-        + style('Heading1', 'heading 1',
-                para=f'<w:keepNext/>{rule}<w:spacing w:before="600" w:after="200"/>'
-                     '<w:outlineLvl w:val="0"/>',
+        + style('Title', 'Title', para='<w:spacing w:after="20"/>',
                 run='<w:sz w:val="40"/><w:szCs w:val="40"/>')
+        + style('Meta', 'Meta', para='<w:spacing w:after="160"/>',
+                run=f'{mono}<w:color w:val="{MUTED}"/><w:sz w:val="15"/>')
+        + style('Heading1', 'heading 1',
+                para='<w:keepNext/><w:spacing w:before="220" w:after="70"/>'
+                     '<w:outlineLvl w:val="0"/>',
+                run=f'<w:b/><w:color w:val="{KODAK_RED}"/><w:sz w:val="24"/><w:szCs w:val="24"/>')
         + style('Heading2', 'heading 2',
                 para='<w:keepNext/><w:spacing w:before="360" w:after="40"/>'
                      '<w:outlineLvl w:val="1"/>',
                 run='<w:sz w:val="28"/><w:szCs w:val="28"/>')
         + style('Label', 'Label', para='<w:spacing w:after="0"/>',
-                run=f'{mono}<w:color w:val="{MUTED}"/><w:sz w:val="17"/>')
+                run=f'{mono}<w:color w:val="{MUTED}"/><w:sz w:val="15"/>')
         + style('Cell', 'Cell', para='<w:spacing w:after="0"/>')
         + style('Name', 'Name', para='<w:spacing w:after="0"/>', run='<w:b/>')
         + style('Picture', 'Picture',
@@ -238,15 +249,17 @@ def build(entries):
     doc.add('靈感整理', 'Title')
     doc.add(f'最後更新 {date.today().isoformat()}  ·  {len(entries)} 項  ·  '
             f'{len(groups)} 個類型  ·  來源 IDEAS.md', 'Meta')
-    doc.table([['類型', '數量']] + [[kind, str(len(found))] for kind, found in groups.items()],
-              [CONTENT_W - 1000, 1000], header=True)
+    anchors = {kind: f'type{n}' for n, kind in enumerate(groups, 1)}
+    doc.table([['目錄(點類型跳到那張表)', '數量']]
+              + [[(f'#{anchors[kind]}', kind), str(len(found))] for kind, found in groups.items()],
+              [3400, 900], header=True)
 
-    for kind, found in groups.items():
-        doc.add(kind, 'Heading1')
+    for n, (kind, found) in enumerate(groups.items(), 1):
+        doc.heading(kind, anchors[kind], n)
         # a column appears only when some entry of this type has something to put in it
         status = any(e['fields'].get('狀態') for e in found)
         links = any(url(e['fields']) for e in found)
-        name_w, status_w, link_w = 2500, 1300 * status, 900 * links
+        name_w, status_w, link_w = 2900, 1100 * status, 800 * links
         widths = [name_w, CONTENT_W - name_w - status_w - link_w]
         head = ['名稱', '重點']
         if status:

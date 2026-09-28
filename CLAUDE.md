@@ -179,7 +179,9 @@ Word file by hand. Each entry is a `###` heading followed by `- 欄位: 內容` 
 the group and `圖片` names a file in `ideas/`.
 
 He asked (2026-09-28) for the Word file to be **readable at a glance**: one table per 類型,
-one row per entry, showing only 名稱, 重點, 狀態 and a link. So every entry needs a `重點`
+one row per entry, showing only 名稱, 重點, 狀態 and a link. He also wants it **dense**
+(about 20 rows a page: single line spacing, small type), tables with a **full drawn frame**,
+and the contents table at the top **linked** to each type's table. So every entry needs a `重點`
 line, written as **one short phrase** (about 15 characters), and `狀態` is one or two words
 (已安裝, 已存檔, 已移除, 未註冊, 收集中). Longer explanation goes in other fields, which stay
 in `IDEAS.md` and are not shown in Word. Don't add the same thing twice: check the list first
