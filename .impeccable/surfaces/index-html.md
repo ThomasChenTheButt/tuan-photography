@@ -39,7 +39,7 @@ a contact email; whether the typefaces may be hosted with the site instead of Go
 Kind: canon, chosen by the owner. On 2026-09-28 he supplied 13 reference sites and asked for
 them to be the template. Asked which to sit alongside, he chose **Along Dusty Roads** and
 **The Common Wanderer**, a **warm light ground**, and the **whole site**. Their craft level is
-the bar. Seed key: canon-adr-tcw-20260928.
+the bar.
 
 THESIS: A travel journal that opens like a printed magazine: one photograph fills the window
 with nothing written across it, and everything else is quiet serif and small sans on warm
@@ -47,7 +47,7 @@ paper. It refuses the dark portfolio with a neon accent that the previous build 
 
 OWN-WORLD: warm paper ground and a stone band that alternate by section; ink in warm
 near-black; links in clay; three earth colours (clay, olive, slate) used as flat blocks, never
-as decoration. A high-contrast display serif for names and headings, centred; a plain sans for
+as decoration. A normal-width, high-contrast display serif for names and headings, centred; a plain sans for
 reading; navigation in small tracked capitals. Square corners everywhere, rectangular buttons
 with capital labels. Photographs bare and uncropped in rows, captions beneath.
 
@@ -58,7 +58,7 @@ FIRST VIEWPORT: the lead photograph edge to edge and top to bottom of the window
 top left and the menu at top right sit on the photograph in paper white. The place name is a
 small line at the bottom left. No headline, no button, no panel on the photograph.
 
-FORM: magazine opening, then a centred intro on paper, three flat colour doors to the main
+FORM: canon, key canon-adr-tcw-20260928 (no roll; see `.impeccable/seed.md`). Magazine opening, then a centred intro on paper, three flat colour doors to the main
 sections on stone, the wall of photographs, the guide as a feature. The guide page is one
 centred column: serif title, dates, a wide lead photograph, contents, then sections with
 centred serif headings; the quick facts are a paper card overlapping a portrait photograph.

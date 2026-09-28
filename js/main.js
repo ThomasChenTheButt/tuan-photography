@@ -128,6 +128,7 @@ function buildViewer() {
   viewer = document.createElement('dialog');
   viewer.className = 'viewer';
   viewer.setAttribute('aria-labelledby', 'viewer-place');
+  viewer.tabIndex = -1;
   viewer.innerHTML = `
     <div class="viewer__bar">
       <div>
@@ -209,7 +210,7 @@ function pick(id, from) {
   current = id;
   const show = () => {
     renderViewer();
-    if (!viewer.open) viewer.showModal();
+    if (!viewer.open) { viewer.showModal(); viewer.focus({ preventScroll: true }); }
   };
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const thumb = from?.querySelector('img');

@@ -80,8 +80,14 @@ to stand there.
 - Name: **tuan photography 陳亮元**. Line: "Travel like a photographer".
 - Identity: landscape photographer. Not a travel blogger, not a studio for hire.
 - Voice: first person, plain, factual. What he did and saw.
-- The visual direction is **not pinned**. For this trial the owner gave full freedom on the
-  look (2026-09-27); the previous design is evidence of the subject, not a commitment.
+- The visual direction is **pinned by the owner** (2026-09-28). He supplied 13 reference sites
+  and chose **Along Dusty Roads** and **The Common Wanderer** as the template, on a **warm
+  light ground**, for the **whole site**. Their craft level is the bar. Earlier, on 2026-09-27,
+  he had given full freedom on the look; two builds made under that freedom (Light Table, then
+  a dark exhibition hang) were set aside and are kept at git tags `light-table-v1` and
+  `exhibition-hang-v2`.
+- Nothing is written across the opening photograph. On his original site he asked for the
+  words over the hero to be reduced because they blocked the image.
 
 ## Evidence on Hand
 

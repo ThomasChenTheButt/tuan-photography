@@ -28,7 +28,7 @@ SRGB = "/System/Library/ColorSync/Profiles/sRGB Profile.icc"
 SITE = "tuan photography 陳亮元"
 STAMP = time.strftime("%Y%m%d%H%M")   # added to the stylesheet and script addresses so browsers never show a stale copy
 
-FONTS = ("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400..600"
+FONTS = ("https://fonts.googleapis.com/css2?family=Playfair+Display&family=Geist:wght@400..600"
          "&family=Noto+Serif+TC:wght@500..600&family=Noto+Sans+TC:wght@400..600&display=swap")
 PAPER = "#f7f2e9"   # the page ground, for the browser's own bars
 
@@ -214,7 +214,9 @@ def cover(sid, root, en, zh):
     s = SLIDES[sid]
     strings(s, en, zh)
     en[f"sw_{sid}"], zh[f"sw_{sid}"] = s["where"]["en"], s["where"]["zh"]
-    return (f'<figure class="cover arrive"><a {opens(sid, root, en, zh)}>{img(s, root, "100vw", first=True)}</a>'
+    # the photograph is cropped to the window's height, so on a tall narrow screen it is wider than the window
+    sizes = "max(100vw, " + str(round(100 * s["w"] / s["h"])) + "vh)"
+    return (f'<figure class="cover arrive"><a {opens(sid, root, en, zh)}>{img(s, root, sizes, first=True)}</a>'
             f'<figcaption><b data-i18n="sp_{sid}">{e(s["place"]["en"])}</b>'
             f'<span data-i18n="sw_{sid}">{e(s["where"]["en"])}</span></figcaption></figure>')
 
@@ -367,7 +369,7 @@ def build_home():
     lead = DATA["lead"]
     n_photos, n_places = len(DATA["slides"]), len(COUNTRIES)
     en.update(heroLine="Travel like a photographer.",
-              heroSay="Landscape photographs by Thomas Chen 陳亮元. Open any one to see how it was made.",
+              heroSay='Landscape photographs by Thomas Chen <span class="nb">陳亮元</span>. Open any one to see how it was made.',
               guidesCta="Read the guides",
               workTitle="Photographs", workCta="See the gallery", guidesTitle="Guides",
               doorsLabel="Sections",
@@ -388,7 +390,7 @@ def build_home():
 
 <section class="wrap intro arrive">
   <h1 class="rise" style="--i: 0" data-i18n-html="heroLine">Travel like a photographer.</h1>
-  <p class="rise" style="--i: 1" data-i18n="heroSay">{e(en['heroSay'])}</p>
+  <p class="rise" style="--i: 1" data-i18n-html="heroSay">{en['heroSay']}</p>
   <div class="intro__acts rise" style="--i: 2">
     <a class="btn" href="{IG['url']}" target="_blank" rel="noopener" data-i18n="followCta">Follow on Instagram</a>
     <a class="btn btn--line" href="#guides-h" data-i18n="guidesCta">Read the guides</a>
@@ -691,6 +693,8 @@ def build_guide(name, title_en, title_zh, desc):
     body = (ROOT / "content" / f"{name}.body.html").read_text(encoding="utf-8")
     body = body.replace("{root}", root)
 
+    body = re.sub(r"[ \t]*<tr><td data-i18n=\"(\w+)\">[^<]*</td><td data-i18n=\"(\w+)\">[^<]*</td></tr>\n",
+                  lambda m: "" if en.get(m.group(2), "").strip() in ("", "-", "—", "–") else m.group(0), body)
     body = re.sub(r"\{plate:([a-z0-9-]+)\}",
                   lambda m: piece(m.group(1), root, en, zh, "(max-width: 80rem) 92vw, 74rem", first=True, data=True), body)
     body = re.sub(r"\{side:([a-z0-9-]+)\}",
