@@ -8,7 +8,8 @@ Bilingual EN / 繁體中文. Owner is not a developer — explain in plain Engli
 Owner decision, 2026-09-27: rebuild the whole site here with the Impeccable skill, **with full
 freedom on the visual direction**, to compare side by side with the original.
 
-- The original lives untouched in `~/Desktop/travel website` (branch `main`, preview `:8642`).
+- This copy lives at `experiments/impeccable/` inside the original's folder
+  (`~/Desktop/travel website`, branch `main`, preview `:8642`), moved there 2026-09-28.
   This copy previews on `:8643`. **Never edit the original from a trial session.**
 - On this branch these sections below are **suspended**: *The brief → Mood / Restraint /
   References*, *Design system*, *Component vocabulary*, and the `<frontend_aesthetics>` block.
@@ -172,4 +173,5 @@ at the top of this file, the brief wins — the owner has already made those cal
 - Commit and push after every meaningful change (owner treats GitHub as autosave).
 - Verify visually in the preview before saying something is done. The browser caches hard —
   `fetch(url, {cache:'reload'})` then reload, or tell him Cmd+Shift+R.
-- Preview: `.claude/launch.json` → "travel-site" on port 8642.
+- Preview: "travel-site-impeccable" on port 8643, defined in the original folder's
+  `.claude/launch.json`.
