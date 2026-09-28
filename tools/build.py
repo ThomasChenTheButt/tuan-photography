@@ -28,8 +28,6 @@ SRGB = "/System/Library/ColorSync/Profiles/sRGB Profile.icc"
 SITE = "tuan photography 陳亮元"
 STAMP = time.strftime("%Y%m%d%H%M")   # added to the stylesheet and script addresses so browsers never show a stale copy
 
-FONTS = ("https://fonts.googleapis.com/css2?family=Playfair+Display&family=Geist:wght@400..600"
-         "&family=Noto+Serif+TC:wght@500..600&family=Noto+Sans+TC:wght@400..600&display=swap")
 PAPER = "#f7f2e9"   # the page ground, for the browser's own bars
 
 NAV = [("gallery", "navGallery", "Gallery", "gallery.html"),
@@ -232,9 +230,7 @@ def head(title, desc, root):
   <title>{e(title)}</title>
   <meta name="description" content="{e(clean_en(desc))}">
   <meta name="theme-color" content="{PAPER}">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="{FONTS}" rel="stylesheet">
+  <link rel="stylesheet" href="{root}css/fonts.css?v={STAMP}">
   <link rel="stylesheet" href="{root}css/style.css?v={STAMP}">
 </head>
 <body>
