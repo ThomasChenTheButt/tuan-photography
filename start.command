@@ -6,7 +6,7 @@ PORT=8642
 if lsof -i ":$PORT" -sTCP:LISTEN >/dev/null 2>&1; then
   echo "伺服器已經在 $PORT 執行中，直接開啟頁面…"
 else
-  python3 "$(dirname "$0")/tools/serve.py" "$PORT" >/dev/null 2>&1 &
+  python3 tools/serve.py "$PORT" >/dev/null &
   sleep 1
 fi
 

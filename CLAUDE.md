@@ -50,8 +50,10 @@ updating in the same commit. The short version:
 ### Rules
 
 - **Build from the components in `DESIGN.md`.** A new page should introduce almost no new CSS.
-- **Never use inline `style="…"`.** Inline styling is how a page silently drifts away from the
-  stylesheet and stops responding to design changes.
+- **Never use inline `style="…"` to style anything.** Inline styling is how a page silently
+  drifts away from the stylesheet and stops responding to design changes. The build writes two
+  values this way and only these: `--ar` (a photograph's shape, for the rows) and `--i` (the
+  order things arrive in). They carry a number to the stylesheet; they are not styling.
 - If something genuinely new is needed, add it to `site/css/style.css` as a **reusable class**, and
   record it in `DESIGN.md` in the same commit.
 
@@ -72,7 +74,8 @@ Arranged on 2026-09-28 at his request, so the top level reads at a glance. Keep 
   notes, no originals, no scripts, no README.
 - After any change to the layout, run `python3 tools/check_site.py`. It follows every link,
   photo, font and icon on every page and reports what leads nowhere. Before a risky change use
-  `--save`, after it `--compare`.
+  `--save <file>`, after it `--compare <file>`, with the file in the scratchpad, not in the
+  project.
 
 ## Structure — the pages are built, not hand-written
 

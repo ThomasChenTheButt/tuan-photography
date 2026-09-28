@@ -122,11 +122,11 @@ def make_sizes():
     """Smaller copies of each photograph for phones and grids, converted to sRGB.
 
     A copy is remade only when its photograph has changed. That is judged by the photograph's
-    contents, noted in site/images/web/sizes.json, because file dates change whenever the project
+    contents, noted in data/sizes.json, because file dates change whenever the project
     is copied or restored and would remake every copy for nothing.
     """
     web = OUT / "images" / "web"
-    note = web / "sizes.json"
+    note = ROOT / "data" / "sizes.json"
     made = json.loads(note.read_text(encoding="utf-8")) if note.exists() else {}
     for s in DATA["slides"]:
         src = web / s["file"]
@@ -711,9 +711,9 @@ def build_guide(name, title_en, title_zh, desc):
     body = re.sub(r"[ \t]*<tr><td data-i18n=\"(\w+)\">[^<]*</td><td data-i18n=\"(\w+)\">[^<]*</td></tr>\n",
                   lambda m: "" if en.get(m.group(2), "").strip() in ("", "-", "—", "–") else m.group(0), body)
     body = re.sub(r"\{plate:([a-z0-9-]+)\}",
-                  lambda m: piece(m.group(1), root, en, zh, "(max-width: 80rem) 92vw, 74rem", first=True, data=True), body)
+                  lambda m: piece(m.group(1), root, en, zh, "(max-width: 80rem) 92vw, 74rem", first=True, anchor=True, data=True), body)
     body = re.sub(r"\{side:([a-z0-9-]+)\}",
-                  lambda m: piece(m.group(1), root, en, zh, "(max-width: 46rem) 92vw, 30rem", data=True), body)
+                  lambda m: piece(m.group(1), root, en, zh, "(max-width: 46rem) 92vw, 30rem", anchor=True, data=True), body)
     body = body.replace('<div class="shots">', '<div class="wall__row shots">')
     body = re.sub(r"\{shot:([a-z0-9-]+)\}", lambda m: shot(m.group(1), root, en, zh), body)
     body = re.sub(r"\{map:([^}]+)\}",

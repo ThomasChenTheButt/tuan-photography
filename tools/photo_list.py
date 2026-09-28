@@ -71,6 +71,10 @@ def pages():
 
 def main():
     data = json.loads((ROOT / "data" / "site.json").read_text(encoding="utf-8"))
+    # Empty folders are where he drops photos later, and GitHub does not keep empty folders,
+    # so they are put back here whenever one is missing.
+    for name in [c["id"] for c in data["countries"]] + ["portfolio"]:
+        (ORIGINALS / name).mkdir(parents=True, exist_ok=True)
     site_pages = pages()
 
     originals = [p for p in sorted(ORIGINALS.rglob("*"))

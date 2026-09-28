@@ -4,7 +4,7 @@
 Same family as FinTuan's FT and BodyTuan's BT — rounded square, two sans letters — with a
 strip of landscape underneath: an ink ridgeline traced loosely from the Aoraki hero photo and
 a kodak-red sun. The colours are the icon's own, kept from the site's first design; they are
-not read from css/style.css.
+not read from site/css/style.css.
 
 Run from anywhere:  python3 tools/icons.py
 Safe to rerun — images are overwritten.
@@ -21,6 +21,7 @@ SITE = ROOT / 'site'
 ICONS = SITE / 'icons'
 
 PAPER = '#f6efe3'
+SITE_PAPER = '#f7f2e9'   # the site's page ground, the same value tools/build.py gives each page
 INK = '#241d15'
 KODAK_RED = '#c22c1e'
 SKY = '#efd9ae'
@@ -110,8 +111,8 @@ def build_icons():
             for px in (192, 512)
         ],
         'start_url': 'index.html',
-        'theme_color': PAPER,
-        'background_color': PAPER,
+        'theme_color': SITE_PAPER,
+        'background_color': SITE_PAPER,
         'display': 'standalone',
     }
     (SITE / 'site.webmanifest').write_text(

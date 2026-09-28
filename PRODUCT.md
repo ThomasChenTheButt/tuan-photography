@@ -49,7 +49,7 @@ to stand there.
   tables, spot tables with map links, food tables, gear lists, sunset times. Guides are written
   from those documents after the trip.
 - 16 countries travelled so far; Taiwan is home base.
-- Site sections: Destinations 目的地 · Gallery 作品集 · Blog 網誌 · Skills 攝影技巧 · About 關於我.
+- Site sections: Gallery 作品集 · Destinations 目的地 · Blog 網誌 · Skills 攝影技巧 · About 關於我.
   Destinations drills down: 7 continents → country pages → guides.
 
 ## Capabilities and Constraints
@@ -63,8 +63,8 @@ to stand there.
 - One finished guide exists: Barcelona (`site/posts/barcelona.html`), with 11 photo spots and a
   day-by-day route.
 - 15 of the 16 country pages have no content yet and **stay empty shells** (owner, 2026-09-27).
-- The photo library will grow. The owner adds photographs later by dropping files into the
-  images folder; layouts must accept more work without being rebuilt.
+- The photo library will grow. The owner adds photographs later by dropping files into
+  `originals/<country>/`; layouts must accept more work without being rebuilt.
 - The site is not public; GitHub Pages is off by the owner's choice.
 - The owner is not a developer. He reviews in the browser and decides; all technical work is
   done for him.
@@ -72,8 +72,9 @@ to stand there.
   2026-09-27.
 - The continent → country → guide hierarchy is fixed. Everything else, including the main
   menu, may be redesigned (owner, 2026-09-27).
-- Undecided: which country gets the next guide; whether the newsletter sign-up is wanted; the
-  About page's real story (current text is placeholder).
+- Undecided: which country gets the next guide; whether the newsletter sign-up is wanted.
+- Decided 2026-09-28: the About text stays as written, no email is published, and the
+  typefaces are kept with the site.
 
 ## Brand Commitments
 
