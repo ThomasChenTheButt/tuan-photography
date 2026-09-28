@@ -77,11 +77,14 @@ folder and **no longer exists anywhere** (confirmed 2026-08-08 by a full-disk se
 many of them at once, write a fresh script **inside the repo** so it survives — don't put it in
 a scratchpad again.
 
-**Site icon — "PT"** (photography tuan): same family as FinTuan's FT mark — rounded square,
-thin P in `--paper`, bold T in `--frame-gold`, on `--darkroom`. Files live in `icons/`, plus
+**Site icon — "PT"** (photography tuan), the "山稜" design he chose 2026-09-28: `--paper` sky,
+`--ink` ridgeline traced from the Aoraki hero photo, `--kodak-red` sun, PT in Instrument Serif.
+He rejected a first version modelled on FinTuan's FT mark (geometric sans on dark) as too
+techy — the icon should feel like landscape, not an app. Files live in `icons/`, plus
 `favicon.ico` and `site.webmanifest` at the root. Don't edit the images by hand: change
-`tools/icons.py` and rerun it — it regenerates every size and adds the `<head>` tags to any
-new page that lacks them. The header wordmark (`.logo`) is separate and unchanged.
+`tools/icons.py` and rerun it (needs Chrome + internet for the web font) — it regenerates
+every size and adds the `<head>` tags to any new page that lacks them. The header wordmark
+(`.logo`) is separate and unchanged.
 
 ## Bilingual rule
 
