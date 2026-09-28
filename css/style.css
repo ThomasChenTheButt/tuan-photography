@@ -73,6 +73,7 @@ body {
   line-height: 1.65;
   color: var(--text);
   background: var(--bg);
+  font-variant-numeric: lining-nums;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
@@ -267,6 +268,9 @@ main { flex: 1; }
 .wall { display: grid; row-gap: var(--s-4); }
 .wall__row { display: flex; gap: var(--gap); align-items: flex-start; }
 .wall .piece { flex: var(--ar) 1 0; min-width: 0; scroll-margin-top: 1.5rem; }
+/* in a row every caption is set the same way: the name, then the place under it */
+.wall__row .piece figcaption { display: block; }
+.wall__row .piece figcaption b { display: block; }
 .wall .piece a { aspect-ratio: var(--ar); }
 .wall .piece img { height: 100%; object-fit: cover; }
 .wall__row > :only-child { max-width: 58rem; margin-inline: auto; }
@@ -354,7 +358,7 @@ main { flex: 1; }
 .glance { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); align-items: center; }
 .glance { align-items: start; }
 .glance .piece { grid-column: 1 / span 6; grid-row: 1; }
-.glance .piece figcaption { max-width: 83%; }
+.glance .piece figcaption { display: block; max-width: calc(83.333% - 1.5rem); }
 .glance__card { grid-column: 6 / span 7; grid-row: 1; z-index: 1; margin-top: 3rem; padding: 2rem 2.1rem 1.5rem; background: var(--card); }
 .glance .sheet-wrap { margin-top: 0; }
 .glance .sheet caption { font-family: var(--serif); font-size: 1.5rem; line-height: 1.2; font-weight: 400; color: var(--text); padding-bottom: 0.9rem; }
@@ -367,7 +371,7 @@ main { flex: 1; }
 .glance .sheet tbody tr + tr td { border-top: 0; }
 @media (max-width: 46rem) {
   .glance { display: block; }
-  .glance .piece figcaption { max-width: none; }
+  .glance .piece figcaption { display: flex; max-width: none; }
   .glance__card { margin: var(--s-3) 0 0; padding: 1.6rem 1.4rem 1.1rem; }
 }
 
