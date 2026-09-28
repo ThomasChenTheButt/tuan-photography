@@ -150,10 +150,11 @@
   <section class="newsletter">
     <h2 data-i18n="newsTitle">New guides, straight from the field</h2>
     <p data-i18n="newsSub">One email when a new guide is published. No spam — a photographer's word.</p>
-    <form onsubmit="event.preventDefault(); alert(document.documentElement.lang === 'zh-Hant' ? '訂閱功能會在網站上線時啟用!' : 'Sign-ups will work once the site is online!');">
-      <input type="email" placeholder="your@email.com" aria-label="Email address" required>
+    <form id="newsletter-form">
+      <input id="newsletter-email" type="email" placeholder="your@email.com" aria-label="Email address" required>
       <button class="btn" type="submit" data-i18n="newsCta">Subscribe</button>
     </form>
+    <p class="form-note exif" role="status" data-i18n="newsNote" hidden>Sign-ups will work once the site is online!</p>
   </section>
 
   </main>

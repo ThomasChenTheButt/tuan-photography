@@ -63,6 +63,7 @@ const i18n = {
     newsTitle: 'New guides, straight from the field',
     newsSub: "One email when a new guide is published. No spam — a photographer's word.",
     newsCta: 'Subscribe',
+    newsNote: 'Sign-ups will work once the site is online!',
 
     footInstagram: 'Instagram',
     footNote: '© 2026 tuan photography 陳亮元 — All photographs are my own.'
@@ -113,6 +114,7 @@ const i18n = {
     newsTitle: '新指南,直送你的信箱',
     newsSub: '新指南發佈時寄一封信給你。不濫發——攝影師的承諾。',
     newsCta: '訂閱',
+    newsNote: '訂閱功能會在網站上線時啟用!',
 
     footInstagram: 'Instagram',
     footNote: '© 2026 tuan photography 陳亮元——所有照片皆為本人拍攝。'
@@ -135,15 +137,28 @@ function setLang(lang) {
   document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : 'en';
   document.getElementById('lang-en').classList.toggle('on', lang === 'en');
   document.getElementById('lang-zh').classList.toggle('on', lang === 'zh');
-  localStorage.setItem('tlap-lang', lang);
+  /* storage can be blocked (private window, embedded viewer) — the switch still works */
+  try { localStorage.setItem('tlap-lang', lang); } catch (e) {}
 }
 
 document.getElementById('lang-en')?.addEventListener('click', () => setLang('en'));
 document.getElementById('lang-zh')?.addEventListener('click', () => setLang('zh'));
 
 /* remember the visitor's choice */
-const saved = localStorage.getItem('tlap-lang');
+let saved = null;
+try { saved = localStorage.getItem('tlap-lang'); } catch (e) {}
 if (saved === 'zh') setLang('zh');
+
+/* ---------- Newsletter (homepage) ----------
+   No sign-up service yet: show the note on the page instead of a pop-up. */
+const newsForm = document.getElementById('newsletter-form');
+const newsNote = document.querySelector('.form-note');
+if (newsForm && newsNote) {
+  newsForm.addEventListener('submit', e => {
+    e.preventDefault();
+    newsNote.hidden = false;
+  });
+}
 
 /* ---------- Hero parallax drift (homepage) ----------
    The pinned cover photo slowly rises (~1/3 of scroll speed)

@@ -17,3 +17,6 @@ images/*.jpg
 images/*.jpeg
 images/*.png
 images/*.heic
+
+# Artifact build output — regenerate with tools/build_artifact.py
+_artifact/

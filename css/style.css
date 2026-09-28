@@ -570,6 +570,19 @@ a:hover { text-decoration: underline; text-underline-offset: 3px; }
   color: var(--ink);
 }
 
+/* quiet status line under a form (shown by script after submit) */
+.newsletter .form-note { margin-top: 18px; }
+.form-note[hidden] { display: none; }
+
+/* an address shown as plain, selectable text beside its button */
+.contact-line {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+  margin-top: 14px;
+  user-select: all;
+}
+
 /* ---------------- Footer ---------------- */
 
 .site-footer {

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artifact self-test</title>
+<!-- Test-only page. tools/build_artifact.py --selftest copies it in as selftest.html;
+     it is never part of the normal build. It opens every page of the site in a
+     same-origin frame at phone and desktop width and reports what it finds. -->
+<style>
+  body { font: 12px/1.45 ui-monospace, Menlo, monospace; background: #f6efe3; color: #241d15; margin: 0; padding: 14px; }
+  h1 { font-size: 15px; margin: 0 0 4px; }
+  #env { margin: 0 0 10px; color: #6b5f50; }
+  table { border-collapse: collapse; }
+  td, th { border: 1px solid #c9bfae; padding: 1px 6px; text-align: left; white-space: nowrap; }
+  td.notes { white-space: normal; max-width: 420px; }
+  .ok { color: #1d6b2f; }
+  .bad { color: #c22c1e; font-weight: 700; }
+  iframe { border: 1px solid #c9bfae; height: 700px; display: block; margin-top: 14px; }
+</style>
+</head>
+<body>
+<h1 id="summary">running…</h1>
+<p id="env"></p>
+<table>
+  <thead><tr>
+    <th>page</th><th>load</th><th>css</th><th>js</th><th>fonts</th><th>img</th><th>links</th>
+    <th>scroll</th><th>w375</th><th>w1280</th><th>中/EN</th><th>menu</th><th>errors</th><th class="notes">notes</th>
+  </tr></thead>
+  <tbody id="rows"></tbody>
+</table>
+<iframe id="stage" title="page under test"></iframe>
+<script>
+const PAGES = /*PAGES*/[];
+const FONTS = ['Instrument Serif', 'JetBrains Mono', 'Noto Serif TC'];
+const stage = document.getElementById('stage');
+const rows = document.getElementById('rows');
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const statusCache = new Map();
+
+async function exists(url) {
+  if (!statusCache.has(url)) {
+    statusCache.set(url, fetch(url).then(r => r.status).catch(() => 0));
+  }
+  return (await statusCache.get(url)) === 200;
+}
+
+function load(path, width) {
+  return new Promise(resolve => {
+    const errors = [];
+    stage.style.width = width + 'px';
+    let hooked = null;
+    const hook = setInterval(() => {
+      let w;
+      try { w = stage.contentWindow; if (w.location.href === 'about:blank') return; } catch (e) { return; }
+      if (w === hooked) return;
+      hooked = w;
+      w.addEventListener('error', e => {
+        const t = e.target;
+        errors.push(t && t !== w && (t.src || t.href) ? 'load failed: ' + (t.src || t.href) : 'script: ' + e.message);
+      }, true);
+      w.addEventListener('unhandledrejection', e => errors.push('promise: ' + e.reason));
+      w.document.addEventListener('securitypolicyviolation', e => errors.push('blocked: ' + e.blockedURI));
+    }, 1);
+    const done = ok => { clearInterval(hook); clearTimeout(timer); stage.onload = null; resolve({ ok, errors }); };
+    const timer = setTimeout(() => done(false), 20000);
+    stage.onload = () => done(true);
+    stage.src = path;
+  });
+}
+
+async function check(path) {
+  const r = { path, notes: [] };
+  const first = await load(path, 375);
+  r.errors = first.errors;
+  let doc, win;
+  try { win = stage.contentWindow; doc = win.document; } catch (e) { doc = null; }
+  r.load = first.ok && !!doc && !!doc.querySelector('.site-header') && !!doc.querySelector('.site-footer');
+  if (!r.load) { r.notes.push('page did not load in a frame'); return r; }
+  await sleep(700);
+  if (doc.documentElement.lang !== 'en') { r.errors.push('lang attribute is "' + doc.documentElement.lang + '" on load'); }
+
+  const sheet = [...doc.styleSheets].find(s => (s.href || '').includes('css/style.css'));
+  try { r.css = !!sheet && sheet.cssRules.length > 100; } catch (e) { r.css = false; }
+
+  /* main.js ends by creating `observer`; if it exists, the whole script ran */
+  const probe = doc.createElement('script');
+  probe.textContent = "document.documentElement.dataset.mainjs = typeof observer + '/' + typeof setLang;";
+  doc.body.appendChild(probe);
+  r.js = doc.documentElement.dataset.mainjs === 'object/function';
+  if (!r.js) r.notes.push('main.js did not finish: ' + doc.documentElement.dataset.mainjs);
+
+  try { await Promise.race([doc.fonts.ready, sleep(6000)]); } catch (e) {}
+  const loaded = new Set([...doc.fonts].filter(f => f.status === 'loaded').map(f => f.family.replace(/["']/g, '')));
+  const missing = FONTS.filter(f => !loaded.has(f));
+  r.fonts = missing.length === 0;
+  if (missing.length) r.notes.push('fonts not loaded: ' + missing.join(', '));
+
+  r.imgCount = doc.images.length;
+  r.img = true;
+  for (const img of doc.images) {
+    const shown = img.complete && img.naturalWidth > 0;
+    if (!shown && !(await exists(img.src))) { r.img = false; r.notes.push('image missing: ' + img.getAttribute('src')); }
+  }
+
+  r.links = true; r.linkCount = 0; r.external = 0;
+  for (const a of doc.querySelectorAll('a[href]')) {
+    const raw = a.getAttribute('href');
+    if (raw === '#' || raw.startsWith('mailto:')) continue;
+    if (raw.startsWith('#')) {
+      if (!doc.getElementById(raw.slice(1))) { r.links = false; r.notes.push('no anchor ' + raw); }
+      continue;
+    }
+    const url = new URL(raw, doc.baseURI);
+    if (url.origin !== location.origin) {
+      r.external++;
+      if (a.target !== '_blank') r.notes.push('external link without new tab: ' + raw);
+      continue;
+    }
+    r.linkCount++;
+    url.hash = '';
+    if (!(await exists(url.href))) { r.links = false; r.notes.push('broken link: ' + raw); }
+  }
+
+  const tall = doc.scrollingElement.scrollHeight - win.innerHeight;
+  win.scrollTo({ top: 300, behavior: 'instant' });
+  r.scroll = tall <= 0 || win.scrollY > 0;
+  if (!r.scroll) r.notes.push('page is ' + tall + 'px taller than the frame but will not scroll');
+  win.scrollTo({ top: 0, behavior: 'instant' });
+
+  const overflow = () => Math.max(doc.documentElement.scrollWidth, doc.body.scrollWidth) - win.innerWidth;
+  r.w375 = overflow() <= 1;
+  if (!r.w375) r.notes.push('375px: ' + overflow() + 'px too wide');
+
+  const toggle = doc.querySelector('.nav-toggle');
+  const links = doc.querySelector('.nav-links');
+  if (toggle && links && win.getComputedStyle(toggle).display !== 'none') {
+    toggle.click();
+    r.menu = links.classList.contains('open') && toggle.getAttribute('aria-expanded') === 'true';
+    toggle.click();
+    r.menu = r.menu && !links.classList.contains('open');
+  } else { r.menu = false; r.notes.push('menu button not shown at 375px'); }
+
+  const zh = doc.getElementById('lang-zh'), en = doc.getElementById('lang-en');
+  const nav = doc.querySelector('.nav-links a');
+  if (zh && en && nav) {
+    zh.click();
+    let stored = null;
+    try { stored = win.localStorage.getItem('tlap-lang'); } catch (e) { r.notes.push('storage blocked'); }
+    const zhOk = doc.documentElement.lang === 'zh-Hant' && nav.textContent === '目的地' && zh.classList.contains('on');
+    const untranslated = [...doc.querySelectorAll('[data-i18n]')].filter(el => !/[㐀-鿿]/.test(el.textContent)
+      && !['siteName', 'footInstagram'].includes(el.dataset.i18n)).length;
+    en.click();
+    r.lang = zhOk && stored === 'zh' && doc.documentElement.lang === 'en' && nav.textContent === 'Destinations';
+    if (untranslated) r.notes.push(untranslated + ' strings without 中文 characters');
+  } else { r.lang = false; }
+
+  const form = doc.getElementById('newsletter-form');
+  if (form) {
+    const note = doc.querySelector('.form-note');
+    const before = win.getComputedStyle(note).display;
+    doc.getElementById('newsletter-email').value = 'test@example.com';
+    form.requestSubmit();
+    await sleep(50);
+    const after = win.getComputedStyle(note).display;
+    const ok = before === 'none' && after !== 'none' && win.location.pathname.endsWith(path);
+    r.notes.push('newsletter note ' + (ok ? 'shows' : 'FAILED'));
+    if (!ok) r.errors.push('newsletter form');
+  }
+
+  stage.style.width = '1280px';
+  await sleep(350);
+  r.w1280 = overflow() <= 1;
+  if (!r.w1280) r.notes.push('1280px: ' + overflow() + 'px too wide');
+  r.notes.unshift(r.imgCount + ' img, ' + r.linkCount + ' links, ' + r.external + ' external');
+  return r;
+}
+
+function cell(v) { return '<td class="' + (v ? 'ok' : 'bad') + '">' + (v ? 'ok' : 'FAIL') + '</td>'; }
+
+(async () => {
+  document.getElementById('env').textContent = location.origin.replace(/\/\/[^.]+/, '//…') + ' · ' + navigator.userAgent.replace(/.*(Chrome\/[\d]+).*/, '$1');
+  /* controls: prove the checks can fail */
+  const missing = !(await exists('no-such-page.html'));
+  const blocked = await new Promise(resolve => {
+    const t = setTimeout(() => resolve(false), 4000);
+    document.addEventListener('securitypolicyviolation', () => { clearTimeout(t); resolve(true); }, { once: true });
+    const probe = new Image();
+    probe.onload = () => { clearTimeout(t); resolve(false); };
+    probe.src = 'https://example.com/probe.png';
+  });
+  document.getElementById('env').textContent += ' · controls: missing file detected=' + missing + ', outside host blocked=' + blocked;
+
+  let pass = 0;
+  for (const path of PAGES) {
+    const r = await check(path);
+    const good = r.load && r.css && r.js && r.fonts && r.img && r.links && r.scroll && r.w375 && r.w1280 && r.lang && r.menu && r.errors.length === 0;
+    if (good) pass++;
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + path + '</td>' + [r.load, r.css, r.js, r.fonts, r.img, r.links, r.scroll, r.w375, r.w1280, r.lang, r.menu].map(cell).join('')
+      + '<td class="' + (r.errors.length ? 'bad' : 'ok') + '">' + r.errors.length + '</td><td class="notes"></td>';
+    tr.lastChild.textContent = r.notes.concat(r.errors).join(' · ');
+    rows.appendChild(tr);
+    document.getElementById('summary').textContent = 'running… ' + rows.children.length + '/' + PAGES.length;
+  }
+  const s = document.getElementById('summary');
+  s.textContent = (pass === PAGES.length ? 'PASS ' : 'FAIL ') + pass + '/' + PAGES.length + ' pages clean';
+  s.className = pass === PAGES.length ? 'ok' : 'bad';
+  stage.remove();
+  const foot = document.createElement('p');
+  foot.className = s.className;
+  document.body.appendChild(foot);
+  window.scrollTo({ top: document.scrollingElement.scrollHeight, behavior: 'instant' });
+  s.textContent += ' · this page scrolled to ' + Math.round(window.scrollY) + 'px';
+  foot.textContent = s.textContent + ' · ' + document.getElementById('env').textContent;
+})();
+</script>
+</body>
+</html>
