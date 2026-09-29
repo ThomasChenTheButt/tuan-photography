@@ -2,6 +2,7 @@
 
 *這個網站還要做什麼、做到哪了。想到要做的事，跟 Claude 說一聲就會記在這裡。*
 *`IDEAS.md` 是「看到喜歡的」，這裡是「決定要做的」，`PROGRESS.md` 是「上次做到哪」。*
+*你自己隨手寫的筆記在 `我的筆記.txt`，那份 Claude 只讀不改。*
 
 Word 版：`ideas/建置進度.docx`（只在你的 Mac 上）。
 每次這份清單有更動，跑一次 `python3 tools/ideas_doc.py TODO.md ideas/建置進度.docx` 就會重做。

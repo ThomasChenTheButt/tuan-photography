@@ -25,6 +25,8 @@ site/images/*
 # repo is public, so they stay on your Mac. IDEAS.md (the notes) is still saved.
 ideas/
 
+# Your own notes. Private, so they stay on your Mac.
+/我的筆記.txt
 
 # Impeccable working files: review screenshots and decision-page payloads stay local
 .impeccable/review/

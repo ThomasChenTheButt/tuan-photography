@@ -65,7 +65,7 @@ Arranged on 2026-09-28 at his request, so the top level reads at a glance. Keep 
 | At the top level | Whose | What it is |
 |---|---|---|
 | `start.command`, `photo-list.command` | his | double-click launchers |
-| `originals/`, `ideas/`, `IDEAS.md`, `TODO.md`, `experiments/` | his | his photos, his ideas, his to-do list, trials |
+| `originals/`, `ideas/`, `IDEAS.md`, `TODO.md`, `我的筆記.txt`, `experiments/` | his | his photos, his ideas, his to-do list, his own notes, trials |
 | `site/` | visitors' | **the whole website and nothing else.** Only this folder is ever published or served |
 | `data/`, `content/`, `tools/` | Claude's | what the pages are built from, and the scripts |
 | `CLAUDE.md`, `DESIGN.md`, `PRODUCT.md`, `PROGRESS.md` | Claude's | notes. They stay at the top: tools look for them there |
@@ -242,6 +242,21 @@ Same format as `IDEAS.md`, same generator. He reads it as `ideas/建置進度.do
 網站文字, 功能, 上線). `狀態` is one of 待做, 進行中, 等你決定, 暫緩, 完成. When something is
 finished, set `狀態` to 完成 and `類型` to 已完成 and move it to the Done section, in the same
 commit as the work. At sign-off, check the list against what the day actually did.
+
+## His own notes 我的筆記 — `我的筆記.txt`
+
+A plain text file at the top level where he writes for himself (started 2026-09-29, at his
+request). It opens in TextEdit on a double-click. **It is his: never edit, tidy, reformat or
+overwrite it**, not even to mark something as handled. It is **gitignored**: the repo is
+public and his notes are private unless he says otherwise.
+
+- **Read it at the start of every session**, right after `PROGRESS.md`, and tell him in a
+  line or two what is new since last time.
+- What he writes there is a note to himself, not an order. Nothing moves into `TODO.md` or
+  `IDEAS.md`, and nothing on the site changes, until he says so in the chat.
+- The generated Word files are overwritten on every run, so they are never the place for his
+  own writing. If he wants a note attached to one item of the build list, add it to that entry
+  in `TODO.md` as a `筆記` field.
 
 ## Experiments 試作 — `experiments/`
 
