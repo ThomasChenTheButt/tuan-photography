@@ -11,8 +11,9 @@ Run from anywhere:  python3 tools/ideas_doc.py
 The same layout serves the weekly web-design report. Give it a list written in the same format
 and where to put the Word file:
                     python3 tools/ideas_doc.py ideas/weekly/2026-09-28.md ideas/weekly/2026-09-28.docx
-The build list is made the same way:
-                    python3 tools/ideas_doc.py TODO.md ideas/建置進度.docx
+The build list is made the same way. --progress puts a bar at the top: how many entries
+have 狀態 完成, out of all of them.
+                    python3 tools/ideas_doc.py TODO.md ideas/建置進度.docx --progress
 The title of the Word file is the first "# " line of the list.
 Safe to rerun — the Word file is overwritten. Never edit the Word file by hand; edit IDEAS.md.
 Needs Pillow (pip install pillow). Writes the .docx directly, no Word library required.
@@ -55,6 +56,9 @@ ORDER = ['設計 Skill', '工具與連接', '找靈感的地方', '攝影師網�
 # The one line shown for an entry: the first of these fields that has something to say.
 POINT = ['重點', '喜歡它什麼', '想法', '這是什麼']
 EMPTY = {'', '待補'}
+DONE = '完成'
+# The order the counts under the progress bar are given in.
+STATES = ['進行中', '等你決定', '待做', '暫緩']
 
 NS = ('xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" '
       'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" '
@@ -171,6 +175,33 @@ class Doc:
         out.append('</w:tbl>')
         self.body.append(''.join(out))
 
+    def bar(self, part, whole):
+        """A flat bar, filled from the left for `part` out of `whole`."""
+        filled = round(CONTENT_W * part / whole) if whole else 0
+        cells = [(filled, INK), (CONTENT_W - filled, HEAD)]
+        cells = [(width, fill) for width, fill in cells if width]
+
+        def pad(width):
+            # Word keeps to the widths given. Quick Look sizes a cell by what is in it, so
+            # each cell carries blank spaces in proportion.
+            spaces = '\u00a0' * max(1, round(120 * width / CONTENT_W))
+            return ('<w:p><w:pPr><w:spacing w:after="0" w:line="180" w:lineRule="exact"/>'
+                    f'</w:pPr><w:r><w:rPr><w:sz w:val="12"/></w:rPr><w:t xml:space="preserve">'
+                    f'{spaces}</w:t></w:r></w:p>')
+
+        self.body.append(
+            f'<w:tbl><w:tblPr><w:tblW w:w="{CONTENT_W}" w:type="dxa"/><w:tblBorders>'
+            + ''.join(f'<w:{side} w:val="single" w:sz="6" w:space="0" w:color="{FRAME}"/>'
+                      for side in ('top', 'left', 'bottom', 'right'))
+            + '</w:tblBorders><w:tblLayout w:type="fixed"/></w:tblPr><w:tblGrid>'
+            + ''.join(f'<w:gridCol w:w="{width}"/>' for width, _ in cells)
+            + '</w:tblGrid><w:tr><w:trPr><w:trHeight w:val="200" w:hRule="exact"/></w:trPr>'
+            + ''.join(f'<w:tc><w:tcPr><w:tcW w:w="{width}" w:type="dxa"/>'
+                      f'<w:shd w:val="clear" w:color="auto" w:fill="{fill}"/></w:tcPr>{pad(width)}'
+                      '</w:tc>'
+                      for width, fill in cells)
+            + '</w:tr></w:tbl>')
+
     def image(self, path, alt, scale=1.0):
         # Word can't show WebP, and phone screenshots are huge — store a plain JPEG.
         picture = Image.open(path).convert('RGB')
@@ -252,12 +283,20 @@ def styles():
         + '</w:styles>')
 
 
-def build(entries, title='靈感整理', source='IDEAS.md'):
+def build(entries, title='靈感整理', source='IDEAS.md', progress=False):
     doc = Doc()
     groups = by_type(entries)
     doc.add(title, 'Title')
     doc.add(f'最後更新 {date.today().isoformat()}  ·  {len(entries)} 項  ·  '
             f'{len(groups)} 個類型  ·  來源 {source}', 'Meta')
+    if progress:
+        states = [e['fields'].get('狀態', '') for e in entries]
+        done = states.count(DONE)
+        share = round(100 * done / len(states)) if states else 0
+        doc.add(f'完成 {done} / {len(states)} 項({share}%)', 'Name')
+        doc.bar(done, len(states))
+        doc.add('  ·  '.join(f'{state} {states.count(state)}'
+                             for state in STATES if states.count(state)), 'Meta')
     anchors = {kind: f'type{n}' for n, kind in enumerate(groups, 1)}
     doc.table([['目錄(點類型跳到那張表)', '數量']]
               + [[(f'#{anchors[kind]}', kind), str(len(found))] for kind, found in groups.items()],
@@ -295,12 +334,12 @@ def build(entries, title='靈感整理', source='IDEAS.md'):
     return doc
 
 
-def main(source=SOURCE, out=OUT):
+def main(source=SOURCE, out=OUT, progress=False):
     text = source.read_text(encoding='utf-8')
     entries = parse(text)
     heading = re.search(r'^# (.+)$', text, re.M)
     title = '靈感整理' if source == SOURCE else (heading.group(1).strip() if heading else out.stem)
-    doc = build(entries, title, source.name)
+    doc = build(entries, title, source.name, progress)
     out.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED) as z:
         z.writestr('[Content_Types].xml',
@@ -335,9 +374,11 @@ def main(source=SOURCE, out=OUT):
 
 
 if __name__ == '__main__':
-    if len(sys.argv) == 3:
-        main(Path(sys.argv[1]).resolve(), Path(sys.argv[2]).resolve())
-    elif len(sys.argv) == 1:
-        main()
+    args = [arg for arg in sys.argv[1:] if arg != '--progress']
+    progress = '--progress' in sys.argv
+    if len(args) == 2:
+        main(Path(args[0]).resolve(), Path(args[1]).resolve(), progress)
+    elif not args:
+        main(progress=progress)
     else:
-        sys.exit('usage: python3 tools/ideas_doc.py [list.md output.docx]')
+        sys.exit('usage: python3 tools/ideas_doc.py [list.md output.docx] [--progress]')

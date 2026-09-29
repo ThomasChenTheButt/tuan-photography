@@ -64,12 +64,19 @@ Arranged on 2026-09-28 at his request, so the top level reads at a glance. Keep 
 
 | At the top level | Whose | What it is |
 |---|---|---|
-| `start.command`, `photo-list.command` | his | double-click launchers |
+| `start.command`, `photo-list.command`, `建置進度.command` | his | double-click launchers |
 | `originals/`, `ideas/`, `IDEAS.md`, `TODO.md`, `我的筆記.txt`, `experiments/` | his | his photos, his ideas, his to-do list, his own notes, trials |
 | `site/` | visitors' | **the whole website and nothing else.** Only this folder is ever published or served |
 | `data/`, `content/`, `tools/` | Claude's | what the pages are built from, and the scripts |
 | `CLAUDE.md`, `DESIGN.md`, `PRODUCT.md`, `PROGRESS.md` | Claude's | notes. They stay at the top: tools look for them there |
 
+- **In Finder he sees only what he opens himself** (his request, 2026-09-29: the full list
+  felt cluttered). Six things: `originals/`, `ideas/`, the three launchers, `我的筆記.txt`.
+  Everything else is flagged hidden for Finder by `python3 tools/finder_view.py`. Nothing is
+  moved or renamed, so every path in this file still holds. **Rerun it after adding or
+  replacing anything at the top level, and at sign-off:** a file written afresh loses the
+  flag. The launchers rerun it too. A new working file goes in its `HIDE` list. `--show` brings
+  everything back. `experiments/` comes into view by itself while a trial is open.
 - Anything a visitor's browser needs goes in `site/`. Anything else stays out of it: no
   notes, no originals, no scripts, no README.
 - After any change to the layout, run `python3 tools/check_site.py`. It follows every link,
@@ -238,7 +245,10 @@ moves from `IDEAS.md` to here only on his word.
 
 Same format as `IDEAS.md`, same generator. He reads it as `ideas/建置進度.docx`:
 **after every change to `TODO.md`, rerun
-`python3 tools/ideas_doc.py TODO.md ideas/建置進度.docx`.** `類型` is the area of work (攻略內容,
+`python3 tools/ideas_doc.py TODO.md ideas/建置進度.docx --progress`.** He opens it by
+double-clicking `建置進度.command`, which rebuilds it first. `--progress` draws the bar at the
+top: entries with `狀態` 完成 out of all entries. It counts entries, not effort, so don't
+present it as more exact than that. `類型` is the area of work (攻略內容,
 網站文字, 功能, 上線). `狀態` is one of 待做, 進行中, 等你決定, 暫緩, 完成. When something is
 finished, set `狀態` to 完成 and `類型` to 已完成 and move it to the Done section, in the same
 commit as the work. At sign-off, check the list against what the day actually did.

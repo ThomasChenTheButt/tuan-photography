@@ -2,6 +2,7 @@
 # 雙擊這個檔案就會開啟 tuan photography。關掉這個終端機視窗即可停止。
 cd "$(dirname "$0")" || exit 1
 PORT=8642
+python3 tools/finder_view.py >/dev/null 2>&1
 
 if lsof -i ":$PORT" -sTCP:LISTEN >/dev/null 2>&1; then
   echo "伺服器已經在 $PORT 執行中，直接開啟頁面…"
