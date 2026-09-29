@@ -42,6 +42,11 @@ the Barcelona pair.
 
 ## 等你決定 Waiting on you
 
+- **Experiment `skills-review` (2026-09-30): keep or drop?** Impeccable and UI UX Pro Max
+  reviewed the home page, Gallery and Destinations; the fixes are in
+  `experiments/skills-review/`, branch `exp/skills-review`, preview on `localhost:8644`.
+  The real site is unchanged. The review itself is saved in
+  `experiments/skills-review/.impeccable/critique/`.
 - **Which country after Barcelona?** 15 of 16 country pages have no guide yet.
 - **Destinations wording.** The sentence under "Destinations" and the taglines for Africa,
   Antarctica and South America describe trips that haven't happened. Confirm or change.
