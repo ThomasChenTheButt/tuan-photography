@@ -9,7 +9,8 @@
    - links are clay; clay, olive and slate appear only as flat blocks
    - names and headings are serif and centred; reading text is sans
    - every corner is square; buttons are rectangles with capital labels
-   - photographs are bare and uncropped in rows, captions beneath
+   - photographs are bare and uncropped in rows, captions beneath;
+     the portfolio grid and the square openings are the exceptions
    - nothing moves unless it has a reason; all of it stops
      under "reduce motion"
    ========================================================== */
@@ -99,7 +100,7 @@ a:hover { text-decoration-color: currentColor; color: var(--accent); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* small capitals in the sans: menu, buttons, quiet labels */
-.caps, .menu a, .lang button, .menu-btn, .btn, .path, .door span, .feature__go, .sheet thead th, .toc h2 {
+.caps, .menu a, .lang button, .menu-btn, .btn, .path, .door span, .tile__count, .feature__go, .sheet thead th, .toc h2 {
   font-family: var(--sans);
   font-size: 0.78rem;
   font-weight: 500;
@@ -107,7 +108,7 @@ a:hover { text-decoration-color: currentColor; color: var(--accent); }
   text-transform: uppercase;
   line-height: 1.3;
 }
-:lang(zh-Hant) :is(.caps, .menu a, .lang button, .menu-btn, .btn, .path, .door span, .feature__go, .sheet thead th, .toc h2) { font-size: 0.875rem; letter-spacing: 0.14em; }
+:lang(zh-Hant) :is(.caps, .menu a, .lang button, .menu-btn, .btn, .path, .door span, .tile__count, .feature__go, .sheet thead th, .toc h2) { font-size: 0.875rem; letter-spacing: 0.14em; }
 
 .wrap { width: 100%; max-width: var(--wide); margin-inline: auto; padding-inline: var(--edge); }
 main { flex: 1; }
@@ -201,6 +202,9 @@ main { flex: 1; }
 :lang(zh-Hant) .cover figcaption b { font-weight: 500; font-size: 1.1rem; letter-spacing: 0.05em; }
 .cover figcaption span { font-size: var(--t-xs); }
 
+/* everything after the opening photograph is one leaf of paper, drawn up over it */
+.leaf { position: relative; z-index: 1; background: var(--bg); }
+
 .intro { text-align: center; padding-block: clamp(5.5rem, 12vw, 10rem); }
 .intro h1 { font-size: var(--t-2xl); }
 .intro p { margin: var(--s-3) auto 0; max-width: 42ch; color: var(--text-2); }
@@ -278,25 +282,17 @@ main { flex: 1; }
   .wall__row { display: grid; row-gap: var(--s-4); }
 }
 
-/* destinations: an index in type. Places with work are in full ink. */
-.index { display: grid; gap: var(--s-4) 0; max-width: 72rem; margin-inline: auto; }
-.index__group { display: grid; grid-template-columns: minmax(0, 17rem) minmax(0, 1fr); gap: 0.5rem var(--s-4); padding-top: var(--s-3); border-top: 1px solid var(--line); }
-.index__group { grid-template-rows: auto 1fr; }
-.index__group h2 { font-size: 1.5rem; }
-.index__group h2 a { text-decoration: none; }
-.index__group h2 + p { grid-column: 1; color: var(--text-2); font-size: var(--t-s); }
-.index__list { grid-column: 2; grid-row: 1 / span 2; display: flex; flex-wrap: wrap; gap: 0.3rem 1.9rem; align-content: start; font-family: var(--serif); font-size: var(--t-xl); line-height: 1.3; }
-:lang(zh-Hant) .index__list { letter-spacing: 0.05em; line-height: 1.5; font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.25rem); }
-.index__list a { text-decoration: none; color: var(--text-2); }
-.index__list a.has { color: var(--text); text-decoration: underline; text-decoration-thickness: 1px; text-decoration-color: var(--clay); text-underline-offset: 0.18em; }
-.index__list a:hover { color: var(--accent); }
-.index__none { grid-column: 2; grid-row: 1 / span 2; color: var(--text-2); }
+/* the portfolio: a tight grid of even openings, no captions. The whole photograph is one step away. */
+.grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-1); }
+.grid figure { scroll-margin-top: 1.5rem; }
+.grid a { display: block; aspect-ratio: 3 / 2; overflow: hidden; background: var(--band); }
+.grid img { width: 100%; height: 100%; object-fit: cover; transition: transform 900ms var(--out); }
+.grid a:hover img { transform: scale(1.02); }
 @media (max-width: 52rem) {
-  .index__group { grid-template-columns: minmax(0, 1fr); }
-  .index__list, .index__none { grid-column: 1; grid-row: auto; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
-/* countries on a continent page */
+/* countries on a continent page and in the gallery */
 .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 28rem)); justify-content: center; gap: var(--s-4) var(--col-gap); }
 .tile { display: block; text-decoration: none; text-align: center; }
 .tile:hover { color: inherit; }
@@ -305,6 +301,21 @@ main { flex: 1; }
 .tile:hover .tile__photo img { transform: scale(1.02); }
 .tile__name { display: block; margin-top: 1rem; font-family: var(--serif); font-size: 1.5rem; line-height: 1.2; }
 :lang(zh-Hant) .tile__name { font-weight: 500; letter-spacing: 0.06em; font-size: 1.45rem; }
+
+/* destinations: the seven continents, three to a row, each under a square opening.
+   A continent with no photograph yet keeps its place as plain stone. */
+.tiles--three { display: flex; flex-wrap: wrap; gap: var(--s-5) var(--col-gap); max-width: 72rem; margin-inline: auto; }
+.tiles--three .tile { flex: 0 0 calc((100% - 2 * var(--col-gap)) / 3); min-width: 0; }
+.tiles--three .tile__photo { aspect-ratio: 1; }
+.tile__say { display: block; max-width: 32ch; margin: 0.5rem auto 0; color: var(--text-2); font-size: var(--t-s); line-height: 1.5; }
+:lang(zh-Hant) .tile__say { line-height: 1.75; }
+.tile__count { display: block; margin-top: 0.9rem; color: var(--text-2); }
+@media (max-width: 56rem) {
+  .tiles--three .tile { flex-basis: calc((100% - var(--col-gap)) / 2); }
+}
+@media (max-width: 36rem) {
+  .tiles--three .tile { flex-basis: 100%; }
+}
 
 .names { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.35rem 1.6rem; max-width: 52rem; margin-inline: auto; font-family: var(--serif); font-size: var(--t-l); line-height: 1.4; }
 :lang(zh-Hant) .names { letter-spacing: 0.06em; font-size: 1.15rem; line-height: 1.6; }
@@ -513,19 +524,26 @@ main { flex: 1; }
 ::view-transition-group(picked) { animation-duration: 460ms; animation-timing-function: var(--out); }
 
 /* ---------------- motion ----------------
-   Two reasons only.
+   Three reasons only.
    1. Arriving: the opening photograph settles into place and the words
       under a title come up after it.
-   2. Walking the wall: each photograph rises as it comes into view. */
+   2. Leaving the opening photograph: it stays where it is, rising slowly,
+      while the page is drawn up over it.
+   3. Walking the wall: each photograph rises as it comes into view. */
 
 @media (prefers-reduced-motion: no-preference) {
+  .cover { position: sticky; top: 0; z-index: 0; }
   .cover.arrive img { animation: settle 2200ms var(--out) both; }
   .arrive .piece a, .arrive.piece a { animation: uncover 1100ms var(--out) both; }
   .arrive .piece img, .arrive.piece img { animation: settle 1600ms var(--out) both; }
   .arrive .rise { animation: rise 900ms var(--out) both; animation-delay: calc(200ms + var(--i, 0) * 90ms); }
 
+  @supports (animation-timeline: scroll()) {
+    .cover { animation: drift linear both; animation-timeline: scroll(root block); animation-range: 0 100vh; }
+  }
+
   @supports (animation-timeline: view()) {
-    .wall .piece, .feature, .tile, .door {
+    .wall .piece, .grid figure, .feature, .tile, .door {
       animation: rise linear both;
       animation-timeline: view();
       animation-range: entry 0% entry 36%;
@@ -534,6 +552,7 @@ main { flex: 1; }
 }
 
 @keyframes uncover { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
+@keyframes drift { to { transform: translateY(-32vh); } }
 @keyframes settle { from { transform: scale(1.06); } to { transform: scale(1); } }
 @keyframes rise { from { opacity: 0; transform: translateY(1.5rem); } to { opacity: 1; transform: none; } }
 
