@@ -65,7 +65,7 @@ Arranged on 2026-09-28 at his request, so the top level reads at a glance. Keep 
 | At the top level | Whose | What it is |
 |---|---|---|
 | `start.command`, `photo-list.command` | his | double-click launchers |
-| `originals/`, `ideas/`, `IDEAS.md`, `experiments/` | his | his photos, his ideas, trials |
+| `originals/`, `ideas/`, `IDEAS.md`, `TODO.md`, `experiments/` | his | his photos, his ideas, his to-do list, trials |
 | `site/` | visitors' | **the whole website and nothing else.** Only this folder is ever published or served |
 | `data/`, `content/`, `tools/` | Claude's | what the pages are built from, and the scripts |
 | `CLAUDE.md`, `DESIGN.md`, `PRODUCT.md`, `PROGRESS.md` | Claude's | notes. They stay at the top: tools look for them there |
@@ -227,6 +227,21 @@ line, written as **one short phrase** (about 15 characters), and `狀態` is one
 (已安裝, 已存檔, 已移除, 未註冊, 收集中). Longer explanation goes in other fields, which stay
 in `IDEAS.md` and are not shown in Word. Don't add the same thing twice: check the list first
 and merge into the existing entry.
+
+## Build list 建置進度 — TODO.md
+
+`TODO.md` is his list of what the site still needs and how far each thing has got (started
+2026-09-29, at his request). The three lists have different jobs: `IDEAS.md` is what he has
+seen and liked, `TODO.md` is what he has decided to do, `PROGRESS.md` is where the last session
+stopped. When he says he wants to do something, add it here in 繁體中文 with the date. An idea
+moves from `IDEAS.md` to here only on his word.
+
+Same format as `IDEAS.md`, same generator. He reads it as `ideas/建置進度.docx`:
+**after every change to `TODO.md`, rerun
+`python3 tools/ideas_doc.py TODO.md ideas/建置進度.docx`.** `類型` is the area of work (攻略內容,
+網站文字, 功能, 上線). `狀態` is one of 待做, 進行中, 等你決定, 暫緩, 完成. When something is
+finished, set `狀態` to 完成 and `類型` to 已完成 and move it to the Done section, in the same
+commit as the work. At sign-off, check the list against what the day actually did.
 
 ## Experiments 試作 — `experiments/`
 

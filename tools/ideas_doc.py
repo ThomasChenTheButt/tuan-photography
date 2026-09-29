@@ -11,6 +11,8 @@ Run from anywhere:  python3 tools/ideas_doc.py
 The same layout serves the weekly web-design report. Give it a list written in the same format
 and where to put the Word file:
                     python3 tools/ideas_doc.py ideas/weekly/2026-09-28.md ideas/weekly/2026-09-28.docx
+The build list is made the same way:
+                    python3 tools/ideas_doc.py TODO.md ideas/建置進度.docx
 The title of the Word file is the first "# " line of the list.
 Safe to rerun — the Word file is overwritten. Never edit the Word file by hand; edit IDEAS.md.
 Needs Pillow (pip install pillow). Writes the .docx directly, no Word library required.
