@@ -129,7 +129,7 @@
 - 重點: 可搜尋的設計資料庫
 - 網址: https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
 - 狀態: 已安裝
-- 狀態說明: 2026-07-26 安裝在這個專案(只在你的 Mac 上),2026-09-30 更新到線上最新版(2026-09-27 的版本)。同一套的 banner-design、brand、design、design-system、slides、ui-styling 也一起更新了。
+- 狀態說明: 2026-07-26 安裝,2026-09-30 更新到線上最新版(2026-09-27 的版本),並和同一套的 banner-design、brand、design、design-system、slides、ui-styling 一起搬進 Mac 的 ~/.claude/skills/,也上傳到 Claude 帳號,兩邊一致。
 - 適合用在: 上線前的檢查清單(無障礙、圖片載入速度、手機版面、鍵盤操作)。它建議的外觀(黑底、大量動畫、Space Grotesk)和這個網站已定的樣子相反,所以不拿它來決定外觀。
 - 這是什麼: 一個可以查詢的設計資料庫:風格、配色、字體搭配、各類產品的設計建議、UX 準則。
 - 喜歡它什麼: 待補
