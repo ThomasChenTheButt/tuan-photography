@@ -259,6 +259,7 @@
   "continents": [
     {
       "id": "europe",
+      "photo": "casa-batllo",
       "en": "Europe",
       "zh": "歐洲",
       "sub": {
@@ -277,6 +278,7 @@
     },
     {
       "id": "oceania",
+      "photo": "aoraki",
       "en": "Oceania",
       "zh": "大洋洲",
       "sub": {

@@ -1,5 +1,14 @@
 # tuan photography 陳亮元 — project instructions
 
+> **This folder is an experiment: `merge-old-layouts`** (started 2026-09-30, branch `exp/merge-old-layouts`, preview on port 8644).
+> **What is being tried:** three things he liked on the site as it was before the redesign (git tag
+> `before-redesign-2026-09-28`), rebuilt in the current look: the gallery as a tight portfolio grid followed by
+> countries, destinations as seven continent squares three to a row, and the opening photograph staying in place
+> while the page is drawn up over it.
+> **Skill:** none. **Rules suspended here:** "photographs untrimmed" does not apply to the portfolio grid or the
+> continent squares. Everything else in this file holds.
+> **Waiting on:** his word, keep or drop.
+
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
 Bilingual EN / 繁體中文. Owner is not a developer — explain in plain English, handle all tech.
 
