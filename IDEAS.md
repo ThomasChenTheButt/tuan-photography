@@ -123,6 +123,16 @@
 - 這是什麼: 影片「I Built The Ultimate Claude Website Design Skill (steal this)」介紹的捲動式網站 skill。
 - 喜歡它什麼: 待補
 
+### UI UX Pro Max
+- 類型: 設計 Skill
+- 日期: 2026-09-30
+- 重點: 可搜尋的設計資料庫
+- 網址: https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+- 狀態: 已安裝
+- 狀態說明: 2026-07-26 已安裝在這個專案(只在你的 Mac 上),同一套的 banner-design、brand、design、design-system、slides、ui-styling 也一起裝了。線上已有較新的版本,尚未更新。
+- 這是什麼: 一個可以查詢的設計資料庫:風格、配色、字體搭配、各類產品的設計建議、UX 準則。
+- 喜歡它什麼: 待補
+
 ### 10K Websites
 - 類型: 設計 Skill
 - 日期: 2026-09-28
