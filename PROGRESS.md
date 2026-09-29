@@ -42,10 +42,6 @@ the Barcelona pair.
 
 ## 等你決定 Waiting on you
 
-- **Experiment `merge-old-layouts` (2026-09-30): keep or drop?** Three things from the old site
-  rebuilt in the new look: gallery grid, continent squares, pinned opening photograph. It is in
-  `experiments/merge-old-layouts/`, branch `exp/merge-old-layouts`, preview on `localhost:8644`.
-  The real site is unchanged.
 - **Which country after Barcelona?** 15 of 16 country pages have no guide yet.
 - **Destinations wording.** The sentence under "Destinations" and the taglines for Africa,
   Antarctica and South America describe trips that haven't happened. Confirm or change.

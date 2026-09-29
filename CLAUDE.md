@@ -1,14 +1,5 @@
 # tuan photography 陳亮元 — project instructions
 
-> **This folder is an experiment: `merge-old-layouts`** (started 2026-09-30, branch `exp/merge-old-layouts`, preview on port 8644).
-> **What is being tried:** three things he liked on the site as it was before the redesign (git tag
-> `before-redesign-2026-09-28`), rebuilt in the current look: the gallery as a tight portfolio grid followed by
-> countries, destinations as seven continent squares three to a row, and the opening photograph staying in place
-> while the page is drawn up over it.
-> **Skill:** none. **Rules suspended here:** "photographs untrimmed" does not apply to the portfolio grid or the
-> continent squares. Everything else in this file holds.
-> **Waiting on:** his word, keep or drop.
-
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
 Bilingual EN / 繁體中文. Owner is not a developer — explain in plain English, handle all tech.
 
@@ -53,7 +44,7 @@ updating in the same commit. The short version:
 | Labels, menu, buttons | Geist in small spaced capitals. No mono face |
 | Corners | square, everywhere |
 | Controls | words, never icons or arrows |
-| Photographs | bare, untrimmed in rows, names beneath and never on top |
+| Photographs | bare, untrimmed in rows, names beneath and never on top. The gallery's portfolio grid and the continent squares are trimmed to even openings (his call, 2026-09-30) |
 | Punctuation | no long dashes; at most one middle dot in a line; 中文 uses full-width marks |
 
 ### Rules
@@ -300,9 +291,12 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 - Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
   harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
 
-Open now: `merge-old-layouts` (started 2026-09-30, port 8644): the old site's gallery grid,
-continent squares and pinned opening photograph, rebuilt in the current look. Waiting on his
-word.
+Open now: none.
+
+Kept on 2026-09-30: `merge-old-layouts`, three things he liked on the site as it was before the
+redesign, rebuilt in the current look: the gallery's tight portfolio grid, destinations as seven
+continent squares, and the opening photograph staying in place while the page is drawn up over
+it. The site just before that merge is at the tag `before-merge-old-layouts-2026-09-30`.
 
 The first experiment, `impeccable` (a full rebuild made with the Impeccable
 and taste skills), was **kept** on 2026-09-28 and is now the site. Its three earlier looks are
