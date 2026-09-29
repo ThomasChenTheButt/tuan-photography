@@ -291,7 +291,11 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 - Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
   harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
 
-Open now: none. The first experiment, `impeccable` (a full rebuild made with the Impeccable
+Open now: `merge-old-layouts` (started 2026-09-30, port 8644): the old site's gallery grid,
+continent squares and pinned opening photograph, rebuilt in the current look. Waiting on his
+word.
+
+The first experiment, `impeccable` (a full rebuild made with the Impeccable
 and taste skills), was **kept** on 2026-09-28 and is now the site. Its three earlier looks are
 in the history at the tags `light-table-v1` and `exhibition-hang-v2`.
 
