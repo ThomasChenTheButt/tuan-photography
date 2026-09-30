@@ -42,15 +42,10 @@ the Barcelona pair.
 
 ## 等你決定 Waiting on you
 
-- **Experiment `impeccable-full` (2026-10-01): keep or drop?** The full Impeccable critique
-  (dual-agent, 23/32) of the home page, Gallery and Destinations, then the three P1 fixes he
-  chose plus polish, in `experiments/impeccable-full/`, branch `exp/impeccable-full`, preview
-  on `localhost:8644`. The real site is unchanged. **The new Destinations wording needs his
-  approval:** "16 countries, by continent. One guide so far: Barcelona." /
-  "16 個國家，依大洲排列。攻略目前只有一篇：巴賽隆納。"
+- **Experiment `taste-review` (2026-10-01): in progress.** The Taste skill, audit-first, on the
+  home page skeleton and the gallery opening, UI UX Pro Max as the UX rule book, look pinned.
+  In `experiments/taste-review/`, branch `exp/taste-review`, preview on `localhost:8645`.
 - **Which country after Barcelona?** 15 of 16 country pages have no guide yet.
-- **Destinations wording.** The sentence under "Destinations" and the taglines for Africa,
-  Antarctica and South America describe trips that haven't happened. Confirm or change.
 - **Barcelona "SIM / data" fact** has no value, so the row is left out of the page.
 - **Newsletter sign-up:** wanted or not?
 - **The old plan of three Barcelona layouts** (2026-08-08) was written for the earlier design.

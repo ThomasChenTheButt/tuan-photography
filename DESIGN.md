@@ -481,7 +481,7 @@ A page with no work says so in one centred sentence in Second Ink, at most 46 ch
 These are recorded as open. None of them is a settled part of the system.
 
 ### Waiting on the owner
-- **Destinations lead sentence and continent taglines.** Rewritten on 2026-10-01 in the experiment to what the build can state ("16 countries, by continent. One guide so far: Barcelona."); the taglines for Africa, Antarctica and South America were removed and the tiles no longer carry a sentence. The new wording awaits the owner's approval.
+- **Destinations lead sentence and continent taglines.** Rewritten on 2026-10-01 in the experiment to what the build can state ("16 countries, by continent. One guide so far: Barcelona."); the taglines for Africa, Antarctica and South America were removed and the tiles no longer carry a sentence. The owner approved the wording on 2026-10-01.
 - **The guide's "SIM / data" fact.** It has no value yet. The build leaves the row out of the page until he supplies one, so the quick facts card shows only facts that have answers.
 - **Carried from the product notes:** which country gets the next guide, and whether a newsletter sign-up is wanted.
 

@@ -1,13 +1,5 @@
 # tuan photography 陳亮元 — project instructions
 
-> **This folder is an experiment: `impeccable-full`** (started 2026-10-01, branch `exp/impeccable-full`, preview on port 8644).
-> **What is being tried:** the full Impeccable procedure on the home page, Gallery and Destinations: a dual-agent
-> `critique` (saved in `.impeccable/critique/`), his answers, then `distill` + `clarify` (Destinations),
-> `adapt` + `optimize` (the viewer on phones), `harden` (keyboard, screen reader) and `polish`.
-> **Skill:** Impeccable. **Rules suspended here:** none. The look and the photographs are unchanged; the
-> Destinations copy was rewritten and awaits his approval.
-> **Waiting on:** his word, keep or drop.
-
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
 Bilingual EN / 繁體中文. Owner is not a developer — explain in plain English, handle all tech.
 
@@ -299,10 +291,16 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 - Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
   harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
 
-Open now: `impeccable-full` (started 2026-10-01, port 8644): the full Impeccable critique of the
-home page, Gallery and Destinations, then the fixes he picks, in the copy only. He dropped the
-2026-09-30 attempt (`skills-review`, a shortened single-context run) and asked for the full
-procedure.
+Open now: `taste-review` (started 2026-10-01, port 8645): the Taste skill, audit-first, on the
+home page skeleton and the gallery opening, with UI UX Pro Max consulted for its UX rules only.
+The look stays pinned. Waiting on his word.
+
+Kept on 2026-10-01: `impeccable-full`, the full Impeccable procedure (dual-agent critique, 23/32,
+its record in `.impeccable/critique/`), then the three P1 fixes he chose plus polish:
+Destinations as the continents travelled with true wording, the phone viewer (bar at the bottom,
+sized copies, swipe, Back closes it), keyboard and screen-reader access. The site just before that
+merge is at the tag `before-impeccable-full-2026-10-01`. A shortened single-context attempt on
+2026-09-30 (`skills-review`) was dropped at his request.
 
 Kept on 2026-09-30: `merge-old-layouts`, three things he liked on the site as it was before the
 redesign, rebuilt in the current look: the gallery's tight portfolio grid, destinations as seven
