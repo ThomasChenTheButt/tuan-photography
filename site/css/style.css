@@ -282,6 +282,14 @@ main { flex: 1; }
 
 .after { margin-top: var(--s-5); color: var(--text-2); text-align: center; }
 
+/* behind the row of books, the front book's own photograph, faint and out of focus, so the
+   stone ground takes a little of the place's colour. Two layers cross-fade as the row moves. */
+.band--ambient { position: relative; overflow: hidden; }
+.band--ambient > .wrap { position: relative; z-index: 1; }
+.ambient { position: absolute; inset: 0; pointer-events: none; }
+.ambient img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; filter: blur(22px) saturate(0.85); transform: scale(1.15); transition: opacity 1100ms var(--out); }
+.ambient img.on { opacity: 0.2; }
+
 /* the guides as books standing in a row, all turned the same way and stepped back into the
    distance on either side of the one in front, like covers fanned on a table. The row moves
    under the wheel, the arrow keys, a swipe, or the page's own scroll; a click on a book
