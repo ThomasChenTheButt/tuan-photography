@@ -291,10 +291,11 @@ if (shelfEl && window.matchMedia('(hover: none)').matches) {
     e.preventDefault();
     shelfEl.querySelectorAll('.book.open').forEach(b => b.classList.remove('open'));
     book.classList.add('open');
-    /* once the cover has come out, bring the whole book into view */
-    book.querySelector('.book__cover').addEventListener('transitionend', () => {
-      book.scrollIntoView({ inline: 'nearest', block: 'nearest', behavior: 'smooth' });
-    }, { once: true });
+    /* once the cover has come out (0.5 s), slide the shelf so the whole book is in view */
+    setTimeout(() => {
+      const over = book.getBoundingClientRect().right - shelfEl.getBoundingClientRect().right + 16;
+      if (over > 0) shelfEl.scrollBy({ left: over });
+    }, 520);
   });
 }
 
