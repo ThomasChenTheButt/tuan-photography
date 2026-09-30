@@ -123,21 +123,6 @@ components:
     textColor: "{colors.text}"
     typography: "{typography.display}"
     padding: "clamp(5.5rem, 12vw, 10rem) 0"
-  door-clay:
-    backgroundColor: "{colors.clay}"
-    textColor: "{colors.paper}"
-    rounded: "{rounded.none}"
-    padding: "1.5rem"
-  door-olive:
-    backgroundColor: "{colors.olive}"
-    textColor: "{colors.paper}"
-    rounded: "{rounded.none}"
-    padding: "1.5rem"
-  door-slate:
-    backgroundColor: "{colors.slate}"
-    textColor: "{colors.paper}"
-    rounded: "{rounded.none}"
-    padding: "1.5rem"
   feature:
     textColor: "{colors.text}"
     typography: "{typography.display}"
@@ -218,7 +203,7 @@ The site is a travel journal set like a printed magazine. It opens with one phot
 
 The site is light only. The stylesheet declares `color-scheme: light` and there is no dark theme in this build. Visitors whose devices are set to dark still see the warm paper site.
 
-Colour is used in two ways. The ground alternates between warm paper and a slightly darker stone band, section by section. Three earth colours (clay, olive and slate) appear as flat blocks: the three doors on the home page and the footer. Links and hover states are a deep clay. There are no icons: every control is a word.
+Colour is used in two ways. The ground alternates between warm paper and a slightly darker stone band, section by section. Three earth colours (clay, olive and slate) appear as flat blocks: the spines of the books on the home page's shelf, and the footer. Links and hover states are a deep clay. There are no icons: every control is a word.
 
 Photographs are shown bare. In a row they keep their own shape and are never trimmed; their names sit beneath them, never on them. Opening any photograph shows it whole, with the account of how it was made beside it.
 
@@ -226,7 +211,7 @@ Photographs are shown bare. In a row they keep their own shape and are never tri
 - One opening photograph fills the window; nothing is written across it.
 - Warm paper and a stone band alternate by section. Light only.
 - Serif for names and headings, centred. Plain sans for reading. Small spaced capitals for the menu, buttons and labels.
-- Clay, olive and slate as flat blocks: three doors and the footer.
+- Clay, olive and slate as flat blocks: the book spines and the footer.
 - Every corner is square. Buttons are rectangles with capital labels.
 - Photographs are bare and untrimmed in rows, with captions beneath.
 - No icons. Every control is a word, in both languages.
@@ -241,9 +226,9 @@ A warm, low-colour palette: paper, stone and ink that all lean toward brown, one
 - **Deep Clay** (`accent`): links inside guide text, the colour a link or word control turns under the pointer, the fill a primary button turns under the pointer, the keyboard focus ring, the section being read in the contents list, and the map link in the viewer.
 
 ### Secondary
-- **Clay** (`clay`): the first door on the home page, and the ground of selected text.
-- **Olive** (`olive`): the second door on the home page.
-- **Slate** (`slate`): the third door, the footer that closes every page, and the colour behind the opening photograph while its file loads.
+- **Clay** (`clay`): a book spine on the shelf, and the ground of selected text.
+- **Olive** (`olive`): a book spine on the shelf.
+- **Slate** (`slate`): a book spine on the shelf, the footer that closes every page, and the colour behind the opening photograph and the window while their files load.
 
 ### Neutral
 - **Warm Paper** (`bg`): the page ground, the viewer's ground, and the top bar when the phone menu is opened over the opening photograph.
@@ -261,7 +246,7 @@ Measured contrast, worked out from the built tokens. Warm Ink on Warm Paper is a
 
 **The Paper And Stone Rule.** Sections alternate between Warm Paper and Stone. A change of ground is how one section is told from the next; there are no boxes drawn around sections and no rules between them.
 
-**The Flat Block Rule.** Clay, Olive and Slate are used as whole flat blocks with Paper White lettering: the three doors, the spines of the books on the shelf, and the footer. They are not used for text on paper, for borders, for tints or for gradients. The build has two small exceptions for Clay, recorded under Open Decisions.
+**The Flat Block Rule.** Clay, Olive and Slate are used as whole flat blocks with Paper White lettering: the spines of the books on the shelf, and the footer. (The three doors that carried them on the home page were removed on 2026-10-01.) They are not used for text on paper, for borders, for tints or for gradients. The build has two small exceptions for Clay, recorded under Open Decisions.
 
 **The One Link Colour Rule.** Deep Clay is the only colour that means "this can be followed". It appears on links in reading text and on hover. It is never used as a fill at rest.
 
@@ -312,9 +297,9 @@ Chinese is set by its own rules, switched on when the page language is `zh-Hant`
 
 Content sits in one centred column, 88rem at its widest, with a side margin that grows with the window (`clamp(1.15rem, 4.5vw, 4rem)`). Most things inside it are centred and narrower than the column, so the page reads like a magazine spread with wide margins. Spacing uses a six-step scale (0.5, 1, 1.5, 2.5, 5rem, and a large step of 6rem to 9.5rem that grows with the window).
 
-- **Sections:** padded by the large step top and bottom (5rem for the doors). A section's heading is centred and sits 5rem above its content. Two sections that follow each other on the same ground share one gap, not two.
+- **Sections:** padded by the large step top and bottom. A section's heading is centred and sits 5rem above its content. Two sections that follow each other on the same ground share one gap, not two.
 - **Bands:** a Stone band always reaches both edges of the window, even when the section sits inside the page column.
-- **Home:** the opening photograph, which stays in place while the rest of the page is drawn up over it; then the centred intro on paper (its second button goes straight to the guide while there is only one), the three doors on stone, the guides as books on a shelf on paper, a second window onto a photograph (Mount Fuji), the wall of photographs on stone, the footer (the shelf moved above the photographs and the second window was added on 2026-10-01, his call, after the home page of Hello Emilie).
+- **Home:** the opening photograph, which stays in place while the rest of the page is drawn up over it; then the centred intro on paper (its second button goes straight to the guide while there is only one), the guides as books on a shelf on stone, a second window onto a photograph (Mount Fuji reflected), the wall of photographs on paper, the footer. The three colour doors were removed on 2026-10-01 at his call (the menu already leads there); the shelf and the window were added the same day, after the home page of Hello Emilie.
 - **Rows of photographs:** rows are worked out when the pages are built (`rows_of()` in `tools/build.py`). Photographs are split into rows of nearly equal total width, about 3.2 square widths each, never one photograph alone in a row, and every photograph grows in proportion to its own shape, so each row fills the column at one height and nothing is trimmed. The gap between photographs is 0.75rem; rows are 2.5rem apart to leave room for captions. A photograph alone in its row is held to 58rem and centred.
 - **Gallery:** the portfolio first, a tight grid four across with 0.5rem between photographs; then the countries that have work, as tiles; then the names of the places not photographed yet, on stone.
 - **Destinations:** the continents travelled, four to a row in a 72rem column, each a square with its name and a count beneath, centred as a group; then the continents not travelled, as names on stone.
@@ -331,7 +316,6 @@ How the layout changes on smaller windows, as built:
 | below 56rem | the continents go two to a row, and stay two to a row on phones; the viewer's words move to a bar at the bottom |
 | below 52rem | features become one column; the portfolio grid goes two across |
 | below 46rem | the quick facts card sits under its photograph instead of overlapping it |
-| below 44rem | the three doors stack and become short bands |
 | below 40rem | photographs stack one per row; tables become short stacks; days become one column |
 | below 36rem | continent names step down in size |
 | below 34rem | the contents list becomes one column |
@@ -349,10 +333,10 @@ Motion has three reasons only, in the stylesheet's own words: arriving, leaving 
 - **Arriving, the photograph:** on the home page the opening photograph settles into place once, from very slightly enlarged to its true size, over 2.2 seconds. At the top of a guide the lead photograph is uncovered from its top edge over 1.1 seconds while it settles over 1.6 seconds.
 - **Arriving, the words:** the words under or beside that photograph rise into place after it (0.9 seconds each, the first after 0.2 seconds, each next one 0.09 seconds later). Used for the home intro, the guide's title block and About.
 - **Leaving the opening photograph:** on the home page the opening photograph stays where it is while the rest of the page, one leaf of paper, is drawn up over it. As that happens the photograph rises slowly, at about a third of the page's speed. The owner asked for this on 2026-09-30; it is carried over from the site as it was before the redesign. The slow rise is tied to scrolling itself and only happens in browsers that support it; in others the photograph simply stays in place.
-- **The window:** part way down the home page a second photograph fills the window's width; it is fixed to the screen and the figure is a window cut in the page, so the page is drawn over it as the visitor moves. Under "reduce motion" it is simply a photograph in the page.
-- **Walking the wall:** photographs in a wall or in the portfolio grid, features, tiles, doors and the shelf rise gently as they enter the window.
+- **The window:** part way down the home page a second photograph fills the window's width; it is fixed to the screen and the figure is a window cut in the page, so the page is drawn over it, and it drifts slowly upward as the window passes (the script sets `--drift` from the window's place on the screen). Under "reduce motion" it is simply a photograph in the page.
+- **Walking the wall:** photographs in a wall or in the portfolio grid, features and tiles rise gently as they enter the window.
 - **Taking a book:** under the pointer a book comes forward, lifts 1rem and turns to face the visitor (0.6 seconds), and its name appears beneath it. On a touch screen the first tap does this and the second opens the guide. This is tied to scrolling itself and only happens in browsers that support it; in others they are simply there.
-- **Under the pointer:** a photograph enlarges very slightly inside its own frame (2%, over 0.9 seconds); a door brightens; a button changes fill; links change colour. Pressing a button moves it down 1px.
+- **Under the pointer:** a photograph enlarges very slightly inside its own frame (2%, over 0.9 seconds); a button changes fill; links change colour. Pressing a button moves it down 1px.
 - **Opening a photograph:** the photograph travels from its place in the row to its place in the viewer (0.46 seconds). Stepping to the next photograph dims the one on screen to 35% until the next file has arrived.
 - **Reduce motion:** when the visitor's device asks for reduced motion, none of the above happens. Arriving and rising are not loaded at all, every transition is switched off, and the viewer opens at once.
 
@@ -363,7 +347,7 @@ Motion has three reasons only, in the stylesheet's own words: arriving, leaving 
 
 ## Shapes
 
-Every corner is square. Photographs, buttons, doors, cards, notes, the contents box, the viewer and the focus ring all have no rounding. There is no rounded shape anywhere in the build.
+Every corner is square. Photographs, buttons, cards, notes, the contents box, the viewer and the focus ring all have no rounding. There is no rounded shape anywhere in the build.
 
 Lines are 1px. They separate rows in a list or table, and divide the language switch. The only boxes drawn with an outline are the buttons. The rule under a table's header row is Warm Ink; every other rule is Hairline.
 
@@ -394,16 +378,13 @@ The unit of the whole site. A bare photograph, no frame, no border, no rounding,
 The first thing on the home page. It fills the window edge to edge and top to bottom (never shorter than 34rem, never taller than 75rem). Nothing is written across it: no headline, no sentence, no button, no panel. The only lettering on it is the top bar, and one small line at the bottom left giving the place and the country. It opens the viewer like any other photograph. It stays in place as the visitor moves down, and the rest of the page is drawn up over it (see Motion). When the keyboard reaches it from further down the page, the page returns to the top so what has focus can be seen.
 
 ### Window
-A second full-width photograph part way down the home page, 72% of the window tall (26rem to 56rem), named in `data/site.json` (`"windows"`, in order; one today: Mount Fuji with the Shinkansen). Like the opening photograph, nothing is written across it but one small line at the bottom left with its place and country, over the same darkening foot; it opens the viewer. The photograph is fixed to the screen and the figure is a window cut in the page, so the page is drawn over it. It is left out of the wall below.
+A second photograph part way down the home page that fills the whole window, like the opening one (never shorter than 34rem, never taller than 75rem), named in `data/site.json` (`"windows"`, in order; one today: Mount Fuji reflected in a lake, his choice). Like the opening photograph, nothing is written across it but one small line at the bottom left with its place and country, over the same darkening foot; it opens the viewer. The photograph is fixed to the screen and the figure is a window cut in the page, so the page is drawn over it; as the window passes, the photograph drifts slowly upward, at a fraction of the page's speed, like the opening one (the script sets `--drift` from the window's place on the screen on each scroll; nothing moves under "reduce motion"). It is left out of the wall below.
 
 ### Intro
 Directly under the opening photograph, on paper, centred: the line "Travel like a photographer." at Display size, one sentence in Second Ink held to 42 characters a line, and two buttons (primary and line) side by side.
 
-### Doors
-Three flat colour blocks on a Stone band, side by side, each a tall rectangle (2 wide by 3 tall): Clay for Gallery, Olive for Destinations, Slate for About. Each holds the section's name in the serif and one small line in capitals beneath it that states a real count or fact ("8 photographs", "16 countries"). The counts are worked out by the build, not typed. The whole block is the link and brightens slightly under the pointer. Below 44rem they stack as short bands.
-
-### Shelf (the guides on the home page)
-The guides as books standing on a shelf, seen in three dimensions, in the order the owner set in `data/site.json` (`"shelf"`): Japan, Hong Kong, Barcelona, Dubai, London (2026-10-01, after the Foliom bookshelf he saved in the ideas list). Five books at most; every book is a place that has photographs on the site. Each book is 12rem by 18rem and 3rem deep, turned 36 degrees so its cover and its spine both show, and the row overlaps by 2.25rem like a shelf seen from one end; the shelf is a 1px Warm Ink rule the books rest on, with a 70rem perspective. A cover is made the way a printed guide is: the photograph named for the book (`"photo"`) above a Paper White band that carries the name in the serif and a small capital series line ("A photographer's guide" for a written guide, "Photographs" for a place without one), inside a hairline edge. The spine is one of the three earth colours in turn, with the name along it in the serif and the imprint "tuan photography" in small capitals at its foot. Under the pointer, on keyboard focus or after a tap, a book comes forward 4rem, lifts 1rem and turns to face the visitor (0.6 seconds), and beneath it, under the shelf line, appear its name and where it leads: "Read the guide", or "Guide not written yet" for a book that opens the country's photographs instead. On phones the books are 9rem by 13.5rem, the shelf scrolls sideways, and an opened book is slid into view. The shelf is a niche: a Stone back panel with a plank of Hairline colour the books stand on. This is the one place the site draws depth, and the one place with shadows and shading: a soft shadow under each book and beside each spine, a darker joint where the cover meets the spine, a faint sheen across the cover and a rounding of tone across the spine, all mixed from warm near-black and Paper White. The owner asked for the books to read as real objects (2026-10-01); nothing outside the shelf casts a shadow.
+### Doors (removed)
+Three flat colour blocks to Gallery, Destinations and About stood on the home page until 2026-10-01, when the owner removed them: the menu already leads to the same pages. The earth colours now appear only on the shelf's spines and the footer.
 
 ### Feature (a guide)
 A guide shown large: its photograph beside its plain name at Display size, one line of facts in Second Ink, and the words "Read the guide" in small capitals with a rule beneath. The whole block is the link. The photograph keeps its own shape.

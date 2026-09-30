@@ -457,22 +457,18 @@ def build_home():
     en, zh = {}, {}
     root = ""
     lead = DATA["lead"]
-    n_photos, n_places = len(DATA["slides"]), len(COUNTRIES)
+    n_places = len(COUNTRIES)
     one = DATA["guides"][0] if len(DATA["guides"]) == 1 else None
     en.update(heroLine="Travel like a photographer.",
               heroSay='Landscape photographs by Thomas Chen <span class="nb">陳亮元</span>. Open any one to see how it was made.',
               guidesCta="Read the guide" if one else "Read the guides",
               workTitle="Photographs", workCta="See the gallery", guidesTitle="Guides",
-              doorsLabel="Sections",
-              doorGallery=f"{n_photos} photographs", doorPlaces=f"{n_places} countries", doorAbout="The photographer",
               moreText=f"Guides for {n_places - 1} more countries are not written yet.",
               moreCta="See every destination")
     zh.update(heroLine='<span class="nb">像攝影師</span><span class="nb">一樣旅行。</span>',
               heroSay="陳亮元的風景攝影。點開任何一張，看它是怎麼拍的。",
               guidesCta="閱讀攻略",
               workTitle="作品", workCta="看全部作品", guidesTitle="攻略",
-              doorsLabel="主要單元",
-              doorGallery=f"{n_photos} 張照片", doorPlaces=f"{n_places} 個國家", doorAbout="攝影師",
               moreText=f"還有 {n_places - 1} 個國家的攻略還沒寫。",
               moreCta="看所有目的地")
     leads = {g["lead"] for g in DATA["guides"]}
@@ -493,30 +489,20 @@ def build_home():
 </section>
 
 <div class="band">
-  <nav class="wrap part part--tight" aria-label="Sections" data-i18n-aria="doorsLabel">
-    <div class="doors">
-      <a class="door door--clay" href="gallery.html"><b data-i18n="navGallery">Gallery</b><span class="num" data-i18n="doorGallery">{e(en['doorGallery'])}</span></a>
-      <a class="door door--olive" href="destinations.html"><b data-i18n="navDestinations">Destinations</b><span class="num" data-i18n="doorPlaces">{e(en['doorPlaces'])}</span></a>
-      <a class="door door--slate" href="about.html"><b data-i18n="navAbout">About</b><span data-i18n="doorAbout">{e(en['doorAbout'])}</span></a>
-    </div>
-  </nav>
+  <section class="wrap part" aria-labelledby="guides-h">
+    <div class="part__head"><h2 id="guides-h" data-i18n="guidesTitle">Guides</h2></div>
+    {shelf(root, en, zh)}
+    <p class="after"><span data-i18n="moreText">{e(en['moreText'])}</span> <a href="{root}destinations.html" data-i18n="moreCta">See every destination</a></p>
+  </section>
 </div>
-
-<section class="wrap part" aria-labelledby="guides-h">
-  <div class="part__head"><h2 id="guides-h" data-i18n="guidesTitle">Guides</h2></div>
-  {shelf(root, en, zh)}
-  <p class="after"><span data-i18n="moreText">{e(en['moreText'])}</span> <a href="{root}destinations.html" data-i18n="moreCta">See every destination</a></p>
-</section>
 
 {panes}
 
-<div class="band">
-  <section class="wrap part" aria-labelledby="work-h">
-    <div class="part__head"><h2 id="work-h" data-i18n="workTitle">Photographs</h2></div>
-    {wall(others, root, en, zh)}
-    <p class="part__more"><a class="btn btn--line" href="gallery.html" data-i18n="workCta">See the gallery</a></p>
-  </section>
-</div>
+<section class="wrap part" aria-labelledby="work-h">
+  <div class="part__head"><h2 id="work-h" data-i18n="workTitle">Photographs</h2></div>
+  {wall(others, root, en, zh)}
+  <p class="part__more"><a class="btn btn--line" href="gallery.html" data-i18n="workCta">See the gallery</a></p>
+</section>
 </div>"""
     write("index.html", f"{SITE} - Landscape photographs and how each one was made",
           f"{SITE} - 風景攝影，以及每一張是怎麼拍的",

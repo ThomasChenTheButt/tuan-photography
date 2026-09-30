@@ -119,6 +119,26 @@ coverLink?.addEventListener('focus', () => {
   if (coverLink.matches(':focus-visible')) window.scrollTo(0, 0);
 });
 
+/* A window part way down the page: its photograph is fixed to the screen, and drifts
+   slowly as the window passes, at a fraction of the page's speed. The number goes to the
+   stylesheet as --drift; nothing moves under "reduce motion". */
+const panes = [...document.querySelectorAll('.window')];
+if (panes.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  let waiting = false;
+  const drift = () => {
+    waiting = false;
+    const vh = window.innerHeight;
+    panes.forEach(pane => {
+      const r = pane.getBoundingClientRect();
+      const passage = (r.top + r.height) / (vh + r.height);   // 1 as it enters at the foot, 0 as it leaves at the top
+      pane.style.setProperty('--drift', `${((passage - 0.5) * 0.24 * vh).toFixed(1)}px`);
+    });
+  };
+  window.addEventListener('scroll', () => { if (!waiting) { waiting = true; requestAnimationFrame(drift); } }, { passive: true });
+  window.addEventListener('resize', drift);
+  drift();
+}
+
 /* ---------- 3. Looking at one photograph ----------
    The photographs on this page are listed in a JSON block (#slides-data).
    Opening one shows it large, with how it was made beside it.

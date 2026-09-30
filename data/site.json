@@ -5,7 +5,7 @@
   },
   "lead": "aoraki",
   "windows": [
-    "fuji-shinkansen"
+    "fuji-lake"
   ],
   "slides": [
     {
@@ -891,6 +891,31 @@
       "aperture": "f/11",
       "shutter": "10s",
       "iso": "160"
+    },
+    {
+      "id": "fuji-lake",
+      "file": "japan-fuji-reflection.jpg",
+      "w": 2400,
+      "h": 1376,
+      "country": "japan",
+      "place": {
+        "en": "Mount Fuji reflected",
+        "zh": "富士山倒影"
+      },
+      "where": {
+        "en": "Yamanashi, Japan",
+        "zh": "日本 山梨"
+      },
+      "alt": {
+        "en": "Mount Fuji and its reflection in a still lake at first light",
+        "zh": "晨光中映在平靜湖面上的富士山"
+      },
+      "camera": "Canon EOS R6 Mark II",
+      "lens": "RF 24-105mm F4 L IS USM",
+      "focal": "35mm",
+      "aperture": "f/4",
+      "shutter": "1/320s",
+      "iso": "400"
     }
   ],
   "guides": [
