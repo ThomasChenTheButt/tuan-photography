@@ -290,6 +290,7 @@ main { flex: 1; }
 .book:hover { color: var(--paper); }
 .book__face, .book__spine { position: absolute; top: 0; left: 0; height: 100%; backface-visibility: hidden; }
 .book__face { display: grid; grid-template-rows: minmax(0, 1fr) auto; width: 100%; background: var(--band); overflow: hidden; outline: 1px solid var(--line); outline-offset: -1px; }
+.wall .piece a { background: var(--paper); }
 .book__face img { width: 100%; height: 100%; object-fit: cover; }
 .book__band { display: grid; gap: 0.35rem; padding: 0.85rem 1rem 0.9rem; background: var(--paper); color: var(--text); border-top: 1px solid var(--line); }
 .book__band b { font-family: var(--serif); font-weight: 400; font-size: 1.35rem; line-height: 1.15; }

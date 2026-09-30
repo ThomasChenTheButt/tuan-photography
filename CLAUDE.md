@@ -1,13 +1,5 @@
 # tuan photography 陳亮元 — project instructions
 
-> **This folder is an experiment: `bookshelf`** (started 2026-10-01, branch `exp/bookshelf`, preview on port 8644).
-> **What is being tried:** the home page's "Guides" section as five books on a shelf, drawn in three dimensions
-> like the Foliom shelf he saved: Japan, Hong Kong, Barcelona, Dubai, London, each a place with photographs on the
-> site. A cover is the photograph over a paper band with the name, like a printed guide; only Barcelona opens a
-> guide, the others open the country's photographs and say the guide is not written yet. Point at a book and it
-> comes forward and faces you; on phones, tap. **Skill:** none. **Rules suspended here:** none.
-> **Waiting on:** his word, keep or drop.
-
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
 Bilingual EN / 繁體中文. Owner is not a developer — explain in plain English, handle all tech.
 
@@ -299,9 +291,11 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 - Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
   harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
 
-Open now: `bookshelf` (started 2026-10-01, port 8644): the home page's guides as five books on
-a shelf (China, Vietnam, Japan, Barcelona, London; only Barcelona is written, the rest stand
-empty on his word). Point at a book and it comes off the shelf.
+Open now: none.
+
+Kept on 2026-10-01: `bookshelf`, the home page's guides as five books on a 3D shelf (Japan,
+Hong Kong, Barcelona, Dubai, London), covers made like printed guides. The site just before
+that merge is at the tag `before-bookshelf-2026-10-01`.
 
 Dropped on 2026-10-01: `taste-review`, the Taste skill's audit-first pass on the home page and
 the gallery opening. It removed the three doors and the intro's two buttons and the Gallery's

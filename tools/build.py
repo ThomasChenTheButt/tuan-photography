@@ -204,7 +204,7 @@ def rows_of(ids, per_row=3.2):
     for i in range(1, n + 1):
         for j in range(1, min(i, k) + 1):
             for p in range(j - 1, i):
-                if (p, j - 1) not in best:
+                if (p, j - 1) not in best or (n > 1 and i - p < 2):   # no photograph alone in a row
                     continue
                 cost = best[(p, j - 1)][0] + (sum(ars[p:i]) - goal) ** 2
                 if (i, j) not in best or cost < best[(i, j)][0]:
@@ -489,17 +489,17 @@ def build_home():
   </nav>
 </div>
 
-<section class="wrap part" aria-labelledby="work-h">
-  <div class="part__head"><h2 id="work-h" data-i18n="workTitle">Photographs</h2></div>
-  {wall(others, root, en, zh)}
-  <p class="part__more"><a class="btn btn--line" href="gallery.html" data-i18n="workCta">See the gallery</a></p>
+<section class="wrap part" aria-labelledby="guides-h">
+  <div class="part__head"><h2 id="guides-h" data-i18n="guidesTitle">Guides</h2></div>
+  {shelf(root, en, zh)}
+  <p class="after"><span data-i18n="moreText">{e(en['moreText'])}</span> <a href="{root}destinations.html" data-i18n="moreCta">See every destination</a></p>
 </section>
 
 <div class="band">
-  <section class="wrap part" aria-labelledby="guides-h">
-    <div class="part__head"><h2 id="guides-h" data-i18n="guidesTitle">Guides</h2></div>
-    {shelf(root, en, zh)}
-    <p class="after"><span data-i18n="moreText">{e(en['moreText'])}</span> <a href="{root}destinations.html" data-i18n="moreCta">See every destination</a></p>
+  <section class="wrap part" aria-labelledby="work-h">
+    <div class="part__head"><h2 id="work-h" data-i18n="workTitle">Photographs</h2></div>
+    {wall(others, root, en, zh)}
+    <p class="part__more"><a class="btn btn--line" href="gallery.html" data-i18n="workCta">See the gallery</a></p>
   </section>
 </div>
 </div>"""
