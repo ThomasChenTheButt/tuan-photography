@@ -426,8 +426,8 @@ def shelf(root, en, zh):
             label, gid, title = e(en[f"bo_{g['id']}"]), g["id"], e(g["title"]["en"])
             books.append(f'<a class="book book--{tone}" href="{root}{g["href"]}" aria-label="{label}" data-i18n-aria="bo_{gid}">'
                          f'<span class="book__spine" data-i18n="{key}">{title}</span>'
-                         f'<span class="book__cover"><span class="book__face">{face}</span>'
-                         f'<span class="book__name" data-i18n="{key}">{title}</span></span></a>')
+                         f'<span class="book__face">{face}</span>'
+                         f'<span class="book__name" data-i18n="{key}">{title}</span></a>')
         else:
             c = COUNTRIES[b["country"]]
             title = b.get("title") or {"en": c["en"], "zh": c["zh"]}
@@ -435,8 +435,9 @@ def shelf(root, en, zh):
             en[key], zh[key] = title["en"], title["zh"]
             books.append(f'<div class="book book--{tone}">'
                          f'<span class="book__spine" data-i18n="{key}">{e(title["en"])}</span>'
-                         f'<span class="book__cover"><span class="book__face"><span class="book__none" data-i18n="notYet">Not written yet</span></span>'
-                         f'<span class="book__name" data-i18n="{key}">{e(title["en"])}</span></span></div>')
+                         f'<span class="book__face book__face--blank"><b data-i18n="{key}">{e(title["en"])}</b>'
+                         f'<span class="book__none" data-i18n="notYet">Not written yet</span></span>'
+                         f'<span class="book__name" data-i18n="{key}">{e(title["en"])}</span></div>')
     return '<div class="shelf">' + "".join(books) + "</div>"
 
 

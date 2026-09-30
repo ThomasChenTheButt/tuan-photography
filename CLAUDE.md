@@ -2,8 +2,8 @@
 
 > **This folder is an experiment: `bookshelf`** (started 2026-10-01, branch `exp/bookshelf`, preview on port 8644).
 > **What is being tried:** the home page's "Guides" section as books on a shelf: China, Vietnam, Japan, Barcelona,
-> London. Only Barcelona is written; the other four stand empty and say "Not written yet", at his request. Point at
-> a book and it lifts and turns its cover out; on phones, tap. **Skill:** none. **Rules suspended here:** "no
+> London, drawn in three dimensions like the Foliom shelf he saved. Only Barcelona is written; the other four stand
+> empty and say "Not written yet", at his request. Point at a book and it comes forward and faces you; on phones, tap. **Skill:** none. **Rules suspended here:** "no
 > stand-in for a guide that does not exist" is relaxed to an honest empty book, on his word (2026-10-01).
 > **Waiting on:** his word, keep or drop.
 
