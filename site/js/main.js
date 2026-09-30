@@ -321,27 +321,13 @@ if (stackEl) {
       book.classList.toggle('front', Math.round(cur) === i);
     });
   };
-  /* the front book's photograph, faint, behind the row */
-  const layers = [...(stage.closest('.band')?.querySelectorAll('.ambient img') || [])];
-  let lit = 0, litSrc = '';
-  const tint = () => {
-    const src = books[Math.round(cur)].querySelector('.book__face img')?.getAttribute('src');
-    if (!layers.length || !src || src === litSrc) return;
-    litSrc = src;
-    const next = layers[1 - lit], prev = layers[lit];
-    next.onload = () => { next.classList.add('on'); prev.classList.remove('on'); };
-    next.src = src.replace('/1280/', '/640/');
-    lit = 1 - lit;
-  };
   const go = (to, snap = true) => {
     cur = Math.min(n - 1, Math.max(0, to));
     place();
-    tint();
     clearTimeout(settle);
     if (!snap) settle = setTimeout(() => go(Math.round(cur)), 160);
   };
   place();
-  tint();
   new IntersectionObserver(([e]) => { shown = e.isIntersecting; }).observe(stage);
   books.forEach((book, i) => {
     book.addEventListener('click', e => {

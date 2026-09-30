@@ -502,8 +502,7 @@ def build_home():
 
 {panes[0]}
 
-<div class="band band--ambient">
-  <div class="ambient" aria-hidden="true"><img alt=""><img alt=""></div>
+<div class="band">
   <section class="wrap part" aria-labelledby="guides-h">
     <div class="part__head"><h2 id="guides-h" data-i18n="guidesTitle">Guides</h2></div>
     {shelf(root, en, zh)}
