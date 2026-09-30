@@ -291,9 +291,11 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 - Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
   harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
 
-Open now: `taste-review` (started 2026-10-01, port 8645): the Taste skill, audit-first, on the
-home page skeleton and the gallery opening, with UI UX Pro Max consulted for its UX rules only.
-The look stays pinned. Waiting on his word.
+Open now: none.
+
+Dropped on 2026-10-01: `taste-review`, the Taste skill's audit-first pass on the home page and
+the gallery opening. It removed the three doors and the intro's two buttons and the Gallery's
+"Portfolio" heading. He preferred the site as it was: the doors and the intro buttons stay.
 
 Kept on 2026-10-01: `impeccable-full`, the full Impeccable procedure (dual-agent critique, 23/32,
 its record in `.impeccable/critique/`), then the three P1 fixes he chose plus polish:
