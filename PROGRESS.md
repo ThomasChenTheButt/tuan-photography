@@ -36,6 +36,8 @@
   UK, Hong Kong, Japan, Australia, China, France, New Zealand, Singapore, Vietnam).
 - Gallery divided by country; home wall one photo per country; home windows set to his picks.
 - The ideas list got Hello Emilie's scroll effect (what he likes: the slow-moving photos).
+- Tried a faint photo behind the row of books at the end of the day; he found it awkward
+  and it was removed. The row stands on plain stone.
 
 ## 接下來 Next up
 
