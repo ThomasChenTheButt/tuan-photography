@@ -303,7 +303,8 @@ main { flex: 1; }
 .book:hover, .book:focus-visible, .book.open { transform: rotateY(0deg) translateZ(4rem) translateY(-1rem); }
 .book:hover .book__name, .book:focus-visible .book__name, .book.open .book__name { opacity: 1; }
 @media (max-width: 40rem) {
-  .shelf { justify-content: flex-start; padding: var(--s-3) var(--s-2) 2.75rem; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; }
+  .shelf { justify-content: flex-start; padding: var(--s-3) var(--s-2) 2.75rem; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; scrollbar-width: none; }
+  .shelf::-webkit-scrollbar { display: none; }
   .shelf::after { content: ""; flex: none; width: var(--s-4); }
   .book { width: 9rem; height: 13.5rem; margin-right: -2rem; --deep: 2rem; }
   .book__face--blank b { font-size: 1.2rem; }
