@@ -42,9 +42,11 @@ the Barcelona pair.
 
 ## 等你決定 Waiting on you
 
-- **Experiment `taste-review` (2026-10-01): in progress.** The Taste skill, audit-first, on the
-  home page skeleton and the gallery opening, UI UX Pro Max as the UX rule book, look pinned.
-  In `experiments/taste-review/`, branch `exp/taste-review`, preview on `localhost:8645`.
+- **Experiment `taste-review` (2026-10-01): keep or drop?** The Taste skill, audit-first, on the
+  home page skeleton and the gallery opening. The doors and the intro buttons are removed, the
+  photographs come straight after the intro, the Gallery loses its "Portfolio" heading, the top
+  bar is 5rem. In `experiments/taste-review/`, branch `exp/taste-review`, preview on
+  `localhost:8645`. The real site is unchanged.
 - **Which country after Barcelona?** 15 of 16 country pages have no guide yet.
 - **Barcelona "SIM / data" fact** has no value, so the row is left out of the page.
 - **Newsletter sign-up:** wanted or not?
