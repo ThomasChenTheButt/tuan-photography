@@ -1,10 +1,11 @@
 # tuan photography 陳亮元 — project instructions
 
 > **This folder is an experiment: `bookshelf`** (started 2026-10-01, branch `exp/bookshelf`, preview on port 8644).
-> **What is being tried:** the home page's "Guides" section as books on a shelf: China, Vietnam, Japan, Barcelona,
-> London, drawn in three dimensions like the Foliom shelf he saved. Only Barcelona is written; the other four stand
-> empty and say "Not written yet", at his request. Point at a book and it comes forward and faces you; on phones, tap. **Skill:** none. **Rules suspended here:** "no
-> stand-in for a guide that does not exist" is relaxed to an honest empty book, on his word (2026-10-01).
+> **What is being tried:** the home page's "Guides" section as five books on a shelf, drawn in three dimensions
+> like the Foliom shelf he saved: Japan, Hong Kong, Barcelona, Dubai, London, each a place with photographs on the
+> site. A cover is the photograph over a paper band with the name, like a printed guide; only Barcelona opens a
+> guide, the others open the country's photographs and say the guide is not written yet. Point at a book and it
+> comes forward and faces you; on phones, tap. **Skill:** none. **Rules suspended here:** none.
 > **Waiting on:** his word, keep or drop.
 
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
