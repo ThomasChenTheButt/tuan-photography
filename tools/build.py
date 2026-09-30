@@ -481,7 +481,8 @@ def build_home():
         seen.add(x["country"])
         others.append(x["id"])
     others = others[:12]
-    panes = "\n\n".join(window(sid, root, en, zh) for sid in windows)
+    # the windows are dealt out between the sections, so a photograph is behind the page all the way down
+    panes = [window(sid, root, en, zh) for sid in windows] + ["", "", ""]
     body = f"""{cover(lead, root, en, zh)}
 
 <div class="leaf">
@@ -494,6 +495,8 @@ def build_home():
   </div>
 </section>
 
+{panes[0]}
+
 <div class="band">
   <section class="wrap part" aria-labelledby="guides-h">
     <div class="part__head"><h2 id="guides-h" data-i18n="guidesTitle">Guides</h2></div>
@@ -502,13 +505,15 @@ def build_home():
   </section>
 </div>
 
-{panes}
+{panes[1]}
 
 <section class="wrap part" aria-labelledby="work-h">
   <div class="part__head"><h2 id="work-h" data-i18n="workTitle">Photographs</h2></div>
   {wall(others, root, en, zh)}
   <p class="part__more"><a class="btn btn--line" href="gallery.html" data-i18n="workCta">See the gallery</a></p>
 </section>
+
+{panes[2]}
 </div>"""
     write("index.html", f"{SITE} - Landscape photographs and how each one was made",
           f"{SITE} - 風景攝影，以及每一張是怎麼拍的",
