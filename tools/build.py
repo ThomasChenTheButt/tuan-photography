@@ -450,7 +450,8 @@ def shelf(root, en, zh):
         books.append(f'<a class="book book--{tone}" href="{href}" aria-label="{e(en[f"bo_{key}"])}" data-i18n-aria="bo_{key}"><span class="book__box">'
                      f'<span class="book__spine"><b data-i18n="{key}">{t}</b><i data-i18n="series">tuan photography</i></span>'
                      f'{face}<span class="book__band"><b data-i18n="{key}">{t}</b><span data-i18n="{band}">{e(en[band])}</span></span></span>'
-                     f'<span class="book__back"><i data-i18n="series">tuan photography</i></span><span class="book__edge"></span></span>'
+                     f'<span class="book__back"><i data-i18n="series">tuan photography</i></span><span class="book__edge"></span>'
+                     f'<span class="book__top"></span><span class="book__shadow"></span></span>'
                      f'<span class="book__name"><b data-i18n="{key}">{t}</b><span data-i18n="{status}">{e(en[status])}</span></span></a>')
     return '<div class="shelf"><div class="ring">' + "".join(books) + "</div></div>"
 
