@@ -291,9 +291,10 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 - Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
   harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
 
-Open now: `skills-review` (started 2026-09-30, port 8644): a review of the home page, Gallery
-and Destinations by Impeccable and UI UX Pro Max, with the fixes applied in the copy only.
-Waiting on his word.
+Open now: `impeccable-full` (started 2026-10-01, port 8644): the full Impeccable critique of the
+home page, Gallery and Destinations, then the fixes he picks, in the copy only. He dropped the
+2026-09-30 attempt (`skills-review`, a shortened single-context run) and asked for the full
+procedure.
 
 Kept on 2026-09-30: `merge-old-layouts`, three things he liked on the site as it was before the
 redesign, rebuilt in the current look: the gallery's tight portfolio grid, destinations as seven
