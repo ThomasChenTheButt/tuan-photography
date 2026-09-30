@@ -291,7 +291,8 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 - Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
   harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
 
-Open now: none.
+Open now: `coverflow` (started 2026-10-01, port 8644): the guides as a looping coverflow of all
+sixteen countries' books, faded until the cursor lights one up; the cursor and the scroll turn it.
 
 Kept on 2026-10-01: `bookshelf`, the home page's guides as five books on a 3D shelf (Japan,
 Hong Kong, Barcelona, Dubai, London), covers made like printed guides. The site just before
