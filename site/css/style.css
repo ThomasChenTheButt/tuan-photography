@@ -287,8 +287,8 @@ main { flex: 1; }
 .band--ambient { position: relative; overflow: hidden; }
 .band--ambient > .wrap { position: relative; z-index: 1; }
 .ambient { position: absolute; inset: 0; pointer-events: none; }
-.ambient img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; filter: blur(8px); transform: scale(1.08); transition: opacity 1100ms var(--out); }
-.ambient img.on { opacity: 0.5; }
+.ambient img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; filter: blur(22px) saturate(0.85); transform: scale(1.15); transition: opacity 1100ms var(--out); }
+.ambient img.on { opacity: 0.2; }
 
 /* the guides as books standing in a row, all turned the same way and stepped back into the
    distance on either side of the one in front, like covers fanned on a table. The row moves
