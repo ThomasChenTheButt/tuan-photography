@@ -288,7 +288,7 @@ main { flex: 1; }
    further along brings it to the front, and the book in front opens. A cursor on a book brings
    it to full strength and turns it to face the visitor. --d is a book's distance from the
    front, set by the script; --z its depth. */
-.shelf { --shade: oklch(20% 0.02 60); --w: 12rem; --h: 17rem; --deep: 2.4rem; --step: 8.5rem; --turn: -24deg; position: relative; height: 27rem; max-width: 64rem; margin-inline: auto; overflow: hidden; perspective: 70rem; perspective-origin: 50% 45%; cursor: default; }
+.shelf { --shade: oklch(20% 0.02 60); --w: 12rem; --h: 17rem; --deep: 3.2rem; --step: 12.5rem; --turn: 24deg; position: relative; height: 27rem; max-width: 64rem; margin-inline: auto; overflow: hidden; perspective: 70rem; perspective-origin: 50% 45%; cursor: default; }
 .stack { position: absolute; left: 50%; top: 4rem; width: var(--w); height: var(--h); margin-left: calc(var(--w) / -2); transform-style: preserve-3d; }
 .book { position: absolute; inset: 0; text-decoration: none; color: var(--paper); transform-style: preserve-3d; transform: translateX(calc(var(--d, 0) * var(--step))) translateZ(var(--z, 0rem)) rotateY(var(--turn)); transition: transform 450ms var(--out); }
 /* the books further back are veiled in the page's own paper, so nothing shows through them */
@@ -330,7 +330,7 @@ main { flex: 1; }
 .book.front .book__name { opacity: 1; }
 .book:hover .book__name, .book:focus-visible .book__name, .book.open .book__name { opacity: 1; }
 @media (max-width: 40rem) {
-  .shelf { --w: 8.5rem; --h: 12rem; --deep: 1.7rem; --step: 6rem; height: 20rem; perspective: 50rem; }
+  .shelf { --w: 8.5rem; --h: 12rem; --deep: 2.2rem; --step: 8.75rem; height: 20rem; perspective: 50rem; }
   .stack { top: 3rem; }
   .book__band { padding: 0.6rem 0.7rem 0.65rem; }
   .book__band b { font-size: 1.1rem; }

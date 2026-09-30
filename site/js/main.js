@@ -315,7 +315,7 @@ if (stackEl) {
     books.forEach((book, i) => {
       const d = i - cur, far = Math.abs(d);
       book.style.setProperty('--d', d.toFixed(3));
-      book.style.setProperty('--z', (-far * 4.5).toFixed(2) + 'rem');
+      book.style.setProperty('--z', (-far * 5).toFixed(2) + 'rem');
       book.style.setProperty('--o', Math.max(0.3, 1 - far * 0.22).toFixed(2));
       book.hidden = far > 5;
       book.classList.toggle('front', Math.round(cur) === i);
