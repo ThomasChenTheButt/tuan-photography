@@ -43,7 +43,8 @@ the Barcelona pair.
 ## 等你決定 Waiting on you
 
 - **Experiment `bookshelf` (2026-10-01): keep or drop?** The home page's guides as five
-  books on a shelf (China, Vietnam, Japan, Barcelona, London), four of them empty on his word.
+  books on a 3D shelf (Japan, Hong Kong, Barcelona, Dubai, London), each a place with
+  photographs; covers made like printed guides.
   In `experiments/bookshelf/`, branch `exp/bookshelf`, preview on `localhost:8644`. The real
   site is unchanged.
 - **Which country after Barcelona?** 15 of 16 country pages have no guide yet.
