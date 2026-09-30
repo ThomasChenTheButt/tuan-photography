@@ -1199,5 +1199,35 @@
         "zh": "2025.6–8"
       }
     }
+  ],
+  "shelf": [
+    {
+      "country": "japan",
+      "photo": "fushimi-inari"
+    },
+    {
+      "country": "hong-kong",
+      "photo": "temple-street"
+    },
+    {
+      "guide": "barcelona",
+      "photo": "casa-batllo"
+    },
+    {
+      "country": "dubai",
+      "photo": "burj-khalifa",
+      "title": {
+        "en": "Dubai",
+        "zh": "杜拜"
+      }
+    },
+    {
+      "country": "uk",
+      "photo": "natural-history-museum",
+      "title": {
+        "en": "London",
+        "zh": "倫敦"
+      }
+    }
   ]
 }

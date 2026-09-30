@@ -280,7 +280,26 @@ document.querySelectorAll('a[data-slide]').forEach(el => {
   });
 });
 
-/* ---------- 4. Guide contents: mark the section being read ---------- */
+/* ---------- 4. Books on the shelf ----------
+   A pointer brings a book out by hovering. On a touch screen the first tap
+   brings it out and the second opens it. */
+const shelfEl = document.querySelector('.shelf');
+if (shelfEl && window.matchMedia('(hover: none)').matches) {
+  shelfEl.addEventListener('click', e => {
+    const book = e.target.closest('.book');
+    if (!book || book.classList.contains('open')) return;
+    e.preventDefault();
+    shelfEl.querySelectorAll('.book.open').forEach(b => b.classList.remove('open'));
+    book.classList.add('open');
+    /* once the cover has come out (0.5 s), slide the shelf so the whole book is in view */
+    setTimeout(() => {
+      const over = book.getBoundingClientRect().right - shelfEl.getBoundingClientRect().right + 16;
+      if (over > 0) shelfEl.scrollBy({ left: over });
+    }, 520);
+  });
+}
+
+/* ---------- 5. Guide contents: mark the section being read ---------- */
 const tocLinks = [...document.querySelectorAll('.toc a[href^="#"]')];
 if (tocLinks.length && 'IntersectionObserver' in window) {
   const byId = new Map(tocLinks.map(a => [a.getAttribute('href').slice(1), a]));
