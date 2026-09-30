@@ -227,7 +227,7 @@ def grid(ids, root, en, zh):
     for n, sid in enumerate(ids):
         s = SLIDES[sid]
         strings(s, en, zh)
-        cells.append(f'    <figure id="s-{sid}"><a {opens(sid, root, en, zh)}>'
+        cells.append(f'    <figure><a {opens(sid, root, en, zh)}>'
                      f'{img(s, root, "(max-width: 52rem) 46vw, 22vw", first=n == 0, soon=n < 8)}</a></figure>')
     return '<div class="grid">\n' + "\n".join(cells) + "\n  </div>"
 
@@ -511,39 +511,45 @@ def build_home():
 
 
 def build_gallery():
+    """The portfolio first, a dozen in a tight grid; then every country with photographs, each
+    its own wall of rows, in the site's order; then the names of the places not photographed yet."""
     en, zh = {}, {}
     root = ""
     en.update(pTitle="Gallery", pSub="Open any photograph to see how it was made.",
-              folioTitle="Portfolio", byTitle="By country",
-              restTitle="Not photographed for the site yet")
+              folioTitle="Portfolio", restTitle="Not photographed for the site yet")
     zh.update(pTitle="作品集", pSub="點開任何一張，看它是怎麼拍的。",
-              folioTitle="精選作品", byTitle="依國家瀏覽", restTitle="還沒有放上照片的地方")
+              folioTitle="精選作品", restTitle="還沒有放上照片的地方")
     lead = DATA["lead"]
     ids = [lead] + [s["id"] for s in DATA["slides"] if s["id"] != lead]
     shown = [c for c in DATA["countries"] if any(s["country"] == c["id"] for s in DATA["slides"])]
     rest = [c for c in DATA["countries"] if c not in shown]
-    tiles = "".join(country_tile(c, root, en, zh) for c in shown)
+    parts = [page_top("pTitle", "Gallery", "pSub", en["pSub"]), f"""  <section class="part" aria-labelledby="folio-h">
+    <div class="part__head"><h2 id="folio-h" data-i18n="folioTitle">Portfolio</h2></div>
+    {grid(ids[:12], root, en, zh)}
+  </section>"""]
+    for c in shown:
+        cid = c["id"]
+        own = [s["id"] for s in DATA["slides"] if s["country"] == cid]
+        en[f"cn_{cid}"], zh[f"cn_{cid}"] = c["en"], c["zh"]
+        en[f"cc_{cid}"] = "1 photograph" if len(own) == 1 else f"{len(own)} photographs"
+        zh[f"cc_{cid}"] = f"{len(own)} 張照片"
+        parts.append(f"""  <section class="part" aria-labelledby="c-{cid}">
+    <div class="part__head"><h2 id="c-{cid}"><a href="countries/{cid}.html" data-i18n="cn_{cid}">{e(c['en'])}</a></h2><p class="num" data-i18n="cc_{cid}">{e(en[f'cc_{cid}'])}</p></div>
+    {wall(own, root, en, zh, anchors=True)}
+  </section>""")
     names = []
     for c in rest:
         cid = c["id"]
         en[f"cn_{cid}"], zh[f"cn_{cid}"] = c["en"], c["zh"]
         names.append(f'<a href="countries/{cid}.html" data-i18n="cn_{cid}">{e(c["en"])}</a>')
-    body = page_top("pTitle", "Gallery", "pSub", en["pSub"]) + f"""  <section class="part" aria-labelledby="folio-h">
-    <div class="part__head"><h2 id="folio-h" data-i18n="folioTitle">Portfolio</h2></div>
-    {grid(ids, root, en, zh)}
-  </section>
-  <section class="part" aria-labelledby="by-h">
-    <div class="part__head"><h2 id="by-h" data-i18n="byTitle">By country</h2></div>
-    <ul class="tiles">{tiles}</ul>
-  </section>
-  <section class="part bleed" aria-labelledby="rest-h">
+    parts.append(f"""  <section class="part bleed" aria-labelledby="rest-h">
     <div class="part__head"><h2 id="rest-h" data-i18n="restTitle">Not photographed for the site yet</h2></div>
     <div class="names">{''.join(names)}</div>
   </section>
-</div>"""
+</div>""")
     write("gallery.html", f"Gallery - {SITE}", f"作品集 - {SITE}",
-          "Landscape photographs by 陳亮元 Thomas Chen: the portfolio, then each country. Each one shows how it was made.",
-          "gallery", body, en, zh)
+          "Landscape photographs by 陳亮元 Thomas Chen: the portfolio, then every country. Each one shows how it was made.",
+          "gallery", "\n".join(parts), en, zh)
 
 
 def build_destinations():
