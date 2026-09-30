@@ -287,13 +287,13 @@ main { flex: 1; }
    turns on its own; a pointer over it stops it, and the book under the pointer comes forward
    and lifts, with its name and where it leads beneath. Books wear their photograph over a
    paper band, the way a printed guide does. --i is a book's place on the ring, --n how many. */
-.shelf { --shade: oklch(20% 0.02 60); --w: 12rem; --h: 18rem; --deep: 2.4rem; --r: calc(var(--n) * 1.15 * var(--w) / 6.2832); position: relative; height: 32rem; max-width: 64rem; margin-inline: auto; overflow: hidden; perspective: 110rem; perspective-origin: 50% 30%; }
-.ring { position: absolute; left: 50%; top: 5rem; width: var(--w); height: var(--h); margin-left: calc(var(--w) / -2); transform-style: preserve-3d; transform: rotateX(-11deg) rotateY(0deg); }
+.shelf { --shade: oklch(20% 0.02 60); --w: 10rem; --h: 15rem; --deep: 2rem; --r: calc(var(--n) * 1.2 * var(--w) / 6.2832); position: relative; height: 34rem; max-width: 64rem; margin-inline: auto; overflow: hidden; perspective: 160rem; perspective-origin: 50% 40%; }
+.ring { position: absolute; left: 50%; top: 8rem; width: var(--w); height: var(--h); margin-left: calc(var(--w) / -2); transform-style: preserve-3d; transform: rotateX(-9deg) rotateY(0deg); }
 @media (prefers-reduced-motion: no-preference) {
   .ring { animation: turn 90s linear infinite; }
   .shelf:hover .ring, .shelf:focus-within .ring, .shelf.still .ring { animation-play-state: paused; }
 }
-@keyframes turn { from { transform: rotateX(-11deg) rotateY(0deg); } to { transform: rotateX(-11deg) rotateY(-360deg); } }
+@keyframes turn { from { transform: rotateX(-9deg) rotateY(0deg); } to { transform: rotateX(-9deg) rotateY(-360deg); } }
 .book { --turn: calc(var(--i) * 360deg / var(--n)); position: absolute; inset: 0; text-decoration: none; color: var(--paper); transform-style: preserve-3d; transform: rotateY(var(--turn)) translateZ(var(--r)); transition: transform 500ms var(--out); }
 .book:hover { color: var(--paper); }
 .book__face, .book__spine, .book__back, .book__edge { position: absolute; top: 0; left: 0; height: 100%; backface-visibility: hidden; }
@@ -301,10 +301,10 @@ main { flex: 1; }
 .book__face::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(100deg, color-mix(in oklch, var(--paper) 22%, transparent), transparent 38%); }
 .book__face img { width: 100%; height: 100%; object-fit: cover; }
 .book__face--blank { align-content: end; }
-.book__face--blank > b { display: block; padding: var(--s-3); font-family: var(--serif); font-weight: 400; font-size: 1.6rem; line-height: 1.15; color: var(--text); background: var(--card); }
+.book__face--blank > b { display: block; padding: var(--s-2) 0.85rem; font-family: var(--serif); font-weight: 400; font-size: 1.4rem; line-height: 1.15; color: var(--text); background: var(--card); }
 :lang(zh-Hant) .book__face--blank > b { font-weight: 500; letter-spacing: 0.08em; }
-.book__band { display: grid; gap: 0.35rem; padding: 0.85rem 1rem 0.9rem; background: var(--paper); color: var(--text); border-top: 1px solid var(--line); }
-.book__band b { font-family: var(--serif); font-weight: 400; font-size: 1.35rem; line-height: 1.15; }
+.book__band { display: grid; gap: 0.3rem; padding: 0.7rem 0.85rem 0.75rem; background: var(--paper); color: var(--text); border-top: 1px solid var(--line); }
+.book__band b { font-family: var(--serif); font-weight: 400; font-size: 1.2rem; line-height: 1.15; }
 :lang(zh-Hant) .book__band b { font-weight: 500; letter-spacing: 0.06em; }
 .book__band span { font-size: 0.66rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-2); }
 :lang(zh-Hant) .book__band span { font-size: 0.75rem; letter-spacing: 0.14em; }
@@ -324,8 +324,8 @@ main { flex: 1; }
 .book:hover, .book:focus-visible, .book.open { transform: rotateY(var(--turn)) translateZ(calc(var(--r) + 3rem)) translateY(-1rem); }
 .book:hover .book__name, .book:focus-visible .book__name, .book.open .book__name { opacity: 1; }
 @media (max-width: 40rem) {
-  .shelf { --w: 8.5rem; --h: 12.75rem; --deep: 1.8rem; height: 23rem; perspective: 70rem; }
-  .ring { top: 3.5rem; }
+  .shelf { --w: 7.5rem; --h: 11.25rem; --deep: 1.5rem; height: 25rem; perspective: 90rem; }
+  .ring { top: 5.5rem; }
   .book__band { padding: 0.6rem 0.7rem 0.65rem; }
   .book__band b { font-size: 1.1rem; }
   .book__face--blank > b { font-size: 1.2rem; padding: var(--s-2); }
