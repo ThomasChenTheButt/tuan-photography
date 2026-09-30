@@ -1215,7 +1215,11 @@
     },
     {
       "country": "dubai",
-      "photo": "burj-khalifa"
+      "photo": "burj-khalifa",
+      "title": {
+        "en": "Dubai",
+        "zh": "杜拜"
+      }
     },
     {
       "country": "uk",
