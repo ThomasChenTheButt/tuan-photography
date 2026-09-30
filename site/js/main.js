@@ -300,22 +300,19 @@ document.querySelectorAll('a[data-slide]').forEach(el => {
   });
 });
 
-/* ---------- 4. Books on the shelf ----------
-   A pointer brings a book out by hovering. On a touch screen the first tap
-   brings it out and the second opens it. */
+/* ---------- 4. Books on the ring ----------
+   The ring turns on its own and a pointer over it stops it. On a touch screen
+   the first tap stops the ring and brings that book out; the second opens it.
+   A tap beside the books sets the ring turning again. */
 const shelfEl = document.querySelector('.shelf');
 if (shelfEl && window.matchMedia('(hover: none)').matches) {
   shelfEl.addEventListener('click', e => {
     const book = e.target.closest('.book');
-    if (!book || book.classList.contains('open')) return;
+    if (book && book.classList.contains('open')) return;
     e.preventDefault();
     shelfEl.querySelectorAll('.book.open').forEach(b => b.classList.remove('open'));
-    book.classList.add('open');
-    /* once the cover has come out (0.5 s), slide the shelf so the whole book is in view */
-    setTimeout(() => {
-      const over = book.getBoundingClientRect().right - shelfEl.getBoundingClientRect().right + 16;
-      if (over > 0) shelfEl.scrollBy({ left: over });
-    }, 520);
+    if (book) { shelfEl.classList.add('still'); book.classList.add('open'); }
+    else shelfEl.classList.remove('still');
   });
 }
 
