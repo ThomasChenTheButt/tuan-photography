@@ -2057,16 +2057,55 @@
   ],
   "shelf": [
     {
+      "guide": "barcelona",
+      "photo": "casa-batllo"
+    },
+    {
+      "country": "uk",
+      "photo": "st-pauls",
+      "title": {
+        "en": "London",
+        "zh": "倫敦"
+      }
+    },
+    {
+      "country": "france",
+      "photo": "calanque-tall"
+    },
+    {
+      "country": "germany",
+      "photo": "neuschwanstein"
+    },
+    {
+      "country": "switzerland",
+      "photo": "matterhorn-flag"
+    },
+    {
+      "country": "taiwan",
+      "photo": "taipei-101"
+    },
+    {
       "country": "japan",
       "photo": "fushimi-inari"
+    },
+    {
+      "country": "south-korea"
     },
     {
       "country": "hong-kong",
       "photo": "temple-street"
     },
     {
-      "guide": "barcelona",
-      "photo": "casa-batllo"
+      "country": "china",
+      "photo": "shanghai-towers"
+    },
+    {
+      "country": "singapore",
+      "photo": "jewel"
+    },
+    {
+      "country": "vietnam",
+      "photo": "sapa-terraces"
     },
     {
       "country": "dubai",
@@ -2077,12 +2116,15 @@
       }
     },
     {
-      "country": "uk",
-      "photo": "natural-history-museum",
-      "title": {
-        "en": "London",
-        "zh": "倫敦"
-      }
+      "country": "australia",
+      "photo": "gold-coast"
+    },
+    {
+      "country": "new-zealand",
+      "photo": "aoraki"
+    },
+    {
+      "country": "usa"
     }
   ]
 }
