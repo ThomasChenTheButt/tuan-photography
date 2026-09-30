@@ -431,7 +431,8 @@ def build_home():
               moreText=f"還有 {n_places - 1} 個國家的攻略還沒寫。",
               moreCta="看所有目的地")
     leads = {g["lead"] for g in DATA["guides"]}
-    others = [x["id"] for x in DATA["slides"] if x["id"] != lead and x["id"] not in leads]
+    # the home page shows a first dozen; the gallery shows them all
+    others = [x["id"] for x in DATA["slides"] if x["id"] != lead and x["id"] not in leads][:12]
     rows = "\n".join(feature(g, root, en, zh) for g in DATA["guides"])
     body = f"""{cover(lead, root, en, zh)}
 
