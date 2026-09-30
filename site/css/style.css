@@ -321,6 +321,20 @@ main { flex: 1; }
   .book__name b { font-size: 1.1rem; }
 }
 
+/* a wall of photographs: rows that fill the width, nothing cropped, each with its name */
+.wall { display: grid; row-gap: var(--s-4); }
+.wall__row { display: flex; gap: var(--gap); align-items: flex-start; }
+.wall .piece { flex: var(--ar) 1 0; min-width: 0; scroll-margin-top: 1.5rem; }
+/* in a row every caption is set the same way: the name, then the place under it */
+.wall__row .piece figcaption { display: block; }
+.wall__row .piece figcaption b { display: block; }
+.wall .piece a { aspect-ratio: var(--ar); }
+.wall .piece img { height: 100%; object-fit: cover; }
+.wall__row > :only-child { max-width: 58rem; margin-inline: auto; }
+@media (max-width: 40rem) {
+  .wall__row { display: grid; row-gap: var(--s-4); }
+}
+
 /* the portfolio: a tight grid of even openings, no captions. The whole photograph is one step away. */
 .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-1); }
 .grid figure { scroll-margin-top: 1.5rem; }
