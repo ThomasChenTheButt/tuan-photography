@@ -436,7 +436,8 @@ def shelf(root, en, zh):
         else:
             c = COUNTRIES[b["country"]]
             key, title, href = f"bk_{c['id']}", b.get("title") or {"en": c["en"], "zh": c["zh"]}, f"{root}countries/{c['id']}.html"
-            sid, band, status = b.get("photo"), "bandPhotos" if b.get("photo") else "bandNone", "bookNot"
+            sid = b.get("photo") or next((x["id"] for x in DATA["slides"] if x["country"] == c["id"]), None)
+            band, status = ("bandPhotos" if sid else "bandNone"), "bookNot"
         en[key], zh[key] = title["en"], title["zh"]
         en[f"bo_{key}"] = f"{title['en']}: {en[status].lower() if status == 'bookOpen' else en[status]}"
         zh[f"bo_{key}"] = f"{title['zh']}：{zh[status]}"
