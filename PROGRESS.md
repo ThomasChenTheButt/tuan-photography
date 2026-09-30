@@ -42,6 +42,10 @@ the Barcelona pair.
 
 ## 等你決定 Waiting on you
 
+- **Experiment `coverflow` (2026-10-01): keep or drop?** All sixteen countries' books on a
+  never-ending ring seen from the front, faded until the cursor lights one; cursor, wheel,
+  swipe and scroll turn it. In `experiments/coverflow/`, branch `exp/coverflow`, preview on
+  `localhost:8644`. The real site keeps the still five-book shelf.
 - **Which country after Barcelona?** 15 of 16 country pages have no guide yet.
 - **Barcelona "SIM / data" fact** has no value, so the row is left out of the page.
 - **Newsletter sign-up:** wanted or not?
