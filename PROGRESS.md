@@ -1,61 +1,62 @@
 # tuan photography 陳亮元 — Project Memo 專案備忘錄
 
-*Last updated: 2026-09-28 — handoff note. Read this first, then check the files to confirm.*
+*Last updated: 2026-10-01 — handoff note. Read this first, then check the files to confirm.*
 
 ## 現在狀態 Where things stand
 
-- **The site has its new look: "The Printed Travel Journal".** Warm paper, serif place names,
-  one full-window opening photograph with nothing written on it. He chose it on 2026-09-28
-  after comparing it side by side with the earlier site.
-- **30 pages, all working.** Home, Gallery, Destinations, 7 continents, 16 countries, Blog,
-  Skills, About, and the Barcelona guide. No broken links, no console errors.
-- **Pages are built, not hand-written.** Edit `data/site.json` or `content/`, then run
-  `python3 tools/build.py`. The design is recorded in `DESIGN.md` and `PRODUCT.md`.
-- **8 real photos live** — 7 from Barcelona, 1 from New Zealand (Aoraki, the opening photo).
-- **Typefaces are stored with the site** in `site/fonts/`. No page contacts Google.
+- **The site is "The Printed Travel Journal"** on warm paper, 30 pages, all passing
+  `python3 tools/check_site.py`. Not public (GitHub Pages off, his call); a private Claude
+  Artifact copy exists (see `tools/build_artifact.py`).
+- **69 photographs from 14 countries** are on the site, each with real camera data read from
+  the file. Only South Korea and the United States have none.
+- **Home page:** opening photo (Aoraki) → intro → Victoria Harbour at night → the Guides row of
+  sixteen 3D books (one per country; Barcelona opens the guide, the rest open country pages) →
+  the aurora → a wall of a dozen photos, one per country → Westminster Bridge → footer. The
+  three mid-page photos fill the window and drift slowly as the page passes over them.
+- **Gallery:** a dozen in a tight grid, then one wall per country (14), then the two names
+  without photos. **Destinations:** four continent squares plus "Not travelled yet".
+- **Design records:** `DESIGN.md` (components, incl. the row of books and the windows) and
+  `PRODUCT.md`. The stylesheet wins where they disagree.
 - **No email on the site.** Instagram `tuan_1127` is the contact.
-- **Not public.** GitHub Pages stays off — his call, 2026-08-08.
 
 ## 上次做到哪 Where we left off
 
-2026-09-28 — the experiment became the site.
+2026-10-01 — a long day of shaping the home page and adding photographs.
 
-- Set up `experiments/`: every trial now lives inside the project folder, and he says keep or
-  drop. The routine is in `CLAUDE.md`.
-- He said **keep** to the redesign. It was merged into the real site, with the PT icon, the
-  ideas inbox and the local server carried over from the earlier site.
-- Fonts moved from Google to the site's own `site/fonts/` folder.
-- Email removed from the site's data. About biography stays as written.
-- **Photo folders split by owner:** his originals are in `originals/`, the site's copies in
-  `site/images/`. A private photo list (double-click `photo-list.command`) shows which photo is
-  for what.
-- **The whole website now lives in `site/`.** The top level went from 33 items to 14, and
-  only `site/` would ever be published. `tools/check_site.py` is the health check.
-- Earlier the same day: the PT site icon, the ideas inbox (`IDEAS.md`), the weekly report.
+- Impeccable's full critique (dual-agent, 23/32) and the three fixes he chose were kept:
+  Destinations rebuilt, the phone viewer, keyboard and screen-reader access.
+- He dropped the three colour doors, put the Guides above the Photographs, and asked for the
+  Hello Emilie feel: full-window photos between sections, drifting with the scroll.
+- The Guides went through four looks in one day: five books on a shelf → a spinning ring (he
+  called it cringe, reverted) → a coverflow ring → the **fanned row of sixteen 3D books** he
+  chose from the mcli CodePen, refined for direction, thickness, spacing and the London cover.
+  Kept at sign-off on his assumption that everything was on 8642. Restore point:
+  tag `before-coverflow-2026-10-01`.
+- **59 photos added** in two batches from his originals (Dubai, Germany, Switzerland, Taiwan,
+  UK, Hong Kong, Japan, Australia, China, France, New Zealand, Singapore, Vietnam).
+- Gallery divided by country; home wall one photo per country; home windows set to his picks.
+- The ideas list got Hello Emilie's scroll effect (what he likes: the slow-moving photos).
 
 ## 接下來 Next up
 
-**Pick the country for the second guide**, then drop its originals into `originals/<country>/`.
-The first move in the files is a new entry under `"guides"` and `"slides"` in
-`data/site.json`, plus `content/<name>.body.html` and `content/<name>.i18n.json`, modelled on
-the Barcelona pair.
+**Confirm the photo names he hasn't checked yet**, then move on to the second guide. The names
+to confirm are in `data/site.json` under `"slides"`: `matterhorn-lake` (which lake), `taipei-101-framed`
+(the twisting tower), `westminster-abbey`, `mong-kok`, `sheung-wan-tram`, `temple-street`,
+`gold-coast`, `hoi-an-gate`, `aurora` (where), `fuji-lake` (which lake). Fix any he corrects,
+rebuild with `python3 tools/build.py`, commit, push.
 
 ## 等你決定 Waiting on you
 
-- **Experiment `coverflow` (2026-10-01): keep or drop?** All sixteen countries' 3D books in a
-  fanned row (the coverflow he chose), the front one clearest, the rest stepped back and veiled;
-  wheel, arrows, swipe and scroll move the row, a click brings a book to the front. In `experiments/coverflow/`, branch `exp/coverflow`, preview on
-  `localhost:8644`. The real site keeps the still five-book shelf.
-- **Which country after Barcelona?** 15 of 16 country pages have no guide yet.
-- **Barcelona "SIM / data" fact** has no value, so the row is left out of the page.
+- **Photo names above:** right or wrong?
+- **Which country gets the second guide?** Vietnam (2026.8) and Japan now have the most photos.
+- **Barcelona "SIM / data" fact** still has no value, so the row is left out of the page.
 - **Newsletter sign-up:** wanted or not?
-- **The old plan of three Barcelona layouts** (2026-08-08) was written for the earlier design.
-  Still wanted, or replaced by the new look?
-- **紐西蘭暫緩** — parked on his call 2026-08-08. Only one NZ photo exists today.
-- **Vietnam (2026.8)** — nothing written yet.
+- **The old plan of three Barcelona layouts** (2026-08-08): still wanted, or replaced by the new look?
+- **紐西蘭暫緩** — parked 2026-08-08; New Zealand now has 7 photos, so it could come off hold.
+- Impeccable's own bookkeeping is stale (its design sidecar and a surface brief pointing at the old
+  `index.html` path). Harmless; its `document` command refreshes it when wanted.
 
 ## 如何接續 How to resume
 
-Say **"continue the travel website"**. Preview runs at `localhost:8642` (I start it
-automatically). To open the site yourself without Claude, double-click **`start.command`**
-in the project folder — same address. A normal reload now shows the latest changes.
+Say **"continue the travel website"**. The site runs at `localhost:8642`: I start it, or he
+double-clicks **`start.command`**, or in Terminal `python3 tools/serve.py` from the project folder.
