@@ -233,7 +233,7 @@ A warm, low-colour palette: paper, stone and ink that all lean toward brown, one
 ### Neutral
 - **Warm Paper** (`bg`): the page ground, the viewer's ground, and the top bar when the phone menu is opened over the opening photograph.
 - **Stone** (`band`): the alternating band, the contents box and the notes in a guide, the resting colour of a photograph's place while its file loads, and the square of a continent that has countries but no photograph yet.
-- **Card Paper** (`card`): the quick facts card in a guide, and the cover of a book on the ring whose country has no photograph yet.
+- **Card Paper** (`card`): the quick facts card in a guide, and nothing else.
 - **Hairline** (`line`): 1px rules between rows, the resting underline of a link, the slash in the breadcrumb.
 - **Warm Ink** (`text`): reading text, headings, the fill of the primary button, the outline of the line button, the rule under a table's header row.
 - **Second Ink** (`text-2`): quiet text. Sentences under titles, dates, the second line of a caption, camera data, table headers, labels, the count under a continent, the line inside an empty square, the count in the viewer, the language not in use, and the names of places that have no work yet.
@@ -335,7 +335,7 @@ Motion has three reasons only, in the stylesheet's own words: arriving, leaving 
 - **Leaving the opening photograph:** on the home page the opening photograph stays where it is while the rest of the page, one leaf of paper, is drawn up over it. As that happens the photograph rises slowly, at about a third of the page's speed. The owner asked for this on 2026-09-30; it is carried over from the site as it was before the redesign. The slow rise is tied to scrolling itself and only happens in browsers that support it; in others the photograph simply stays in place.
 - **The window:** part way down the home page a second photograph fills the window's width; it is fixed to the screen and the figure is a window cut in the page, so the page is drawn over it, and it drifts slowly upward as the window passes (the script sets `--drift` from the window's place on the screen). Under "reduce motion" it is simply a photograph in the page.
 - **Walking the wall:** photographs in a wall or in the portfolio grid, features and tiles rise gently as they enter the window.
-- **The ring of books:** turns once every ninety seconds on its own and stops under the pointer; the book under the pointer comes forward 3rem and lifts 1rem (0.5 seconds), and its name appears beneath it. On a touch screen the first tap stops the ring and brings the book out, the second opens it. This is tied to scrolling itself and only happens in browsers that support it; in others they are simply there.
+- **Taking a book:** under the pointer a book comes forward, lifts 1rem and turns to face the visitor (0.6 seconds), and its name appears beneath it. On a touch screen the first tap does this and the second opens the guide. This is tied to scrolling itself and only happens in browsers that support it; in others they are simply there.
 - **Under the pointer:** a photograph enlarges very slightly inside its own frame (2%, over 0.9 seconds); a button changes fill; links change colour. Pressing a button moves it down 1px.
 - **Opening a photograph:** the photograph travels from its place in the row to its place in the viewer (0.46 seconds). Stepping to the next photograph dims the one on screen to 35% until the next file has arrived.
 - **Reduce motion:** when the visitor's device asks for reduced motion, none of the above happens. Arriving and rising are not loaded at all, every transition is switched off, and the viewer opens at once.
@@ -343,7 +343,7 @@ Motion has three reasons only, in the stylesheet's own words: arriving, leaving 
 ### Named Rules
 **The Flat Rule.** No shadows. Separation is made with a change of ground first, space second, and a 1px hairline third.
 
-**The Three Reasons Rule.** Something moves only when the visitor arrives, when the page is drawn up over the opening photograph, or when a photograph comes into view, plus the small answers to the pointer. Nothing loops and nothing moves on its own, except the ring of books on the home page, which turns slowly until a pointer rests on it (his call, 2026-10-01); all of it stops under "reduce motion".
+**The Three Reasons Rule.** Something moves only when the visitor arrives, when the page is drawn up over the opening photograph, or when a photograph comes into view, plus the small answers to the pointer. Nothing loops, nothing moves on its own, and all of it stops under "reduce motion".
 
 ## Shapes
 
@@ -385,9 +385,6 @@ Directly under the opening photograph, on paper, centred: the line "Travel like 
 
 ### Doors (removed)
 Three flat colour blocks to Gallery, Destinations and About stood on the home page until 2026-10-01, when the owner removed them: the menu already leads to the same pages. The earth colours now appear only on the shelf's spines and the footer.
-
-### Shelf (the guides on the home page)
-The guides as books on a slowly turning ring, like goods on a display stand: one book per country, sixteen today, in the order of `data/site.json` (`"shelf"`). The ring is tilted eleven degrees so the visitor looks a little down onto it, and it turns once every ninety seconds; a pointer over it stops it (so does keyboard focus, and a tap on a phone), and the book under the pointer comes forward 3rem and lifts 1rem, with its name and where it leads beneath. Each book is a box 12rem by 18rem and 2.4rem deep: a cover made the way a printed guide is (the photograph named for the book, or the country's first, over a Paper White band with the name and a small capital series line: "A photographer's guide" for a written guide, "Photographs" for a place with photographs, "No photographs yet" for one without), a spine and a back in one of the three earth colours in turn with the imprint "tuan photography", and a page edge of fine paper lines. A country with no photograph yet has a plain Card Paper cover with its name. A written guide's book opens the guide; every other book opens the country's page and says "Guide not written yet" beneath. This is the one place the site draws depth, the one place with shadows and shading (a soft shadow under each cover, a darker joint at the spine, a faint sheen), and the one thing that moves on its own, at the owner's request (2026-10-01, after the Foliom shelf he saved); it stands still under "reduce motion". On phones the books are 8.5rem by 12.75rem.
 
 ### Feature (a guide)
 A guide shown large: its photograph beside its plain name at Display size, one line of facts in Second Ink, and the words "Read the guide" in small capitals with a rule beneath. The whole block is the link. The photograph keeps its own shape.
@@ -464,7 +461,7 @@ A page with no work says so in one centred sentence in Second Ink, at most 46 ch
 - **Don't** use clay, olive or slate for reading text or as tints.
 - **Don't** put a small capital line above a heading as decoration. The only line that sits above a title is the breadcrumb, and it is made of real links.
 - **Don't** add a third typeface, or bold the serif in English.
-- **Don't** add motion that loops or plays on its own. The turning ring of books on the home page is the one exception, and it stops under the pointer.
+- **Don't** add motion that loops or plays on its own.
 - **Don't** use long dashes, or more than one middle dot in a line.
 - **Don't** fill an empty place with a stand-in image, an invented guide, invented camera data, or a claim the site cannot yet support.
 

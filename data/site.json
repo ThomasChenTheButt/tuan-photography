@@ -1230,51 +1230,16 @@
   ],
   "shelf": [
     {
-      "guide": "barcelona",
-      "photo": "casa-batllo"
-    },
-    {
-      "country": "uk",
-      "photo": "natural-history-museum",
-      "title": {
-        "en": "London",
-        "zh": "倫敦"
-      }
-    },
-    {
-      "country": "france"
-    },
-    {
-      "country": "germany",
-      "photo": "neuschwanstein"
-    },
-    {
-      "country": "switzerland",
-      "photo": "matterhorn-flag"
-    },
-    {
-      "country": "taiwan",
-      "photo": "taipei-101"
-    },
-    {
       "country": "japan",
       "photo": "fushimi-inari"
-    },
-    {
-      "country": "south-korea"
     },
     {
       "country": "hong-kong",
       "photo": "temple-street"
     },
     {
-      "country": "china"
-    },
-    {
-      "country": "singapore"
-    },
-    {
-      "country": "vietnam"
+      "guide": "barcelona",
+      "photo": "casa-batllo"
     },
     {
       "country": "dubai",
@@ -1285,14 +1250,12 @@
       }
     },
     {
-      "country": "australia"
-    },
-    {
-      "country": "new-zealand",
-      "photo": "aoraki"
-    },
-    {
-      "country": "usa"
+      "country": "uk",
+      "photo": "natural-history-museum",
+      "title": {
+        "en": "London",
+        "zh": "倫敦"
+      }
     }
   ]
 }
