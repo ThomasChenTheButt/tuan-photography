@@ -300,66 +300,62 @@ document.querySelectorAll('a[data-slide]').forEach(el => {
   });
 });
 
-/* ---------- 4. Books on the ring ----------
-   The books stand on a ring that turns slowly on its own. A cursor on the ring
-   stops it; a cursor near the left or right edge turns it that way; the wheel, a
-   swipe on a touch screen, and the page's own scrolling turn it too. Each book's
-   angle goes to the stylesheet as --a. Nothing turns under "reduce motion". */
-const ringEl = document.querySelector('.ring');
-if (ringEl) {
-  const stage = ringEl.parentElement;
-  const books = [...ringEl.children];
-  const step = 360 / books.length;
-  const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  let angle = 0, nudge = 0, resting = true, shown = false, last = performance.now(), lastY = window.scrollY;
+/* ---------- 4. Books in a row ----------
+   The books stand in a row, the one in front at the middle and the rest stepped back
+   on either side. The wheel, the arrow keys, a swipe, or the page's own scrolling move
+   the row; a click on a book further along brings it to the front; the book in front
+   opens. Each book's distance from the front goes to the stylesheet as --d. */
+const stackEl = document.querySelector('.stack');
+if (stackEl) {
+  const stage = stackEl.parentElement;
+  const books = [...stackEl.children];
+  const n = books.length;
+  let cur = 0, settle = null, lastY = window.scrollY, shown = false;
   const place = () => {
     books.forEach((book, i) => {
-      const a = ((i * step + angle) % 360 + 540) % 360 - 180;   // -180 to 180, 0 at the front
-      book.style.setProperty('--a', a.toFixed(2) + 'deg');
-      book.hidden = Math.abs(a) > 100;                             // the back of the ring is out of sight
+      const d = i - cur, far = Math.abs(d);
+      book.style.setProperty('--d', d.toFixed(3));
+      book.style.setProperty('--z', (-far * 4.5).toFixed(2) + 'rem');
+      book.style.setProperty('--o', Math.max(0.3, 1 - far * 0.22).toFixed(2));
+      book.hidden = far > 5;
+      book.classList.toggle('front', Math.round(cur) === i);
     });
   };
-  const tick = now => {
-    const dt = Math.min(0.05, (now - last) / 1000);
-    last = now;
-    if (!still) angle += (resting ? -2.2 : 0) * dt + nudge * dt;   // a slow turn on its own, or the cursor's push
+  const go = (to, snap = true) => {
+    cur = Math.min(n - 1, Math.max(0, to));
     place();
-    if (shown) requestAnimationFrame(tick);
+    clearTimeout(settle);
+    if (!snap) settle = setTimeout(() => go(Math.round(cur)), 160);
   };
-  new IntersectionObserver(([e]) => {
-    shown = e.isIntersecting;
-    if (shown) { last = performance.now(); requestAnimationFrame(tick); }
-  }).observe(stage);
   place();
-  if (window.matchMedia('(hover: hover)').matches) {
-    stage.addEventListener('pointerenter', () => { resting = false; });
-    stage.addEventListener('pointerleave', () => { resting = true; nudge = 0; });
-    stage.addEventListener('pointermove', e => {
-      const x = (e.clientX - stage.getBoundingClientRect().left) / stage.clientWidth - 0.5;   // -0.5 to 0.5
-      nudge = Math.abs(x) < 0.3 ? 0 : -Math.sign(x) * (Math.abs(x) - 0.3) * 90;              // only near the edges
+  new IntersectionObserver(([e]) => { shown = e.isIntersecting; }).observe(stage);
+  books.forEach((book, i) => {
+    book.addEventListener('click', e => {
+      if (i === Math.round(cur)) return;            // the book in front opens
+      e.preventDefault();
+      go(i);
     });
-  }
+    book.addEventListener('focus', () => go(i));   // the keyboard walks the row
+  });
+  stage.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); go(Math.round(cur) + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); go(Math.round(cur) - 1); }
+  });
   stage.addEventListener('wheel', e => {
-    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) { e.preventDefault(); angle -= e.deltaX * 0.08; place(); }
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) { e.preventDefault(); go(cur + e.deltaX / 90, false); }
   }, { passive: false });
   let touchX = null;
-  stage.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; resting = false; }, { passive: true });
+  stage.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; }, { passive: true });
   stage.addEventListener('touchmove', e => {
     if (touchX === null) return;
-    angle += (e.touches[0].clientX - touchX) * 0.25; touchX = e.touches[0].clientX; place();
+    go(cur - (e.touches[0].clientX - touchX) / 70, false); touchX = e.touches[0].clientX;
   }, { passive: true });
-  stage.addEventListener('touchend', () => { touchX = null; });
-  window.addEventListener('scroll', () => { angle += (window.scrollY - lastY) * 0.02; lastY = window.scrollY; }, { passive: true });
-  if (window.matchMedia('(hover: none)').matches) {
-    /* on a touch screen the first tap brings a book out and the second opens it */
-    stage.addEventListener('click', e => {
-      const book = e.target.closest('.book');
-      if (!book || book.classList.contains('open')) return;
-      e.preventDefault();
-      books.forEach(b => b.classList.remove('open'));
-      book.classList.add('open');
-    });
-  }
+  stage.addEventListener('touchend', () => { touchX = null; go(Math.round(cur)); });
+  /* the page's own scrolling walks the row while it is in view */
+  window.addEventListener('scroll', () => {
+    const dy = window.scrollY - lastY; lastY = window.scrollY;
+    if (shown && !stage.matches(':hover')) go(cur + dy / 260, false);
+  }, { passive: true });
 }
 
 /* ---------- 5. Guide contents: mark the section being read ---------- */

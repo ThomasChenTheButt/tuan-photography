@@ -451,9 +451,9 @@ def shelf(root, en, zh):
                      f'<span class="book__spine"><b data-i18n="{key}">{t}</b><i data-i18n="series">tuan photography</i></span>'
                      f'{face}<span class="book__band"><b data-i18n="{key}">{t}</b><span data-i18n="{band}">{e(en[band])}</span></span></span>'
                      f'<span class="book__back"><i data-i18n="series">tuan photography</i></span><span class="book__edge"></span>'
-                     f'<span class="book__top"></span><span class="book__shadow"></span></span>'
+                     f'<span class="book__top"></span><span class="book__shadow"></span><span class="book__veil"></span></span>'
                      f'<span class="book__name"><b data-i18n="{key}">{t}</b><span data-i18n="{status}">{e(en[status])}</span></span></a>')
-    return '<div class="shelf"><div class="ring">' + "".join(books) + "</div></div>"
+    return '<div class="shelf"><div class="stack">' + "".join(books) + "</div></div>"
 
 
 # ------------------------------------------------------------------ pages

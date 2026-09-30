@@ -282,14 +282,18 @@ main { flex: 1; }
 
 .after { margin-top: var(--s-5); color: var(--text-2); text-align: center; }
 
-/* the guides as books on a ring that never ends, seen from the front: the book in the middle
-   faces the visitor, its neighbours turn away and fade, and the ring keeps turning slowly. A
-   cursor on it stops the turning, and the book under the cursor comes forward, faces the visitor
-   and goes from faded to full. The cursor near either edge, the wheel, a swipe or the page's own
-   scroll turn the ring; --a is a book's angle on the ring, set by the script. */
-.shelf { --shade: oklch(20% 0.02 60); --w: 12rem; --h: 17rem; --deep: 2.4rem; --r: 37rem; position: relative; height: 28rem; max-width: 64rem; margin-inline: auto; overflow: hidden; perspective: 80rem; perspective-origin: 50% 36%; cursor: default; }
-.ring { position: absolute; left: 50%; top: 3.75rem; width: var(--w); height: var(--h); margin-left: calc(var(--w) / -2); transform-style: preserve-3d; transform: translateZ(calc(-1 * var(--r))) rotateX(-7deg); }
-.book { position: absolute; inset: 0; text-decoration: none; color: var(--paper); transform-style: preserve-3d; transform: rotateY(var(--a, 0deg)) translateZ(var(--r)); opacity: 0.72; transition: opacity 450ms var(--out); }
+/* the guides as books standing in a row, all turned the same way and stepped back into the
+   distance on either side of the one in front, like covers fanned on a table. The row moves
+   under the wheel, the arrow keys, a swipe, or the page's own scroll; a click on a book
+   further along brings it to the front, and the book in front opens. A cursor on a book brings
+   it to full strength and turns it to face the visitor. --d is a book's distance from the
+   front, set by the script; --z its depth. */
+.shelf { --shade: oklch(20% 0.02 60); --w: 12rem; --h: 17rem; --deep: 2.4rem; --step: 8.5rem; --turn: -24deg; position: relative; height: 27rem; max-width: 64rem; margin-inline: auto; overflow: hidden; perspective: 70rem; perspective-origin: 50% 45%; cursor: default; }
+.stack { position: absolute; left: 50%; top: 4rem; width: var(--w); height: var(--h); margin-left: calc(var(--w) / -2); transform-style: preserve-3d; }
+.book { position: absolute; inset: 0; text-decoration: none; color: var(--paper); transform-style: preserve-3d; transform: translateX(calc(var(--d, 0) * var(--step))) translateZ(var(--z, 0rem)) rotateY(var(--turn)); transition: transform 450ms var(--out); }
+/* the books further back are veiled in the page's own paper, so nothing shows through them */
+.book__veil { position: absolute; inset: 0; background: var(--bg); opacity: calc(1 - var(--o, 1)); transform: translateZ(1px); pointer-events: none; transition: opacity 450ms var(--out); }
+.book:hover .book__veil, .book:focus-visible .book__veil { opacity: 0; }
 .book[hidden] { display: block; visibility: hidden; }
 .book:hover { color: var(--paper); }
 .book__box { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform 500ms var(--out); }
@@ -322,12 +326,12 @@ main { flex: 1; }
 :lang(zh-Hant) .book__name b { font-weight: 500; letter-spacing: 0.06em; }
 .book__name span { color: var(--text-2); font-size: var(--t-xs); }
 .book:hover, .book:focus-visible, .book.open { opacity: 1; }
-.book:hover .book__box, .book:focus-visible .book__box, .book.open .book__box { transform: rotateY(calc(-1 * var(--a, 0deg))) translateZ(2.5rem) translateY(-0.75rem); }
+.book:hover .book__box, .book:focus-visible .book__box, .book.open .book__box { transform: rotateY(calc(-1 * var(--turn))) translateZ(2rem) translateY(-0.5rem); }
+.book.front .book__name { opacity: 1; }
 .book:hover .book__name, .book:focus-visible .book__name, .book.open .book__name { opacity: 1; }
-@media (hover: none) { .book { opacity: 0.85; } }
 @media (max-width: 40rem) {
-  .shelf { --w: 8.5rem; --h: 12rem; --deep: 1.7rem; --r: 27rem; height: 21rem; perspective: 60rem; }
-  .ring { top: 3rem; }
+  .shelf { --w: 8.5rem; --h: 12rem; --deep: 1.7rem; --step: 6rem; height: 20rem; perspective: 50rem; }
+  .stack { top: 3rem; }
   .book__band { padding: 0.6rem 0.7rem 0.65rem; }
   .book__band b { font-size: 1.1rem; }
   .book__face--blank > b { font-size: 1.2rem; padding: var(--s-2); }
