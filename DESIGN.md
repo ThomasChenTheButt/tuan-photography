@@ -247,11 +247,11 @@ A warm, low-colour palette: paper, stone and ink that all lean toward brown, one
 
 ### Neutral
 - **Warm Paper** (`bg`): the page ground, the viewer's ground, and the top bar when the phone menu is opened over the opening photograph.
-- **Stone** (`band`): the alternating band, the contents box and the notes in a guide, the resting colour of a photograph's place while its file loads, and the square of a continent that has no photograph yet.
+- **Stone** (`band`): the alternating band, the contents box and the notes in a guide, the resting colour of a photograph's place while its file loads, and the square of a continent that has countries but no photograph yet.
 - **Card Paper** (`card`): the quick facts card in a guide, and nothing else.
 - **Hairline** (`line`): 1px rules between rows, the resting underline of a link, the slash in the breadcrumb.
 - **Warm Ink** (`text`): reading text, headings, the fill of the primary button, the outline of the line button, the rule under a table's header row.
-- **Second Ink** (`text-2`): quiet text. Sentences under titles, dates, the second line of a caption, camera data, table headers, labels, the sentence and count under a continent, and the names of places that have no work yet.
+- **Second Ink** (`text-2`): quiet text. Sentences under titles, dates, the second line of a caption, camera data, table headers, labels, the count under a continent, the line inside an empty square, the count in the viewer, the language not in use, and the names of places that have no work yet.
 - **Paper White** (`paper`): lettering on a colour block, on an ink button, and on the opening photograph; the fill of the footer button.
 
 Measured contrast, worked out from the built tokens. Warm Ink on Warm Paper is about 14.5:1, on Stone 12.6:1, on Card Paper 15.5:1. Second Ink is about 6.8:1 on Warm Paper, 5.9:1 on Stone and 7.2:1 on Card Paper. Deep Clay is about 6.7:1 on Warm Paper and 5.8:1 on Stone. Paper White is about 5.1:1 on Clay, 5.8:1 on Olive, 8.1:1 on Slate and 14.9:1 on Warm Ink. The small print in the footer is about 5.9:1 on Slate. Hairline measures 1.3:1 to 1.5:1 against its ground and is decoration only; nothing depends on it to be understood.
@@ -283,7 +283,7 @@ The pages load Playfair Display at weight 400, Geist at 400 to 600, Noto Serif T
 - **Body** (sans, 400, 1.0625rem, line-height 1.65): reading text. Paragraphs in a guide are at most 40rem wide; sentences under a title are held to between 42 and 54 characters a line. Emphasis is weight 600.
 - **Small** (sans, 400, 0.9375rem): tables (line-height 1.55), dates under a title, captions (line-height 1.4), the contents list, viewer data.
 - **Caption** (sans, 400, 0.8125rem, Second Ink, tabular figures): the second line of a caption, camera data, the area under a day number, the footer's small print. At weight 500, in capitals with 0.08em spacing, it labels a fact (quick facts, About's facts, "How it was made").
-- **Capitals** (sans, 500, 0.78rem, 0.1em spacing, capitals, line-height 1.3): the menu, the language switch, the word "Menu", buttons, the breadcrumb, the small line on a door, the count under a continent, "Read the guide" on a feature, table header cells, the contents heading, the viewer's Previous, Next and Close.
+- **Capitals** (sans, 500, 0.78rem, 0.1em spacing, capitals, line-height 1.3): the menu, the language switch, the word "Menu", buttons, the breadcrumb, the small line on a door, the count under a continent, the line inside an empty square, the count in the viewer, "Read the guide" on a feature, table header cells, the contents heading, the viewer's Previous, Next and Close.
 
 ### Chinese
 Chinese is set by its own rules, switched on when the page language is `zh-Hant`. These are built, not planned.
@@ -314,10 +314,10 @@ Content sits in one centred column, 88rem at its widest, with a side margin that
 
 - **Sections:** padded by the large step top and bottom (5rem for the doors). A section's heading is centred and sits 5rem above its content. Two sections that follow each other on the same ground share one gap, not two.
 - **Bands:** a Stone band always reaches both edges of the window, even when the section sits inside the page column.
-- **Home:** the opening photograph, which stays in place while the rest of the page is drawn up over it; then the centred intro on paper, the three doors on stone, the wall of photographs on paper, the guide as a feature on stone, the footer.
+- **Home:** the opening photograph, which stays in place while the rest of the page is drawn up over it; then the centred intro on paper (its second button goes straight to the guide while there is only one), the three doors on stone, the wall of photographs on paper, the guide as a feature on stone, the footer.
 - **Rows of photographs:** rows are worked out when the pages are built (`rows_of()` in `tools/build.py`). Photographs are split into rows of nearly equal total width, about 3.2 square widths each, and every photograph grows in proportion to its own shape, so each row fills the column at one height and nothing is trimmed. The gap between photographs is 0.75rem; rows are 2.5rem apart to leave room for captions. A photograph alone in its row is held to 58rem and centred.
 - **Gallery:** the portfolio first, a tight grid four across with 0.5rem between photographs; then the countries that have work, as tiles; then the names of the places not photographed yet, on stone.
-- **Destinations:** the seven continents, three to a row in a 72rem column, each a square with its name, one sentence and a count beneath. A continent left alone in the last row sits in the middle.
+- **Destinations:** the continents travelled, four to a row in a 72rem column, each a square with its name and a count beneath, centred as a group; then the continents not travelled, as names on stone.
 - **Feature:** a twelve-column grid. The photograph takes seven columns and the name takes four, with one column of air between them. Every second feature is mirrored.
 - **Guide:** the title and lead photograph (up to 74rem wide), then one centred column of 50rem. Paragraphs, lists and notes inside it are held to 40rem. Rows of photographs in a guide break out of the column to 74rem.
 - **About:** a twelve-column grid, the text on six columns and the facts on three.
@@ -328,12 +328,12 @@ How the layout changes on smaller windows, as built:
 |---|---|
 | below 60rem | About's text and facts stack |
 | below 56rem | the menu collapses behind the word "Menu"; the viewer stacks, photograph first |
-| below 56rem | the continents go two to a row |
+| below 56rem | the continents go two to a row, and stay two to a row on phones; the viewer's words move to a bar at the bottom |
 | below 52rem | features become one column; the portfolio grid goes two across |
 | below 46rem | the quick facts card sits under its photograph instead of overlapping it |
 | below 44rem | the three doors stack and become short bands |
 | below 40rem | photographs stack one per row; tables become short stacks; days become one column |
-| below 36rem | the continents stack one per row |
+| below 36rem | continent names step down in size |
 | below 34rem | the contents list becomes one column |
 | below 26rem | the site name steps down in size |
 
@@ -341,7 +341,7 @@ How the layout changes on smaller windows, as built:
 
 The system is flat. Nothing casts a shadow, at rest or on hover. Depth comes from four things only: the change of ground between paper and stone, the page drawn up over the opening photograph, the quick facts card laid over the edge of a photograph, and the viewer, which replaces the page with the same paper ground.
 
-There is one place with gradients: the opening photograph has a soft darkening at its top edge (14rem tall) and at its bottom edge (11rem tall), so the site name, the menu and the place name can be read in Paper White on any photograph. These are warm near-black fading to nothing (`oklch(20% 0.02 60)` at 50% and 64%). They are not decoration and are not used anywhere else.
+There is one place with gradients: the opening photograph has a soft darkening at its top edge (14rem tall) and at its bottom edge (12rem tall), so the site name, the menu and the place name can be read in Paper White on any photograph. These are warm near-black fading to nothing (`oklch(20% 0.02 60)` at 50% and 80%). They are not decoration and are not used anywhere else.
 
 ### Motion
 Motion has three reasons only, in the stylesheet's own words: arriving, leaving the opening photograph, and walking the wall. Everything uses one ease-out curve, `cubic-bezier(0.16, 1, 0.3, 1)`.
@@ -351,7 +351,7 @@ Motion has three reasons only, in the stylesheet's own words: arriving, leaving 
 - **Leaving the opening photograph:** on the home page the opening photograph stays where it is while the rest of the page, one leaf of paper, is drawn up over it. As that happens the photograph rises slowly, at about a third of the page's speed. The owner asked for this on 2026-09-30; it is carried over from the site as it was before the redesign. The slow rise is tied to scrolling itself and only happens in browsers that support it; in others the photograph simply stays in place.
 - **Walking the wall:** photographs in a wall or in the portfolio grid, features, tiles and doors rise gently as they enter the window. This is tied to scrolling itself and only happens in browsers that support it; in others they are simply there.
 - **Under the pointer:** a photograph enlarges very slightly inside its own frame (2%, over 0.9 seconds); a door brightens; a button changes fill; links change colour. Pressing a button moves it down 1px.
-- **Opening a photograph:** the photograph travels from its place in the row to its place in the viewer (0.46 seconds).
+- **Opening a photograph:** the photograph travels from its place in the row to its place in the viewer (0.46 seconds). Stepping to the next photograph dims the one on screen to 35% until the next file has arrived.
 - **Reduce motion:** when the visitor's device asks for reduced motion, none of the above happens. Arriving and rising are not loaded at all, every transition is switched off, and the viewer opens at once.
 
 ### Named Rules
@@ -365,16 +365,17 @@ Every corner is square. Photographs, buttons, doors, cards, notes, the contents 
 
 Lines are 1px. They separate rows in a list or table, and divide the language switch. The only boxes drawn with an outline are the buttons. The rule under a table's header row is Warm Ink; every other rule is Hairline.
 
-Keyboard focus is a 2px Deep Clay outline set 3px away from the element; on the Slate footer it is Paper White.
+Keyboard focus is a 2px Deep Clay outline set 3px away from the element; on the Slate footer it is Paper White, and on the opening photograph it sits 4px inside the frame, where it can be seen.
 
 ## Components
 
 ### Top bar
 The site name at the left in the serif with 陳亮元 beside it; five menu words and the language switch at the right in small capitals. The bar is 5.5rem tall and scrolls away with the page.
 - **Current page:** a 1px underline beneath the word. The same underline appears under a word on hover.
-- **Language switch:** EN and 中文 divided by a 1px line. The one in use is full strength, the other is at 60%.
+- **Language switch:** EN and 中文 divided by a 1px line. The one in use is Warm Ink, the other Second Ink (on the opening photograph, Paper White at 75%).
 - **Over the photograph (home page only):** the bar sits on top of the opening photograph with all its lettering in Paper White and no ground of its own.
-- **Small windows (below 56rem):** the word "Menu" opens the menu as a full-width stack under a hairline. On the home page the bar then turns to Warm Paper with Warm Ink lettering so the menu can be read.
+- **Small windows (below 56rem):** the word "Menu" opens the menu as a full-width stack under a hairline. On the home page the bar then turns to Warm Paper with Warm Ink lettering so the menu can be read. "Menu" and the language words are at least 2.75rem tall there, and footer links at least 24px tall at every size.
+- **Skip link:** the first stop for the keyboard on every page is "Skip to the content", a primary button at the top left that is out of sight until it has focus.
 - **Breadcrumb:** on continent, country and guide pages, the way back up (Destinations / Europe / Spain) sits above the title in small capitals, Second Ink, divided by typed slashes. Each word is a link.
 
 ### Buttons
@@ -388,7 +389,7 @@ Rectangles with capital labels. Padding 1rem by 1.7rem, a 1px outline, labels ne
 The unit of the whole site. A bare photograph, no frame, no border, no rounding, nothing on top of it. Beneath it, its name in the serif and a second line in small Second Ink: the country on listing pages, the camera data (focal length, aperture, shutter, ISO) inside a guide. Every photograph is a real link to its place in the gallery, so it works without the script; with the script it opens the viewer.
 
 ### Opening photograph
-The first thing on the home page. It fills the window edge to edge and top to bottom (never shorter than 34rem, never taller than 75rem). Nothing is written across it: no headline, no sentence, no button, no panel. The only lettering on it is the top bar, and one small line at the bottom left giving the place and the country. It opens the viewer like any other photograph. It stays in place as the visitor moves down, and the rest of the page is drawn up over it (see Motion).
+The first thing on the home page. It fills the window edge to edge and top to bottom (never shorter than 34rem, never taller than 75rem). Nothing is written across it: no headline, no sentence, no button, no panel. The only lettering on it is the top bar, and one small line at the bottom left giving the place and the country. It opens the viewer like any other photograph. It stays in place as the visitor moves down, and the rest of the page is drawn up over it (see Motion). When the keyboard reaches it from further down the page, the page returns to the top so what has focus can be seen.
 
 ### Intro
 Directly under the opening photograph, on paper, centred: the line "Travel like a photographer." at Display size, one sentence in Second Ink held to 42 characters a line, and two buttons (primary and line) side by side.
@@ -400,19 +401,19 @@ Three flat colour blocks on a Stone band, side by side, each a tall rectangle (2
 A guide shown large: its photograph beside its plain name at Display size, one line of facts in Second Ink, and the words "Read the guide" in small capitals with a rule beneath. The whole block is the link. The photograph keeps its own shape.
 
 ### Wall of rows
-Rows of photographs with captions, as described under Layout. In a row every caption is set the same way: the name, then the place under it. Used on the home page and country pages.
+Rows of photographs with captions, as described under Layout. In a row every caption is set the same way: the name, then the place under it. Used on the home page (where a guide's lead photograph is left to the feature below and not repeated) and country pages.
 
 ### Portfolio grid
 The first thing in the gallery: every photograph on the site in a tight grid, four across, 0.5rem apart. Each opening is 3 by 2 and the photograph is fitted to it, so upright photographs are trimmed here. There are no captions in the grid; opening a photograph shows it whole with its name and how it was made. The owner asked for this layout on 2026-09-30; it is carried over from the site as it was before the redesign. The opening photograph comes first, then the rest in the order of `data/site.json`.
 
 ### Continents (destinations)
-Destinations are the seven continents, three to a row. Each is a tile with a square opening, its name centred beneath in the serif, one sentence in Second Ink, and a count in small capitals ("5 countries"). The counts are worked out by the build. A continent with no countries gives its state in place of a count ("No trips yet"). The photograph is the one named for the continent in `data/site.json` (`"photo"`), or the first photograph from any of its countries. A continent with no photograph yet keeps its place as a plain Stone square: no stand-in image. The whole tile is the link to the continent's page, where its countries are. The owner asked for this layout on 2026-09-30; it is carried over from the site as it was before the redesign.
+Destinations shows the continents travelled as tiles, four to a row: a square opening, the continent's name centred beneath as a heading in the serif, and a count in small capitals ("5 countries"), worked out by the build. The photograph is the one named for the continent in `data/site.json` (`"photo"`), or the first from any of its countries. A continent with countries but no photograph yet keeps its place as a plain Stone square that says so ("No photographs yet"): no stand-in image. The continents not travelled are not tiles and not links: they are names on a Stone band under "Not travelled yet". The page sentence states the counts the build knows ("16 countries, by continent. One guide so far: Barcelona."). The seven-square grid with taglines was replaced on 2026-10-01 after the critique found five blank squares and copy about places not visited.
 
 ### Tiles
-On a continent page and in the gallery, each country with work is a photograph in a 3 by 2 opening with its name centred beneath in the serif. Tiles are 20rem to 28rem wide and centred as a group.
+On a continent page and in the gallery, each country with work is a photograph in a 3 by 2 opening with its name centred beneath in the serif. Tiles are a list. Under the pointer the name turns Deep Clay, so a tile with no photograph answers too. A photograph beside its own name carries no spoken description of its own (`alt=""`), so a link is read as the place, not as a sentence about the photograph. Tiles are 20rem to 28rem wide and centred as a group.
 
 ### Names
-A centred, flowing list of place names in the serif, in Second Ink, on a Stone band. It lists the places that have no photographs on the site yet, under a plain heading that says so.
+A centred, flowing list of place names in the serif, in Second Ink, on a Stone band. It lists the places that have no photographs on the site yet, under a plain heading that says so. Names that lead somewhere are links with the hairline underline every text link has; the continents not travelled are plain names.
 
 ### Guide column
 A guide is one centred column: breadcrumb, serif title, the dates in small Second Ink, a wide lead photograph with its caption, the contents list, then sections. Section headings are centred serif at Headline size with generous space above. Links in the text are Deep Clay with a lighter underline. Plain lists are rows divided by hairlines.
@@ -433,7 +434,7 @@ An aside in a guide: a Stone box with square corners and no border, a serif head
 The route, one block per day, divided by hairlines. At the left in an 8.5rem column, the day in the serif with its area beneath in small Second Ink; at the right the text, then a quiet line of light times in tabular figures.
 
 ### Viewer
-Opening a photograph shows it whole on the page's own paper ground, filling the window. The photograph is at the left, as large as the window allows. At the right, a column 17rem to 23rem wide: Previous, Next and Close as words, the place name at Headline size, where it is, then "How it was made" as a ruled list (best time, focal length, aperture, shutter, ISO, lens, camera). Below that a short note, the primary button to the guide, and a Deep Clay link to the map pin. Arrow keys step between photographs, every photograph has its own address (`#view-<id>`), and closing returns focus to the photograph it came from. Below 56rem the photograph comes first and the word bar stays at the top.
+Opening a photograph shows it whole on the page's own paper ground, filling the window. The photograph is at the left, as large as the window allows. At the right, a column 17rem to 23rem wide: Previous, Next and Close as words, the place name at Headline size, where it is, then "How it was made" as a ruled list (best time, focal length, aperture, shutter, ISO, lens, camera). Below that a short note, the primary button to the guide, and a Deep Clay link to the map pin. Between Previous and Next, a count ("3 / 8") in Second Ink. The photograph is served in the same sized copies the pages use. Arrow keys step between photographs, a sideways swipe steps on touch, every photograph has its own address (`#view-<id>`), opening adds one step to the history so the phone's Back closes the photograph instead of leaving the site, focus lands on Close, the place name is announced when it changes, and closing returns focus to the photograph it came from. Below 56rem the photograph comes first, the word bar sits fixed at the bottom of the window with its words 2.75rem tall, and the way to the guide comes directly under the place name, before the camera data.
 
 ### Footer
 A flat Slate block closes every page. Centred: the Instagram handle at Display size in the serif, the footer button beneath it, then a thin rule and a small row with the menu at the left and the copyright line at the right.
@@ -480,7 +481,7 @@ A page with no work says so in one centred sentence in Second Ink, at most 46 ch
 These are recorded as open. None of them is a settled part of the system.
 
 ### Waiting on the owner
-- **Destinations lead sentence and continent taglines.** The sentence under "Destinations" ("Every place I've photographed, researched, eaten through, and written up") and the one-line taglines for continents he has not yet visited (Africa, Antarctica, South America) read as claims the site cannot yet support: 15 of 16 countries have no guide, and those continents have no trips. They are the owner's copy to confirm or change.
+- **Destinations lead sentence and continent taglines.** Rewritten on 2026-10-01 in the experiment to what the build can state ("16 countries, by continent. One guide so far: Barcelona."); the taglines for Africa, Antarctica and South America were removed and the tiles no longer carry a sentence. The new wording awaits the owner's approval.
 - **The guide's "SIM / data" fact.** It has no value yet. The build leaves the row out of the page until he supplies one, so the quick facts card shows only facts that have answers.
 - **Carried from the product notes:** which country gets the next guide, and whether a newsletter sign-up is wanted.
 

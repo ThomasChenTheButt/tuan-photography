@@ -299,10 +299,6 @@
       "id": "south-america",
       "en": "South America",
       "zh": "南美洲",
-      "sub": {
-        "en": "Uruguay, Argentina, Chile, Peru — the research has already started.",
-        "zh": "烏拉圭、阿根廷、智利、秘魯——功課已經開始做了。"
-      },
       "state": {
         "en": "In research",
         "zh": "研究中"
@@ -312,10 +308,6 @@
       "id": "africa",
       "en": "Africa",
       "zh": "非洲",
-      "sub": {
-        "en": "Savanna light, red dust, and horizons that never quite end.",
-        "zh": "莽原的光線、赭紅的塵土,以及望不到盡頭的地平線。"
-      },
       "state": {
         "en": "No trips yet",
         "zh": "還沒去過"
@@ -325,10 +317,6 @@
       "id": "antarctica",
       "en": "Antarctica",
       "zh": "南極洲",
-      "sub": {
-        "en": "The white silence at the end of the map.",
-        "zh": "地圖盡頭的白色寂靜。"
-      },
       "state": {
         "en": "No trips yet",
         "zh": "還沒去過"
