@@ -70,9 +70,16 @@ Word 版：雙擊專案資料夾裡的 `建置進度.command` 就會更新並打
 - 日期: 2026-08-08
 - 重點: 現在只在你的 Mac 上看得到
 - 狀態: 暫緩
-- 說明: 2026-08-08 你決定先不公開，GitHub Pages 維持關閉。
+- 說明: 2026-08-08 你決定先不公開，GitHub Pages 維持關閉。2026-09-30 改用 Claude Artifact 發布（見做完的那段），要給誰看由你在頁面上開分享。
 
 ## 二、做完的 Done
+
+### 發布成 Claude Artifact
+- 類型: 已完成
+- 日期: 2026-09-30
+- 重點: 網站已在 claude.ai 上，分享由你開
+- 狀態: 完成
+- 說明: 不用 Vercel，直接用 Claude 的 Artifact 發布。網址 https://claude.ai/artifact/VjuNp7mBxXM8VCSLhjPSXM，預設只有你看得到，要給別人看就在頁面右上角 Share 打開。網站改了之後，跟 Claude 說「重新發布 Artifact」就會用 `tools/build_artifact.py` 打包再發布到同一個網址。
 
 ### 把舊版喜歡的版面併進新網站
 - 類型: 已完成
