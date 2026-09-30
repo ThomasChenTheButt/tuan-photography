@@ -260,6 +260,17 @@ def cover(sid, root, en, zh):
             f'<span data-i18n="sw_{sid}">{e(s["where"]["en"])}</span></figcaption></figure>')
 
 
+def window(sid, root, en, zh):
+    """A second window onto a photograph, part way down the home page: it fills the window's
+    width and stays where it is while the page is drawn over it, like the opening one."""
+    s = SLIDES[sid]
+    strings(s, en, zh)
+    en[f"sw_{sid}"], zh[f"sw_{sid}"] = s["where"]["en"], s["where"]["zh"]
+    return (f'<figure class="window"><a {opens(sid, root, en, zh)}>{img(s, root, "100vw", soon=True)}</a>'
+            f'<figcaption><b data-i18n="sp_{sid}">{e(s["place"]["en"])}</b>'
+            f'<span data-i18n="sw_{sid}">{e(s["where"]["en"])}</span></figcaption></figure>')
+
+
 # ------------------------------------------------------------------ page frame
 
 def head(title, desc, root):
@@ -466,7 +477,9 @@ def build_home():
               moreCta="看所有目的地")
     leads = {g["lead"] for g in DATA["guides"]}
     # the home page shows a first dozen; the gallery shows them all
-    others = [x["id"] for x in DATA["slides"] if x["id"] != lead and x["id"] not in leads][:12]
+    windows = DATA.get("windows", [])
+    others = [x["id"] for x in DATA["slides"] if x["id"] != lead and x["id"] not in leads and x["id"] not in windows][:12]
+    panes = "\n\n".join(window(sid, root, en, zh) for sid in windows)
     body = f"""{cover(lead, root, en, zh)}
 
 <div class="leaf">
@@ -494,6 +507,8 @@ def build_home():
   {shelf(root, en, zh)}
   <p class="after"><span data-i18n="moreText">{e(en['moreText'])}</span> <a href="{root}destinations.html" data-i18n="moreCta">See every destination</a></p>
 </section>
+
+{panes}
 
 <div class="band">
   <section class="wrap part" aria-labelledby="work-h">

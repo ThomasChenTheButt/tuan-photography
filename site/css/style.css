@@ -215,6 +215,22 @@ main { flex: 1; }
 /* everything after the opening photograph is one leaf of paper, drawn up over it */
 .leaf { position: relative; z-index: 1; background: var(--bg); }
 
+/* a second window onto a photograph, part way down the page. The photograph is fixed to the
+   screen and the figure is a window cut in the page, so the page is drawn over it as the
+   visitor moves, like the opening photograph. Nothing is written across it but its place. */
+.window { position: relative; height: 72svh; min-height: 26rem; max-height: 56rem; overflow: clip; clip-path: inset(0); background: var(--slate); color: var(--paper); }
+.window a { display: block; height: 100%; }
+.window a:hover { color: inherit; }
+.window img { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; height: 100lvh; object-fit: cover; }
+.window::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 12rem; z-index: 1; pointer-events: none; background: linear-gradient(to top, oklch(20% 0.02 60 / 0.8), oklch(20% 0.02 60 / 0)); }
+.window figcaption { position: absolute; z-index: 2; left: var(--edge); right: var(--edge); bottom: 1.6rem; display: flex; gap: 0.2rem 1rem; flex-wrap: wrap; align-items: baseline; pointer-events: none; }
+.window figcaption b { font-family: var(--serif); font-weight: 400; font-size: 1.15rem; line-height: 1.25; }
+:lang(zh-Hant) .window figcaption b { font-weight: 500; font-size: 1.1rem; letter-spacing: 0.05em; }
+.window figcaption span { font-size: var(--t-xs); }
+@media (prefers-reduced-motion: reduce) {
+  .window img { position: absolute; width: 100%; height: 100%; }
+}
+
 .intro { text-align: center; padding-block: clamp(5.5rem, 12vw, 10rem); }
 .intro h1 { font-size: var(--t-2xl); }
 .intro p { margin: var(--s-3) auto 0; max-width: 42ch; color: var(--text-2); }
@@ -284,12 +300,13 @@ main { flex: 1; }
    the series line, the way a printed guide has; the spine carries the name and the imprint.
    Point at a book and it comes forward and turns to face you; its name and where it leads
    then appear beneath it on the shelf. */
-.shelf { display: flex; align-items: flex-end; justify-content: center; max-width: 64rem; margin-inline: auto; padding: var(--s-4) var(--s-4) 0; border-bottom: 1px solid var(--text); perspective: 70rem; perspective-origin: 50% 40%; }
-.book { --turn: 36deg; --deep: 3rem; position: relative; flex: none; width: 12rem; height: 18rem; margin-right: -2.25rem; text-decoration: none; color: var(--paper); transform-style: preserve-3d; transform: rotateY(var(--turn)); transition: transform 600ms var(--out); }
+.shelf { --shade: oklch(20% 0.02 60); display: flex; align-items: flex-end; justify-content: center; max-width: 64rem; margin-inline: auto; padding: var(--s-5) var(--s-4) 0; background: var(--band); border-bottom: 0.8rem solid var(--line); box-shadow: inset 0 -1px 0 color-mix(in oklch, var(--shade) 35%, transparent); perspective: 70rem; perspective-origin: 50% 40%; }
+.book { --turn: 36deg; --deep: 2.4rem; position: relative; flex: none; width: 12rem; height: 18rem; margin-right: -2.25rem; text-decoration: none; color: var(--paper); transform-style: preserve-3d; transform: rotateY(var(--turn)); transition: transform 600ms var(--out); }
 .book:last-child { margin-right: 0; }
 .book:hover { color: var(--paper); }
 .book__face, .book__spine { position: absolute; top: 0; left: 0; height: 100%; backface-visibility: hidden; }
-.book__face { display: grid; grid-template-rows: minmax(0, 1fr) auto; width: 100%; background: var(--band); overflow: hidden; outline: 1px solid var(--line); outline-offset: -1px; }
+.book__face { display: grid; grid-template-rows: minmax(0, 1fr) auto; width: 100%; background: var(--band); overflow: hidden; outline: 1px solid transparent; box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--shade) 18%, transparent), inset 3px 0 6px -3px color-mix(in oklch, var(--shade) 45%, transparent), 0.4rem 1.1rem 1.4rem -0.8rem color-mix(in oklch, var(--shade) 45%, transparent); }
+.book__face::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(100deg, color-mix(in oklch, var(--paper) 22%, transparent), transparent 38%); }
 .wall .piece a { background: var(--paper); }
 .book__face img { width: 100%; height: 100%; object-fit: cover; }
 .book__band { display: grid; gap: 0.35rem; padding: 0.85rem 1rem 0.9rem; background: var(--paper); color: var(--text); border-top: 1px solid var(--line); }
@@ -297,13 +314,13 @@ main { flex: 1; }
 :lang(zh-Hant) .book__band b { font-weight: 500; letter-spacing: 0.06em; }
 .book__band span { font-size: 0.66rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-2); }
 :lang(zh-Hant) .book__band span { font-size: 0.75rem; letter-spacing: 0.14em; }
-.book__spine { display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: var(--deep); padding: 1.1rem 0; writing-mode: vertical-rl; transform-origin: left center; transform: rotateY(-90deg) translateX(-100%); }
+.book__spine { display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: var(--deep); padding: 1.1rem 0; writing-mode: vertical-rl; transform-origin: left center; transform: rotateY(-90deg) translateX(-100%); background-image: linear-gradient(to right, color-mix(in oklch, var(--shade) 30%, transparent), transparent 35%, transparent 70%, color-mix(in oklch, var(--shade) 22%, transparent)); box-shadow: -0.6rem 0.4rem 1.2rem -0.4rem color-mix(in oklch, var(--shade) 40%, transparent); }
 .book__spine b { font-family: var(--serif); font-weight: 400; font-size: 1.1rem; line-height: 1; letter-spacing: 0.04em; white-space: nowrap; }
 .book__spine i { font-style: normal; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; white-space: nowrap; }
 :lang(zh-Hant) .book__spine b { text-orientation: upright; letter-spacing: 0.2em; font-weight: 500; font-size: 1rem; }
-.book--clay .book__spine { background: var(--clay); }
-.book--olive .book__spine { background: var(--olive); }
-.book--slate .book__spine { background: var(--slate); }
+.book--clay .book__spine { background-color: var(--clay); }
+.book--olive .book__spine { background-color: var(--olive); }
+.book--slate .book__spine { background-color: var(--slate); }
 .book__name { position: absolute; left: 50%; top: calc(100% + 0.9rem); width: 16rem; transform: translateX(-50%); display: grid; gap: 0.2rem; color: var(--text); text-align: center; opacity: 0; transition: opacity 400ms var(--out); }
 .book__name b { font-family: var(--serif); font-weight: 400; font-size: 1.25rem; line-height: 1.2; }
 :lang(zh-Hant) .book__name b { font-weight: 500; letter-spacing: 0.06em; }
@@ -311,10 +328,10 @@ main { flex: 1; }
 .book:hover, .book:focus-visible, .book.open { transform: rotateY(0deg) translateZ(4rem) translateY(-1rem); }
 .book:hover .book__name, .book:focus-visible .book__name, .book.open .book__name { opacity: 1; }
 @media (max-width: 40rem) {
-  .shelf { justify-content: flex-start; padding: var(--s-3) var(--s-2) 3rem; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; scrollbar-width: none; }
+  .shelf { justify-content: flex-start; padding: var(--s-4) var(--s-2) 3rem; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; scrollbar-width: none; }
   .shelf::-webkit-scrollbar { display: none; }
   .shelf::after { content: ""; flex: none; width: var(--s-4); }
-  .book { width: 9rem; height: 13.5rem; margin-right: -1.75rem; --deep: 2.25rem; }
+  .book { width: 9rem; height: 13.5rem; margin-right: -1.75rem; --deep: 1.8rem; }
   .book__band { padding: 0.6rem 0.7rem 0.65rem; }
   .book__band b { font-size: 1.1rem; }
   .book__name { width: 12rem; }
