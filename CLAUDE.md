@@ -1,5 +1,12 @@
 # tuan photography 陳亮元 — project instructions
 
+> **This folder is an experiment: `coverflow`** (started 2026-10-01, branch `exp/coverflow`, preview on port 8644).
+> **What is being tried:** the home page's guides as all sixteen countries' books on a ring that never ends,
+> seen from the front like a coverflow: faded until the cursor lights one up, the ring turning slowly on its
+> own, and turned by the cursor near the edges, the wheel, a swipe, or the page's scroll. A merge of the
+> 3D books he kept, the coverflow he liked, and the scroll-driven shelf. **Skill:** none.
+> **Rules suspended here:** "nothing moves on its own" for the ring. **Waiting on:** his word, keep or drop.
+
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
 Bilingual EN / 繁體中文. Owner is not a developer — explain in plain English, handle all tech.
 

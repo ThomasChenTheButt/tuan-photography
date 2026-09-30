@@ -300,23 +300,66 @@ document.querySelectorAll('a[data-slide]').forEach(el => {
   });
 });
 
-/* ---------- 4. Books on the shelf ----------
-   A pointer brings a book out by hovering. On a touch screen the first tap
-   brings it out and the second opens it. */
-const shelfEl = document.querySelector('.shelf');
-if (shelfEl && window.matchMedia('(hover: none)').matches) {
-  shelfEl.addEventListener('click', e => {
-    const book = e.target.closest('.book');
-    if (!book || book.classList.contains('open')) return;
-    e.preventDefault();
-    shelfEl.querySelectorAll('.book.open').forEach(b => b.classList.remove('open'));
-    book.classList.add('open');
-    /* once the cover has come out (0.5 s), slide the shelf so the whole book is in view */
-    setTimeout(() => {
-      const over = book.getBoundingClientRect().right - shelfEl.getBoundingClientRect().right + 16;
-      if (over > 0) shelfEl.scrollBy({ left: over });
-    }, 520);
-  });
+/* ---------- 4. Books on the ring ----------
+   The books stand on a ring that turns slowly on its own. A cursor on the ring
+   stops it; a cursor near the left or right edge turns it that way; the wheel, a
+   swipe on a touch screen, and the page's own scrolling turn it too. Each book's
+   angle goes to the stylesheet as --a. Nothing turns under "reduce motion". */
+const ringEl = document.querySelector('.ring');
+if (ringEl) {
+  const stage = ringEl.parentElement;
+  const books = [...ringEl.children];
+  const step = 360 / books.length;
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let angle = 0, nudge = 0, resting = true, shown = false, last = performance.now(), lastY = window.scrollY;
+  const place = () => {
+    books.forEach((book, i) => {
+      const a = ((i * step + angle) % 360 + 540) % 360 - 180;   // -180 to 180, 0 at the front
+      book.style.setProperty('--a', a.toFixed(2) + 'deg');
+      book.hidden = Math.abs(a) > 100;                             // the back of the ring is out of sight
+    });
+  };
+  const tick = now => {
+    const dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+    if (!still) angle += (resting ? -2.2 : 0) * dt + nudge * dt;   // a slow turn on its own, or the cursor's push
+    place();
+    if (shown) requestAnimationFrame(tick);
+  };
+  new IntersectionObserver(([e]) => {
+    shown = e.isIntersecting;
+    if (shown) { last = performance.now(); requestAnimationFrame(tick); }
+  }).observe(stage);
+  place();
+  if (window.matchMedia('(hover: hover)').matches) {
+    stage.addEventListener('pointerenter', () => { resting = false; });
+    stage.addEventListener('pointerleave', () => { resting = true; nudge = 0; });
+    stage.addEventListener('pointermove', e => {
+      const x = (e.clientX - stage.getBoundingClientRect().left) / stage.clientWidth - 0.5;   // -0.5 to 0.5
+      nudge = Math.abs(x) < 0.3 ? 0 : -Math.sign(x) * (Math.abs(x) - 0.3) * 90;              // only near the edges
+    });
+  }
+  stage.addEventListener('wheel', e => {
+    if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) { e.preventDefault(); angle -= e.deltaX * 0.08; place(); }
+  }, { passive: false });
+  let touchX = null;
+  stage.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; resting = false; }, { passive: true });
+  stage.addEventListener('touchmove', e => {
+    if (touchX === null) return;
+    angle += (e.touches[0].clientX - touchX) * 0.25; touchX = e.touches[0].clientX; place();
+  }, { passive: true });
+  stage.addEventListener('touchend', () => { touchX = null; });
+  window.addEventListener('scroll', () => { angle += (window.scrollY - lastY) * 0.02; lastY = window.scrollY; }, { passive: true });
+  if (window.matchMedia('(hover: none)').matches) {
+    /* on a touch screen the first tap brings a book out and the second opens it */
+    stage.addEventListener('click', e => {
+      const book = e.target.closest('.book');
+      if (!book || book.classList.contains('open')) return;
+      e.preventDefault();
+      books.forEach(b => b.classList.remove('open'));
+      book.classList.add('open');
+    });
+  }
 }
 
 /* ---------- 5. Guide contents: mark the section being read ---------- */

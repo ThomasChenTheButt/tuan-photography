@@ -418,12 +418,13 @@ def feature(g, root, en, zh, with_country=True):
 
 
 def shelf(root, en, zh):
-    """The guides as books on a shelf, in the owner's order: countries that have photographs.
-    A written guide is a book that opens the guide; the others open the country's photographs
-    and say the guide is not written yet."""
-    en.update(bandGuide="A photographer's guide", bandPhotos="Photographs",
+    """The guides as books on a ring that never ends, seen from the front like a coverflow: one
+    book per country, in the owner's order. The script turns the ring and places each book.
+    A written guide is a book that opens the guide; the others open the country's photographs."""
+    en.update(bandGuide="A photographer's guide", bandPhotos="Photographs", bandNone="No photographs yet",
               bookOpen="Read the guide", bookNot="Guide not written yet", series="tuan photography")
-    zh.update(bandGuide="攝影師的攻略", bandPhotos="作品", bookOpen="閱讀攻略", bookNot="攻略還沒寫", series="tuan photography")
+    zh.update(bandGuide="攝影師的攻略", bandPhotos="作品", bandNone="還沒有照片",
+              bookOpen="閱讀攻略", bookNot="攻略還沒寫", series="tuan photography")
     tones = ("clay", "olive", "slate")
     books = []
     for i, b in enumerate(DATA["shelf"]):
@@ -431,24 +432,26 @@ def shelf(root, en, zh):
         if "guide" in b:
             g = next(x for x in DATA["guides"] if x["id"] == b["guide"])
             key, title, href = f"bk_{g['id']}", g["title"], f"{root}{g['href']}"
-            ph = SLIDES[b.get("photo") or g["lead"]]
-            band, status = "bandGuide", "bookOpen"
+            sid, band, status = b.get("photo") or g["lead"], "bandGuide", "bookOpen"
         else:
             c = COUNTRIES[b["country"]]
             key, title, href = f"bk_{c['id']}", b.get("title") or {"en": c["en"], "zh": c["zh"]}, f"{root}countries/{c['id']}.html"
-            ph = SLIDES[b["photo"]] if b.get("photo") else next(x for x in DATA["slides"] if x["country"] == c["id"])
-            band, status = "bandPhotos", "bookNot"
-        strings(ph, en, zh)
+            sid, band, status = b.get("photo"), "bandPhotos" if b.get("photo") else "bandNone", "bookNot"
         en[key], zh[key] = title["en"], title["zh"]
         en[f"bo_{key}"] = f"{title['en']}: {en[status].lower() if status == 'bookOpen' else en[status]}"
         zh[f"bo_{key}"] = f"{title['zh']}：{zh[status]}"
         t = e(title["en"])
-        books.append(f'<a class="book book--{tone}" href="{href}" aria-label="{e(en[f"bo_{key}"])}" data-i18n-aria="bo_{key}">'
+        if sid:
+            strings(SLIDES[sid], en, zh)
+            face = f'<span class="book__face">{img(SLIDES[sid], root, "11rem", soon=True, named=False)}'
+        else:
+            face = f'<span class="book__face book__face--blank"><b data-i18n="{key}">{t}</b>'
+        books.append(f'<a class="book book--{tone}" href="{href}" aria-label="{e(en[f"bo_{key}"])}" data-i18n-aria="bo_{key}"><span class="book__box">'
                      f'<span class="book__spine"><b data-i18n="{key}">{t}</b><i data-i18n="series">tuan photography</i></span>'
-                     f'<span class="book__face">{img(ph, root, "12rem", soon=True, named=False)}'
-                     f'<span class="book__band"><b data-i18n="{key}">{t}</b><span data-i18n="{band}">{e(en[band])}</span></span></span>'
+                     f'{face}<span class="book__band"><b data-i18n="{key}">{t}</b><span data-i18n="{band}">{e(en[band])}</span></span></span>'
+                     f'<span class="book__back"><i data-i18n="series">tuan photography</i></span><span class="book__edge"></span></span>'
                      f'<span class="book__name"><b data-i18n="{key}">{t}</b><span data-i18n="{status}">{e(en[status])}</span></span></a>')
-    return '<div class="shelf">' + "".join(books) + "</div>"
+    return '<div class="shelf"><div class="ring">' + "".join(books) + "</div></div>"
 
 
 # ------------------------------------------------------------------ pages
