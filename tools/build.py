@@ -472,9 +472,15 @@ def build_home():
               moreText=f"還有 {n_places - 1} 個國家的攻略還沒寫。",
               moreCta="看所有目的地")
     leads = {g["lead"] for g in DATA["guides"]}
-    # the home page shows a first dozen; the gallery shows them all
+    # the home page shows a dozen, one from each country in turn; the gallery shows them all
     windows = DATA.get("windows", [])
-    others = [x["id"] for x in DATA["slides"] if x["id"] != lead and x["id"] not in leads and x["id"] not in windows][:12]
+    seen, others = set(), []
+    for x in DATA["slides"]:
+        if x["id"] == lead or x["id"] in leads or x["id"] in windows or x["country"] in seen:
+            continue
+        seen.add(x["country"])
+        others.append(x["id"])
+    others = others[:12]
     panes = "\n\n".join(window(sid, root, en, zh) for sid in windows)
     body = f"""{cover(lead, root, en, zh)}
 
