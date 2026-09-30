@@ -42,10 +42,12 @@ the Barcelona pair.
 
 ## 等你決定 Waiting on you
 
-- **Experiment `impeccable-full` (2026-10-01): in progress.** The full Impeccable critique
-  of the home page, Gallery and Destinations, in `experiments/impeccable-full/`, branch
-  `exp/impeccable-full`, preview on `localhost:8644`. He dropped the 2026-09-30 version
-  (`skills-review`) and asked for the full procedure instead. The real site is unchanged.
+- **Experiment `impeccable-full` (2026-10-01): keep or drop?** The full Impeccable critique
+  (dual-agent, 23/32) of the home page, Gallery and Destinations, then the three P1 fixes he
+  chose plus polish, in `experiments/impeccable-full/`, branch `exp/impeccable-full`, preview
+  on `localhost:8644`. The real site is unchanged. **The new Destinations wording needs his
+  approval:** "16 countries, by continent. One guide so far: Barcelona." /
+  "16 個國家，依大洲排列。攻略目前只有一篇：巴賽隆納。"
 - **Which country after Barcelona?** 15 of 16 country pages have no guide yet.
 - **Destinations wording.** The sentence under "Destinations" and the taglines for Africa,
   Antarctica and South America describe trips that haven't happened. Confirm or change.
