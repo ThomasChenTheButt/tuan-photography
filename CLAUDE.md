@@ -1,5 +1,13 @@
 # tuan photography 陳亮元 — project instructions
 
+> **This folder is an experiment: `impeccable-full`** (started 2026-10-01, branch `exp/impeccable-full`, preview on port 8644).
+> **What is being tried:** the full Impeccable procedure on the home page, Gallery and Destinations: a dual-agent
+> `critique` (saved in `.impeccable/critique/`), his answers, then `distill` + `clarify` (Destinations),
+> `adapt` + `optimize` (the viewer on phones), `harden` (keyboard, screen reader) and `polish`.
+> **Skill:** Impeccable. **Rules suspended here:** none. The look and the photographs are unchanged; the
+> Destinations copy was rewritten and awaits his approval.
+> **Waiting on:** his word, keep or drop.
+
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
 Bilingual EN / 繁體中文. Owner is not a developer — explain in plain English, handle all tech.
 
