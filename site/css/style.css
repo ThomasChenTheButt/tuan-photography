@@ -100,7 +100,7 @@ a:hover { text-decoration-color: currentColor; color: var(--accent); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* small capitals in the sans: menu, buttons, quiet labels */
-.caps, .menu a, .lang button, .menu-btn, .btn, .path, .door span, .tile__count, .feature__go, .sheet thead th, .toc h2 {
+.caps, .menu a, .lang button, .menu-btn, .btn, .path, .door span, .tile__count, .tile__none, .viewer__count, .feature__go, .sheet thead th, .toc h2 {
   font-family: var(--sans);
   font-size: 0.78rem;
   font-weight: 500;
@@ -108,7 +108,12 @@ a:hover { text-decoration-color: currentColor; color: var(--accent); }
   text-transform: uppercase;
   line-height: 1.3;
 }
-:lang(zh-Hant) :is(.caps, .menu a, .lang button, .menu-btn, .btn, .path, .door span, .tile__count, .feature__go, .sheet thead th, .toc h2) { font-size: 0.875rem; letter-spacing: 0.14em; }
+:lang(zh-Hant) :is(.caps, .menu a, .lang button, .menu-btn, .btn, .path, .door span, .tile__count, .tile__none, .viewer__count, .feature__go, .sheet thead th, .toc h2) { font-size: 0.875rem; letter-spacing: 0.14em; }
+
+/* the first stop for the keyboard: out of sight until it has focus */
+.skip { position: absolute; z-index: 4; top: var(--s-1); left: var(--edge); transform: translateY(-200%); }
+.skip:focus { transform: none; }
+main:focus { outline: 0; }
 
 .wrap { width: 100%; max-width: var(--wide); margin-inline: auto; padding-inline: var(--edge); }
 main { flex: 1; }
@@ -131,8 +136,10 @@ main { flex: 1; }
 .menu a[aria-current="page"] { border-bottom-color: currentColor; }
 
 .lang { display: flex; align-items: center; }
-.lang button { color: inherit; opacity: 0.6; background: none; border: 0; padding: 0.5rem 0.45rem; cursor: pointer; }
-.lang button[aria-pressed="true"] { opacity: 1; }
+.lang button { color: var(--text-2); background: none; border: 0; padding: 0.5rem 0.45rem; cursor: pointer; }
+.lang button[aria-pressed="true"] { color: inherit; }
+.top--over .lang button { color: inherit; opacity: 0.75; }
+.top--over .lang button[aria-pressed="true"] { opacity: 1; }
 .lang i { width: 1px; height: 0.9em; background: currentColor; opacity: 0.35; }
 
 .menu-btn { display: none; margin-left: auto; color: inherit; background: none; border: 0; padding: 0.7rem 0; cursor: pointer; }
@@ -143,12 +150,14 @@ main { flex: 1; }
 
 @media (max-width: 56rem) {
   .top { flex-wrap: wrap; row-gap: 0; }
-  .menu-btn { display: block; }
+  .menu-btn { display: block; min-height: 2.75rem; padding-left: 0.75rem; }
   .menu { display: none; flex-basis: 100%; flex-direction: column; align-items: stretch; gap: 0; margin: 0 0 var(--s-2); border-top: 1px solid var(--line); }
   .menu.open { display: flex; }
   .menu ul { flex-direction: column; gap: 0; }
   .menu a { display: block; padding-block: 1rem; border-bottom: 0; }
   .lang { padding-top: 0.5rem; }
+  .lang button { min-height: 2.75rem; padding-inline: 0.7rem; }
+  .lang button:first-child { margin-left: -0.7rem; }
   .top--over:has(.menu.open) { background: var(--bg); color: var(--text); }
 }
 @media (max-width: 26rem) {
@@ -196,7 +205,8 @@ main { flex: 1; }
 .cover img { width: 100%; height: 100%; object-fit: cover; }
 .cover::before, .cover::after { content: ""; position: absolute; left: 0; right: 0; z-index: 1; pointer-events: none; }
 .cover::before { top: 0; height: 14rem; background: linear-gradient(to bottom, oklch(20% 0.02 60 / 0.5), oklch(20% 0.02 60 / 0)); }
-.cover::after { bottom: 0; height: 11rem; background: linear-gradient(to top, oklch(20% 0.02 60 / 0.64), oklch(20% 0.02 60 / 0)); }
+.cover::after { bottom: 0; height: 12rem; background: linear-gradient(to top, oklch(20% 0.02 60 / 0.8), oklch(20% 0.02 60 / 0)); }
+.cover a:focus-visible { outline-offset: -4px; }
 .cover figcaption { position: absolute; z-index: 2; left: var(--edge); right: var(--edge); bottom: 1.6rem; display: flex; gap: 0.2rem 1rem; flex-wrap: wrap; align-items: baseline; pointer-events: none; }
 .cover figcaption b { font-family: var(--serif); font-weight: 400; font-size: 1.15rem; line-height: 1.25; }
 :lang(zh-Hant) .cover figcaption b { font-weight: 500; font-size: 1.1rem; letter-spacing: 0.05em; }
@@ -299,27 +309,30 @@ main { flex: 1; }
 .tile__photo { display: block; aspect-ratio: 3 / 2; overflow: hidden; background: var(--band); }
 .tile__photo img { width: 100%; height: 100%; object-fit: cover; transition: transform 900ms var(--out); }
 .tile:hover .tile__photo img { transform: scale(1.02); }
+.tile__name { transition: color 200ms var(--out); }
+.tile:hover .tile__name { color: var(--accent); }
+.tile__photo:has(.tile__none) { display: grid; place-content: center; padding: var(--s-2); text-align: center; }
+.tile__none { color: var(--text-2); }
+.tile__count { display: block; margin-top: 0.6rem; color: var(--text-2); }
 .tile__name { display: block; margin-top: 1rem; font-family: var(--serif); font-size: 1.5rem; line-height: 1.2; }
 :lang(zh-Hant) .tile__name { font-weight: 500; letter-spacing: 0.06em; font-size: 1.45rem; }
 
-/* destinations: the seven continents, three to a row, each under a square opening.
-   A continent with no photograph yet keeps its place as plain stone. */
-.tiles--three { display: flex; flex-wrap: wrap; gap: var(--s-5) var(--col-gap); max-width: 72rem; margin-inline: auto; }
-.tiles--three .tile { flex: 0 0 calc((100% - 2 * var(--col-gap)) / 3); min-width: 0; }
-.tiles--three .tile__photo { aspect-ratio: 1; }
-.tile__say { display: block; max-width: 32ch; margin: 0.5rem auto 0; color: var(--text-2); font-size: var(--t-s); line-height: 1.5; }
-:lang(zh-Hant) .tile__say { line-height: 1.75; }
-.tile__count { display: block; margin-top: 0.9rem; color: var(--text-2); }
+/* destinations: the continents travelled, four to a row, each a square opening.
+   A continent with countries but no photograph yet keeps its place as plain stone, and says so. */
+.tiles--four { display: flex; flex-wrap: wrap; gap: var(--s-5) var(--col-gap); max-width: 72rem; margin-inline: auto; }
+.tiles--four li { flex: 0 0 calc((100% - 3 * var(--col-gap)) / 4); min-width: 0; }
+.tiles--four .tile__photo { aspect-ratio: 1; }
 @media (max-width: 56rem) {
-  .tiles--three .tile { flex-basis: calc((100% - var(--col-gap)) / 2); }
+  .tiles--four { row-gap: var(--s-4); }
+  .tiles--four li { flex-basis: calc((100% - var(--col-gap)) / 2); }
 }
 @media (max-width: 36rem) {
-  .tiles--three .tile { flex-basis: 100%; }
+  .tiles--four .tile__name { font-size: 1.25rem; }
 }
 
 .names { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.35rem 1.6rem; max-width: 52rem; margin-inline: auto; font-family: var(--serif); font-size: var(--t-l); line-height: 1.4; }
 :lang(zh-Hant) .names { letter-spacing: 0.06em; font-size: 1.15rem; line-height: 1.6; }
-.names a { text-decoration: none; color: var(--text-2); }
+.names a, .names span { color: var(--text-2); }
 
 .empty { max-width: 46ch; margin-inline: auto; text-align: center; color: var(--text-2); }
 .empty .btn { margin-top: var(--s-4); }
@@ -475,7 +488,7 @@ main { flex: 1; }
 .foot .btn:hover { color: var(--paper); background: transparent; border-color: var(--paper); }
 .foot__small { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-2) var(--s-4); margin-top: var(--s-6); padding-top: var(--s-3); border-top: 1px solid color-mix(in oklch, var(--paper) 28%, transparent); color: color-mix(in oklch, var(--paper) 82%, var(--slate)); font-size: var(--t-xs); text-align: left; }
 .foot__small ul { display: flex; flex-wrap: wrap; gap: 0.4rem 1.5rem; }
-.foot__small a { text-decoration: none; }
+.foot__small a { display: inline-block; padding-block: 0.4rem; text-decoration: none; }
 .foot__small a:hover { text-decoration: underline; }
 
 /* ---------------- looking at one photograph ---------------- */
@@ -491,10 +504,12 @@ main { flex: 1; }
 }
 
 .viewer__photo { grid-area: photo; display: grid; place-items: center; padding: clamp(1rem, 2.4vw, 2.25rem); min-height: 0; }
-.viewer__photo img { max-width: 100%; max-height: calc(100dvh - 2 * clamp(1rem, 2.4vw, 2.25rem)); width: auto; height: auto; }
+.viewer__photo img { max-width: 100%; max-height: calc(100dvh - 2 * clamp(1rem, 2.4vw, 2.25rem)); width: auto; height: auto; transition: opacity 300ms var(--out); }
+.viewer__photo img[aria-busy="true"] { opacity: 0.35; }
 
 .viewer__bar { grid-area: bar; display: flex; justify-content: space-between; align-items: center; gap: var(--s-2); padding: clamp(1.1rem, 2.2vw, 2rem) clamp(1.1rem, 2.2vw, 2rem) 0 0; }
-.viewer__bar div { display: flex; gap: 1.2rem; }
+.viewer__bar div { display: flex; align-items: center; gap: 1.2rem; }
+.viewer__count { color: var(--text-2); }
 .viewer__bar button { font-family: var(--sans); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-2); background: none; border: 0; padding: 0.5rem 0; cursor: pointer; }
 :lang(zh-Hant) .viewer__bar button { font-size: 0.875rem; letter-spacing: 0.14em; }
 .viewer__bar button:hover { color: var(--accent); }
@@ -514,11 +529,15 @@ main { flex: 1; }
 
 @media (max-width: 56rem) {
   .viewer[open] { display: block; }
-  .viewer__bar { position: sticky; top: 0; z-index: 1; background: var(--bg); padding: 0.6rem var(--edge); }
+  /* the words sit at the bottom, under the thumb; the way to the guide comes right after the name */
+  .viewer__bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 1; background: var(--bg); border-top: 1px solid var(--line); padding: 0 var(--edge) max(0px, env(safe-area-inset-bottom)); }
+  .viewer__bar button { min-height: 2.75rem; }
   .viewer__photo { display: block; padding: 0; }
   .viewer__photo img { display: block; margin-inline: auto; max-height: 78dvh; }
-  .viewer__side { padding: 1.4rem var(--edge) 2.5rem; overflow: visible; }
-  .viewer__acts { margin-top: 0; }
+  .viewer__side { padding: 1.4rem var(--edge) calc(3.75rem + env(safe-area-inset-bottom)); overflow: visible; }
+  .viewer__side > div:nth-child(2) { order: 2; }
+  .viewer__note { order: 3; }
+  .viewer__acts { order: 1; margin-top: 0; padding-top: 0; }
 }
 
 ::view-transition-group(picked) { animation-duration: 460ms; animation-timing-function: var(--out); }

@@ -147,13 +147,19 @@ def ratio(s):
     return f"{s['w'] / s['h']:.4f}"
 
 
-def img(s, root, sizes, first=False):
+def srcset(s, root):
     base = f"{root}images/web/"
-    srcset = ", ".join([f"{base}{w}/{s['file']} {w}w" for w in SIZES] + [f"{base}{s['file']} {s['w']}w"])
-    load = 'fetchpriority="high"' if first else 'loading="lazy" decoding="async"'
-    return (f'<img src="{base}1280/{s["file"]}" srcset="{srcset}" sizes="{sizes}" '
-            f'width="{s["w"]}" height="{s["h"]}" alt="{e(s["alt"]["en"])}" '
-            f'data-i18n-alt="sa_{s["id"]}" {load}>')
+    return ", ".join([f"{base}{w}/{s['file']} {w}w" for w in SIZES] + [f"{base}{s['file']} {s['w']}w"])
+
+
+def img(s, root, sizes, first=False, soon=False, named=True):
+    """first: the page's lead photograph. soon: in the first window, fetched without waiting.
+    named=False: the photograph stands beside its own name (a tile, a feature), so it is not described twice."""
+    base = f"{root}images/web/"
+    load = 'fetchpriority="high"' if first else ('decoding="async"' if soon else 'loading="lazy" decoding="async"')
+    alt = f'alt="{e(s["alt"]["en"])}" data-i18n-alt="sa_{s["id"]}"' if named else 'alt=""'
+    return (f'<img src="{base}1280/{s["file"]}" srcset="{srcset(s, root)}" sizes="{sizes}" '
+            f'width="{s["w"]}" height="{s["h"]}" {alt} {load}>')
 
 
 def strings(s, en, zh):
@@ -218,11 +224,11 @@ def wall(ids, root, en, zh, per_row=3.2, anchors=False):
 def grid(ids, root, en, zh):
     """The portfolio: a tight grid of even openings with no captions. Opening one shows it whole."""
     cells = []
-    for sid in ids:
+    for n, sid in enumerate(ids):
         s = SLIDES[sid]
         strings(s, en, zh)
         cells.append(f'    <figure id="s-{sid}"><a {opens(sid, root, en, zh)}>'
-                     f'{img(s, root, "(max-width: 52rem) 46vw, 22vw")}</a></figure>')
+                     f'{img(s, root, "(max-width: 52rem) 46vw, 22vw", first=n == 0, soon=n < 8)}</a></figure>')
     return '<div class="grid">\n' + "\n".join(cells) + "\n  </div>"
 
 
@@ -232,9 +238,9 @@ def country_tile(c, root, en, zh):
     ph = next(s for s in DATA["slides"] if s["country"] == cid)
     strings(ph, en, zh)
     en[f"cn_{cid}"], zh[f"cn_{cid}"] = c["en"], c["zh"]
-    return (f'<a class="tile" href="{root}countries/{cid}.html"><span class="tile__photo">'
-            f'{img(ph, root, "(max-width: 40rem) 92vw, 30vw")}</span>'
-            f'<span class="tile__name" data-i18n="cn_{cid}">{e(c["en"])}</span></a>')
+    return (f'<li><a class="tile" href="{root}countries/{cid}.html"><span class="tile__photo">'
+            f'{img(ph, root, "(max-width: 40rem) 92vw, 30vw", named=False)}</span>'
+            f'<span class="tile__name" data-i18n="cn_{cid}">{e(c["en"])}</span></a></li>')
 
 
 def shot(sid, root, en, zh):
@@ -284,7 +290,8 @@ def header(root, current, over=False):
         + (' aria-current="page"' if current == nid else "") + f">{label}</a></li>"
         for nid, key, label, href in NAV)
     cls = "wrap top top--over" if over else "wrap top"
-    return f"""<header class="{cls}">
+    return f"""<a class="skip btn" href="#main" data-i18n="skip">Skip to the content</a>
+<header class="{cls}">
   <a class="name" href="{root}index.html">tuan photography <span>陳亮元</span></a>
   <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" data-i18n="navMenu">Menu</button>
   <nav class="menu" id="menu" aria-label="Site">
@@ -305,6 +312,7 @@ def footer(root, used, en, zh):
     data = []
     for sid in used:
         s = json.loads(json.dumps(SLIDES[sid]))
+        s["srcset"] = srcset(s, root)
         for field in ("place", "where", "alt", "best", "note"):
             if field in s:
                 s[field]["en"] = clean_en(s[field]["en"])
@@ -354,7 +362,7 @@ def write(path, title, zh_title, desc, current, body, en, zh, over=False):
     body = re.sub(r'aria-label="[^"]*" data-i18n-aria="([^"]+)"',
                   lambda m: f'aria-label="{e(en[m.group(1)])}" data-i18n-aria="{m.group(1)}"', body)
     used = list(dict.fromkeys(re.findall(r'data-slide="([^"]+)"', body)))
-    out = head(title, desc, root) + header(root, current, over) + "<main>\n" + body + "\n</main>\n" \
+    out = head(title, desc, root) + header(root, current, over) + '<main id="main" tabindex="-1">\n' + body + "\n</main>\n" \
         + footer(root, used, en, zh)
     (OUT / path).write_text(out, encoding="utf-8")
     print("  wrote", path)
@@ -389,7 +397,7 @@ def feature(g, root, en, zh, with_country=True):
     zh[f"gf_{gid}"] = (c["zh"] + "、" if with_country else "") + g["facts"]["zh"].replace(" · ", "、")
     en["guideOpen"], zh["guideOpen"] = "Read the guide", "閱讀攻略"
     return f"""<a class="feature" href="{root}{g['href']}">
-      <span class="feature__photo">{img(ph, root, "(max-width: 52rem) 92vw, 56vw")}</span>
+      <span class="feature__photo">{img(ph, root, "(max-width: 52rem) 92vw, 56vw", named=False)}</span>
       <span class="feature__say">
         <span class="feature__name" data-i18n="g_{gid}">{e(g['title']['en'])}</span>
         <span class="feature__facts num" data-i18n="gf_{gid}">{e(en[f'gf_{gid}'])}</span>
@@ -405,9 +413,10 @@ def build_home():
     root = ""
     lead = DATA["lead"]
     n_photos, n_places = len(DATA["slides"]), len(COUNTRIES)
+    one = DATA["guides"][0] if len(DATA["guides"]) == 1 else None
     en.update(heroLine="Travel like a photographer.",
               heroSay='Landscape photographs by Thomas Chen <span class="nb">陳亮元</span>. Open any one to see how it was made.',
-              guidesCta="Read the guides",
+              guidesCta="Read the guide" if one else "Read the guides",
               workTitle="Photographs", workCta="See the gallery", guidesTitle="Guides",
               doorsLabel="Sections",
               doorGallery=f"{n_photos} photographs", doorPlaces=f"{n_places} countries", doorAbout="The photographer",
@@ -421,7 +430,8 @@ def build_home():
               doorGallery=f"{n_photos} 張照片", doorPlaces=f"{n_places} 個國家", doorAbout="攝影師",
               moreText=f"還有 {n_places - 1} 個國家的攻略還沒寫。",
               moreCta="看所有目的地")
-    others = [x["id"] for x in DATA["slides"] if x["id"] != lead]
+    leads = {g["lead"] for g in DATA["guides"]}
+    others = [x["id"] for x in DATA["slides"] if x["id"] != lead and x["id"] not in leads]
     rows = "\n".join(feature(g, root, en, zh) for g in DATA["guides"])
     body = f"""{cover(lead, root, en, zh)}
 
@@ -431,7 +441,7 @@ def build_home():
   <p class="rise" style="--i: 1" data-i18n-html="heroSay">{en['heroSay']}</p>
   <div class="intro__acts rise" style="--i: 2">
     <a class="btn" href="{IG['url']}" target="_blank" rel="noopener" data-i18n="followCta">Follow on Instagram</a>
-    <a class="btn btn--line" href="#guides-h" data-i18n="guidesCta">Read the guides</a>
+    <a class="btn btn--line" href="{one['href'] if one else '#guides-h'}" data-i18n="guidesCta">{e(en['guidesCta'])}</a>
   </div>
 </section>
 
@@ -491,7 +501,7 @@ def build_gallery():
   </section>
   <section class="part" aria-labelledby="by-h">
     <div class="part__head"><h2 id="by-h" data-i18n="byTitle">By country</h2></div>
-    <div class="tiles">{tiles}</div>
+    <ul class="tiles">{tiles}</ul>
   </section>
   <section class="part bleed" aria-labelledby="rest-h">
     <div class="part__head"><h2 id="rest-h" data-i18n="restTitle">Not photographed for the site yet</h2></div>
@@ -504,42 +514,53 @@ def build_gallery():
 
 
 def build_destinations():
+    """The continents travelled, each a square; the continents not travelled, as names."""
     en, zh = {}, {}
     root = ""
-    en.update(pTitle="Destinations",
-              pSub="Every place I've photographed, researched, eaten through, and written up — pick a continent to explore.")
-    zh.update(pTitle="目的地", pSub="每一個我拍攝過、研究過、吃遍也寫成指南的地方——選一個大洲開始探索。")
-    tiles = []
+    n_c, guides = len(COUNTRIES), DATA["guides"]
+    if len(guides) == 1:
+        tail_en = f"One guide so far: {guides[0]['title']['en']}."
+        tail_zh = f"攻略目前只有一篇：{guides[0]['title']['zh']}。"
+    else:
+        tail_en = f"{len(guides)} guides so far."
+        tail_zh = f"攻略目前有 {len(guides)} 篇。"
+    en.update(pTitle="Destinations", pSub=f"{n_c} countries, by continent. {tail_en}",
+              noPhoto="No photographs yet", restTitle="Not travelled yet")
+    zh.update(pTitle="目的地", pSub=f"{n_c} 個國家，依大洲排列。{tail_zh}",
+              noPhoto="還沒有照片", restTitle="還沒去過")
+    tiles, names = [], []
     for k in DATA["continents"]:
         kid = k["id"]
         own = [c for c in DATA["countries"] if c["continent"] == kid]
         en[f"k_{kid}"], zh[f"k_{kid}"] = k["en"], k["zh"]
-        en[f"ks_{kid}"], zh[f"ks_{kid}"] = k["sub"]["en"], k["sub"]["zh"]
-        if own:
-            en[f"kn_{kid}"] = "1 country" if len(own) == 1 else f"{len(own)} countries"
-            zh[f"kn_{kid}"] = f"{len(own)} 個國家"
-        else:
-            en[f"kn_{kid}"], zh[f"kn_{kid}"] = k["state"]["en"], k["state"]["zh"]
+        if not own:
+            names.append(f'<span data-i18n="k_{kid}">{e(k["en"])}</span>')
+            continue
+        en[f"kn_{kid}"] = "1 country" if len(own) == 1 else f"{len(own)} countries"
+        zh[f"kn_{kid}"] = f"{len(own)} 個國家"
         # the photograph named for the continent, or the first one from any of its countries
         sid = k.get("photo") or next((s["id"] for c in own for s in DATA["slides"] if s["country"] == c["id"]), None)
-        photo = ""
+        photo = '<span class="tile__none" data-i18n="noPhoto">No photographs yet</span>'
         if sid:
             strings(SLIDES[sid], en, zh)
-            photo = img(SLIDES[sid], root, "(max-width: 36rem) 92vw, (max-width: 56rem) 46vw, 30vw")
-        tiles.append(f"""      <a class="tile" href="continents/{kid}.html">
+            photo = img(SLIDES[sid], root, "(max-width: 56rem) 46vw, 22vw", soon=True, named=False)
+        tiles.append(f"""      <li><a class="tile" href="continents/{kid}.html">
         <span class="tile__photo">{photo}</span>
-        <span class="tile__name" data-i18n="k_{kid}">{e(k['en'])}</span>
-        <span class="tile__say" data-i18n="ks_{kid}">{e(k['sub']['en'])}</span>
+        <h2 class="tile__name" data-i18n="k_{kid}">{e(k['en'])}</h2>
         <span class="tile__count num" data-i18n="kn_{kid}">{e(en[f'kn_{kid}'])}</span>
-      </a>""")
+      </a></li>""")
     body = page_top("pTitle", "Destinations", "pSub", en["pSub"]) + f"""  <section class="part">
-    <div class="tiles tiles--three">
+    <ul class="tiles tiles--four">
 {chr(10).join(tiles)}
-    </div>
+    </ul>
+  </section>
+  <section class="part bleed" aria-labelledby="rest-h">
+    <div class="part__head"><h2 id="rest-h" data-i18n="restTitle">Not travelled yet</h2></div>
+    <div class="names">{''.join(names)}</div>
   </section>
 </div>"""
     write("destinations.html", f"Destinations - {SITE}", f"目的地 - {SITE}",
-          "Every place photographed and researched by 陳亮元 Thomas Chen, by continent and country.",
+          "The countries photographed by 陳亮元 Thomas Chen, by continent.",
           "destinations", body, en, zh)
 
 
@@ -555,9 +576,10 @@ def build_continents():
         root = "../"
         kid = k["id"]
         own = [c for c in DATA["countries"] if c["continent"] == kid]
-        en.update(pTitle=k["en"], pSub=k["sub"]["en"], pathDest="Destinations")
-        zh.update(pTitle=k["zh"], pSub=k["sub"]["zh"], pathDest="目的地")
-        top = page_top("pTitle", k["en"], "pSub", k["sub"]["en"],
+        sub = k.get("sub") or k["state"]
+        en.update(pTitle=k["en"], pSub=sub["en"], pathDest="Destinations")
+        zh.update(pTitle=k["zh"], pSub=sub["zh"], pathDest="目的地")
+        top = page_top("pTitle", k["en"], "pSub", sub["en"],
                        crumbs([(f"{root}destinations.html", "pathDest", "Destinations")]))
         if own:
             tiles, names = [], []
@@ -572,7 +594,7 @@ def build_continents():
                     names.append(f'<a href="{href}" data-i18n="cn_{cid}">{e(c["en"])}</a>')
             body = top
             if tiles:
-                body += f'  <section class="part">\n    <div class="tiles">{"".join(tiles)}</div>\n  </section>\n'
+                body += f'  <section class="part">\n    <ul class="tiles">{"".join(tiles)}</ul>\n  </section>\n'
             if names:
                 en["restTitle"], zh["restTitle"] = "Not photographed for the site yet", "還沒有放上照片的地方"
                 body += f"""  <section class="part bleed" aria-labelledby="rest-h">

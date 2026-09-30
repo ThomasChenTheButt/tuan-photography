@@ -19,6 +19,7 @@ const i18n = {
     navSkills: 'Skills',
     navAbout: 'About',
     navMenu: 'Menu',
+    skip: 'Skip to the content',
     footNote: '© 2026 tuan photography 陳亮元. All photographs are my own.',
     followCta: 'Follow on Instagram',
     vMaking: 'How it was made',
@@ -43,6 +44,7 @@ const i18n = {
     navSkills: '攝影技巧',
     navAbout: '關於我',
     navMenu: '選單',
+    skip: '跳到內容',
     footNote: '© 2026 tuan photography 陳亮元。所有照片皆為本人拍攝。',
     followCta: '追蹤 Instagram',
     vMaking: '這張怎麼拍',
@@ -110,6 +112,13 @@ menuBtn?.addEventListener('click', () => {
   menuBtn.setAttribute('aria-expanded', String(open));
 });
 
+/* The opening photograph stays in place under the page. When the keyboard reaches it
+   from further down, go back up so what has focus can be seen. */
+const coverLink = document.querySelector('.cover a');
+coverLink?.addEventListener('focus', () => {
+  if (coverLink.matches(':focus-visible')) window.scrollTo(0, 0);
+});
+
 /* ---------- 3. Looking at one photograph ----------
    The photographs on this page are listed in a JSON block (#slides-data).
    Opening one shows it large, with how it was made beside it.
@@ -134,13 +143,14 @@ function buildViewer() {
       <div>
         <button id="viewer-prev" type="button"></button>
         <button id="viewer-next" type="button"></button>
+        <span class="viewer__count num" id="viewer-count"></span>
       </div>
       <button id="viewer-close" type="button"></button>
     </div>
     <div class="viewer__photo"><img id="viewer-img" alt=""></div>
     <div class="viewer__side">
       <div>
-        <h2 id="viewer-place"></h2>
+        <h2 id="viewer-place" aria-live="polite"></h2>
         <p class="viewer__where" id="viewer-where"></p>
       </div>
       <div>
@@ -152,17 +162,31 @@ function buildViewer() {
     </div>`;
   document.body.append(viewer);
   const tidy = () => {
-    if (location.hash.startsWith('#view-')) history.replaceState(null, '', location.pathname + location.search);
+    if (history.state?.viewer) history.back();
+    else if (location.hash.startsWith('#view-')) history.replaceState(null, '', location.pathname + location.search);
     document.querySelector(`[data-slide="${current}"]`)?.focus({ preventScroll: true });
   };
+  /* the phone's Back closes the photograph instead of leaving the site */
+  window.addEventListener('popstate', () => {
+    if (viewer.open && !location.hash.startsWith('#view-')) viewer.close();
+  });
+  /* a sideways swipe on the photograph steps to the next one */
+  let touchX = null, touchY = null;
+  const photo = viewer.querySelector('.viewer__photo');
+  photo.addEventListener('touchstart', e => { touchX = e.touches[0].clientX; touchY = e.touches[0].clientY; }, { passive: true });
+  photo.addEventListener('touchend', e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX, dy = e.changedTouches[0].clientY - touchY;
+    touchX = touchY = null;
+    if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1);
+  }, { passive: true });
   viewer.querySelector('#viewer-close').addEventListener('click', () => { viewer.close(); tidy(); });
   viewer.querySelector('#viewer-prev').addEventListener('click', () => step(-1));
   viewer.querySelector('#viewer-next').addEventListener('click', () => step(1));
   viewer.addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft') step(-1);
     if (e.key === 'ArrowRight') step(1);
-    if (e.key === 'Escape') setTimeout(tidy, 0);
-  });
+  });   /* Escape closes the dialog itself, and 'close' below tidies up once */
   viewer.addEventListener('close', tidy);
 }
 
@@ -174,7 +198,13 @@ function renderViewer() {
   const s = slides.find(x => x.id === current);
   if (!s) return;
   const img = viewer.querySelector('#viewer-img');
-  img.src = root + 'images/web/' + s.file;
+  if (!img.src.endsWith('/' + s.file)) {
+    img.setAttribute('aria-busy', 'true');
+    img.onload = () => img.removeAttribute('aria-busy');
+    img.sizes = '(max-width: 56rem) 100vw, calc(100vw - 20rem)';
+    img.srcset = s.srcset;
+    img.src = root + 'images/web/' + s.file;
+  }
   img.width = s.w;
   img.height = s.h;
   img.alt = s.alt[lang];
@@ -202,6 +232,9 @@ function renderViewer() {
   const many = order.length > 1;
   viewer.querySelector('#viewer-prev').hidden = !many;
   viewer.querySelector('#viewer-next').hidden = !many;
+  const count = viewer.querySelector('#viewer-count');
+  count.hidden = !many;
+  count.textContent = `${order.indexOf(current) + 1} / ${order.length}`;
 }
 
 function pick(id, from) {
@@ -210,7 +243,7 @@ function pick(id, from) {
   current = id;
   const show = () => {
     renderViewer();
-    if (!viewer.open) { viewer.showModal(); viewer.focus({ preventScroll: true }); }
+    if (!viewer.open) { viewer.showModal(); viewer.querySelector('#viewer-close').focus({ preventScroll: true }); }
   };
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const thumb = from?.querySelector('img');
@@ -227,7 +260,8 @@ function pick(id, from) {
   } else {
     show();
   }
-  history.replaceState(null, '', '#view-' + id);
+  if (history.state?.viewer) history.replaceState({ viewer: true }, '', '#view-' + id);
+  else history.pushState({ viewer: true }, '', '#view-' + id);
 }
 
 function step(d) {
@@ -235,7 +269,7 @@ function step(d) {
   const i = order.indexOf(current);
   current = order[(i + d + order.length) % order.length];
   renderViewer();
-  history.replaceState(null, '', '#view-' + current);
+  history.replaceState({ viewer: true }, '', '#view-' + current);
 }
 
 document.querySelectorAll('a[data-slide]').forEach(el => {
