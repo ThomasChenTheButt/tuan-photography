@@ -100,7 +100,7 @@ a:hover { text-decoration-color: currentColor; color: var(--accent); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
 /* small capitals in the sans: menu, buttons, quiet labels */
-.caps, .menu a, .lang button, .menu-btn, .btn, .path, .door span, .tile__count, .tile__none, .viewer__count, .feature__go, .sheet thead th, .toc h2 {
+.caps, .menu a, .lang button, .menu-btn, .btn, .path, .door span, .tile__count, .tile__none, .book__none, .viewer__count, .feature__go, .sheet thead th, .toc h2 {
   font-family: var(--sans);
   font-size: 0.78rem;
   font-weight: 500;
@@ -108,7 +108,7 @@ a:hover { text-decoration-color: currentColor; color: var(--accent); }
   text-transform: uppercase;
   line-height: 1.3;
 }
-:lang(zh-Hant) :is(.caps, .menu a, .lang button, .menu-btn, .btn, .path, .door span, .tile__count, .tile__none, .viewer__count, .feature__go, .sheet thead th, .toc h2) { font-size: 0.875rem; letter-spacing: 0.14em; }
+:lang(zh-Hant) :is(.caps, .menu a, .lang button, .menu-btn, .btn, .path, .door span, .tile__count, .tile__none, .book__none, .viewer__count, .feature__go, .sheet thead th, .toc h2) { font-size: 0.875rem; letter-spacing: 0.14em; }
 
 /* the first stop for the keyboard: out of sight until it has focus */
 .skip { position: absolute; z-index: 4; top: var(--s-1); left: var(--edge); transform: translateY(-200%); }
@@ -277,6 +277,33 @@ main { flex: 1; }
 }
 
 .after { margin-top: var(--s-5); color: var(--text-2); text-align: center; }
+
+/* the guides as books on a shelf: spines in the three earth colours, the name along each.
+   Point at a book and it lifts off the shelf and turns its cover out, the photograph with
+   the name beneath. A guide not written yet stands there too, empty, and says so. */
+.shelf { display: flex; align-items: flex-end; justify-content: center; gap: var(--s-1); max-width: 64rem; margin-inline: auto; padding: var(--s-4) var(--s-3) 0; border-bottom: 1px solid var(--text); overflow-x: auto; overscroll-behavior-x: contain; }
+.book { position: relative; display: flex; align-items: flex-end; flex: none; text-decoration: none; color: var(--paper); transition: transform 500ms var(--out); }
+.book:hover { color: var(--paper); }
+.book__spine { display: flex; align-items: center; justify-content: center; width: 3.25rem; height: 20rem; padding: 1.25rem 0; writing-mode: vertical-rl; font-family: var(--serif); font-size: 1.3rem; line-height: 1; letter-spacing: 0.04em; white-space: nowrap; }
+:lang(zh-Hant) .book__spine { text-orientation: upright; letter-spacing: 0.25em; font-weight: 500; font-size: 1.2rem; }
+.book--clay .book__spine { background: var(--clay); }
+.book--olive .book__spine { background: var(--olive); }
+.book--slate .book__spine { background: var(--slate); }
+.book__cover { display: grid; align-content: end; gap: 0.6rem; width: 0; height: 20rem; overflow: hidden; transition: width 500ms var(--out); }
+.book__face { display: grid; place-content: center; width: 12rem; aspect-ratio: 2 / 3; margin-left: var(--s-1); background: var(--card); text-align: center; overflow: hidden; }
+.book__face img { width: 100%; height: 100%; object-fit: cover; }
+.book__none { padding: var(--s-2); color: var(--text-2); }
+.book__name { display: block; width: 12rem; margin-left: var(--s-1); font-family: var(--serif); font-size: 1.25rem; line-height: 1.2; color: var(--text); text-align: center; }
+:lang(zh-Hant) .book__name { font-weight: 500; letter-spacing: 0.06em; }
+.book:hover, .book:focus-visible, .book.open { transform: translateY(-1rem); }
+.book:hover .book__cover, .book:focus-visible .book__cover, .book.open .book__cover { width: 12.5rem; }
+@media (max-width: 40rem) {
+  .shelf { justify-content: flex-start; padding-inline: var(--s-2); }
+  .book__spine { width: 2.75rem; height: 16rem; font-size: 1.1rem; }
+  .book__cover { height: 16rem; }
+  .book__face, .book__name { width: 9.5rem; }
+  .book:hover .book__cover, .book:focus-visible .book__cover, .book.open .book__cover { width: 10rem; }
+}
 
 /* a wall of photographs: rows that fill the width, nothing cropped, each with its name */
 .wall { display: grid; row-gap: var(--s-4); }
@@ -562,7 +589,7 @@ main { flex: 1; }
   }
 
   @supports (animation-timeline: view()) {
-    .wall .piece, .grid figure, .feature, .tile, .door {
+    .wall .piece, .grid figure, .feature, .tile, .door, .shelf {
       animation: rise linear both;
       animation-timeline: view();
       animation-range: entry 0% entry 36%;

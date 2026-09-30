@@ -406,6 +406,40 @@ def feature(g, root, en, zh, with_country=True):
     </a>"""
 
 
+def shelf(root, en, zh):
+    """The guides as books on a shelf, in the owner's order. A guide that is written is a book
+    that opens; one that is not yet stands on the shelf empty and says so."""
+    en["notYet"], zh["notYet"] = "Not written yet", "還沒寫"
+    tones = ("clay", "olive", "slate")
+    books = []
+    for i, b in enumerate(DATA["shelf"]):
+        tone = tones[i % len(tones)]
+        if "guide" in b:
+            g = next(x for x in DATA["guides"] if x["id"] == b["guide"])
+            ph = SLIDES[b.get("photo") or g["lead"]]
+            strings(ph, en, zh)
+            key = f"bk_{g['id']}"
+            en[key], zh[key] = g["title"]["en"], g["title"]["zh"]
+            en[f"bo_{g['id']}"] = f"{g['title']['en']}: read the guide"
+            zh[f"bo_{g['id']}"] = f"{g['title']['zh']}：閱讀攻略"
+            face = img(ph, root, "12rem", soon=True, named=False)
+            label, gid, title = e(en[f"bo_{g['id']}"]), g["id"], e(g["title"]["en"])
+            books.append(f'<a class="book book--{tone}" href="{root}{g["href"]}" aria-label="{label}" data-i18n-aria="bo_{gid}">'
+                         f'<span class="book__spine" data-i18n="{key}">{title}</span>'
+                         f'<span class="book__cover"><span class="book__face">{face}</span>'
+                         f'<span class="book__name" data-i18n="{key}">{title}</span></span></a>')
+        else:
+            c = COUNTRIES[b["country"]]
+            title = b.get("title") or {"en": c["en"], "zh": c["zh"]}
+            key = f"bk_{c['id']}"
+            en[key], zh[key] = title["en"], title["zh"]
+            books.append(f'<div class="book book--{tone}">'
+                         f'<span class="book__spine" data-i18n="{key}">{e(title["en"])}</span>'
+                         f'<span class="book__cover"><span class="book__face"><span class="book__none" data-i18n="notYet">Not written yet</span></span>'
+                         f'<span class="book__name" data-i18n="{key}">{e(title["en"])}</span></span></div>')
+    return '<div class="shelf">' + "".join(books) + "</div>"
+
+
 # ------------------------------------------------------------------ pages
 
 def build_home():
@@ -432,7 +466,6 @@ def build_home():
               moreCta="看所有目的地")
     leads = {g["lead"] for g in DATA["guides"]}
     others = [x["id"] for x in DATA["slides"] if x["id"] != lead and x["id"] not in leads]
-    rows = "\n".join(feature(g, root, en, zh) for g in DATA["guides"])
     body = f"""{cover(lead, root, en, zh)}
 
 <div class="leaf">
@@ -464,9 +497,7 @@ def build_home():
 <div class="band">
   <section class="wrap part" aria-labelledby="guides-h">
     <div class="part__head"><h2 id="guides-h" data-i18n="guidesTitle">Guides</h2></div>
-    <div class="features">
-    {rows}
-    </div>
+    {shelf(root, en, zh)}
     <p class="after"><span data-i18n="moreText">{e(en['moreText'])}</span> <a href="{root}destinations.html" data-i18n="moreCta">See every destination</a></p>
   </section>
 </div>

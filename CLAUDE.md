@@ -1,5 +1,12 @@
 # tuan photography 陳亮元 — project instructions
 
+> **This folder is an experiment: `bookshelf`** (started 2026-10-01, branch `exp/bookshelf`, preview on port 8644).
+> **What is being tried:** the home page's "Guides" section as books on a shelf: China, Vietnam, Japan, Barcelona,
+> London. Only Barcelona is written; the other four stand empty and say "Not written yet", at his request. Point at
+> a book and it lifts and turns its cover out; on phones, tap. **Skill:** none. **Rules suspended here:** "no
+> stand-in for a guide that does not exist" is relaxed to an honest empty book, on his word (2026-10-01).
+> **Waiting on:** his word, keep or drop.
+
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
 Bilingual EN / 繁體中文. Owner is not a developer — explain in plain English, handle all tech.
 

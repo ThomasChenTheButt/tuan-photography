@@ -240,6 +240,13 @@
       "iso": "125"
     }
   ],
+  "shelf": [
+    {"country": "china"},
+    {"country": "vietnam"},
+    {"country": "japan"},
+    {"guide": "barcelona", "photo": "casa-batllo"},
+    {"country": "uk", "title": {"en": "London", "zh": "倫敦"}}
+  ],
   "guides": [
     {
       "id": "barcelona",
