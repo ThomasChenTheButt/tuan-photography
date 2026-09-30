@@ -407,37 +407,36 @@ def feature(g, root, en, zh, with_country=True):
 
 
 def shelf(root, en, zh):
-    """The guides as books on a shelf, in the owner's order. A guide that is written is a book
-    that opens; one that is not yet stands on the shelf empty and says so."""
-    en["notYet"], zh["notYet"] = "Not written yet", "還沒寫"
+    """The guides as books on a shelf, in the owner's order: countries that have photographs.
+    A written guide is a book that opens the guide; the others open the country's photographs
+    and say the guide is not written yet."""
+    en.update(bandGuide="A photographer's guide", bandPhotos="Photographs",
+              bookOpen="Read the guide", bookNot="Guide not written yet", series="tuan photography")
+    zh.update(bandGuide="攝影師的攻略", bandPhotos="作品", bookOpen="閱讀攻略", bookNot="攻略還沒寫", series="tuan photography")
     tones = ("clay", "olive", "slate")
     books = []
     for i, b in enumerate(DATA["shelf"]):
         tone = tones[i % len(tones)]
         if "guide" in b:
             g = next(x for x in DATA["guides"] if x["id"] == b["guide"])
+            key, title, href = f"bk_{g['id']}", g["title"], f"{root}{g['href']}"
             ph = SLIDES[b.get("photo") or g["lead"]]
-            strings(ph, en, zh)
-            key = f"bk_{g['id']}"
-            en[key], zh[key] = g["title"]["en"], g["title"]["zh"]
-            en[f"bo_{g['id']}"] = f"{g['title']['en']}: read the guide"
-            zh[f"bo_{g['id']}"] = f"{g['title']['zh']}：閱讀攻略"
-            face = img(ph, root, "12rem", soon=True, named=False)
-            label, gid, title = e(en[f"bo_{g['id']}"]), g["id"], e(g["title"]["en"])
-            books.append(f'<a class="book book--{tone}" href="{root}{g["href"]}" aria-label="{label}" data-i18n-aria="bo_{gid}">'
-                         f'<span class="book__spine" data-i18n="{key}">{title}</span>'
-                         f'<span class="book__face">{face}</span>'
-                         f'<span class="book__name" data-i18n="{key}">{title}</span></a>')
+            band, status = "bandGuide", "bookOpen"
         else:
             c = COUNTRIES[b["country"]]
-            title = b.get("title") or {"en": c["en"], "zh": c["zh"]}
-            key = f"bk_{c['id']}"
-            en[key], zh[key] = title["en"], title["zh"]
-            books.append(f'<div class="book book--{tone}">'
-                         f'<span class="book__spine" data-i18n="{key}">{e(title["en"])}</span>'
-                         f'<span class="book__face book__face--blank"><b data-i18n="{key}">{e(title["en"])}</b>'
-                         f'<span class="book__none" data-i18n="notYet">Not written yet</span></span>'
-                         f'<span class="book__name" data-i18n="{key}">{e(title["en"])}</span></div>')
+            key, title, href = f"bk_{c['id']}", b.get("title") or {"en": c["en"], "zh": c["zh"]}, f"{root}countries/{c['id']}.html"
+            ph = SLIDES[b["photo"]] if b.get("photo") else next(x for x in DATA["slides"] if x["country"] == c["id"])
+            band, status = "bandPhotos", "bookNot"
+        strings(ph, en, zh)
+        en[key], zh[key] = title["en"], title["zh"]
+        en[f"bo_{key}"] = f"{title['en']}: {en[status].lower() if status == 'bookOpen' else en[status]}"
+        zh[f"bo_{key}"] = f"{title['zh']}：{zh[status]}"
+        t = e(title["en"])
+        books.append(f'<a class="book book--{tone}" href="{href}" aria-label="{e(en[f"bo_{key}"])}" data-i18n-aria="bo_{key}">'
+                     f'<span class="book__spine"><b data-i18n="{key}">{t}</b><i data-i18n="series">tuan photography</i></span>'
+                     f'<span class="book__face">{img(ph, root, "12rem", soon=True, named=False)}'
+                     f'<span class="book__band"><b data-i18n="{key}">{t}</b><span data-i18n="{band}">{e(en[band])}</span></span></span>'
+                     f'<span class="book__name"><b data-i18n="{key}">{t}</b><span data-i18n="{status}">{e(en[status])}</span></span></a>')
     return '<div class="shelf">' + "".join(books) + "</div>"
 
 
@@ -466,7 +465,8 @@ def build_home():
               moreText=f"還有 {n_places - 1} 個國家的攻略還沒寫。",
               moreCta="看所有目的地")
     leads = {g["lead"] for g in DATA["guides"]}
-    others = [x["id"] for x in DATA["slides"] if x["id"] != lead and x["id"] not in leads]
+    # the home page shows a first dozen; the gallery shows them all
+    others = [x["id"] for x in DATA["slides"] if x["id"] != lead and x["id"] not in leads][:12]
     body = f"""{cover(lead, root, en, zh)}
 
 <div class="leaf">

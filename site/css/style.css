@@ -280,35 +280,44 @@ main { flex: 1; }
 
 /* the guides as books on a shelf, seen in three dimensions. Each book stands turned a little
    to the left, so its cover and its spine both show, and the row overlaps like a shelf seen
-   from one end. Point at a book and it comes forward and turns to face you; its name then
-   appears beneath it on the shelf. A guide not written yet is a plain paper book that says so. */
+   from one end. A cover is the photograph with a paper band beneath it carrying the name and
+   the series line, the way a printed guide has; the spine carries the name and the imprint.
+   Point at a book and it comes forward and turns to face you; its name and where it leads
+   then appear beneath it on the shelf. */
 .shelf { display: flex; align-items: flex-end; justify-content: center; max-width: 64rem; margin-inline: auto; padding: var(--s-4) var(--s-4) 0; border-bottom: 1px solid var(--text); perspective: 70rem; perspective-origin: 50% 40%; }
-.book { --turn: 38deg; --deep: 2.5rem; position: relative; flex: none; width: 12rem; height: 18rem; margin-right: -2.5rem; text-decoration: none; color: var(--paper); transform-style: preserve-3d; transform: rotateY(var(--turn)); transition: transform 600ms var(--out); }
+.book { --turn: 36deg; --deep: 3rem; position: relative; flex: none; width: 12rem; height: 18rem; margin-right: -2.25rem; text-decoration: none; color: var(--paper); transform-style: preserve-3d; transform: rotateY(var(--turn)); transition: transform 600ms var(--out); }
 .book:last-child { margin-right: 0; }
 .book:hover { color: var(--paper); }
 .book__face, .book__spine { position: absolute; top: 0; left: 0; height: 100%; backface-visibility: hidden; }
-.book__face { width: 100%; background: var(--band); overflow: hidden; }
+.book__face { display: grid; grid-template-rows: minmax(0, 1fr) auto; width: 100%; background: var(--band); overflow: hidden; outline: 1px solid var(--line); outline-offset: -1px; }
 .book__face img { width: 100%; height: 100%; object-fit: cover; }
-.book__face--blank { display: grid; align-content: center; justify-items: start; gap: 0.9rem; padding: var(--s-3) 3.5rem var(--s-3) var(--s-3); background: var(--card); color: var(--text); text-align: left; }
-.book__face--blank b { font-family: var(--serif); font-weight: 400; font-size: 1.5rem; line-height: 1.2; }
-:lang(zh-Hant) .book__face--blank b { font-weight: 500; letter-spacing: 0.08em; }
-.book__none { color: var(--text-2); }
-.book__spine { display: flex; align-items: center; justify-content: center; width: var(--deep); padding: 1rem 0; writing-mode: vertical-rl; font-family: var(--serif); font-size: 1.05rem; line-height: 1; letter-spacing: 0.04em; white-space: nowrap; transform-origin: left center; transform: rotateY(-90deg) translateX(-100%); }
-:lang(zh-Hant) .book__spine { text-orientation: upright; letter-spacing: 0.2em; font-weight: 500; font-size: 1rem; }
+.book__band { display: grid; gap: 0.35rem; padding: 0.85rem 1rem 0.9rem; background: var(--paper); color: var(--text); border-top: 1px solid var(--line); }
+.book__band b { font-family: var(--serif); font-weight: 400; font-size: 1.35rem; line-height: 1.15; }
+:lang(zh-Hant) .book__band b { font-weight: 500; letter-spacing: 0.06em; }
+.book__band span { font-size: 0.66rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-2); }
+:lang(zh-Hant) .book__band span { font-size: 0.75rem; letter-spacing: 0.14em; }
+.book__spine { display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: var(--deep); padding: 1.1rem 0; writing-mode: vertical-rl; transform-origin: left center; transform: rotateY(-90deg) translateX(-100%); }
+.book__spine b { font-family: var(--serif); font-weight: 400; font-size: 1.1rem; line-height: 1; letter-spacing: 0.04em; white-space: nowrap; }
+.book__spine i { font-style: normal; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; white-space: nowrap; }
+:lang(zh-Hant) .book__spine b { text-orientation: upright; letter-spacing: 0.2em; font-weight: 500; font-size: 1rem; }
 .book--clay .book__spine { background: var(--clay); }
 .book--olive .book__spine { background: var(--olive); }
 .book--slate .book__spine { background: var(--slate); }
-.book__name { position: absolute; left: 0; right: 0; top: calc(100% + 0.9rem); font-family: var(--serif); font-size: 1.25rem; line-height: 1.2; color: var(--text); text-align: center; opacity: 0; transition: opacity 400ms var(--out); }
-:lang(zh-Hant) .book__name { font-weight: 500; letter-spacing: 0.06em; }
+.book__name { position: absolute; left: 50%; top: calc(100% + 0.9rem); width: 16rem; transform: translateX(-50%); display: grid; gap: 0.2rem; color: var(--text); text-align: center; opacity: 0; transition: opacity 400ms var(--out); }
+.book__name b { font-family: var(--serif); font-weight: 400; font-size: 1.25rem; line-height: 1.2; }
+:lang(zh-Hant) .book__name b { font-weight: 500; letter-spacing: 0.06em; }
+.book__name span { color: var(--text-2); font-size: var(--t-xs); }
 .book:hover, .book:focus-visible, .book.open { transform: rotateY(0deg) translateZ(4rem) translateY(-1rem); }
 .book:hover .book__name, .book:focus-visible .book__name, .book.open .book__name { opacity: 1; }
 @media (max-width: 40rem) {
-  .shelf { justify-content: flex-start; padding: var(--s-3) var(--s-2) 2.75rem; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; scrollbar-width: none; }
+  .shelf { justify-content: flex-start; padding: var(--s-3) var(--s-2) 3rem; overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; scrollbar-width: none; }
   .shelf::-webkit-scrollbar { display: none; }
   .shelf::after { content: ""; flex: none; width: var(--s-4); }
-  .book { width: 9rem; height: 13.5rem; margin-right: -2rem; --deep: 2rem; }
-  .book__face--blank b { font-size: 1.2rem; }
-  .book__name { font-size: 1.1rem; }
+  .book { width: 9rem; height: 13.5rem; margin-right: -1.75rem; --deep: 2.25rem; }
+  .book__band { padding: 0.6rem 0.7rem 0.65rem; }
+  .book__band b { font-size: 1.1rem; }
+  .book__name { width: 12rem; }
+  .book__name b { font-size: 1.1rem; }
 }
 
 /* the portfolio: a tight grid of even openings, no captions. The whole photograph is one step away. */
