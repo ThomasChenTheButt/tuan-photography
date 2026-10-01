@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Design 2 - five versions</title>
+  <link rel="stylesheet" href="fonts.css">
+  <style>
+    :root { color-scheme: light; --ink: oklch(24% 0.01 250); --ink-2: oklch(46% 0.012 250); --ground: oklch(97.5% 0.004 250); --rule: oklch(86% 0.006 250); --go: oklch(45% 0.12 255); }
+    * { box-sizing: border-box; margin: 0; }
+    body { min-height: 100svh; background: var(--ground); color: var(--ink); font: 400 1rem/1.6 "Geist", "Noto Sans TC", system-ui, sans-serif; padding: clamp(2rem, 6vw, 5rem) clamp(1rem, 5vw, 4rem); }
+    h1 { font: 500 clamp(1.6rem, 1.2rem + 1.6vw, 2.4rem)/1.2 "Geist", "Noto Sans TC", sans-serif; letter-spacing: -0.01em; }
+    p.say { color: var(--ink-2); margin-top: 0.5rem; max-width: 52ch; }
+    ol { list-style: none; padding: 0; margin-top: 2.5rem; border-top: 1px solid var(--rule); max-width: 60rem; }
+    li a { display: grid; grid-template-columns: minmax(9rem, 14rem) 1fr; gap: 0.25rem 2rem; padding: 1.25rem 0; border-bottom: 1px solid var(--rule); color: inherit; text-decoration: none; }
+    li a:hover b, li a:focus-visible b { color: var(--go); }
+    a:focus-visible { outline: 2px solid var(--go); outline-offset: 4px; }
+    b { font-weight: 500; font-size: 1.2rem; }
+    b span { display: block; font-size: 0.95rem; color: var(--ink-2); font-weight: 400; }
+    li a > span { color: var(--ink-2); }
+    @media (max-width: 40rem) { li a { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <h1>Design 2 · 五個版本</h1>
+  <p class="say">The home page as a map. Five versions to choose from; each opens the guide from a book. 首頁是一張地圖，五個版本，挑一個。</p>
+  <ol>
+    <li><a href="departures/"><b>Departures<span>出發</span></b><span>A daylight departure board: choose a flight, the map flies there and the book rises. 機場出發看板，選一班，地圖就飛過去。</span></a></li>
+    <li><a href="pinned/"><b>Saved places<span>收藏的地點</span></b><span>Your Google Maps idea, made calm and light: books stand on the map like pins, photos appear as you zoom in. 像 Google 地圖，書像圖釘站在地圖上。</span></a></li>
+    <li><a href="routes/"><b>Flight lines<span>航線</span></b><span>An in-flight magazine route map: lines from Taipei to every place, the book waits at the end of each line. 機上雜誌的航線圖，從台北出發的每一條線。</span></a></li>
+    <li><a href="globe/"><b>Desk globe<span>地球儀</span></b><span>A globe you turn with your hand, or let it spin and choose for you. 用手轉的地球儀，也可以讓它幫你選。</span></a></li>
+    <li><a href="atlas/"><b>Circled atlas<span>圈起來的地圖冊</span></b><span>A printed atlas and a pen: every photo is a stamp in the index, circled on the map. 印刷地圖冊加一支筆，每張照片都圈在地圖上。</span></a></li>
+  </ol>
+</body>
+</html>

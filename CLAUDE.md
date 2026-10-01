@@ -80,6 +80,17 @@ Arranged on 2026-09-28 at his request, so the top level reads at a glance. Keep 
   opening photograph, light only, Instagram as the only contact, English plus 中文. Everything
   else about its look starts fresh; `DESIGN.md` describes design 1 only. Both folders are hidden
   in Finder (Cmd+Shift+. shows them).
+- **How design 2 is made** (set up 2026-10-01). `python3 tools/build2.py` reads the shared facts
+  and writes `design 2/data.js` (`window.SITE`: countries, photographs, books, the guide as ready
+  HTML, words in both languages) and `design 2/fonts.css`. Rerun it whenever `data/` or
+  `content/` changes, as with `tools/build.py`. `design 2/images` and `design 2/fonts` are links
+  to design 1's folders, so photographs and typefaces are never copied. Map shapes and libraries
+  live in `design 2/vendor/` (d3, topojson-client, Natural Earth via world-atlas; ISC licences
+  beside them); pages never contact a map or font server. Every country and photograph in
+  `data/site.json` carries `ll` [lat, lng]: the place's public location, approximate, for the
+  map. It is not the camera's GPS (the files carry none). Design 2's pages are hand-built per
+  version (`design 2/<version>/`), loading `../data.js`; no facts are written into them.
+  `start.command` starts both servers, 8642 and 8645.
 - **In Finder he sees only what he opens himself** (his request, 2026-09-29: the full list
   felt cluttered). Six things: `originals/`, `ideas/`, the three launchers, `我的筆記.txt`.
   Everything else is flagged hidden for Finder by `python3 tools/finder_view.py`. Nothing is
