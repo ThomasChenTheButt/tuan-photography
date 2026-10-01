@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Artifact 版 — package site/ so Claude can publish it as a Claude Artifact.
+"""Artifact 版 — package design 1/ so Claude can publish it as a Claude Artifact.
 
     python3 tools/build_artifact.py              writes .claude/artifact-build/
     python3 tools/build_artifact.py --selftest   also adds selftest.html (test only)
 
 Claude then publishes .claude/artifact-build/index.html with the Artifact tool and every
-other file in the folder alongside it (the list is in files.json). Nothing in site/ changes.
+other file in the folder alongside it (the list is in files.json). Nothing in design 1/ changes.
 
-What differs from site/:
+What differs from design 1/:
 - index.html loses its <html>/<head>/<body> wrapper, because the publisher supplies one.
   Its language and data-root attributes are carried over in a one-line script.
 - css/fonts.css keeps only the font files some page can actually use. The two Noto
@@ -29,7 +29,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SITE = ROOT / "site"
+SITE = ROOT / "design 1"
 OUT = ROOT / ".claude" / "artifact-build"
 
 TITLE = "tuan photography 陳亮元"

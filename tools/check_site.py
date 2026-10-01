@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """網站健康檢查 — checks that nothing on the site points at something missing.
 
-    python3 tools/check_site.py                 check site/
+    python3 tools/check_site.py                 check design 1/
     python3 tools/check_site.py --save f.json   also note each page's contents in f.json
     python3 tools/check_site.py --compare f.json   also say which pages differ from that note
 
@@ -19,7 +19,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SITE = ROOT / "site"
+SITE = ROOT / "design 1"
 ELSEWHERE = re.compile(r"^(https?:|mailto:|tel:|data:|javascript:|//|#)")
 STAMP = re.compile(r"\?v=\d+")
 

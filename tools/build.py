@@ -4,10 +4,10 @@
     python3 tools/build.py
 
 Reads data/site.json (photographs, countries, guides) and content/ (hand-written
-page bodies), and writes plain HTML files into site/. Nothing here runs on the live
-site: the output is ordinary static pages. site/ is the whole website and nothing else.
+page bodies), and writes plain HTML files into design 1/. Nothing here runs on the live
+site: the output is ordinary static pages. design 1/ is the whole website and nothing else.
 
-To add a photograph: put the web-sized file in site/images/web/, add an entry to
+To add a photograph: put the web-sized file in design 1/images/web/, add an entry to
 "slides" in data/site.json, and run this script again.
 """
 import hashlib
@@ -20,7 +20,7 @@ import time
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / "site"   # the website itself: everything a visitor receives
+OUT = ROOT / "design 1"   # the website itself: everything a visitor receives
 DATA = json.loads((ROOT / "data" / "site.json").read_text(encoding="utf-8"))
 SLIDES = {s["id"]: s for s in DATA["slides"]}
 COUNTRIES = {c["id"]: c for c in DATA["countries"]}

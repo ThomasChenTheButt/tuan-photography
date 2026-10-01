@@ -4,7 +4,7 @@
 Same family as FinTuan's FT and BodyTuan's BT — rounded square, two sans letters — with a
 strip of landscape underneath: an ink ridgeline traced loosely from the Aoraki hero photo and
 a kodak-red sun. The colours are the icon's own, kept from the site's first design; they are
-not read from site/css/style.css.
+not read from design 1/css/style.css.
 
 Run from anywhere:  python3 tools/icons.py
 Safe to rerun — images are overwritten.
@@ -17,7 +17,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parent.parent
-SITE = ROOT / 'site'
+SITE = ROOT / 'design 1'
 ICONS = SITE / 'icons'
 
 PAPER = '#f6efe3'

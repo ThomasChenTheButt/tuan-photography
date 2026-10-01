@@ -8,15 +8,15 @@ __pycache__/
 .claude/
 
 # Your original full-res photos stay on your Mac only — the website uses the
-# web-sized copies in site/images/web/. Keeps the repo small and your originals private.
+# web-sized copies in design 1/images/web/. Keeps the repo small and your originals private.
 # The photo list inside is private too: it can show photos that aren't published.
 originals/*
 !originals/README.md
 
 # Safety net: anything dropped into the site's images by mistake stays private as well.
-# Only the web copies in site/images/web/ are saved.
-site/images/*
-!site/images/web/
+# Only the web copies in design 1/images/web/ are saved.
+/design 1/images/*
+!/design 1/images/web/
 
 # The old drop location, retired 2026-09-28. If the folder ever comes back, it stays private.
 /images/

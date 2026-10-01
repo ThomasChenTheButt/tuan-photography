@@ -193,7 +193,7 @@ components:
 
 # Design System: tuan photography 陳亮元
 
-This file was written on 2026-09-28 from the built site (`site/css/style.css`, `tools/build.py`, `site/js/main.js` and the pages they produce), after the rebuild that followed the owner's reference sites. It replaces the record of the earlier dark build, which is kept at the git tag `exhibition-hang-v2`. Where this file and the stylesheet ever disagree, the stylesheet is right and this file needs updating.
+This file was written on 2026-09-28 from the built site (`design 1/css/style.css`, `tools/build.py`, `design 1/js/main.js` and the pages they produce), after the rebuild that followed the owner's reference sites. It replaces the record of the earlier dark build, which is kept at the git tag `exhibition-hang-v2`. Where this file and the stylesheet ever disagree, the stylesheet is right and this file needs updating.
 
 ## Overview
 
@@ -220,7 +220,7 @@ Photographs are shown bare. In a row they keep their own shape and are never tri
 
 ## Colors
 
-A warm, low-colour palette: paper, stone and ink that all lean toward brown, one deep clay for links, and three muted earth colours for flat blocks. The values in the front matter are the ones in `site/css/style.css` and are the only source.
+A warm, low-colour palette: paper, stone and ink that all lean toward brown, one deep clay for links, and three muted earth colours for flat blocks. The values in the front matter are the ones in `design 1/css/style.css` and are the only source.
 
 ### Primary
 - **Deep Clay** (`accent`): links inside guide text, the colour a link or word control turns under the pointer, the fill a primary button turns under the pointer, the keyboard focus ring, the section being read in the contents list, and the map link in the viewer.
@@ -258,7 +258,7 @@ Measured contrast, worked out from the built tokens. Warm Ink on Warm Paper is a
 
 **Character:** A high-contrast book serif for the names of places, against a plain modern sans for everything that is read. The serif is always weight 400 in English; emphasis comes from size and from centring, not from bold.
 
-The pages load Playfair Display at weight 400, Geist at 400 to 600, Noto Serif TC at 500 to 600 and Noto Sans TC at 400 to 600. The files are kept with the site in `site/fonts/` and named in `site/css/fonts.css`, which `tools/fonts.py` writes; no page contacts Google Fonts. The Chinese faces are cut into about a hundred slices each, and a browser fetches only the slices a page needs.
+The pages load Playfair Display at weight 400, Geist at 400 to 600, Noto Serif TC at 500 to 600 and Noto Sans TC at 400 to 600. The files are kept with the site in `design 1/fonts/` and named in `design 1/css/fonts.css`, which `tools/fonts.py` writes; no page contacts Google Fonts. The Chinese faces are cut into about a hundred slices each, and a browser fetches only the slices a page needs.
 
 ### Hierarchy
 - **Display** (serif, 400, `clamp(2.3rem, 1.45rem + 3.4vw, 4.25rem)`, line-height 1.14): page titles, the home page line, the name of a guide shown as a feature (line-height 1.1), the Instagram handle in the footer (line-height 1).
@@ -478,7 +478,7 @@ These are recorded as open. None of them is a settled part of the system.
 - **Carried from the product notes:** which country gets the next guide, and whether a newsletter sign-up is wanted.
 
 ### Decided by the owner on 2026-09-28
-- **Typeface hosting.** The typefaces are kept with the site, in `site/fonts/`.
+- **Typeface hosting.** The typefaces are kept with the site, in `design 1/fonts/`.
 - **About biography.** The text on the About page stays as it is.
 - **Contact email.** No email address is published. Instagram is the way to reach him.
 
