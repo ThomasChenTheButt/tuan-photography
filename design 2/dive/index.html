@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#f9f8f5">
+<title>tuan photography 陳亮元</title>
+<meta name="description" content="Landscape photographs by Thomas Chen 陳亮元 from sixteen countries. Turn the globe, put a finger on a place, and dive into its photographs and guide.">
+<link rel="preload" href="fonts/familjen-grotesk-latin-wght.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../fonts.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="home" id="home">
+
+  <header class="top">
+    <h1 class="site"><a href="./">tuan photography <span class="nb">陳亮元</span></a></h1>
+    <div class="top__end">
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" data-lang="zh" aria-pressed="false" lang="zh-Hant">中文</button>
+      </div>
+      <a class="ig" href="https://www.instagram.com/tuan_1127/" target="_blank" rel="noopener"><span data-t="ig">Instagram</span> <span class="ig__handle">tuan_1127</span></a>
+    </div>
+  </header>
+
+  <main class="main">
+    <div class="stage" id="stage" tabindex="0" role="application" aria-roledescription="globe" aria-label="Globe" aria-describedby="stage-help">
+      <canvas class="globe" id="globe" aria-hidden="true"></canvas>
+      <svg class="leads" id="leads" aria-hidden="true"></svg>
+      <div class="marks" id="marks"></div>
+      <p class="sr" id="stage-help" data-t="globeHelp">A globe of the places Thomas Chen has photographed. Arrow keys turn it, plus and minus zoom, Enter dives into the place nearest the middle.</p>
+    </div>
+
+    <div class="zoom" role="group" aria-label="Globe controls">
+      <button type="button" class="word" id="zoom-in" data-t="zoomIn">Zoom in</button>
+      <button type="button" class="word" id="zoom-out" data-t="zoomOut">Zoom out</button>
+      <button type="button" class="word places-open" id="places-open" aria-controls="places" aria-expanded="false" data-t="places">Places</button>
+    </div>
+
+    <nav class="places" id="places" aria-labelledby="places-h">
+      <div class="places__head">
+        <h2 id="places-h" data-t="places">Places</h2>
+        <button type="button" class="word places__close" id="places-close" data-t="hidePlaces">Hide</button>
+      </div>
+      <ol class="places__list" id="places-list"></ol>
+    </nav>
+  </main>
+
+  <section class="strip" id="strip" aria-labelledby="strip-h">
+    <h2 class="sr" id="strip-h" data-t="index">Index of photographs</h2>
+    <div class="strip__scroll" id="strip-scroll" tabindex="-1">
+      <div class="strip__row" id="strip-row"></div>
+    </div>
+  </section>
+
+  <p class="sr" id="live" aria-live="polite"></p>
+</div>
+
+<section class="page" id="page" hidden aria-labelledby="page-h">
+  <div class="page__top">
+    <button type="button" class="word word--back" id="back" data-t="back">Back to the map</button>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" data-lang="zh" aria-pressed="false" lang="zh-Hant">中文</button>
+    </div>
+  </div>
+  <div class="cover" id="cover" hidden></div>
+  <div class="sheet" id="sheet">
+    <div class="page__body" id="page-body"></div>
+    <footer class="page__foot">
+      <button type="button" class="word word--back" id="back-2" data-t="back">Back to the map</button>
+      <a href="https://www.instagram.com/tuan_1127/" target="_blank" rel="noopener"><span data-t="follow">Follow on Instagram</span></a>
+    </footer>
+  </div>
+</section>
+
+<dialog class="viewer" id="viewer" aria-labelledby="viewer-h">
+  <div class="viewer__in">
+    <figure class="viewer__fig">
+      <span class="viewer__pic" id="viewer-pic"></span>
+      <figcaption class="viewer__cap">
+        <h2 id="viewer-h"></h2>
+        <p class="viewer__where" id="viewer-where"></p>
+        <p class="viewer__coord num" id="viewer-coord"></p>
+        <p class="viewer__data num" id="viewer-data"></p>
+        <p class="viewer__extra" id="viewer-extra"></p>
+      </figcaption>
+    </figure>
+    <div class="viewer__bar">
+      <button type="button" class="word" id="viewer-prev" data-t="prev">Previous</button>
+      <button type="button" class="word" id="viewer-next" data-t="next">Next</button>
+      <button type="button" class="word word--back" id="viewer-close" data-t="close">Close</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="../data.js"></script>
+<script src="../vendor/d3.min.js"></script>
+<script src="../vendor/topojson-client.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

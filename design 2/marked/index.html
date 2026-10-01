@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#eef3f5">
+<title>tuan photography 陳亮元</title>
+<meta name="description" content="Sixteen places Thomas Chen has photographed, each ringed on a light map with its coordinates. Pick one and the map dives into the photograph and the guide.">
+<link rel="preload" href="fonts/alegreya-sans/alegreya-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/alegreya-sans/alegreya-sans-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../vendor/countries-110m.json" as="fetch" crossorigin>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../fonts.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <div class="map" id="map" tabindex="0" role="region" aria-roledescription="map" aria-describedby="map-hint" data-t-aria="mapLabel" aria-label="Map of the places he has photographed">
+    <canvas class="map__land" id="land" aria-hidden="true"></canvas>
+    <svg class="map__marks" id="marks" aria-hidden="true"></svg>
+    <div class="map__caps" id="caps"></div>
+    <p class="sr" id="map-hint" data-t="mapHint">Drag or use the arrow keys to move the map. Scroll, or press plus and minus, to zoom. Tab moves between the places.</p>
+  </div>
+
+  <header class="mast">
+    <p class="mast__name">tuan photography <span lang="zh-Hant">陳亮元</span></p>
+    <p class="mast__line" data-t="line">Travel like a photographer</p>
+  </header>
+
+  <nav class="chrome" id="chrome" data-t-aria="siteLabel" aria-label="Site">
+    <div class="lang" role="group" data-t-aria="langLabel" aria-label="Language">
+      <button type="button" class="lang__btn" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" class="lang__btn" data-lang="zh" aria-pressed="false" lang="zh-Hant">中文</button>
+    </div>
+    <a class="ig" href="https://www.instagram.com/tuan_1127/" target="_blank" rel="noopener"><span data-t="ig">Instagram</span> <b>tuan_1127</b></a>
+  </nav>
+
+  <div class="zoom" role="group" data-t-aria="zoomGroup" aria-label="Zoom">
+    <button class="zoom__btn" id="zoom-in" type="button" data-t="zoomIn">Zoom in</button>
+    <button class="zoom__btn" id="zoom-out" type="button" data-t="zoomOut">Zoom out</button>
+    <button class="zoom__btn" id="zoom-world" type="button" data-t="world">Whole map</button>
+    <p class="credit" data-t="credit">Map: Natural Earth</p>
+  </div>
+
+  <aside class="index" id="index" aria-labelledby="index-title">
+    <button class="index__head" id="index-head" type="button" aria-expanded="true" aria-controls="index-scroll">
+      <span class="index__title" id="index-title" data-t="indexTitle">Photographs</span>
+      <span class="index__count" id="index-count"></span>
+    </button>
+    <div class="index__scroll" id="index-scroll">
+      <div class="index__body" id="index-body"></div>
+    </div>
+  </aside>
+
+</div>
+
+<div class="reader" id="reader" role="dialog" aria-modal="true" aria-labelledby="reader-title" hidden>
+  <div class="reader__bar">
+    <button class="reader__back" id="reader-back" type="button" data-t="back">Back to the map</button>
+  </div>
+  <div class="reader__scroll" id="reader-scroll">
+    <div class="reader__content" id="reader-content"></div>
+  </div>
+</div>
+<div class="flip" id="flip" aria-hidden="true"></div>
+
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="viewer-title" hidden>
+  <div class="viewer__bar">
+    <p class="viewer__count" id="viewer-count"></p>
+    <div class="viewer__nav">
+      <button class="viewer__btn" id="viewer-prev" type="button" data-t="prev">Previous</button>
+      <button class="viewer__btn" id="viewer-next" type="button" data-t="next">Next</button>
+      <button class="viewer__btn viewer__btn--close" id="viewer-close" type="button" data-t="close">Close</button>
+    </div>
+  </div>
+  <figure class="viewer__fig">
+    <div class="viewer__frame"></div>
+    <figcaption class="viewer__cap" id="viewer-cap"></figcaption>
+  </figure>
+</div>
+
+<p class="sr" id="live" aria-live="polite"></p>
+
+<script src="../data.js"></script>
+<script src="../vendor/d3.min.js"></script>
+<script src="../vendor/topojson-client.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
