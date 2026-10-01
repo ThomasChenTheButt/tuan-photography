@@ -291,7 +291,7 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 - Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
   harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
 
-Open now: none.
+Open now: `marked-photo` (2026-10-01, port 8644): a friend's idea, a circled spot on the home windows drawn to a print of it up close.
 
 Kept on 2026-10-01: `coverflow`, the guides as a fanned row of all sixteen countries' 3D books
 (replacing the five-book still shelf kept earlier the same day). The site just before it is at the
