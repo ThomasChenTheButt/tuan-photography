@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#f1f3f3">
+<title>tuan photography 陳亮元</title>
+<meta name="description" content="Landscape photographs by Thomas Chen, on a map printed in two inks. Choose one of the sixteen places: the map magnifies into it, the print resolves into the photograph, and the guide begins.">
+<link rel="preload" href="fonts/alegreya-sans/alegreya-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/alegreya-sans/alegreya-sans-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../vendor/countries-110m.json" as="fetch" crossorigin>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../fonts.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app is-loading" id="app">
+
+  <div class="map" id="map" tabindex="0" role="application" aria-roledescription="map" aria-describedby="map-hint" data-t-aria="mapLabel" aria-label="Map of the places travelled">
+    <canvas class="map__ink" id="ink" aria-hidden="true"></canvas>
+    <canvas class="map__line" id="line" aria-hidden="true"></canvas>
+    <div class="pins" id="pins"></div>
+    <p class="sr" id="map-hint" data-t="mapHint">Drag or use the arrow keys to move the map. Scroll, or press plus and minus, to zoom. Tab moves through the books.</p>
+  </div>
+
+  <canvas class="opening" id="opening" aria-hidden="true" hidden></canvas>
+
+  <header class="mast">
+    <p class="mast__name">tuan photography <span lang="zh-Hant">陳亮元</span></p>
+    <p class="mast__line" data-t="mastLine">Sixteen places travelled. Choose one and the map goes in.</p>
+  </header>
+
+  <nav class="chrome" id="chrome" data-t-aria="siteLabel" aria-label="Site">
+    <button type="button" class="word chrome__index" id="index-toggle" aria-expanded="false" aria-controls="index"><span data-t="indexTitle">Photographs</span> <span class="chrome__count" id="index-n"></span></button>
+    <div class="lang" role="group" data-t-aria="langLabel" aria-label="Language">
+      <button type="button" class="word lang__btn" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" class="word lang__btn" data-lang="zh" aria-pressed="false" lang="zh-Hant">中文</button>
+    </div>
+    <a class="ig" id="ig" href="https://www.instagram.com/tuan_1127/" target="_blank" rel="noopener"><span data-t="ig">Instagram</span> <b>tuan_1127</b></a>
+  </nav>
+
+  <div class="zoom" role="group" data-t-aria="zoomGroup" aria-label="Zoom">
+    <button type="button" class="word" id="zoom-in" data-t="zoomIn">Zoom in</button>
+    <button type="button" class="word" id="zoom-out" data-t="zoomOut">Zoom out</button>
+    <button type="button" class="word" id="zoom-all" data-t="zoomAll">Whole map</button>
+    <p class="credit" data-t="credit">Map: Natural Earth</p>
+  </div>
+
+  <button type="button" class="flights" id="flights" data-t-aria="flightsAria" aria-label="Flights. Play them again.">
+    <canvas class="flights__globe" id="globe" aria-hidden="true"></canvas>
+    <span class="flights__label" data-t="flights">Flights</span>
+  </button>
+
+  <aside class="index" id="index" aria-labelledby="index-title" hidden>
+    <div class="index__head">
+      <h2 class="index__title" id="index-title" data-t="indexTitle">Photographs</h2>
+      <p class="index__count" id="index-count"></p>
+      <button type="button" class="word index__close" id="index-close" data-t="close">Close</button>
+    </div>
+    <div class="index__scroll" id="index-scroll">
+      <div class="index__body" id="index-body"></div>
+    </div>
+  </aside>
+
+</div>
+
+<div class="leaf" id="leaf" role="dialog" aria-modal="true" aria-labelledby="leaf-title" hidden>
+  <div class="leaf__bar">
+    <button type="button" class="word leaf__back" id="leaf-back" data-t="back">Back to the map</button>
+    <div class="lang" role="group" data-t-aria="langLabel" aria-label="Language">
+      <button type="button" class="word lang__btn" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" class="word lang__btn" data-lang="zh" aria-pressed="false" lang="zh-Hant">中文</button>
+    </div>
+  </div>
+  <div class="leaf__scroll" id="leaf-scroll">
+    <section class="cover" id="cover">
+      <div class="cover__pic" id="cover-pic"></div>
+      <div class="cover__shade" aria-hidden="true"></div>
+      <div class="cover__cap" id="cover-cap">
+        <p class="cover__note" id="cover-note"></p>
+        <p class="cover__name" id="cover-name"></p>
+        <p class="cover__ll" id="cover-ll"></p>
+      </div>
+      <button type="button" class="word cover__on" id="cover-on"></button>
+    </section>
+    <div class="leaf__content" id="leaf-content"></div>
+  </div>
+</div>
+
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="viewer-title" hidden>
+  <div class="viewer__bar">
+    <p class="viewer__count" id="viewer-count"></p>
+    <div class="viewer__nav">
+      <button type="button" class="word" id="viewer-prev" data-t="prev">Previous</button>
+      <button type="button" class="word" id="viewer-next" data-t="next">Next</button>
+      <button type="button" class="word viewer__close" id="viewer-close" data-t="close">Close</button>
+    </div>
+  </div>
+  <figure class="viewer__fig">
+    <div class="viewer__frame" id="viewer-frame"></div>
+    <figcaption class="viewer__cap" id="viewer-cap"></figcaption>
+  </figure>
+</div>
+
+<p class="sr" id="live" aria-live="polite"></p>
+
+<script src="../vendor/d3.min.js"></script>
+<script src="../vendor/topojson-client.min.js"></script>
+<script src="../data.js"></script>
+<script src="press.js"></script>
+<script src="flights.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

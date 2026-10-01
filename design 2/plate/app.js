@@ -1141,7 +1141,7 @@
       marks.push(diveRing);
       const ringPath = diveRing.firstChild;
       drawStroke(ringPath, 0, 500);
-      diveTween = tween(2000, (e) => { diveRing.dataset.s = (6 - 5 * e).toFixed(3); placePen(); });
+      diveTween = tween(2000, (e) => { if (diveRing) { diveRing.dataset.s = (6 - 5 * e).toFixed(3); placePen(); } });
       // 2. as it arrives, the cover photograph grows out of the spot and fills the screen
       const [sx, sy] = spotAt(ll, landing);
       const hasCover = !leaf.classList.contains('is-plain');

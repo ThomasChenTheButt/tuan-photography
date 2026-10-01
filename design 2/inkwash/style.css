@@ -1,0 +1,625 @@
+/* ==========================================================
+   tuan photography 陳亮元 · design 2 · "Ink and silk" (水墨)
+
+   The world painted in ink wash on pale xuan paper, mounted
+   on a celadon silk border. Land is laid down in graded washes
+   (darker where the ground rises), the coasts dry with a wet
+   edge, the sea is bare paper. His sixteen countries are
+   touched with a pale mineral green (石綠); each place carries
+   a small vermilion seal. One ink, one colour, one seal red.
+
+   - ink for every word and line; vermilion only for seals,
+     focus and the live ring
+   - square corners; controls are words
+   - the books are design 1's books, copied with their tokens
+   - choosing a place: the map draws near, the ink deepens and
+     bleeds, then the photograph lifts out of the paper
+   ========================================================== */
+
+@font-face { font-family: "Alegreya Sans"; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/alegreya-sans/alegreya-sans-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "Alegreya Sans"; font-style: italic; font-weight: 400; font-display: swap; src: url(fonts/alegreya-sans/alegreya-sans-latin-400-italic.woff2) format("woff2"); }
+@font-face { font-family: "Alegreya Sans"; font-style: normal; font-weight: 500; font-display: swap; src: url(fonts/alegreya-sans/alegreya-sans-latin-500-normal.woff2) format("woff2"); }
+@font-face { font-family: "Alegreya Sans"; font-style: normal; font-weight: 700; font-display: swap; src: url(fonts/alegreya-sans/alegreya-sans-latin-700-normal.woff2) format("woff2"); }
+
+:root {
+  color-scheme: light;
+
+  /* paper and silk */
+  --paper: oklch(95.6% 0.015 86);
+  --paper-hi: oklch(98.3% 0.008 86);
+  --paper-2: oklch(92.6% 0.017 84);
+  --silk: oklch(88.6% 0.017 158);
+  --silk-2: oklch(84.5% 0.02 158);
+
+  /* sumi ink, in dilutions */
+  --ink: oklch(23.5% 0.009 255);
+  --ink-2: oklch(41% 0.011 255);
+  --ink-3: oklch(58% 0.01 255);
+  --ink-wash: oklch(23.5% 0.009 255 / 0.1);
+  --hair: oklch(83.5% 0.013 82);
+
+  /* the two colours: mineral green on the land, vermilion for seals */
+  --green: oklch(70% 0.058 166);
+  --green-deep: oklch(47% 0.06 166);
+  --seal: oklch(54.5% 0.175 32);
+  --seal-deep: oklch(47% 0.155 32);
+
+  --sans: "Alegreya Sans", "Noto Sans TC", system-ui, sans-serif;
+  --serif-zh: "Noto Serif TC", "Alegreya Sans", serif;
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --m: 14px;      /* the silk mount around the painting */
+  --edge: 26px;   /* inner margin of the painting */
+  --shadow: 0 1px 2px oklch(25% 0.02 80 / 0.12), 0 14px 34px -18px oklch(25% 0.02 80 / 0.4);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; height: 100%; background: var(--silk); }
+body {
+  margin: 0; height: 100%; overflow: hidden;
+  font-family: var(--sans); font-size: 1.0625rem; line-height: 1.5; color: var(--ink);
+  background: var(--silk);
+  caret-color: var(--seal);
+  -webkit-font-smoothing: antialiased;
+  font-kerning: normal;
+  font-variant-numeric: lining-nums;
+}
+:lang(zh-Hant) body { line-height: 1.7; }
+::selection { background: oklch(86% 0.07 32); color: var(--ink); }
+img { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; border-radius: 0; }
+a { color: var(--seal-deep); text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+a:hover { color: var(--ink); }
+:focus-visible { outline: 2px solid var(--seal); outline-offset: 3px; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+[hidden] { display: none !important; }
+.defs { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* the voice of the labels: spaced capitals of Alegreya Sans */
+.caps, .pin__label, .lang__btn, .zoom__btn, .index__word, .index__title, .index__close, .group__name, .flights__cap,
+.leaf__back, .cover__name, .cover__on, .toc h2, .sheet thead th, .viewer__btn, .day__light, .ate, .quiet-line, .opening__skip, .word {
+  font-size: 0.74rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; line-height: 1.3;
+}
+:lang(zh-Hant) :is(.caps, .pin__label, .lang__btn, .zoom__btn, .index__word, .index__title, .index__close, .group__name, .flights__cap,
+.leaf__back, .cover__name, .cover__on, .toc h2, .sheet thead th, .viewer__btn, .day__light, .ate, .quiet-line, .opening__skip, .word) {
+  font-size: 0.8rem; letter-spacing: 0.26em; text-transform: none;
+}
+
+/* ---------------------------------------------------------- the mounted painting */
+
+.app { position: fixed; inset: 0; overflow: hidden; }
+.mount {
+  position: absolute; inset: var(--m);
+  background: var(--paper);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.map {
+  position: absolute; inset: 0; overflow: hidden;
+  cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+  transition: filter 1400ms var(--inout), opacity 1400ms var(--inout);
+}
+.map.is-dragging { cursor: grabbing; }
+.map:focus-visible { outline: 2px solid var(--seal); outline-offset: -4px; }
+.map__ink { position: absolute; inset: 0; width: 100%; height: 100%; }
+.map__marks { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 3; }
+.map__marks path { fill: none; stroke: var(--ink); stroke-linecap: round; stroke-linejoin: round; }
+.map__marks .ring { stroke-width: 1.5; vector-effect: non-scaling-stroke; opacity: 0.85; }
+.map__marks .ring--under { stroke-width: 3.4; opacity: 0.12; }
+.map__marks g { opacity: var(--o, 1); }
+.map__marks .fading { transition: opacity 260ms ease-out; opacity: 0; }
+/* while the photograph lifts out, the painting beneath softens and pales */
+.app.is-lifting .map { filter: blur(5px) saturate(0.6); opacity: 0.55; }
+
+/* the inscription: name, line and how to begin, set quietly in the upper left */
+.colophon {
+  position: absolute; z-index: 6; left: var(--edge); top: calc(var(--edge) - 4px);
+  margin: 0; pointer-events: none;
+  display: grid; gap: 0.35rem; max-width: 17rem;
+  -webkit-text-stroke: 4px var(--paper); paint-order: stroke fill;
+}
+.colophon p { margin: 0; }
+.colophon__name { font-size: 1.02rem; font-weight: 500; letter-spacing: 0.02em; line-height: 1.25; }
+.colophon__name span { font-family: var(--serif-zh); font-weight: 500; letter-spacing: 0.08em; }
+.colophon__say { display: grid; gap: 0.2rem; }
+.colophon__line { font-size: 0.95rem; font-style: italic; color: var(--ink-2); }
+.colophon__hint { font-size: 0.86rem; line-height: 1.4; color: var(--ink-2); text-wrap: balance; }
+/* 中文: the two lines become columns, read from the right, as an inscription is */
+:lang(zh-Hant) .colophon__say {
+  writing-mode: vertical-rl; display: block; height: 21rem; margin-top: 0.5rem;
+  font-family: var(--serif-zh);
+}
+:lang(zh-Hant) .colophon__say p + p { margin-right: 0.7rem; }
+:lang(zh-Hant) .colophon__line { font-style: normal; font-size: 0.98rem; font-weight: 500; letter-spacing: 0.3em; color: var(--ink); }
+:lang(zh-Hant) .colophon__hint { font-size: 0.86rem; letter-spacing: 0.18em; line-height: 1.6; }
+
+.chrome { position: absolute; z-index: 6; top: calc(var(--edge) - 12px); right: calc(var(--edge) - 4px); display: flex; align-items: center; gap: 1.1rem; }
+.lang { display: flex; gap: 0.15rem; }
+.lang__btn { min-height: 2.75rem; min-width: 2.75rem; padding: 0 0.5rem; color: var(--ink-2); -webkit-text-stroke: 4px var(--paper); paint-order: stroke fill; }
+.lang__btn:hover { color: var(--ink); }
+.lang__btn[aria-pressed="true"] { color: var(--ink); text-decoration: underline; text-underline-offset: 0.4em; text-decoration-thickness: 1px; }
+.ig { display: inline-flex; align-items: center; gap: 0.35rem; min-height: 2.75rem; font-size: 0.86rem; color: var(--ink-2); text-decoration: none; -webkit-text-stroke: 4px var(--paper); paint-order: stroke fill; }
+.ig b { font-weight: 500; color: var(--ink); }
+.ig:hover b { color: var(--seal-deep); }
+
+.zoom { position: absolute; z-index: 6; right: calc(var(--edge) - 4px); bottom: calc(var(--edge) - 12px); display: flex; gap: 0 1.1rem; }
+.zoom__btn { min-height: 2.75rem; padding: 0 0.2rem; color: var(--ink-2); -webkit-text-stroke: 4px var(--paper); paint-order: stroke fill; }
+.zoom__btn:hover { color: var(--ink); }
+.zoom__btn:disabled { color: var(--ink-3); cursor: default; }
+
+/* ---------------------------------------------------------- the small globe of flights */
+
+.flights {
+  position: absolute; z-index: 6; left: calc(var(--edge) - 6px); bottom: calc(var(--edge) - 10px);
+  margin: 0; display: grid; justify-items: center; gap: 0.1rem;
+  width: 12.5rem;
+}
+.flights__globe { display: block; width: 12.5rem; height: 12.5rem; border-radius: 50%; }
+.flights__globe canvas { display: block; width: 100%; height: 100%; }
+.flights__globe:focus-visible { outline-offset: -2px; }
+.flights__cap { color: var(--ink-2); -webkit-text-stroke: 4px var(--paper); paint-order: stroke fill; }
+
+/* ---------------------------------------------------------- the index: a strip at the right edge, a panel on request */
+
+.index { position: absolute; z-index: 8; top: 0; right: 0; bottom: 0; pointer-events: none; }
+.index__tab {
+  position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+  writing-mode: vertical-rl;
+  display: flex; align-items: center; gap: 0.9rem;
+  min-width: 2.75rem; padding: 1.2rem 0.65rem;
+  color: var(--ink);
+  border-left: 1px solid var(--hair);
+  background: var(--paper);
+  pointer-events: auto;
+  transition: color 200ms;
+}
+.index__tab:hover { color: var(--seal-deep); }
+.index__count { font-size: 0.8rem; letter-spacing: 0.08em; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.index__panel {
+  position: absolute; top: 0; right: 0; bottom: 0; width: 22rem; max-width: calc(100vw - 2 * var(--m));
+  display: grid; grid-template-rows: auto minmax(0, 1fr);
+  background: var(--paper-hi);
+  border-left: 1px solid var(--ink-3);
+  transform: translateX(102%);
+  visibility: hidden;
+  transition: transform 560ms var(--ease), visibility 0s linear 560ms;
+  pointer-events: auto;
+}
+.index.is-open .index__panel { transform: none; visibility: visible; transition: transform 560ms var(--ease), visibility 0s; }
+.index.is-open .index__tab { visibility: hidden; }
+.index__head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.75rem 0.75rem 0.65rem 1.4rem; border-bottom: 1px solid var(--hair); }
+.index__title { margin: 0; }
+.index__close { min-height: 2.75rem; padding: 0 0.6rem; color: var(--ink-2); }
+.index__close:hover { color: var(--ink); }
+.index__scroll { overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--hair) transparent; }
+.index__body { padding: 0.25rem 1.4rem 3rem; }
+
+.group { padding: 1.15rem 0 0.4rem; scroll-margin-top: 0.5rem; }
+.group h3 { margin: 0 0 0.65rem; display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0.2rem 0.75rem; }
+.group__name { min-height: 2.25rem; text-align: left; color: var(--ink); display: inline-flex; align-items: center; gap: 0.55rem; }
+.group__name:hover, .group.is-awake .group__name { color: var(--seal-deep); }
+.group__meta { font-size: 0.8rem; color: var(--ink-2); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.group__none { margin: 0.1rem 0 0.4rem; font-size: 0.92rem; font-style: italic; color: var(--ink-2); }
+:lang(zh-Hant) .group__none { font-style: normal; }
+.thumbs { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.95rem 0.8rem; align-items: start; }
+.thumb { display: grid; gap: 0.3rem; width: 100%; text-align: left; align-content: start; }
+.thumb img { width: 100%; height: auto; background: var(--paper-2); transition: transform 300ms var(--ease), box-shadow 300ms var(--ease); }
+.thumb__name { font-size: 0.82rem; line-height: 1.3; color: var(--ink-2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: color 200ms; }
+:lang(zh-Hant) .thumb__name { font-size: 0.8rem; }
+.thumb:hover img, .thumb:focus-visible img { transform: translateY(-2px); box-shadow: 0 6px 14px -8px oklch(25% 0.02 80 / 0.5); }
+.thumb:hover .thumb__name, .thumb:focus-visible .thumb__name { color: var(--ink); }
+.thumb:focus-visible { outline: none; }
+.thumb:focus-visible img { outline: 2px solid var(--seal); outline-offset: 3px; }
+
+/* ---------------------------------------------------------- seals: a square vermilion chop with the first letter */
+
+.seal { display: block; overflow: visible; }
+.seal__ground { fill: var(--seal); }
+.seal__glyph { fill: var(--paper-hi); font-family: "Alegreya Sans", serif; font-weight: 700; font-size: 12.5px; letter-spacing: 0; }
+:lang(zh-Hant) .seal__glyph { font-family: var(--serif-zh); font-weight: 600; font-size: 11.5px; }
+.seal__rim { fill: none; stroke: var(--paper-hi); stroke-width: 0.7; opacity: 0.9; }
+
+/* ---------------------------------------------------------- pins: a book standing on its seal at its place */
+
+.pins { position: absolute; inset: 0; pointer-events: none; transition: opacity 600ms var(--ease); z-index: 2; }
+.app.is-diving .pins { opacity: 0; }
+.app.is-diving .pin .book, .app.is-diving .pin__seal { pointer-events: none; }
+.app.is-opening .pins, .app.is-opening .colophon, .app.is-opening .chrome, .app.is-opening .zoom, .app.is-opening .index, .app.is-opening .flights { opacity: 0; }
+.colophon, .chrome, .zoom, .index, .flights { transition: opacity 900ms var(--ease); }
+/* while diving, the words at the edges step aside for the painting */
+.app.is-diving :is(.colophon, .chrome, .zoom, .index, .flights) { opacity: 0; transition-duration: 500ms; }
+.app.is-arriving .pin { animation: settle 900ms var(--ease) both; animation-delay: calc(var(--i, 0) * 45ms); }
+@keyframes settle { from { opacity: 0; } }
+
+.pin {
+  position: absolute; left: 0; top: 0; width: 0; height: 0;
+  transform: translate3d(var(--x, -999px), var(--y, -999px), 0);
+  pointer-events: none; z-index: 1;
+}
+.pin.awake, .pin:focus-within { z-index: 2; }
+.pin__seal {
+  position: absolute; left: -7.5px; top: -7.5px; width: 15px; height: 15px;
+  transform: rotate(var(--rot, 0deg));
+  pointer-events: auto; cursor: pointer;
+  transition: transform 400ms var(--ease);
+}
+.pin.awake .pin__seal { transform: rotate(var(--rot, 0deg)) scale(1.18); }
+.pin__stage {
+  position: absolute; left: 0; bottom: 10px;
+  width: 12rem; height: 17rem;
+  transform: translateX(-50%) scale(var(--s, 0.3));
+  transform-origin: 50% 100%;
+  perspective: 70rem;
+  perspective-origin: 50% 45%;
+}
+.pin__label {
+  position: absolute; left: 0; top: 10px;
+  transform: translateX(calc(-50% + var(--lx, 0px)));
+  width: max-content; max-width: 10rem;
+  text-align: center; color: var(--ink);
+  pointer-events: none;
+  -webkit-text-stroke: 4px var(--paper); paint-order: stroke fill;
+  transition: opacity 220ms ease-out;
+}
+/* 中文: the name stands as a column beside its book, like an inscription */
+:lang(zh-Hant) .pin__label {
+  writing-mode: vertical-rl; text-orientation: upright;
+  top: auto; bottom: 12px; left: calc(var(--bw, 46px) / 2 + 5px); transform: translateX(var(--lx, 0px));
+  width: auto; max-width: none; inline-size: max-content; white-space: nowrap;
+  font-family: var(--serif-zh); font-weight: 500; font-size: 0.82rem; letter-spacing: 0.18em; line-height: 1;
+}
+.pin.is-quiet .pin__label { opacity: 0; }
+.pin.is-quiet.awake .pin__label, .pin.is-quiet:focus-within .pin__label { opacity: 1; z-index: 3; }
+.pin.awake .pin__label { color: var(--seal-deep); }
+.pins.is-seals .pin__stage { visibility: hidden; }
+
+/* ---------------------------------------------------------- the book (design 1, copied) */
+
+.pin__stage {
+  --bg: oklch(96.6% 0.011 82);
+  --band: oklch(91.8% 0.013 80);
+  --card: oklch(98.8% 0.005 85);
+  --line: oklch(84.5% 0.015 78);
+  --text: oklch(25% 0.012 60);
+  --text-2: oklch(45% 0.017 62);
+  --paper: oklch(97.5% 0.008 85);
+  --clay: oklch(53% 0.088 47);
+  --olive: oklch(49% 0.052 95);
+  --slate: oklch(41% 0.03 195);
+  --serif: "Playfair Display", "Noto Serif TC", Georgia, serif;
+  --sans: "Geist", "Noto Sans TC", system-ui, sans-serif;
+  --s-2: 1rem;
+  --shade: oklch(20% 0.02 60);
+  --w: 12rem; --h: 17rem; --deep: 3.2rem; --turn: 24deg;
+  font-family: var(--sans);
+  letter-spacing: normal; text-transform: none;
+}
+.book { position: absolute; inset: 0; text-decoration: none; color: var(--paper); transform-style: preserve-3d; transform: rotateY(var(--turn)); pointer-events: auto; outline: 0; }
+.book:hover { color: var(--paper); }
+.book__box { position: absolute; inset: 0; transform-style: preserve-3d; transition: transform 500ms var(--ease); }
+.book__face, .book__spine, .book__back, .book__edge, .book__top, .book__shadow { position: absolute; top: 0; left: 0; height: 100%; backface-visibility: hidden; outline: 1px solid transparent; }
+.book__face { display: grid; grid-template-rows: minmax(0, 1fr) auto; width: 100%; background: var(--band); overflow: hidden; box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--shade) 22%, transparent), inset 0 0 0 2px color-mix(in oklch, var(--paper) 55%, transparent), inset 4px 0 8px -4px color-mix(in oklch, var(--shade) 50%, transparent); }
+.book__face::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(100deg, color-mix(in oklch, var(--paper) 22%, transparent), transparent 38%); }
+.book__face img { width: 100%; height: 100%; object-fit: cover; }
+.book__face--blank { align-content: end; }
+.book__face--blank > b { display: block; padding: var(--s-2) 0.85rem; font-family: var(--serif); font-weight: 400; font-size: 1.4rem; line-height: 1.15; color: var(--text); background: var(--card); }
+:lang(zh-Hant) .book__face--blank > b { font-weight: 500; letter-spacing: 0.08em; }
+.book__band { display: grid; gap: 0.3rem; padding: 0.7rem 0.85rem 0.75rem; background: var(--paper); color: var(--text); border-top: 1px solid var(--line); }
+.book__band b { font-family: var(--serif); font-weight: 400; font-size: 1.2rem; line-height: 1.15; }
+:lang(zh-Hant) .book__band b { font-weight: 500; letter-spacing: 0.06em; }
+.book__band span { font-size: 0.66rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-2); }
+:lang(zh-Hant) .book__band span { font-size: 0.75rem; letter-spacing: 0.14em; }
+.book__spine { display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: var(--deep); padding: 1.1rem 0; writing-mode: vertical-rl; transform-origin: left center; transform: rotateY(-90deg) translateX(-100%); background-image: linear-gradient(to right, color-mix(in oklch, var(--shade) 30%, transparent), transparent 35%, transparent 70%, color-mix(in oklch, var(--shade) 22%, transparent)); }
+.book__spine b { font-family: var(--serif); font-weight: 400; font-size: 1.1rem; line-height: 1; letter-spacing: 0.04em; white-space: nowrap; }
+.book__spine i, .book__back i { font-style: normal; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; white-space: nowrap; }
+:lang(zh-Hant) .book__spine b { text-orientation: upright; letter-spacing: 0.2em; font-weight: 500; font-size: 1rem; }
+.book__back { display: grid; place-content: end center; width: 100%; padding-bottom: 1.2rem; transform: translateZ(calc(-1 * var(--deep))) rotateY(180deg); background-image: linear-gradient(100deg, color-mix(in oklch, var(--shade) 10%, transparent), transparent 40%); }
+.book__edge { top: 3px; left: auto; right: 0; height: calc(100% - 6px); width: calc(var(--deep) - 3px); transform-origin: right center; transform: rotateY(90deg) translateX(100%); background: repeating-linear-gradient(to right, var(--paper) 0 2px, color-mix(in oklch, var(--line) 70%, var(--paper)) 2px 3px); box-shadow: inset 0 0 0.6rem color-mix(in oklch, var(--shade) 12%, transparent); }
+.book__top { left: 3px; width: calc(100% - 6px); height: calc(var(--deep) - 3px); transform-origin: top center; transform: rotateY(0deg) rotateX(90deg) translateY(-100%); background: repeating-linear-gradient(to bottom, var(--paper) 0 2px, color-mix(in oklch, var(--line) 70%, var(--paper)) 2px 3px); }
+.book__shadow { left: -10%; width: 120%; top: auto; bottom: calc(var(--deep) * -1.6); height: calc(var(--deep) * 2.2); transform-origin: 50% calc(var(--deep) * 0.6); transform: rotateX(-90deg); background: radial-gradient(ellipse at 50% 35%, color-mix(in oklch, var(--shade) 40%, transparent), transparent 68%); backface-visibility: visible; pointer-events: none; }
+.book--clay .book__spine, .book--clay .book__back { background-color: var(--clay); }
+.book--olive .book__spine, .book--olive .book__back { background-color: var(--olive); }
+.book--slate .book__spine, .book--slate .book__back { background-color: var(--slate); }
+.book:hover .book__box, .book:focus-visible .book__box, .pin.awake .book__box { transform: rotateY(calc(-1 * var(--turn))) translateZ(2rem) translateY(-0.5rem); }
+.book:focus-visible .book__face { outline: 6px solid oklch(54.5% 0.175 32); outline-offset: 8px; }
+
+/* ---------------------------------------------------------- the opening: a globe of flights unrolls into the map */
+
+.opening { position: absolute; inset: var(--m); z-index: 12; background: var(--paper); transition: opacity 800ms var(--inout); }
+.opening.is-gone { opacity: 0; pointer-events: none; }
+.opening__canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.opening__skip { position: absolute; right: calc(var(--edge) - 4px); bottom: calc(var(--edge) - 12px); min-height: 2.75rem; padding: 0 0.4rem; color: var(--ink-2); }
+.opening__skip:hover { color: var(--ink); }
+
+/* ---------------------------------------------------------- the leaf: the page the dive lands on */
+
+.leaf {
+  --barh: 3.4rem;
+  position: fixed; inset: 0; z-index: 40;
+  display: grid; grid-template-rows: var(--barh) minmax(0, 1fr);
+  background: var(--paper);
+}
+/* the photograph lifts out of the paper through a soft, uneven bloom: five feathered washes
+   that spread from the spot at slightly different paces, their union the opening */
+.leaf.is-masked {
+  -webkit-mask-image:
+    radial-gradient(circle at var(--x1) var(--y1), #000 calc(var(--r1) * 0.5), transparent var(--r1)),
+    radial-gradient(circle at var(--x2) var(--y2), #000 calc(var(--r2) * 0.45), transparent var(--r2)),
+    radial-gradient(circle at var(--x3) var(--y3), #000 calc(var(--r3) * 0.45), transparent var(--r3)),
+    radial-gradient(circle at var(--x4) var(--y4), #000 calc(var(--r4) * 0.4), transparent var(--r4)),
+    radial-gradient(circle at var(--x5) var(--y5), #000 calc(var(--r5) * 0.4), transparent var(--r5));
+          mask-image:
+    radial-gradient(circle at var(--x1) var(--y1), #000 calc(var(--r1) * 0.5), transparent var(--r1)),
+    radial-gradient(circle at var(--x2) var(--y2), #000 calc(var(--r2) * 0.45), transparent var(--r2)),
+    radial-gradient(circle at var(--x3) var(--y3), #000 calc(var(--r3) * 0.45), transparent var(--r3)),
+    radial-gradient(circle at var(--x4) var(--y4), #000 calc(var(--r4) * 0.4), transparent var(--r4)),
+    radial-gradient(circle at var(--x5) var(--y5), #000 calc(var(--r5) * 0.4), transparent var(--r5));
+}
+.leaf.is-fading { animation: fade-in 320ms ease-out both; }
+.leaf.is-fading-out { animation: fade-out 260ms ease-in both; }
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes fade-out { to { opacity: 0; } }
+
+.leaf__bar {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: 0.3rem clamp(0.75rem, 2vw, 1.4rem);
+  background: var(--paper);
+  border-bottom: 1px solid var(--hair);
+}
+.leaf__back { min-height: 2.75rem; padding: 0 0.3rem; color: var(--ink); }
+.leaf__back:hover { color: var(--seal-deep); }
+.leaf__bar .lang__btn { -webkit-text-stroke: 0; }
+.leaf__scroll {
+  overflow-y: auto; overscroll-behavior: contain;
+  scrollbar-width: thin; scrollbar-color: oklch(76% 0.014 80) transparent; scroll-padding-top: 1.5rem;
+}
+.leaf__scroll::-webkit-scrollbar { width: 10px; }
+.leaf__scroll::-webkit-scrollbar-thumb { background: oklch(76% 0.014 80); border: 3px solid var(--paper); }
+.leaf.is-masked .leaf__scroll { overflow: hidden; }
+#leaf-title:focus { outline: none; }
+
+/* the cover: the place's photograph fills the window under the bar; nothing is written across it.
+   Its note, name and coordinates settle at the bottom edge over a soft darkening, last. */
+.cover { position: relative; height: calc(100dvh - var(--barh)); min-height: 22rem; margin: 0; overflow: hidden; background: var(--paper-2); }
+.cover__pic { position: absolute; inset: 0; }
+.cover__pic img {
+  width: 100%; height: 100%; object-fit: cover;
+  transform: scale(var(--sc, 1));
+  filter: blur(calc(var(--blur, 0) * 1px)) grayscale(var(--gray, 0)) brightness(var(--bright, 1));
+}
+.cover__shade { position: absolute; left: 0; right: 0; bottom: 0; height: 48%; background: linear-gradient(to top, oklch(17% 0.012 255 / 0.62), oklch(17% 0.012 255 / 0.26) 48%, transparent); pointer-events: none; transition: opacity 900ms var(--ease); }
+.cover__cap {
+  position: absolute; left: 0; right: 0; bottom: 0; margin: 0;
+  display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem;
+  padding: 0 clamp(1rem, 4vw, 3.25rem) clamp(1.2rem, 3.2vw, 2.4rem);
+  color: var(--paper-hi);
+  transition: opacity 900ms var(--ease), transform 900ms var(--ease);
+}
+.cover.is-quiet .cover__cap { opacity: 0; transform: translateY(6px); }
+.cover.is-quiet .cover__shade { opacity: 0; }
+.cover__text { display: grid; gap: 0.25rem; max-width: 34rem; }
+.cover__note { font-style: italic; font-size: 1.2rem; line-height: 1.32; text-wrap: balance; }
+:lang(zh-Hant) .cover__note { font-style: normal; font-size: 1.08rem; letter-spacing: 0.06em; font-family: var(--serif-zh); }
+.cover__name { display: flex; flex-wrap: wrap; align-items: center; gap: 0 0.7rem; font-size: 0.8rem; }
+.cover__country:empty { display: none; }
+.cover__country { opacity: 0.85; }
+.cover__ll { font-size: 0.86rem; letter-spacing: 0.06em; opacity: 0.86; font-variant-numeric: tabular-nums; }
+.cover__on {
+  flex: none; min-height: 2.75rem; padding: 0 1rem;
+  border: 1px solid oklch(98.3% 0.008 86 / 0.7);
+  color: var(--paper-hi);
+  transition: background-color 200ms, color 200ms;
+}
+.cover__on:hover { background: var(--paper-hi); color: var(--ink); }
+.cover__on:focus-visible { outline-color: var(--paper-hi); }
+.leaf.is-plain .cover { display: none; }
+
+/* shared page parts */
+.wrap { width: min(76rem, 100% - 2 * clamp(1.25rem, 4vw, 3rem)); margin-inline: auto; padding: clamp(2.25rem, 5vw, 4.25rem) 0 6rem; }
+.page-title, .guide-top h1 {
+  margin: 0; display: flex; align-items: center; gap: 0.25em;
+  font-size: clamp(2.75rem, 1.5rem + 5vw, 5.25rem); font-weight: 400; line-height: 1; letter-spacing: -0.015em; text-wrap: balance;
+}
+.page-title .seal, .guide-top h1 .seal { flex: none; width: 0.42em; height: 0.42em; margin-top: 0.08em; }
+:lang(zh-Hant) :is(.page-title, .guide-top h1) { font-family: var(--serif-zh); font-weight: 500; letter-spacing: 0.08em; line-height: 1.15; }
+.meta { margin: 0; color: var(--ink-2); font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+.page-meta { margin: 1rem 0 0; display: flex; flex-wrap: wrap; gap: 0.2rem 1.4rem; color: var(--ink-2); font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+.guide-facts { margin: 0; font-size: 1.0625rem; color: var(--ink); }
+.page-lede { max-width: 40rem; margin: 1.25rem 0 0; font-size: 1.32rem; line-height: 1.45; font-style: italic; color: var(--ink); text-wrap: pretty; }
+:lang(zh-Hant) .page-lede { font-style: normal; font-family: var(--serif-zh); font-size: 1.2rem; letter-spacing: 0.04em; }
+.quiet-line { margin: 4rem 0 0; padding-top: 1.25rem; border-top: 1px solid var(--hair); color: var(--ink-2); }
+.no-photos { margin: 3rem 0 0; display: grid; gap: 0.5rem; max-width: 40rem; padding: 2.5rem 0 0; border-top: 1px solid var(--ink); }
+.no-photos b { font-weight: 500; font-size: 1.35rem; }
+.no-photos span { color: var(--ink-2); }
+.page-end { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem 1.5rem; margin-top: 5rem; padding-top: 1.5rem; border-top: 1px solid var(--ink); color: var(--ink-2); font-size: 0.95rem; }
+.word { min-height: 2.75rem; padding: 0 0.1rem; color: var(--ink); border-bottom: 1px solid var(--ink); }
+.word:hover { color: var(--seal-deep); border-color: var(--seal-deep); }
+
+.piece { margin: 0; }
+.piece a, .piece button { display: block; width: 100%; padding: 0; color: inherit; background: var(--paper-2); cursor: zoom-in; }
+.piece a:focus-visible, .piece button:focus-visible { outline-offset: 4px; }
+.piece img { width: 100%; height: auto; }
+.piece figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 0.15rem 1rem; margin-top: 0.6rem; font-size: 0.92rem; line-height: 1.4; }
+.piece figcaption b { font-weight: 500; }
+.piece figcaption span:not(.data) { color: var(--ink-2); font-size: 0.84rem; }
+.data { display: inline-flex; flex-wrap: wrap; gap: 0 0.75rem; color: var(--ink-2); font-size: 0.82rem; letter-spacing: 0.04em; font-variant-numeric: tabular-nums; }
+.data span { white-space: nowrap; }
+
+/* a country's photographs: rows that fill the width, nothing trimmed, names beneath */
+.place-top { display: grid; gap: 0.75rem; max-width: 52rem; }
+.rows { display: grid; gap: 2.75rem; margin-top: 3.5rem; }
+.row { display: flex; gap: 0.85rem; align-items: flex-start; }
+.row .piece { flex: var(--ar) 1 0; min-width: 0; }
+.row .piece figcaption { display: grid; gap: 0.1rem; }
+.row .piece img { width: 100%; height: auto; aspect-ratio: var(--ar); }
+
+/* ---------------------------------------------------------- the guide (Barcelona), set in ink */
+
+.guide-top { display: grid; gap: 1rem; }
+.guide-top__say { display: grid; gap: 0.6rem; }
+.guide-top .piece { margin-top: 2.25rem; }
+.guide-top .piece img { max-height: 80vh; width: auto; }
+.guide-top .piece a { background: none; }
+
+.read { display: grid; grid-template-columns: 13rem minmax(0, 1fr); gap: clamp(2rem, 5vw, 5rem); margin-top: 4.5rem; align-items: start; }
+.toc { position: sticky; top: 1.5rem; }
+.toc h2 { margin: 0 0 0.75rem; color: var(--ink-2); }
+.toc ol { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
+.toc a { display: block; padding: 0.5rem 0; border-bottom: 1px solid var(--hair); font-size: 0.96rem; line-height: 1.35; color: var(--ink-2); text-decoration: none; position: relative; }
+.toc a:hover { color: var(--ink); }
+.toc a.is-here { color: var(--ink); font-weight: 500; }
+.toc a.is-here::before { content: ""; position: absolute; left: -0.95rem; top: 50%; width: 0.45rem; height: 0.45rem; margin-top: -0.225rem; background: var(--seal); }
+
+.body { min-width: 0; max-width: 52rem; font-size: 1.0625rem; line-height: 1.66; }
+:lang(zh-Hant) .body { line-height: 1.9; letter-spacing: 0.02em; }
+.body > p, .body > .ticks { max-width: 65ch; }
+.body > p { margin: 0 0 1.1em; text-wrap: pretty; }
+.body h2 { margin: 4.5rem 0 1rem; font-size: clamp(1.8rem, 1.4rem + 1.2vw, 2.35rem); font-weight: 400; line-height: 1.1; letter-spacing: -0.01em; scroll-margin-top: 1.5rem; }
+:lang(zh-Hant) .body h2 { font-family: var(--serif-zh); font-weight: 500; letter-spacing: 0.08em; line-height: 1.3; }
+.body h2:first-child { margin-top: 0; }
+.body h3 { margin: 2.25rem 0 0.5rem; font-size: 1.15rem; font-weight: 700; line-height: 1.35; }
+:lang(zh-Hant) .body h3 { font-family: var(--serif-zh); font-weight: 600; }
+.body strong { font-weight: 700; }
+
+.glance { display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr); gap: 2rem; align-items: start; margin-top: 1.5rem; }
+.glance__card { padding: 1.25rem 1.5rem 0.5rem; border: 1px solid var(--hair); background: var(--paper-hi); }
+.glance .sheet-wrap { margin: 0; }
+.glance .sheet caption { padding-bottom: 0.5rem; font-size: 1.15rem; font-weight: 500; color: var(--ink); }
+.glance .sheet tr { display: block; padding: 0.7rem 0; border-top: 1px solid var(--hair); }
+.glance .sheet td { display: block; padding: 0; border: 0; }
+.glance .sheet td:first-child { font-size: 0.74rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-2); min-width: 0; }
+:lang(zh-Hant) .glance .sheet td:first-child { text-transform: none; letter-spacing: 0.2em; font-size: 0.8rem; }
+
+.sheet-wrap { overflow-x: auto; margin: 1.5rem 0 0.5rem; scrollbar-width: thin; scrollbar-color: var(--hair) transparent; }
+.sheet { width: 100%; border-collapse: collapse; font-size: 0.96rem; line-height: 1.5; }
+:lang(zh-Hant) .sheet { line-height: 1.75; }
+.sheet caption { caption-side: top; text-align: left; padding-bottom: 0.625rem; font-size: 1.05rem; font-weight: 500; }
+.sheet th, .sheet td { text-align: left; vertical-align: top; padding: 0.75rem 1.25rem 0.75rem 0; border-bottom: 1px solid var(--hair); }
+.sheet th:last-child, .sheet td:last-child { padding-right: 0; }
+.sheet thead th { padding-top: 0; border-bottom: 1px solid var(--ink); color: var(--ink-2); white-space: nowrap; }
+.sheet td:first-child { font-weight: 500; min-width: 9rem; }
+.sheet .t { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.sheet a { white-space: nowrap; }
+.sheet .best { color: var(--ink); }
+.sheet td.best::before { content: ""; display: inline-block; width: 0.45rem; height: 0.45rem; margin-right: 0.5rem; background: var(--seal); vertical-align: 0.08em; }
+.ate { display: inline-block; margin-left: 0.5rem; color: var(--seal-deep); white-space: nowrap; }
+
+.wall__row.shots { display: flex; gap: 0.75rem; margin: 2rem 0; }
+.wall__row.shots .piece { flex: var(--ar) 1 0; min-width: 0; }
+.wall__row.shots .piece figcaption { display: grid; gap: 0.1rem; }
+
+.days { display: grid; margin-top: 1.5rem; border-top: 1px solid var(--ink); }
+.day { display: grid; grid-template-columns: 10rem minmax(0, 1fr); gap: 1.5rem; padding: 1.5rem 0; border-bottom: 1px solid var(--hair); }
+.day__no { display: grid; align-content: start; gap: 0.125rem; margin: 0; line-height: 1.3; }
+.day__no b { font-size: 1.2rem; font-weight: 500; font-variant-numeric: tabular-nums; }
+.day__no span { font-size: 0.9rem; color: var(--ink-2); }
+.day h3 { margin: 0 0 0.375rem; }
+.day p { margin: 0; max-width: 62ch; }
+.day .day__light { display: inline-block; margin-top: 0.75rem; color: var(--green-deep); }
+
+.note { max-width: 65ch; margin: 1rem 0; padding: 1.25rem 1.5rem; border: 1px solid var(--hair); background: var(--paper-hi); }
+.note h3 { margin: 0 0 0.375rem; font-size: 1rem; }
+.note p { margin: 0; font-size: 1rem; }
+.ticks { list-style: none; margin: 0.75rem 0 0; padding: 0; }
+.ticks li { position: relative; padding: 0.5rem 0 0.5rem 1.6rem; border-bottom: 1px solid var(--hair); }
+.ticks li::before { content: ""; position: absolute; left: 0.15rem; top: 1.1em; width: 0.42rem; height: 0.42rem; background: var(--ink-2); }
+
+/* ---------------------------------------------------------- a photograph, larger, with how it was made */
+
+.viewer {
+  position: fixed; inset: 0; z-index: 80;
+  display: grid; grid-template-columns: minmax(0, 1fr) 21rem;
+  background: var(--paper);
+  animation: fade-in 240ms var(--ease) both;
+}
+.viewer__photo { display: grid; place-items: center; margin: 0; padding: clamp(1rem, 2.5vw, 2.5rem); min-height: 0; min-width: 0; }
+.viewer__photo img { max-width: 100%; max-height: calc(100dvh - 2 * clamp(1rem, 2.5vw, 2.5rem)); width: auto; height: auto; background: var(--paper-2); transition: opacity 250ms ease-out; }
+.viewer__photo img.is-loading { opacity: 0.4; }
+.viewer__side { display: grid; grid-template-rows: auto minmax(0, 1fr); border-left: 1px solid var(--hair); min-height: 0; }
+.viewer__nav { display: flex; gap: 1.1rem; padding: 0.4rem 1.2rem; border-bottom: 1px solid var(--hair); }
+.viewer__btn { min-height: 2.75rem; padding: 0 0.1rem; color: var(--ink-2); }
+.viewer__btn:hover { color: var(--ink); }
+.viewer__btn:disabled { color: var(--ink-3); cursor: default; }
+.viewer__btn--close { margin-left: auto; color: var(--ink); }
+.viewer__text { overflow-y: auto; padding: 1.6rem 1.4rem 2rem; }
+.viewer__text h2 { margin: 0; font-size: 1.75rem; font-weight: 400; line-height: 1.15; text-wrap: balance; }
+:lang(zh-Hant) .viewer__text h2 { font-family: var(--serif-zh); font-weight: 500; letter-spacing: 0.06em; }
+.viewer__where { margin: 0.35rem 0 0; font-size: 0.95rem; color: var(--ink-2); }
+.viewer__ll { margin: 0.6rem 0 0; font-size: 0.86rem; letter-spacing: 0.06em; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.spec { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 0.4rem 1rem; margin: 1.2rem 0 0; padding: 0.9rem 0 0; border-top: 1px solid var(--ink); font-size: 0.92rem; }
+.spec dt { color: var(--ink-2); }
+.spec dd { margin: 0; font-variant-numeric: tabular-nums; }
+.viewer__note { margin: 1rem 0 0; font-size: 0.95rem; line-height: 1.5; }
+.viewer__note b { display: block; font-weight: 500; color: var(--ink-2); font-size: 0.74rem; letter-spacing: 0.2em; text-transform: uppercase; }
+:lang(zh-Hant) .viewer__note b { letter-spacing: 0.26em; }
+.viewer__go { display: inline-flex; align-items: center; min-height: 2.75rem; margin-top: 1rem; color: var(--seal-deep); text-decoration: underline; text-underline-offset: 0.25em; }
+.viewer__go:hover { color: var(--ink); }
+.viewer__count { margin: 1.4rem 0 0; font-size: 0.82rem; color: var(--ink-2); font-variant-numeric: tabular-nums; letter-spacing: 0.05em; }
+
+/* ---------------------------------------------------------- narrower windows */
+
+@media (max-width: 64rem) {
+  .read { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+  .toc { position: static; }
+  .flights, .flights__globe { width: 10rem; }
+  .flights__globe { height: 10rem; }
+}
+
+@media (max-width: 47.99rem) {
+  :root { --m: 6px; --edge: 16px; }
+  body { font-size: 1rem; }
+  .colophon { max-width: 13rem; }
+  .colophon__name { font-size: 0.92rem; }
+  .colophon__say { display: none; }
+  :lang(zh-Hant) .colophon__say { display: none; }
+  .chrome { gap: 0.4rem; right: 6px; top: 4px; }
+  .ig span { display: none; }
+  .zoom { right: auto; left: calc(var(--edge) - 4px); bottom: 4px; gap: 0 0.8rem; }
+  #zoom-all { display: none; }
+  .flights { left: auto; right: 6px; bottom: 46px; width: 5.75rem; }
+  .flights__globe { width: 5.75rem; height: 5.75rem; }
+  .flights__cap { font-size: 0.72rem; letter-spacing: 0.14em; }
+  /* a seal is small; its touch area is not */
+  .pin__seal { box-sizing: content-box; padding: 14px; left: -21.5px; top: -21.5px; }
+
+  .index__tab {
+    top: auto; bottom: 0; right: 0; transform: none;
+    writing-mode: horizontal-tb;
+    min-height: 2.75rem; padding: 0 0.9rem;
+    border-left: 1px solid var(--hair); border-top: 1px solid var(--hair);
+  }
+  .index__panel { top: auto; left: 0; width: 100%; height: 72dvh; transform: translateY(102%); border-left: 0; border-top: 1px solid var(--ink-3); }
+  .index { left: 0; top: auto; height: 100%; }
+  .index__body { padding: 0.25rem 1rem 3rem; }
+  .thumbs { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.8rem 0.55rem; }
+
+  .cover__cap { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  .cover__note { font-size: 1.05rem; }
+  .read { margin-top: 3rem; gap: 2.5rem; }
+  .glance { grid-template-columns: minmax(0, 1fr); }
+  .glance__card { padding: 1rem 1.25rem 0.25rem; }
+  .day { grid-template-columns: minmax(0, 1fr); gap: 0.5rem; }
+  .wall__row.shots { flex-direction: column; }
+  .row { flex-direction: column; gap: 2.5rem; }
+  .row .piece { flex: none; width: 100%; }
+  .sheet { font-size: 0.875rem; }
+  .sheet td:first-child { min-width: 7.5rem; }
+  .body h2 { margin-top: 3.5rem; }
+  .guide-top .piece img { max-height: none; width: 100%; }
+
+  .viewer { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) auto; }
+  .viewer__photo { padding: 0.75rem; }
+  .viewer__photo img { max-height: calc(58dvh - 1.5rem); }
+  .viewer__side { border-left: 0; border-top: 1px solid var(--hair); grid-template-rows: auto auto; max-height: 42dvh; }
+  .viewer__nav { order: 2; border-bottom: 0; border-top: 1px solid var(--hair); }
+  .viewer__text { order: 1; padding: 1rem 1rem; }
+  .viewer__text h2 { font-size: 1.3rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 1ms !important; animation-duration: 1ms !important; scroll-behavior: auto !important; }
+}
+
+@media (forced-colors: active) {
+  .colophon, .lang__btn, .ig, .zoom__btn, .flights__cap, .pin__label { -webkit-text-stroke: 0; }
+}

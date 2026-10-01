@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#fbfaf6">
+<title>tuan photography 陳亮元</title>
+<meta name="description" content="Landscape photographs by Thomas Chen, on a field map painted in watercolour. Sixteen places travelled, each with its book; choose one and the map opens into its photographs and guide.">
+<link rel="preload" href="fonts/alegreya-sans/alegreya-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/alegreya-sans/alegreya-sans-latin-400-italic.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/alegreya-sans/alegreya-sans-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="../vendor/countries-110m.json" as="fetch" crossorigin>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../fonts.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <div class="map" id="map" tabindex="0" role="application" aria-roledescription="map" aria-describedby="map-hint" data-t-aria="mapLabel" aria-label="Map of the places travelled">
+    <canvas class="map__paint" id="paint" aria-hidden="true"></canvas>
+    <div class="map__tooth" aria-hidden="true"></div>
+    <svg class="map__pen" id="pen" aria-hidden="true"></svg>
+    <div class="pins" id="pins"></div>
+    <p class="sr" id="map-hint" data-t="mapHint">Drag, or use the arrow keys, to move the map. Scroll, or press plus and minus, to zoom. Tab moves through the books.</p>
+  </div>
+
+  <canvas class="opening" id="opening" aria-hidden="true" hidden></canvas>
+
+  <header class="mast">
+    <p class="mast__name">tuan photography <span lang="zh-Hant">陳亮元</span></p>
+    <p class="mast__line" data-t="line">Travel like a photographer</p>
+    <p class="mast__note" data-t="note">Sixteen places travelled, each glazed in rose. Choose one and the map opens into its photographs.</p>
+  </header>
+
+  <nav class="chrome" data-t-aria="site" aria-label="Site">
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" class="lang__btn" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" class="lang__btn" data-lang="zh" aria-pressed="false" lang="zh-Hant">中文</button>
+    </div>
+    <a class="ig" id="ig" href="https://www.instagram.com/tuan_1127/" target="_blank" rel="noopener"><span data-t="ig">Instagram</span> <b>tuan_1127</b></a>
+  </nav>
+
+  <div class="corner">
+    <button type="button" class="globe" id="globe" aria-label="Flights flown, drawn across a small globe. Press to send them out again.">
+      <canvas class="globe__canvas" id="globe-canvas" aria-hidden="true"></canvas>
+      <span class="globe__cap" data-t="flights" aria-hidden="true">Flights</span>
+    </button>
+    <dl class="key" data-t-aria="keyLabel" aria-label="Key">
+      <div><dt class="key__dab key__dab--glaze" aria-hidden="true"></dt><dd data-t="keyBeen">Travelled</dd></div>
+      <div><dt class="key__dab key__dab--paper" aria-hidden="true"></dt><dd data-t="keyNot">Not yet</dd></div>
+    </dl>
+  </div>
+
+  <div class="tools">
+    <div class="zoom" role="group" data-t-aria="zoomGroup" aria-label="Zoom">
+      <button class="zoom__btn" id="zoom-in" type="button" data-t="zoomIn">Zoom in</button>
+      <button class="zoom__btn" id="zoom-out" type="button" data-t="zoomOut">Zoom out</button>
+      <button class="zoom__btn" id="zoom-world" type="button" data-t="world">Whole map</button>
+    </div>
+    <p class="credit" data-t="credit">Map: Natural Earth</p>
+  </div>
+
+  <aside class="index" id="index" aria-labelledby="index-title">
+    <button class="index__tab" id="index-tab" type="button" aria-expanded="false" aria-controls="index-panel">
+      <span data-t="indexTitle">Photographs</span> <span class="index__n" id="index-n">68</span>
+    </button>
+    <div class="index__panel" id="index-panel">
+      <header class="index__head">
+        <h2 class="index__title" id="index-title" data-t="indexTitle">Photographs</h2>
+        <button class="index__close" id="index-close" type="button" data-t="indexClose">Close</button>
+        <p class="index__count" id="index-count"></p>
+      </header>
+      <div class="index__scroll" id="index-scroll">
+        <div class="index__body" id="index-body"></div>
+      </div>
+    </div>
+  </aside>
+
+</div>
+
+
+<div class="leaf" id="leaf" role="dialog" aria-modal="true" aria-labelledby="leaf-title" hidden>
+  <div class="leaf__bar" id="leaf-bar">
+    <button class="word leaf__back" id="leaf-back" type="button" data-t="back">Back to the map</button>
+    <p class="leaf__where" id="leaf-where"></p>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" class="lang__btn" data-lang="en" aria-pressed="true">EN</button>
+      <button type="button" class="lang__btn" data-lang="zh" aria-pressed="false" lang="zh-Hant">中文</button>
+    </div>
+  </div>
+  <div class="leaf__scroll" id="leaf-scroll">
+    <figure class="cover" id="cover" hidden>
+      <div class="cover__pic" id="cover-pic"></div>
+      <div class="cover__shade" aria-hidden="true"></div>
+      <figcaption class="cover__cap">
+        <span class="cover__note" id="cover-note"></span>
+        <span class="cover__name" id="cover-name"></span>
+        <span class="cover__ll" id="cover-ll"></span>
+      </figcaption>
+      <div class="cover__go">
+        <button class="word word--light" id="cover-back" type="button" data-t="back">Back to the map</button>
+        <button class="word word--light" id="cover-on" type="button"></button>
+      </div>
+    </figure>
+    <div class="leaf__content" id="leaf-content"></div>
+  </div>
+</div>
+
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="viewer-title" hidden>
+  <div class="viewer__bar">
+    <p class="viewer__count" id="viewer-count"></p>
+    <div class="viewer__nav">
+      <button class="word viewer__btn" id="viewer-prev" type="button" data-t="prev">Previous</button>
+      <button class="word viewer__btn" id="viewer-next" type="button" data-t="next">Next</button>
+      <button class="word viewer__btn" id="viewer-close" type="button" data-t="close">Close</button>
+    </div>
+  </div>
+  <figure class="viewer__fig">
+    <div class="viewer__frame"></div>
+    <figcaption class="viewer__cap" id="viewer-cap"></figcaption>
+  </figure>
+</div>
+
+<p class="sr" id="live" aria-live="polite"></p>
+
+<script src="../vendor/d3.min.js"></script>
+<script src="../vendor/topojson-client.min.js"></script>
+<script src="../data.js"></script>
+<script src="paint.js"></script>
+<script src="globe.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
