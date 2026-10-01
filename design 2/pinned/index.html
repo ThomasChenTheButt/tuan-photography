@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#d0e6ee">
+<title>tuan photography 陳亮元</title>
+<meta name="description" content="Thomas Chen's places as a map: sixteen countries, his photographs as saved places, and his guides standing on the map as books.">
+<link rel="stylesheet" href="../fonts.css">
+<link rel="stylesheet" href="style.css">
+<link rel="preload" href="../vendor/countries-110m.json" as="fetch" crossorigin>
+<link rel="preload" href="fonts/onest/onest-latin-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/onest/onest-latin-600.woff2" as="font" type="font/woff2" crossorigin>
+</head>
+<body>
+
+<div class="app" id="app">
+
+
+  <div class="search" id="search" role="search">
+    <svg class="search__glass" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.75"/><path d="M12.75 12.75 17 17"/></svg>
+    <label class="sr" for="q" data-t="searchLabel">Search his places</label>
+    <input class="search__input" id="q" type="text" role="combobox" aria-expanded="false" aria-controls="suggest" aria-autocomplete="list" autocomplete="off" spellcheck="false" enterkeyhint="go" placeholder="Where to?" data-t-ph="where">
+    <button class="search__list" id="list-btn" type="button" aria-controls="card" aria-expanded="false" data-t="list">List</button>
+    <div class="suggest" id="suggest-box" hidden>
+      <p class="suggest__head" id="suggest-head"></p>
+      <ul class="suggest__list" id="suggest" role="listbox" aria-labelledby="suggest-head"></ul>
+    </div>
+  </div>
+
+  <div class="map" id="map" tabindex="0" role="region" aria-roledescription="map" aria-describedby="map-hint" data-t-aria="mapLabel" aria-label="Map of the places he has photographed">
+    <canvas class="map__land" id="land" aria-hidden="true"></canvas>
+    <svg class="map__leaders" id="leaders" aria-hidden="true"></svg>
+    <div class="map__pins" id="pins"></div>
+    <div class="map__stickers" id="stickers"></div>
+    <p class="sr" id="map-hint" data-t="mapHint">Drag or use the arrow keys to move the map. Scroll, or press plus and minus, to zoom.</p>
+  </div>
+
+  <aside class="card" id="card" aria-labelledby="card-title" hidden>
+    <div class="card__grip" aria-hidden="true"></div>
+    <button class="card__close" id="card-close" type="button" data-t="close">Close</button>
+    <div class="card__body" id="card-body"></div>
+  </aside>
+
+  <div class="zoom" role="group" data-t-aria="zoomGroup" aria-label="Zoom">
+    <button class="zoom__btn" id="zoom-in" type="button" data-t-aria="zoomIn" aria-label="Zoom in"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 4v12M4 10h12"/></svg></button>
+    <button class="zoom__btn" id="zoom-out" type="button" data-t-aria="zoomOut" aria-label="Zoom out"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12"/></svg></button>
+    <button class="zoom__word" id="zoom-world" type="button" data-t="world">World</button>
+  </div>
+
+  <footer class="foot">
+    <p class="mark"><span class="mark__name">tuan photography <span lang="zh-Hant">陳亮元</span></span><span class="mark__line" data-t="line">Travel like a photographer</span></p>
+    <div class="foot__right">
+      <p class="credit" data-t="credit">Map data: Natural Earth</p>
+      <div class="scale" aria-hidden="true"><span class="scale__label" id="scale-label">500 km</span><span class="scale__bar" id="scale-bar"></span></div>
+    </div>
+  </footer>
+</div>
+
+<nav class="chrome" id="chrome" data-t-aria="siteLabel" aria-label="Site">
+  <div class="lang" role="group" data-t-aria="langLabel" aria-label="Language">
+    <button type="button" class="lang__btn" data-lang="en" aria-pressed="true">EN</button>
+    <button type="button" class="lang__btn" data-lang="zh" aria-pressed="false" lang="zh-Hant">中文</button>
+  </div>
+  <a class="ig" href="https://www.instagram.com/tuan_1127/" target="_blank" rel="noopener">
+    <svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="14" height="14" rx="4"/><circle cx="10" cy="10" r="3.25"/><circle class="ig__dot" cx="14.1" cy="5.9" r="0.6"/></svg>
+    <span data-t="follow">Follow on Instagram</span>
+  </a>
+</nav>
+
+<div class="reader" id="reader" role="dialog" aria-modal="true" aria-labelledby="reader-title" hidden>
+  <div class="reader__bar">
+    <button class="reader__back" id="reader-back" type="button"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M11.5 5 6.5 10l5 5"/></svg><span data-t="back">Back to the map</span></button>
+  </div>
+  <div class="reader__scroll" id="reader-scroll">
+    <div class="reader__content" id="reader-content"></div>
+  </div>
+</div>
+
+<div class="viewer" id="viewer" role="dialog" aria-modal="true" aria-labelledby="viewer-title" hidden>
+  <div class="viewer__bar">
+    <p class="viewer__count" id="viewer-count"></p>
+    <div class="viewer__nav">
+      <button class="viewer__btn" id="viewer-prev" type="button" data-t="prev">Previous</button>
+      <button class="viewer__btn" id="viewer-next" type="button" data-t="next">Next</button>
+      <button class="viewer__btn viewer__btn--close" id="viewer-close" type="button" data-t="close">Close</button>
+    </div>
+  </div>
+  <figure class="viewer__fig">
+    <div class="viewer__frame"></div>
+    <figcaption class="viewer__cap" id="viewer-cap"></figcaption>
+  </figure>
+</div>
+
+<p class="sr" id="live" aria-live="polite"></p>
+
+<script src="../data.js"></script>
+<script src="../vendor/d3.min.js"></script>
+<script src="../vendor/topojson-client.min.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>tuan photography 陳亮元</title>
+<meta name="description" content="Landscape photographs by Thomas Chen, on a route map from Taipei to every place he has photographed. Open a book for the photographs or the guide.">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#f9fbfd">
+<link rel="preload" href="fonts/archivo/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="../fonts.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="is-map">
+
+<div class="app" id="app">
+  <div class="map" id="map" tabindex="0" role="region" aria-roledescription="map" aria-label="Route map" data-t-aria="mapLabel">
+    <canvas class="map__canvas" id="canvas" aria-hidden="true"></canvas>
+    <div class="pins bookworld" id="pins"></div>
+    <div class="tags" id="tags" aria-hidden="true"></div>
+  </div>
+
+  <div class="fold" aria-hidden="true"></div>
+
+  <header class="mast">
+    <h1 class="mast__name">tuan photography<span>陳亮元</span></h1>
+    <p class="mast__line cap" data-t="line">Travel like a photographer</p>
+  </header>
+
+  <nav class="tools" aria-label="Language and contact" data-t-aria="toolsLabel">
+    <div class="lang" role="group" aria-label="Language" data-t-aria="langLabel">
+      <button class="word" type="button" data-lang="en" aria-pressed="true"><span>EN</span></button>
+      <button class="word" type="button" data-lang="zh" aria-pressed="false" lang="zh-Hant"><span>中文</span></button>
+    </div>
+    <a class="word ig" href="https://www.instagram.com/tuan_1127/" target="_blank" rel="me noopener" aria-label="Follow on Instagram" data-t-aria="follow"><span>Instagram</span></a>
+  </nav>
+
+  <aside class="index" id="index" aria-labelledby="index-h">
+    <div class="index__head">
+      <div>
+        <h2 class="wide" id="index-h" data-t="indexTitle">Routes from Taipei</h2>
+        <p class="index__sum cap num" id="index-sum"></p>
+      </div>
+      <button class="word index__toggle" type="button" id="index-toggle" aria-expanded="false" aria-controls="index-list"><span data-t="showRoutes">Show routes</span></button>
+    </div>
+    <ol class="index__list" id="index-list"></ol>
+  </aside>
+
+  <div class="legend" id="legend">
+    <ul>
+      <li><svg viewBox="0 0 36 14" aria-hidden="true"><path d="M1 12 Q18 -2 35 9" fill="none" stroke="#223fca" stroke-width="1.4"/><circle cx="35" cy="9" r="2" fill="#223fca"/></svg><span data-t="lgRoute">A route from Taipei, on the great circle</span></li>
+      <li><svg viewBox="0 0 36 14" aria-hidden="true"><g fill="#7490d6"><rect x="2" y="2" width="2" height="2"/><rect x="8" y="2" width="2" height="2"/><rect x="14" y="2" width="2" height="2"/><rect x="5" y="7" width="2" height="2"/><rect x="11" y="7" width="2" height="2"/><rect x="17" y="7" width="2" height="2"/></g><g fill="#bec4cf"><rect x="20" y="2" width="2" height="2"/><rect x="26" y="2" width="2" height="2"/><rect x="32" y="2" width="2" height="2"/><rect x="23" y="7" width="2" height="2"/><rect x="29" y="7" width="2" height="2"/></g></svg><span data-t="lgSeen">Blue land: countries I have photographed</span></li>
+      <li><svg viewBox="0 0 36 14" aria-hidden="true"><rect x="12" y="0" width="10" height="14" fill="#f3efe6" stroke="#6b5a4a" stroke-width="1"/><rect x="9" y="0" width="3" height="14" fill="#9a6a4a"/></svg><span data-t="lgBook">A book at the end of each line: open it</span></li>
+      <li><svg viewBox="0 0 36 14" aria-hidden="true"><circle cx="18" cy="7" r="5.5" fill="none" stroke="#223fca" stroke-width="1.4"/><circle cx="18" cy="7" r="2" fill="#223fca"/></svg><span data-t="lgHome">Taipei, home base</span></li>
+    </ul>
+    <div class="zoom" role="group" aria-label="Zoom" data-t-aria="zoomLabel">
+      <button class="word" type="button" data-zoom="in"><span data-t="zoomIn">Zoom in</span></button>
+      <button class="word" type="button" data-zoom="out"><span data-t="zoomOut">Zoom out</span></button>
+      <button class="word" type="button" data-zoom="all"><span data-t="zoomAll">Whole map</span></button>
+    </div>
+  </div>
+
+  <div class="zoom-phone" role="group" aria-label="Zoom" data-t-aria="zoomLabel">
+    <button class="word" type="button" data-zoom="in"><span data-t="zoomIn">Zoom in</span></button>
+    <button class="word" type="button" data-zoom="out"><span data-t="zoomOut">Zoom out</span></button>
+    <button class="word" type="button" data-zoom="all"><span data-t="zoomAll">Whole map</span></button>
+  </div>
+</div>
+
+<article class="page" id="page" hidden tabindex="-1" aria-labelledby="page-title">
+  <div class="page__bar">
+    <button class="word back" type="button" id="back"><span data-t="back">Back to the map</span></button>
+    <span class="page__site">tuan photography<span>陳亮元</span></span>
+    <div class="lang" role="group" aria-label="Language" data-t-aria="langLabel">
+      <button class="word" type="button" data-lang="en" aria-pressed="true"><span>EN</span></button>
+      <button class="word" type="button" data-lang="zh" aria-pressed="false" lang="zh-Hant"><span>中文</span></button>
+    </div>
+  </div>
+  <div class="page__body" id="page-body"></div>
+</article>
+
+<div class="viewer" id="viewer" hidden role="dialog" aria-modal="true" aria-labelledby="viewer-name">
+  <div class="viewer__bar">
+    <span class="cap num" id="viewer-count"></span>
+    <nav aria-label="Photographs" data-t-aria="photosLabel">
+      <button class="word" type="button" id="viewer-prev"><span data-t="prev">Previous</span></button>
+      <button class="word" type="button" id="viewer-next"><span data-t="next">Next</span></button>
+      <button class="word" type="button" id="viewer-close"><span data-t="close">Close</span></button>
+    </nav>
+  </div>
+  <div class="viewer__stage" id="viewer-stage"></div>
+  <div class="viewer__cap">
+    <div><h2 class="wide" id="viewer-name"></h2><p id="viewer-where"></p></div>
+    <p class="viewer__data" id="viewer-data"></p>
+  </div>
+</div>
+
+<noscript><p>This map needs JavaScript. Instagram: <a href="https://www.instagram.com/tuan_1127/">tuan_1127</a></p></noscript>
+
+<script src="../vendor/d3.min.js"></script>
+<script src="../vendor/topojson-client.min.js"></script>
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
