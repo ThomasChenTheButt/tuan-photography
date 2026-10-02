@@ -100,7 +100,8 @@
   } catch (e) { /* storage blocked: stay in English */ }
 
   const ask = new URLSearchParams(location.search);
-  const nameN = clamp(parseInt(ask.get('name'), 10) || 1, 1, 5) - 1;
+  // his choice (2026-10-02): "Tuan, Through the Lens" / Tuan 的鏡頭之旅; ?name=1 to 5 still shows the others
+  const nameN = clamp(parseInt(ask.get('name'), 10) || 2, 1, 5) - 1;
   const t = (k) => (T[lang][k] !== undefined ? T[lang][k] : (S.i18n[lang][k] !== undefined ? S.i18n[lang][k] : k));
   const L = (o) => clean(o ? (typeof o === 'string' ? o : o[lang] !== undefined ? o[lang] : o.en) : '');
   const cityName = (c) => (typeof c === 'object' && c ? L(c) : clean(c || ''));
