@@ -1,0 +1,5 @@
+country-names.js: every country's name in English and Traditional Chinese, its label point and
+label rank, keyed by ISO 3166 numeric code (the ids used by world-atlas countries-50m.json;
+"x-<A3>" where a country has no numeric code). From Natural Earth ne_50m_admin_0_countries
+(NAME, NAME_ZHT, LABEL_X/Y, LABELRANK, MIN_LABEL), public domain, fetched 2026-10-02.
+His 16 countries use the names in data/site.json (Taiwan 台灣; Dubai's country as UAE).

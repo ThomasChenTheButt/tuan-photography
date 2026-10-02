@@ -111,8 +111,23 @@ def main():
                "close": "關閉", "back": "回到地圖", "photos": "作品", "home": "家",
                "made": "這張怎麼拍", "best": "最佳光線"},
     }
+    # journeys: the countries that share a travel date in his data, one journey per date, in the
+    # order he lists them. Nothing is added: the grouping comes only from those dates. The flights
+    # are drawn from Taipei to each place, where he flies from (to be confirmed by him).
+    journeys, by_date = [], {}
+    for c in D["countries"]:
+        if c["id"] == "taiwan":
+            continue
+        key = c["date"]["en"]
+        if key not in by_date:
+            by_date[key] = {"id": "j-" + re.sub(r"[^a-z0-9]+", "-", key.lower()).strip("-"),
+                            "date": {"en": b.clean_en(c["date"]["en"]), "zh": b.clean_zh(c["date"]["zh"])},
+                            "countries": []}
+            journeys.append(by_date[key])
+        by_date[key]["countries"].append(c["id"])
     site = {"instagram": D["instagram"], "home": "taiwan", "sizes": list(b.SIZES),
-            "countries": countries, "slides": slides, "books": books, "guides": guides, "i18n": i18n}
+            "countries": countries, "slides": slides, "books": books, "guides": guides, "i18n": i18n,
+            "journeys": journeys, "flightsFrom": [25.03, 121.56], "flightsConfirmed": False}
     OUT.mkdir(exist_ok=True)
     js = "window.SITE = " + json.dumps(site, ensure_ascii=False).replace("</", "<\\/") + ";\n"
     (OUT / "data.js").write_text(js, encoding="utf-8")
