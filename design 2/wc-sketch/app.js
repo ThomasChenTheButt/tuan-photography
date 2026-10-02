@@ -225,6 +225,7 @@
     w110: null, w50: null,
     land110: null, land50: null, travel: [], seams: null,
     coast110: null, coast50: null, borders110: null, borders50: null, landFill110: null,
+    lakes: null, lakesPath: null, lakesBigPath: null,
     labels: new Map(), photoPts: [],
     feats: {},
     relief: null, reliefFine: null,
@@ -275,6 +276,7 @@
     land: () => state.land50,
     travel: () => state.travel,
     seams: () => state.seams,
+    lakes: () => state.lakes,
     relief: (r) => (r >= 22 && state.reliefFine ? state.reliefFine : state.relief),
   };
 
@@ -347,12 +349,18 @@
     }
     g.restore();
   }
+  // the Flights globe reads the relief from a bitmap decoded off the main thread, so its first
+  // close look never stalls a frame (falls back to nothing: the globe then hatches from the image)
+  const bitmapOf = (src) => (window.createImageBitmap
+    ? fetch(src).then((r) => r.blob()).then((b) => createImageBitmap(b)).catch(() => null)
+    : Promise.resolve(null));
   function loadFineRelief() {
     if (state.reliefFineLoading) return;
     state.reliefFineLoading = true;
     const im = new Image();
     im.src = '../vendor/relief/SR_50M-10800.jpg';
     im.decode().then(() => { state.reliefFine = im; }).catch(() => {});
+    bitmapOf(im.src).then((bm) => { state.reliefFineBM = bm; if (flightsOpen) big.warm(); });
   }
 
   /* ------------------------------------------------------------ drawing a frame */
@@ -471,6 +479,9 @@
       const w = Math.min(1.35, 0.78 + p * 0.005);
       ctx.strokeStyle = INK(0.9);
       coast.forEach((path, i) => { ctx.lineWidth = (w * [0.55, 0.78, 1, 1.26, 1.6][i]) / p; ctx.stroke(path); });
+      // the lakes' shores, a little lighter: the great lakes from afar, all of them closer in
+      const lakes = fine ? state.lakesPath : state.lakesBigPath;
+      if (lakes && state.base) { ctx.strokeStyle = INK(0.82); ctx.lineWidth = (w * 0.82) / p; ctx.stroke(lakes); }
     }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.restore();
@@ -503,7 +514,7 @@
       ctx.lineWidth = 0.8;
       ctx.strokeStyle = INK(0.6);
       for (const b of pinList) {
-        if (Math.hypot(b.x - b.ax, b.y - b.ay) > 6) { ctx.beginPath(); ctx.moveTo(b.ax, b.ay); ctx.lineTo(b.x, b.y); ctx.stroke(); }
+        if (Math.hypot(b.x - b.ax, b.y - b.ay) > 6) { ctx.beginPath(); ctx.moveTo(b.ax, b.ay); ctx.lineTo(b.x, b.ly); ctx.stroke(); }
       }
       for (const b of pinList) {
         ctx.beginPath(); ctx.arc(b.ax, b.ay, 3.5, 0, Math.PI * 2);
@@ -534,7 +545,8 @@
         ctx.globalAlpha = 1;
       }
       const zw = Math.log2((360 * p) / 256);
-      for (const n of others) {
+      // (held back while the opening's title stands over the map, then lettered in with the books)
+      for (const n of leadA > 0 ? others : []) {
         if (n.min > zw + 1.0) continue;
         const [x, y] = P(n.ll);
         if (x < -60 || y < -20 || x > W + 60 || y > H + 20) continue;
@@ -549,7 +561,7 @@
         state.labels.set(n.id, a);
         if (a < 1) again = true;
         ctx.save();
-        ctx.globalAlpha = a;
+        ctx.globalAlpha = a * leadA;
         ctx.translate(x, y);
         ctx.rotate(sp.tilt);
         ctx.drawImage(sp.c, -sp.inkW / 2 - sp.bx, -sp.by + sp.size * 0.34, sp.w, sp.h);
@@ -718,36 +730,78 @@
     const s = bookScale();
     const small = narrow.matches;
     const bw = 192 * s, bh = 272 * s;
-    const below = small ? 4 : 20;
+    // the room between two books, or a book and another's name, or two names
+    const gap = small ? 5 : 9;
+    const lh = small ? 15 : 18;
     for (const q of pinList) {
       const a = P(q.ll);
       q.ax = a[0]; q.ay = a[1];
       if (Number.isNaN(q.x)) { q.x = q.ax; q.y = q.ay; }
-      q.hw = small ? bw / 2 + 2 : Math.max(bw / 2 + 3, q.lw / 2 + 2);
     }
-    // pulled toward its place, pushed apart from its neighbours: books never cover each other
+    // what a book takes up: the book standing above its foot, and its name lettered under it
+    const shapes = (q) => [
+      [q.x - bw / 2, q.y - bh, q.x + bw / 2, q.y],
+      [q.x - q.lw / 2, q.y + 5, q.x + q.lw / 2, q.y + 7 + lh],
+    ];
+    // pulled toward its place, pushed apart from its neighbours until nothing touches: books,
+    // names and the places' own marks all count, so each book and its name stand clear and a
+    // short pen leader runs back to the true spot
     const pull = 0.3;
     for (const q of pinList) { q.x += (q.ax - q.x) * pull; q.y += (q.ay - q.y) * pull; }
-    for (let it = 0; it < 10; it++) {
-      for (let i = 0; i < pinList.length; i++) {
+    const n = pinList.length;
+    for (let it = 0; it < 60; it++) {
+      let moved = false;
+      for (let i = 0; i < n; i++) {
         const a = pinList[i];
-        for (let j = i + 1; j < pinList.length; j++) {
+        for (let j = i + 1; j < n; j++) {
           const b = pinList[j];
-          const ox = a.hw + b.hw - Math.abs(a.x - b.x);
-          if (ox <= 0) continue;
-          const oy = Math.min(a.y + below, b.y + below) - Math.max(a.y - bh - 4, b.y - bh - 4);
-          if (oy <= 0) continue;
-          if (ox < oy * (small ? 2.4 : 1.1)) {
-            const dir = a.x < b.x || (a.x === b.x && i < j) ? -1 : 1;
-            a.x += (dir * ox) / 2; b.x -= (dir * ox) / 2;
-          } else {
-            const dir = a.y < b.y ? -1 : 1;
-            a.y += (dir * oy) / 2; b.y -= (dir * oy) / 2;
+          if (Math.abs(a.x - b.x) > bw + Math.max(a.lw, b.lw) + gap || Math.abs(a.y - b.y) > bh + lh + 20) continue;
+          for (const A of shapes(a)) {
+            for (const B of shapes(b)) {
+              const ox = Math.min(A[2], B[2]) - Math.max(A[0], B[0]) + gap;
+              const oy = Math.min(A[3], B[3]) - Math.max(A[1], B[1]) + gap;
+              if (ox <= 0 || oy <= 0) continue;
+              moved = true;
+              // the shorter way apart (sideways is preferred a little, so the leaders stay short),
+              // each toward its own side as the places themselves lie, so no two leaders cross
+              if (ox < oy * 1.25) {
+                const d = a.ax - b.ax || a.x - b.x || i - j;
+                const dir = d < 0 ? -1 : 1;
+                a.x += (dir * ox) / 2; b.x -= (dir * ox) / 2;
+              } else {
+                const d = a.ay - b.ay || a.y - b.y || i - j;
+                const dir = d < 0 ? -1 : 1;
+                a.y += (dir * oy) / 2; b.y -= (dir * oy) / 2;
+              }
+            }
           }
         }
+        // nor over any place's own mark, its own included (a book pushed down past its spot)
+        for (let j = 0; j < n; j++) {
+          const o = pinList[j];
+          const D = [o.ax - 5, o.ay - 5, o.ax + 5, o.ay + 5];
+          const sh = shapes(a);
+          if (j === i) sh[0][3] -= 7;
+          // (on a phone only the books keep off the marks: a name there may cross one, small)
+          if (small) sh.length = 1;
+          for (const A of sh) {
+            const ox = Math.min(A[2], D[2]) - Math.max(A[0], D[0]);
+            const oy = Math.min(A[3], D[3]) - Math.max(A[1], D[1]);
+            if (ox <= 0 || oy <= 0) continue;
+            moved = true;
+            if (ox < oy) a.x += (A[0] + A[2] < D[0] + D[2] ? -1 : 1) * ox;
+            else a.y += (A[1] + A[3] < D[1] + D[3] ? -1 : 1) * oy;
+          }
+        }
+        // and, while its place is in view, never past the window's edge
+        if (a.ax > 0 && a.ax < state.W) {
+          const half = Math.max(bw, a.lw) / 2 + 6;
+          if (a.x < half) { a.x = half; moved = true; } else if (a.x > state.W - half) { a.x = state.W - half; moved = true; }
+        }
       }
+      if (!moved) break;
     }
-    // on a phone, names that would sit on another book or name wait until their book wakes
+    // on a phone, a name that still would sit on another book or name waits until its book wakes
     const taken = [];
     for (const q of pinList) {
       let free = true;
@@ -761,11 +815,14 @@
         if (free) taken.push(r);
       }
       q.el.classList.toggle('is-quiet', !free);
-      // the room it takes, kept clear of the lettering of other countries
-      q.boxes = [[q.x - bw / 2 - 3, q.y - bh - 6, q.x + bw / 2 + 3, q.y + 6]];
-      if (free) q.boxes.push([q.x - q.lw / 2 - 2, q.y + 4, q.x + q.lw / 2 + 2, q.y + 24]);
+      // the room it takes, kept clear of the lettering of other countries by a little paper
+      const m = small ? 4 : 7;
+      q.boxes = [[q.x - bw / 2 - m, q.y - bh - m, q.x + bw / 2 + m, q.y + m]];
+      if (free) q.boxes.push([q.x - q.lw / 2 - m, q.y + 4, q.x + q.lw / 2 + m, q.y + 7 + lh + m]);
     }
     for (const q of pinList) {
+      // the leader meets the book at its foot, or under its name when the place lies below both
+      q.ly = q.ay > q.y + 7 + lh && !q.el.classList.contains('is-quiet') ? q.y + 7 + lh + 1 : q.y;
       q.el.style.setProperty('--x', `${q.x.toFixed(1)}px`);
       q.el.style.setProperty('--y', `${q.y.toFixed(1)}px`);
       q.el.style.setProperty('--s', s.toFixed(3));
@@ -1145,11 +1202,14 @@
   // the words on the cover step back after a still moment, and return with any movement
   let stillTimer = 0;
   function wake() {
+    // (back from stillness the words return at once, not at the caption's slow first reveal)
+    if (leaf.classList.contains('is-still')) leaf.classList.add('is-woken');
     leaf.classList.remove('is-still');
     clearTimeout(stillTimer);
-    stillTimer = setTimeout(() => { if (page) leaf.classList.add('is-still'); }, 2500);
+    stillTimer = setTimeout(() => { if (page) { leaf.classList.remove('is-woken'); leaf.classList.add('is-still'); } }, 2500);
   }
-  ['pointermove', 'pointerdown', 'keydown', 'focusin'].forEach((ev) => leaf.addEventListener(ev, wake, { passive: true }));
+  // any touch, pointer, wheel or key brings the cover's words back at once
+  ['pointermove', 'pointerdown', 'touchstart', 'wheel', 'keydown', 'focusin'].forEach((ev) => window.addEventListener(ev, () => { if (page) wake(); }, { passive: true, capture: true }));
   leafScroll.addEventListener('scroll', () => { if (leafScroll.scrollTop > 40) leaf.classList.add('is-scrolled'); }, { passive: true });
   const coverInView = () => !cover.hidden && leafScroll.scrollTop < cover.offsetHeight * 0.5;
   leaf.addEventListener('keydown', (e) => {
@@ -1200,9 +1260,8 @@
     leafContent.innerHTML = `<div class="wrap">
       <header class="place-top">
         <h1 class="page-title" id="leaf-title">${esc(title)}</h1>
-        <p class="meta">${name !== title ? `<span>${esc(name)}</span>` : ''}<span>${esc(bookDate(b))}</span>${ids.length ? `<span>${esc(T[lang].nPhotos(ids.length))}</span>` : ''}</p>
+        <p class="meta place-status"><span class="quiet-line">${esc(t('bookNot'))}</span>${name !== title ? `<span>${esc(name)}</span>` : ''}${bookDate(b) ? `<span>${esc(bookDate(b))}</span>` : ''}${ids.length ? `<span>${esc(T[lang].nPhotos(ids.length))}</span>` : ''}</p>
         ${b.place ? '' : `<p class="page-lede">${esc(L(c.note))}</p>`}
-        <p class="quiet-line">${esc(t('bookNot'))}</p>
       </header>${body}${pageEnd(ids.length > 0)}</div>`;
     $$('[data-ar]', leafContent).forEach((n) => n.style.setProperty('--ar', n.dataset.ar));
   }
@@ -1348,7 +1407,7 @@
     if (!diving) state.before = state.z;
     diving = true;
     app.classList.add('is-diving');
-    leaf.classList.remove('is-open', 'is-captioned', 'is-dissolving', 'is-leaving', 'is-still');
+    leaf.classList.remove('is-open', 'is-captioned', 'is-dissolving', 'is-leaving', 'is-still', 'is-woken');
     const hasCover = !leaf.classList.contains('is-plain');
     if (opts.animate && !reduce.matches) {
       // 1. the map magnifies into the country while the pen tightens a ring on the spot
@@ -1424,7 +1483,7 @@
     const done = () => {
       if (gen !== pageGen) return;
       leaf.hidden = true;
-      leaf.classList.remove('is-open', 'is-captioned', 'is-dissolving', 'is-leaving', 'is-past', 'is-still', 'is-scrolled');
+      leaf.classList.remove('is-open', 'is-captioned', 'is-dissolving', 'is-leaving', 'is-past', 'is-still', 'is-woken', 'is-scrolled');
       leafContent.textContent = '';
       clearDissolve();
     };
@@ -1702,6 +1761,7 @@
     letter: (text) => sprite(`city-${text}`, text, { size: 12.5, weight: 500, colour: 'rgb(38, 34, 33)', halo: 3.4 }),
     onLeg: (i) => showLeg(i),
     speed: () => replaySpeed,
+    relief: () => (state.relief ? { coarse: state.reliefBM || state.relief, fine: state.reliefFineBM || null } : null),
   });
   let flightsOpen = false, jOn = -1, jLeave = 0, lastPointer = '';
   // the replay's speed, remembered on this browser
@@ -1942,6 +2002,15 @@
     const relief = new Image();
     relief.src = '../vendor/relief/SR_50M-4096.jpg';
     const reliefReady = relief.decode().then(() => { state.relief = relief; }).catch(() => {});
+    bitmapOf(relief.src).then((bm) => { state.reliefBM = bm; });
+    // the lakes (Natural Earth 50m), washed and outlined as the coasts are
+    const lakesReady = fetch('map/lakes-50m.json').then((r) => r.json()).then((lk) => {
+      state.lakes = lk;
+      state.lakesPath = pathDeg(lk);
+      state.lakesBigPath = pathDeg({ type: 'FeatureCollection', features: lk.features.filter((f) => d3.geoArea(f) > 1.2e-4) });
+      big.o.lakes = lk;
+      if (flightsOpen) big.kick();
+    }).catch(() => {});
     const w50 = await fetch('../vendor/countries-50m.json').then((r) => r.json());
     state.w50 = w50;
     state.land50 = topojson.feature(w50, w50.objects.land);
@@ -1956,6 +2025,7 @@
     state.seams = topojson.mesh(w50, w50.objects.countries, (a, b) => a !== b && isos.has(id3(a)) && isos.has(id3(b)));
     queueDraw();
     await reliefReady;
+    await lakesReady;
     paintBase();
   }
 

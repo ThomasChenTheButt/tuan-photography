@@ -125,6 +125,21 @@
         ctx.restore();
       }
     }
+    // the lakes: bare paper with the sea's pale cerulean laid along their shores, from inside
+    let kp = null;
+    if (o.lakes) {
+      kp = new Path2D();
+      d3.geoPath(proj, kp)(o.lakes);
+      ctx.save();
+      ctx.clip(kp);
+      ctx.fillStyle = PAPER; ctx.fill(kp);
+      ctx.fillStyle = 'rgba(132, 186, 218, 0.12)'; ctx.fill(kp);
+      const ws = [0.05, 0.028, 0.012], as = [0.1, 0.13, 0.16];
+      for (let i = 0; i < 3; i++) { ctx.lineWidth = Math.max(1.4, ws[i] * R); ctx.strokeStyle = `rgba(132, 186, 218, ${as[i]})`; ctx.stroke(kp); }
+      ctx.restore();
+    }
+    // the mountains' hatching, drawn by the caller over the washes and under the pen
+    if (o.under) o.under(ctx);
     const hatch = round * (o.hatch == null ? 1 : o.hatch);
     if (hatch > 0.02 && o.shade !== false) hatchShade(ctx, cx, cy, o.r0 || proj.scale(), hatch, lw);
     // a faint pencil graticule
@@ -139,6 +154,7 @@
       ctx.setLineDash([]);
     }
     if (lp) { ctx.strokeStyle = ink(0.86); ctx.lineWidth = 0.75 * lw; ctx.stroke(lp); }
+    if (kp) { ctx.strokeStyle = ink(0.8); ctx.lineWidth = 0.6 * lw; ctx.stroke(kp); }
     ctx.restore();
     // the outline: one confident circle of the pen, and a second just off it where the nib lifted
     const edgeA = o.edgeA == null ? round : o.edgeA;
@@ -315,7 +331,8 @@
     lettered as it is reached. At the end the camera draws back to show the whole journey.
 
     o: { land, travel, borders (110m), hi: { land, travel, borders } (50m, once loaded), home: [lng, lat],
-         places: [[lng, lat]], reduce(), letter(text) -> sprite, onLeg(i) }
+         places: [[lng, lat]], reduce(), letter(text) -> sprite, onLeg(i),
+         lakes (Natural Earth 50m, once loaded), relief() -> { coarse, fine } images (for the hatching) }
     focus({ key, legs: [{ from, to, mode, fromName, toName, fromHome, toHome }] } | null)
   */
   const RAD = Math.PI / 180;
@@ -451,6 +468,151 @@
     ctx.restore();
   }
 
+  /* ------------------------------------------------------------ the mountains, hatched in pen, close in */
+
+  /*
+    Close in, the Flights globe hatches the mountains from the same shaded relief, in the same short
+    strokes of the pen, as the flat map (paint.js): parallel lines at one angle, a light slope
+    every fourth line, a steeper one every second, the steepest all of them, each run broken into
+    short strokes a hair off true, kept off the sea and the lakes. The strokes are worked out once
+    per tile of a Web Mercator grid (conformal, so the lines keep their angle and spacing on the
+    screen), at the zoom level whose tile pixel is about a screen pixel, and kept as points on the
+    sphere; each frame only turns them with the camera and draws them.
+  */
+  const HT = 256;                                  // samples across a tile
+  const HSP = 3.1;                                 // samples between the lines (as paint.js)
+  const HANG = -1.0;                               // the lines' angle (as paint.js)
+  const HLEVELS = [0.17, 0.62, 0.36, 0.62];
+  const mercY = (lat) => Math.log(Math.tan(Math.PI / 4 + (clamp(lat, -85, 85) * RAD) / 2)) / RAD;
+  const latOfY = (y) => (2 * Math.atan(Math.exp(y * RAD)) - Math.PI / 2) / RAD;
+  const HYMAX = mercY(70);                         // no hatching nearer the poles than 70°, as the map
+  const polyIndex = new WeakMap();
+  // the polygons of a GeoJSON object, each with its box, so a tile draws only those it touches
+  function polysOf(obj) {
+    if (!obj) return [];
+    let list = polyIndex.get(obj);
+    if (list) return list;
+    list = [];
+    const add = (g) => {
+      if (!g) return;
+      if (g.type === 'FeatureCollection') g.features.forEach((f) => add(f.geometry));
+      else if (g.type === 'Feature') add(g.geometry);
+      else if (g.type === 'GeometryCollection') g.geometries.forEach(add);
+      else if (g.type === 'Polygon' || g.type === 'MultiPolygon') {
+        for (const poly of g.type === 'Polygon' ? [g.coordinates] : g.coordinates) {
+          let w = 180, e = -180, s = 90, n = -90;
+          for (const [x, y] of poly[0]) { if (x < w) w = x; if (x > e) e = x; if (y < s) s = y; if (y > n) n = y; }
+          list.push({ poly, w, e, s, n });
+        }
+      }
+    };
+    add(obj);
+    polyIndex.set(obj, list);
+    return list;
+  }
+  // the relief image as a tile reads it; the first read of a large image decodes it (a fifth of
+  // a second for the finer one), so the view does that once, idle, before any journey is followed
+  const reliefSrc = (img) => ({ img, w: img.width });
+  function warmImage(img) {
+    const c = scratch().a;
+    c.drawImage(img, 0, 0, 2, 2, 0, 0, 2, 2);
+    c.getImageData(0, 0, 1, 1);
+  }
+  let hScratch = null;
+  function scratch() {
+    if (!hScratch) {
+      const a = document.createElement('canvas'); a.width = a.height = HT;
+      const b = document.createElement('canvas'); b.width = b.height = HT;
+      // (the relief is sampled on an ordinary canvas: drawing the large image into a CPU-backed
+      // one is slower still; the land is traced on a CPU-backed one)
+      hScratch = { a: a.getContext('2d'), b: b.getContext('2d', { willReadFrequently: true }) };
+    }
+    return hScratch;
+  }
+  function hatchTile(z, tx, ty, cut, land, lakes, seed) {
+    const T = 360 / (1 << z), lon0 = -180 + tx * T, y0 = 180 - ty * T, px = T / HT;
+    const lonE = lon0 + T, latN = latOfY(y0), latS = latOfY(y0 - T);
+    const { a: rc, b: mc } = scratch();
+    // the relief under the tile, laid in strips so the Mercator rows find their latitudes
+    rc.setTransform(1, 0, 0, 1, 0, 0);
+    rc.fillStyle = 'rgb(206,206,206)'; rc.fillRect(0, 0, HT, HT);
+    rc.imageSmoothingEnabled = true; rc.imageSmoothingQuality = 'high';
+    const ri = cut.w / 360;
+    const STRIP = 16;
+    for (let r0 = 0; r0 < HT; r0 += STRIP) {
+      const la = latOfY(y0 - r0 * px), lb = latOfY(y0 - (r0 + STRIP) * px);
+      rc.drawImage(cut.img, (lon0 + 180) * ri, (90 - la) * ri, T * ri, Math.max(0.01, (la - lb) * ri), 0, r0, HT, STRIP);
+    }
+    const rd = rc.getImageData(0, 0, HT, HT).data;
+    // the land, less its lakes
+    mc.setTransform(1, 0, 0, 1, 0, 0);
+    mc.fillStyle = '#000'; mc.fillRect(0, 0, HT, HT);
+    const trace = (list, colour) => {
+      mc.beginPath();
+      let any = false;
+      for (const p of list) {
+        if (p.e < lon0 || p.w > lonE || p.n < latS || p.s > latN) continue;
+        any = true;
+        for (const ring of p.poly) {
+          for (let i = 0; i < ring.length; i++) {
+            const x = (ring[i][0] - lon0) / px, y = (y0 - mercY(ring[i][1])) / px;
+            if (i) mc.lineTo(x, y); else mc.moveTo(x, y);
+          }
+          mc.closePath();
+        }
+      }
+      if (any) { mc.fillStyle = colour; mc.fill('evenodd'); }
+    };
+    trace(polysOf(land), '#fff');
+    trace(polysOf(lakes), '#000');
+    const md = mc.getImageData(0, 0, HT, HT).data;
+    // the lines, anchored to the world so neighbouring tiles agree
+    let s = (seed ^ (z * 73856093) ^ (tx * 19349663) ^ (ty * 83492791)) | 0;
+    const rnd = () => { s = (s + 0x6d2b79f5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+    const dx = Math.cos(HANG), dy = Math.sin(HANG), nx = -dy, ny = dx;
+    const gx0 = tx * HT, gy0 = ty * HT;
+    const cs = [[gx0, gy0], [gx0 + HT, gy0], [gx0, gy0 + HT], [gx0 + HT, gy0 + HT]];
+    const ns = cs.map(([x, y]) => x * nx + y * ny), ts = cs.map(([x, y]) => x * dx + y * dy);
+    const k0 = Math.floor(Math.min(...ns) / HSP), k1 = Math.ceil(Math.max(...ns) / HSP);
+    const t0 = Math.floor(Math.min(...ts)), t1 = Math.ceil(Math.max(...ts));
+    const flat = [];
+    const at = (u, v) => { flat.push(u, v); };
+    for (let k = k0; k <= k1; k++) {
+      const thr = HLEVELS[((k % 4) + 4) % 4];
+      const ox = nx * k * HSP - gx0, oy = ny * k * HSP - gy0;
+      let run = -Infinity;
+      for (let t = t0; t <= t1 + 1; t++) {
+        const x = ox + dx * t, y = oy + dy * t;
+        let on = false;
+        if (t <= t1 && x >= 0 && y >= 0 && x < HT && y < HT) {
+          const q = ((y | 0) * HT + (x | 0)) << 2;
+          if (md[q] > 200) on = (206 - rd[q]) / 64 > thr;
+        }
+        if (on && run === -Infinity) run = t;
+        if (!on && run !== -Infinity) {
+          let a0 = run;
+          const end = t - 1;
+          while (a0 < end - 1.2) {
+            const L = 5 + rnd() * 6;
+            const a1 = Math.min(end, a0 + L);
+            const j0 = (rnd() - 0.5) * 0.7, j1 = (rnd() - 0.5) * 0.7;
+            at(ox + nx * j0 + dx * a0, oy + ny * j0 + dy * a0);
+            at(ox + nx * j1 + dx * a1, oy + ny * j1 + dy * a1);
+            a0 = a1 + 1.1 + rnd() * 1.4;
+          }
+          run = -Infinity;
+        }
+      }
+    }
+    // as points on the unit sphere
+    const P = new Float32Array((flat.length / 2) * 3);
+    for (let i = 0, j = 0; i < flat.length; i += 2, j += 3) {
+      const lon = (lon0 + flat[i] * px) * RAD, lat = latOfY(y0 - flat[i + 1] * px) * RAD, c = Math.cos(lat);
+      P[j] = c * Math.cos(lon); P[j + 1] = c * Math.sin(lon); P[j + 2] = Math.sin(lat);
+    }
+    return { P, n: flat.length / 4, c: [lon0 + T / 2, latOfY(y0 - T / 2)], r: T * 0.75 * RAD };
+  }
+
   WC.BigGlobe = class {
     constructor(canvas, o) {
       this.c = canvas;
@@ -475,6 +637,10 @@
       this.PX = new Float32Array(MAXP); this.PY = new Float32Array(MAXP);
       this.PV = new Uint8Array(MAXP); this.PU = new Float32Array(MAXP);
       this.boxes = [];
+      this.htiles = new Map();   // the mountains' hatching, by tile
+      this.hq = new Map();       // tiles waiting to be made
+      this.hTimer = 0;
+      this.frameNo = 0;
       this.bind();
       this.setPlaces();
     }
@@ -628,6 +794,7 @@
       }
       this.rp = this.build(j, now);
       this.prepare(this.rp);
+      this.hPrepare(this.rp);
       if (this.o.reduce()) {
         // all at once, framed, without the camera's flight
         this.rp.t0 = now - this.rp.total - 1;
@@ -782,7 +949,7 @@
           reg = { c, r, ready: false };
           this.regions.set(key, reg);
           // one piece at a time, between frames
-          const steps = [['land', hi.land], ['travel', hi.travel], ['borders', hi.borders]];
+          const steps = [['land', hi.land], ['travel', hi.travel], ['borders', hi.borders], ['lakes', this.o.lakes]];
           const geo = {};
           const next = () => {
             const st = steps.shift();
@@ -795,6 +962,169 @@
         return reg;
       });
     }
+    /* -------------------------------- the mountains' hatching, close in */
+
+    // the relief to hatch from: the finer image, once it has arrived, for the tiles that need it
+    reliefFor(z) {
+      const r = this.o.relief ? this.o.relief() : null;
+      if (!r) return null;
+      if (z >= 5 && r.fine) {
+        if (this.warmed && this.warmed.has(r.fine)) return { cut: reliefSrc(r.fine), id: 'f' };
+      }
+      return r.coarse ? { cut: reliefSrc(r.coarse), id: 'c' } : null;
+    }
+    // ready the relief's pieces and the outlines' index a moment after the view opens, so the
+    // first journey followed finds them waiting
+    warm() {
+      clearTimeout(this.warmT);
+      this.warmed = this.warmed || new Set();
+      const idle = window.requestIdleCallback || ((f) => setTimeout(f, 1));
+      // one piece of work per idle moment
+      const jobs = [
+        () => { const r = this.o.relief && this.o.relief(); if (r && r.coarse && !this.warmed.has(r.coarse)) { warmImage(r.coarse); this.warmed.add(r.coarse); } },
+        () => polysOf((this.o.hi && this.o.hi.land) || this.o.land),
+        () => polysOf(this.o.lakes),
+        // (never while a journey is being followed: it waits for the globe to rest)
+        () => { const r = this.o.relief && this.o.relief(); if (this.rp) return false; if (r && r.fine && !this.warmed.has(r.fine)) { warmImage(r.fine); this.warmed.add(r.fine); } return true; },
+      ];
+      const next = () => {
+        const f = jobs[0];
+        if (!f) { this.warmT = 0; return; }
+        const done = f() !== false;
+        if (done) jobs.shift();
+        this.warmT = setTimeout(() => idle(next, { timeout: 2000 }), done ? 60 : 1500);
+      };
+      this.warmT = setTimeout(() => idle(next, { timeout: 2000 }), 1200);
+    }
+    // the tile level whose sample is about a screen pixel here (as the map's paintings are made)
+    hLevel(R, lat) {
+      const f = Math.min(1.5, this.dpr || 1) * 0.85 * 1.15;
+      return Math.log2((f * R * RAD * Math.cos(clamp(lat, -70, 70) * RAD) * 360) / HT);
+    }
+    // the tiles a camera sees, at level z
+    hTiles(c, k, z) {
+      const s = this.size;
+      const R = s * BASE * k;
+      const rho = R > s * FRAME + 0.5 ? viewRad(k) : Math.PI / 2;
+      const rd = Math.min(89, rho / RAD + 0.5);
+      const la0 = Math.max(-70, c[1] - rd), la1 = Math.min(70, c[1] + rd);
+      if (la1 <= la0) return [];
+      const n = 1 << z, T = 360 / n;
+      const lon = ((((c[0] + 180) % 360) + 360) % 360) - 180;
+      const span = rd < 90 - Math.abs(c[1]) - 0.5 ? Math.asin(Math.min(1, Math.sin(rd * RAD) / Math.cos(c[1] * RAD))) / RAD + 0.5 : 180;
+      const ty0 = clamp(Math.floor((180 - mercY(la1)) / T), 0, n - 1), ty1 = clamp(Math.floor((180 - mercY(la0)) / T), 0, n - 1);
+      const xs = new Set();
+      if (span >= 180) for (let x = 0; x < n; x++) xs.add(x);
+      else for (let x = Math.floor((lon - span + 180) / T); x <= Math.floor((lon + span + 180) / T); x++) xs.add(((x % n) + n) % n);
+      const out = [];
+      for (let y = ty0; y <= ty1; y++) for (const x of xs) out.push([z, x, y]);
+      return out;
+    }
+    hPeek(z, x, y) {
+      for (const id of ['f', 'c']) { const t = this.htiles.get(`${z}/${x}/${y}/${id}`); if (t) { t.used = this.frameNo; return t; } }
+      return null;
+    }
+    // a tile's strokes: made now if the frame has time, else queued (and a coarser one stands in)
+    hGet(z, x, y, until) {
+      const src = this.reliefFor(z);
+      if (!src) return null;
+      const key = `${z}/${x}/${y}/${src.id}`;
+      let t = this.htiles.get(key);
+      if (t) { t.used = this.frameNo; return t; }
+      if (performance.now() <= until) {
+        const hi = this.o.hi;
+        t = hatchTile(z, x, y, src.cut, (hi && hi.land) || this.o.land, this.o.lakes, 0x51ed);
+        t.used = this.frameNo;
+        this.htiles.set(key, t);
+        if (this.htiles.size > 420) {
+          const old = [...this.htiles.entries()].sort((a, b) => a[1].used - b[1].used).slice(0, 120);
+          for (const [kk] of old) this.htiles.delete(kk);
+        }
+        return t;
+      }
+      this.hEnqueue(z, x, y);
+      return this.hPeek(z, x, y);
+    }
+    hEnqueue(z, x, y) {
+      const k = `${z}/${x}/${y}`;
+      if (!this.hq.has(k)) this.hq.set(k, [z, x, y]);
+      if (this.hTimer) return;
+      this.hTimer = setTimeout(() => {
+        this.hTimer = 0;
+        const until = performance.now() + 10;
+        for (const [kk, [z1, x1, y1]] of this.hq) {
+          this.hq.delete(kk);
+          this.hGet(z1, x1, y1, Infinity);
+          if (performance.now() > until) break;
+        }
+        if (this.hq.size) this.hEnqueue(...this.hq.values().next().value);
+        else this.kick();
+      }, 16);
+    }
+    // the hatching of the views a journey will close in on, made ahead of the camera
+    hPrepare(rp) {
+      if (!this.size) return;
+      for (const kf of rp.keys) {
+        if (kf.to.k < 1.7) continue;
+        const z = clamp(Math.round(this.hLevel(this.size * BASE * kf.to.k, kf.to.c[1])), 2, 12);
+        for (const [z1, x, y] of this.hTiles(kf.to.c, kf.to.k, z)) this.hEnqueue(z1, x, y);
+      }
+    }
+    drawRelief(ctx) {
+      const a = clamp((this.k - 1.7) / 0.9, 0, 1);
+      if (a <= 0 || !this.o.relief) return;
+      const cam = this.cam, c = this.centre, s = this.size;
+      this.frameNo += 1;
+      const zf = this.hLevel(cam.R, c[1]);
+      // between two levels, a short fade from one to the other, so the hatching never jumps
+      const f0 = Math.floor(zf), fr = zf - f0;
+      const levels = fr > 0.38 && fr < 0.62 ? [[f0, 1 - (fr - 0.38) / 0.24], [f0 + 1, (fr - 0.38) / 0.24]] : [[Math.round(zf), 1]];
+      const until = performance.now() + 7;
+      const { cl, sl, cp, sp, R, cx, cy } = cam;
+      ctx.save();
+      ctx.lineCap = 'round';
+      for (const [zz, wa] of levels) {
+        const z = clamp(zz, 2, 12);
+        const tiles = this.hTiles(c, this.k, z);
+        if (!tiles.length || tiles.length > 80) continue;
+        const seen = new Set();
+        ctx.beginPath();
+        for (const [z1, x, y] of tiles) {
+          const t = this.hGet(z1, x, y, until) || this.hPeek(z1 - 1, x >> 1, y >> 1);
+          if (!t || seen.has(t)) continue;
+          seen.add(t);
+          const P = t.P;
+          for (let i = 0; i < P.length; i += 6) {
+            let x1 = P[i] * cl - P[i + 1] * sl;
+            if (x1 * cp - P[i + 2] * sp <= 0) continue;
+            const ax = cx + R * (P[i] * sl + P[i + 1] * cl), ay = cy - R * (P[i + 2] * cp + x1 * sp);
+            x1 = P[i + 3] * cl - P[i + 4] * sl;
+            const bx = cx + R * (P[i + 3] * sl + P[i + 4] * cl), by = cy - R * (P[i + 5] * cp + x1 * sp);
+            if ((ax < -4 && bx < -4) || (ay < -4 && by < -4) || (ax > s + 4 && bx > s + 4) || (ay > s + 4 && by > s + 4)) continue;
+            ctx.moveTo(ax, ay); ctx.lineTo(bx, by);
+          }
+        }
+        // the nib's width as the map's: 0.8 of a sample
+        const perPx = (Math.pow(2, z) * HT) / 360 / Math.max(1e-6, R * RAD * Math.cos(clamp(c[1], -70, 70) * RAD));
+        ctx.lineWidth = clamp(0.8 / perPx, 0.4, 1.3);
+        ctx.strokeStyle = ink(0.5 * a * wa);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+    // the lakes to draw: the region's close in, all of them at middle distance, the great ones far out
+    lakesFor(geo) {
+      const L = this.o.lakes;
+      if (!L) return null;
+      if (geo !== this.o && geo.lakes) return geo.lakes;
+      if (this.k >= 2) return L;
+      if (this._bigOf !== L) {
+        this._bigOf = L;
+        this._big = { type: 'FeatureCollection', features: L.features.filter((f) => d3.geoArea(f) > 3e-4) };
+      }
+      return this._big;
+    }
+
     geoFor() {
       const lo = this.o;
       const rp = this.rp;
@@ -1179,6 +1509,7 @@
         land: geo.land, travel: geo.travel, borders: geo.borders, lw, grain: 1,
         R: Math.min(R * 0.8, s * 0.34), frame: rf,
         hatch: clamp((1.55 - this.k) / 0.45, 0, 1), grat: clamp((5 - this.k) / 3, 0.25, 1),
+        lakes: this.lakesFor(geo), under: (c) => this.drawRelief(c),
       });
 
       ctx.save();
@@ -1223,6 +1554,7 @@
     }
     start() {
       if (this.running) return;
+      this.warm();
       if (this.o.reduce()) { this.draw(performance.now()); return; }
       this.running = true;
       this.last = 0;

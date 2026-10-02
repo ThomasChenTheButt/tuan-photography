@@ -374,7 +374,7 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 .leaf.is-dissolving .slide.is-current img { opacity: var(--fade, 0); filter: blur(var(--blur, 8px)); transform: scale(var(--sc, 1.04)); will-change: opacity, filter, transform; }
 .cover__shade { position: absolute; left: 0; right: 0; bottom: 0; height: 15rem; max-height: 45%; background: linear-gradient(to top, oklch(16% 0.012 50 / 0.7), oklch(16% 0.012 50 / 0.28) 50%, transparent); pointer-events: none; }
 .cover__back, .cover__foot, .cover__hint { color: var(--paper); text-shadow: var(--cap-shadow); }
-.cover__ctl { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 0.2rem; color: var(--paper); text-decoration: none; transition: opacity 700ms var(--soft), color 180ms; }
+.cover__ctl { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 0.2rem; color: var(--paper); text-decoration: none; transition: opacity 160ms ease-out, color 180ms; }
 .cover__ctl:hover { color: var(--warm-wash); }
 .cover :focus-visible { outline-color: var(--paper); }
 .cover__back { position: absolute; z-index: 2; left: clamp(0.9rem, 3vw, 2.4rem); top: clamp(0.6rem, 2.2vh, 1.4rem); }
@@ -398,7 +398,9 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 .leaf.is-captioned .cover__foot { transition-delay: 100ms; }
 .leaf.is-captioned .cover__back { transition-delay: 300ms; }
 /* after a still moment the words step back, all but the caption itself */
-.leaf.is-still .cover__ctl { opacity: 0.06; }
+.leaf.is-woken .cover__ctl { transition: opacity 160ms ease-out, color 180ms; }
+/* (they stay legible on their soft shadow: on a phone, Back is the only way out) */
+.leaf.is-still .cover__ctl { opacity: 0.62; transition: opacity 900ms var(--soft), color 180ms; }
 .leaf.is-still .cover__hint, .leaf.is-scrolled .cover__hint { opacity: 0; pointer-events: none; }
 
 /* ---------------------------------------------------------- pages: one voice for both kinds */
@@ -413,6 +415,12 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 :lang(zh-Hant) .page-lede { font-style: normal; font-size: 1.2rem; }
 .quiet-line { margin-top: 1.4rem; color: var(--ink-2); }
 .place-top { display: grid; gap: 0.6rem; max-width: 52rem; }
+/* a place's page: its name set as the title, in the cover caption's serif, and under it a quiet
+   line with how far the guide has got, the country, the date and the photographs */
+.page-title { font-family: var(--serif); }
+.place-status { align-items: baseline; gap: 0.2rem 1.25rem; margin-top: 0.5rem; }
+.place-status .quiet-line { margin: 0; }
+.place-top .page-lede { margin-top: 0.6rem; }
 .no-photos { margin-top: 2.5rem; width: min(30rem, 100%); padding: 2.6rem 0 2.6rem 2.2rem; background: var(--dab-sea, none) left center / 100% 100% no-repeat; }
 .no-photos b { font-weight: 500; font-size: 1.35rem; }
 
@@ -625,16 +633,20 @@ button.jplace:hover img, .jplace:focus-visible img { transform: translateY(-2px)
   :root { --edge: 14px; --index-w: 100vw; }
   body { font-size: 1rem; }
   .mast { font-size: 0.72rem; max-width: 9rem; }
-  .chrome { gap: 0.4rem; }
-  .ig span { display: none; }
-  .ig { font-size: 0.8rem; }
+  .chrome { gap: 0.3rem; }
+  .lang { gap: 0; }
+  .lang__btn { min-width: 2.4rem; padding: 0 0.3rem; }
+  .ig { font-size: 0.8rem; gap: 0.3rem; }
   .globe__canvas { width: 92px; height: 92px; }
   .globe__cap { margin-top: -0.35rem; font-size: 0.62rem; letter-spacing: 0.16em; }
   .key { display: none; }
   .credit { display: none; }
   #zoom-world { display: none; }
-  .tools { right: var(--edge); bottom: calc(var(--edge) + 3rem); }
+  .tools { right: calc(var(--edge) - 0.55rem); bottom: calc(var(--edge) + 3rem); }
   .zoom { flex-direction: column; align-items: flex-end; gap: 0; }
+  /* the coast of Antarctica runs along the bottom of a phone: each word sits on a patch of
+     paper cleared out of the drawing, its edge soft as an eraser leaves it */
+  .zoom__btn { padding: 0 0.75rem; background: radial-gradient(closest-side, var(--paper) 78%, oklch(98.4% 0.0075 95 / 0) 100%); }
   .corner { bottom: calc(var(--edge) + 2.6rem); }
 
   .index { left: 0; }

@@ -228,7 +228,8 @@
   /*
     job: { r: texture px per degree, u0, v0: world origin of the texture in degrees (u east of the
            map's centre meridian, v = -latitude), w, h: size in px }
-    env: { LON0, LAT_N, LAT_S, land() -> GeoJSON, travel() -> [GeoJSON], seams() -> mesh, relief(r) -> image|null }
+    env: { LON0, LAT_N, LAT_S, land() -> GeoJSON, travel() -> [GeoJSON], seams() -> mesh, lakes() -> GeoJSON|null,
+           relief(r) -> image|null }
     Resolves to a canvas; rejects with 'cancelled' when job.cancelled turns true.
     The washes are laid first, each a few pixels off the line it belongs to; the pen's hatching
     for the mountains is drawn over them. The coastlines, borders and names are drawn live.
@@ -246,6 +247,10 @@
       .clipExtent([[-60, -60], [PW + 60, PH + 60]]);
     const landPath = new Path2D();
     d3.geoPath(proj, landPath)(env.land(r));
+    // the lakes are cut out of the land (filled even-odd), so the sea's wash finds their shores too
+    const lakes = env.lakes ? env.lakes() : null;
+    const lakePath = new Path2D();
+    if (lakes) { d3.geoPath(proj, lakePath)(lakes); landPath.addPath(lakePath); }
     const travelPath = new Path2D();
     const gp = d3.geoPath(proj, travelPath);
     for (const f of env.travel()) gp(f);
@@ -259,13 +264,14 @@
     const pc = P.getContext('2d', { willReadFrequently: true });
     pc.fillStyle = '#000'; pc.fillRect(0, 0, PW, PH);
     pc.globalCompositeOperation = 'lighter';
-    pc.filter = 'blur(1.1px)'; pc.fillStyle = '#f00'; pc.fill(landPath);
-    pc.filter = 'blur(7px)'; pc.fillStyle = '#0f0'; pc.fill(landPath);
+    pc.filter = 'blur(1.1px)'; pc.fillStyle = '#f00'; pc.fill(landPath, 'evenodd');
+    pc.filter = 'blur(7px)'; pc.fillStyle = '#0f0'; pc.fill(landPath, 'evenodd');
     const T = document.createElement('canvas');
     T.width = PW; T.height = PH;
     const tc = T.getContext('2d');
     tc.fillStyle = '#000'; tc.fillRect(0, 0, PW, PH);
     tc.fillStyle = '#00f'; tc.fill(travelPath);
+    if (lakes) { tc.fillStyle = '#000'; tc.fill(lakePath); }
     tc.strokeStyle = '#000'; tc.lineWidth = 4; tc.lineJoin = 'round'; tc.stroke(seamPath);
     pc.filter = 'blur(2.6px)'; pc.drawImage(T, 0, 0);
     pc.filter = 'none';
@@ -277,7 +283,7 @@
     wcx.fillStyle = '#000'; wcx.fillRect(0, 0, QW, QH);
     wcx.filter = 'blur(5px)';
     wcx.setTransform(0.25, 0, 0, 0.25, 0, 0);
-    wcx.fillStyle = '#fff'; wcx.fill(landPath);
+    wcx.fillStyle = '#fff'; wcx.fill(landPath, 'evenodd');
     if (job.cancelled) throw new Error('cancelled');
     await later();
 
