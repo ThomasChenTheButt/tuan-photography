@@ -115,7 +115,12 @@ def main():
     # order he lists them. Nothing is added: the grouping comes only from those dates. The flights
     # are drawn from Taipei to each place, where he flies from (to be confirmed by him).
     journeys, by_date = [], {}
-    for c in D["countries"]:
+    if D.get("journeys"):
+        # his real journeys and their legs, taken from his own trip documents (2026-10-02)
+        for j in D["journeys"]:
+            journeys.append({"id": j["id"], "date": {"en": b.clean_en(j["label"]["en"]), "zh": b.clean_zh(j["label"]["zh"])},
+                             "countries": j["countries"], "legs": j["legs"]})
+    for c in ([] if journeys else D["countries"]):
         if c["id"] == "taiwan":
             continue
         key = c["date"]["en"]
@@ -127,7 +132,7 @@ def main():
         by_date[key]["countries"].append(c["id"])
     site = {"instagram": D["instagram"], "home": "taiwan", "sizes": list(b.SIZES),
             "countries": countries, "slides": slides, "books": books, "guides": guides, "i18n": i18n,
-            "journeys": journeys, "flightsFrom": [25.03, 121.56], "flightsConfirmed": False}
+            "journeys": journeys, "flightsFrom": [25.03, 121.56], "flightsConfirmed": bool(D.get("journeys"))}
     OUT.mkdir(exist_ok=True)
     js = "window.SITE = " + json.dumps(site, ensure_ascii=False).replace("</", "<\\/") + ";\n"
     (OUT / "data.js").write_text(js, encoding="utf-8")
