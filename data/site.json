@@ -2411,6 +2411,38 @@
       "legs": [
         {
           "from": {
+            "code": "TPE",
+            "city": "Taipei",
+            "lat": 25.08,
+            "lng": 121.23
+          },
+          "to": {
+            "code": "MUC",
+            "city": "Munich",
+            "lat": 48.35,
+            "lng": 11.79
+          },
+          "month": null,
+          "mode": "flight",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Munich",
+            "lat": 48.14,
+            "lng": 11.58
+          },
+          "to": {
+            "city": "Zurich",
+            "lat": 47.38,
+            "lng": 8.54
+          },
+          "month": null,
+          "mode": "train",
+          "confirmed": true
+        },
+        {
+          "from": {
             "city": "Zurich",
             "lat": 47.38,
             "lng": 8.54
@@ -2737,6 +2769,36 @@
         {
           "from": {
             "city": "New York",
+            "lat": 40.71,
+            "lng": -74.0
+          },
+          "to": {
+            "city": "Boston",
+            "lat": 42.36,
+            "lng": -71.06
+          },
+          "month": null,
+          "mode": "ground",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Boston",
+            "lat": 42.36,
+            "lng": -71.06
+          },
+          "to": {
+            "city": "New York",
+            "lat": 40.71,
+            "lng": -74.0
+          },
+          "month": null,
+          "mode": "ground",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "New York",
             "lat": 40.75,
             "lng": -73.99
           },
@@ -2794,7 +2856,7 @@
           },
           "month": "2025-08",
           "mode": "flight",
-          "confirmed": false
+          "confirmed": true
         },
         {
           "from": {
