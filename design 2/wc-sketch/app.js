@@ -34,7 +34,7 @@
       mapHint: 'Drag, or use the arrow keys, to move the map. Scroll, or press plus and minus, to zoom. Tab moves through the books.',
       zoomGroup: 'Zoom', zoomIn: 'Zoom in', zoomOut: 'Zoom out', world: 'Whole map', credit: 'Map: Natural Earth',
       flights: 'Flights', globeLabel: 'Flights: open the globe of journeys',
-      flightsTitle: 'Flights', flightsHow: 'Drag to turn the globe', speed: 'Speed',
+      flightsTitle: 'Flights', flightsHow: 'Drag to turn the globe', speed: 'Speed', speedSlow: 'Slow',
       flightsLede: (n) => `${n} journeys. Choose one to follow its flights on the globe.`,
       journeyAria: (d) => `Follow the journey of ${d}`,
       modes: { flight: 'flight', train: 'train', bus: 'bus', car: 'car', ground: 'overland' },
@@ -63,7 +63,7 @@
       mapHint: '拖曳或用方向鍵移動地圖；捲動，或按加號、減號縮放。Tab 鍵逐一走過每本書。',
       zoomGroup: '縮放', zoomIn: '放大', zoomOut: '縮小', world: '整張地圖', credit: '地圖：Natural Earth',
       flights: '飛過的航線', globeLabel: '飛過的航線：打開旅程地球',
-      flightsTitle: '飛過的航線', flightsHow: '拖曳轉動地球', speed: '速度',
+      flightsTitle: '飛過的航線', flightsHow: '拖曳轉動地球', speed: '速度', speedSlow: '慢慢看',
       flightsLede: (n) => `${n} 段旅程。選一段，在地球上看它的航線。`,
       journeyAria: (d) => `看 ${d} 的旅程`,
       modes: { flight: '飛機', train: '火車', bus: '巴士', car: '開車', ground: '陸路' },
@@ -1655,12 +1655,13 @@
   let flightsOpen = false, jOn = -1, jLeave = 0, lastPointer = '';
   // the replay's speed, remembered on this browser
   let replaySpeed = 1;
-  try { const v = parseFloat(localStorage.getItem('tlap-speed')); if ([1, 1.5, 2].includes(v)) replaySpeed = v; } catch (e) { /* storage blocked */ }
+  const speedOf = (s) => (s === 'slow' ? 'slow' : parseFloat(s));
+  try { const v = speedOf(localStorage.getItem('tlap-speed')); if (['slow', 0.5, 1, 1.5, 2].includes(v)) replaySpeed = v; } catch (e) { /* storage blocked */ }
   const speedBtns = $$('.speed__btn');
-  const markSpeed = () => speedBtns.forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.speed === replaySpeed)));
+  const markSpeed = () => speedBtns.forEach((b) => b.setAttribute('aria-pressed', String(speedOf(b.dataset.speed) === replaySpeed)));
   markSpeed();
   speedBtns.forEach((b) => b.addEventListener('click', () => {
-    replaySpeed = +b.dataset.speed;
+    replaySpeed = speedOf(b.dataset.speed);
     try { localStorage.setItem('tlap-speed', String(replaySpeed)); } catch (e) { /* storage blocked */ }
     markSpeed();
     // a journey being followed starts again at the new speed

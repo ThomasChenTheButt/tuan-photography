@@ -613,6 +613,11 @@
       return pts;
     }
     build(j, now) {
+      // the visitor's speed: 'slow' is the first, unhurried pace (each leg given its full time,
+      // up to 16 s a journey); the numbers shorten the usual 7 s timetable alike
+      const spd = (this.o.speed && this.o.speed()) || 1;
+      const slow = spd === 'slow';
+      const cap = slow ? 16000 : CAP;
       // the stops, each once, in the order they are reached; an airport and its city, named
       // alike, are one stop, and the legs are joined there
       const stops = [];
@@ -632,7 +637,7 @@
         L.frame = fit([q.from, q.to], 0.62);
         L.cc = [...new Set([this.countryAt(q.from), this.countryAt(q.to)].filter(Boolean))].sort();
         // ground legs within a country go quickly; long flights take their time
-        L.dur = L.mode === 'flight' ? 1200 + 1000 * Math.min(1, L.d / 1.4) : 520 + 380 * Math.min(1, L.d / 0.05);
+        L.dur = L.mode === 'flight' ? 1200 + 1000 * Math.min(1, L.d / 1.4) : slow ? 1000 + 600 * Math.min(1, L.d / 0.05) : 520 + 380 * Math.min(1, L.d / 0.05);
         return L;
       });
       const overview = fit(stops.map((st) => st.ll), 0.74);
@@ -656,7 +661,7 @@
       const lay = (beat, f, hold) => {
         let t = 0;
         const keys = [];
-        const intro = clamp(camDur(cur, overview), 450, 800);
+        const intro = slow ? clamp(camDur(cur, overview), 700, 1300) : clamp(camDur(cur, overview), 450, 800);
         keys.push({ at: 0, dur: intro, to: overview, leg: 0 });
         t = intro + hold;
         let prev = overview;
@@ -670,23 +675,23 @@
           t = L.at + L.d0 + beat;
           prev = L.frame;
         }
-        const out = clamp(camDur(prev, overview), 600, 900);
+        const out = slow ? clamp(camDur(prev, overview) + 200, 1100, 1700) : clamp(camDur(prev, overview), 600, 900);
         keys.push({ at: t, dur: out, to: overview, leg: legs.length });
         return { keys, total: t + out };
       };
-      let plan = lay(260, 1, 200);
-      if (plan.total > CAP) plan = lay(60, 1, 80);
-      for (let n = 0; n < 6 && plan.total > CAP; n++) {
+      let plan = slow ? lay(420, 1, 450) : lay(260, 1, 200);
+      if (plan.total > cap) plan = slow ? lay(140, 1, 260) : lay(60, 1, 80);
+      for (let n = 0; n < 6 && plan.total > cap; n++) {
         const fixed = plan.total - legs.reduce((s, L) => s + L.lead + L.d0, 0);
-        const f = Math.max(0.12, (CAP - fixed) / Math.max(1, plan.total - fixed));
-        plan = lay(60, f * (n ? 0.97 : 1), 80);
+        const f = Math.max(slow ? 0.35 : 0.12, (cap - fixed) / Math.max(1, plan.total - fixed));
+        plan = slow ? lay(140, f * (n ? 0.97 : 1), 260) : lay(60, f * (n ? 0.97 : 1), 80);
       }
       for (const L of legs) {
         if (!L.a.home) L.a.pop = Math.min(L.a.pop, L.at - 40);
         if (!L.b.home) L.b.pop = Math.min(L.b.pop, L.at + L.d0);
       }
       // the visitor's speed (1x, 1.5x, 2x) shortens the whole timetable alike
-      const sp = (this.o.speed && this.o.speed()) || 1;
+      const sp = slow ? 1 : spd;
       if (sp !== 1) {
         for (const k of plan.keys) { k.at /= sp; k.dur = Math.max(1, k.dur / sp); }
         for (const L of legs) { L.at /= sp; L.d0 /= sp; L.lead /= sp; }
