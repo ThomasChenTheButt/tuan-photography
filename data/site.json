@@ -2393,134 +2393,256 @@
         40.71,
         -74.0
       ]
+    },
+    {
+      "id": "thailand",
+      "continent": "asia",
+      "en": "Thailand",
+      "zh": "泰國",
+      "note": {
+        "en": "Pattaya, then Bangkok.",
+        "zh": "先到芭達雅，再到曼谷。"
+      },
+      "date": {
+        "en": "2023",
+        "zh": "2023"
+      },
+      "ll": [
+        13.75,
+        100.5
+      ]
+    },
+    {
+      "id": "myanmar",
+      "continent": "asia",
+      "en": "Myanmar",
+      "zh": "緬甸",
+      "note": {
+        "en": "",
+        "zh": ""
+      },
+      "date": {
+        "en": "2022",
+        "zh": "2022"
+      },
+      "ll": [
+        16.84,
+        96.17
+      ]
+    },
+    {
+      "id": "netherlands",
+      "continent": "europe",
+      "en": "Netherlands",
+      "zh": "荷蘭",
+      "note": {
+        "en": "",
+        "zh": ""
+      },
+      "date": {
+        "en": "2012",
+        "zh": "2012"
+      },
+      "ll": [
+        52.37,
+        4.9
+      ]
+    },
+    {
+      "id": "malaysia",
+      "continent": "asia",
+      "en": "Malaysia",
+      "zh": "馬來西亞",
+      "note": {
+        "en": "",
+        "zh": ""
+      },
+      "date": {
+        "en": "2010",
+        "zh": "2010"
+      },
+      "ll": [
+        3.14,
+        101.69
+      ]
+    },
+    {
+      "id": "andorra",
+      "continent": "europe",
+      "en": "Andorra",
+      "zh": "安道爾",
+      "note": {
+        "en": "A day from Barcelona, by bus.",
+        "zh": "從巴賽隆納搭巴士來回的一天。"
+      },
+      "date": {
+        "en": "2026.7",
+        "zh": "2026.7"
+      },
+      "ll": [
+        42.51,
+        1.52
+      ]
     }
   ],
   "journeys": [
     {
-      "id": "2024-summer",
+      "id": "2026-08",
       "label": {
-        "en": "Summer 2024",
-        "zh": "2024 暑假"
+        "en": "August 2026",
+        "zh": "2026 年 8 月"
       },
       "countries": [
-        "germany",
-        "switzerland",
+        "vietnam"
+      ],
+      "legs": [
+        {
+          "from": {
+            "code": "TPE",
+            "city": "Taipei",
+            "lat": 25.08,
+            "lng": 121.23,
+            "zh": "台北"
+          },
+          "to": {
+            "code": "HAN",
+            "city": "Hanoi",
+            "lat": 21.22,
+            "lng": 105.81,
+            "zh": "河內"
+          },
+          "month": "2026-08",
+          "mode": "flight",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Hanoi",
+            "lat": 21.03,
+            "lng": 105.85,
+            "zh": "河內"
+          },
+          "to": {
+            "city": "Sapa",
+            "lat": 22.34,
+            "lng": 103.84,
+            "zh": "沙壩"
+          },
+          "month": "2026-08",
+          "mode": "bus",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Lao Cai",
+            "lat": 22.49,
+            "lng": 103.97,
+            "zh": "老街"
+          },
+          "to": {
+            "city": "Hanoi",
+            "lat": 21.03,
+            "lng": 105.85,
+            "zh": "河內"
+          },
+          "month": "2026-08",
+          "mode": "train",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Hanoi",
+            "lat": 21.03,
+            "lng": 105.85,
+            "zh": "河內"
+          },
+          "to": {
+            "city": "Ha Long Bay",
+            "lat": 20.95,
+            "lng": 107.08,
+            "zh": "下龍灣"
+          },
+          "month": "2026-08",
+          "mode": "bus",
+          "confirmed": false
+        },
+        {
+          "from": {
+            "city": "Ha Long Bay",
+            "lat": 20.95,
+            "lng": 107.08,
+            "zh": "下龍灣"
+          },
+          "to": {
+            "city": "Hanoi",
+            "lat": 21.03,
+            "lng": 105.85,
+            "zh": "河內"
+          },
+          "month": "2026-08",
+          "mode": "bus",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "code": "HAN",
+            "city": "Hanoi",
+            "lat": 21.22,
+            "lng": 105.81,
+            "zh": "河內"
+          },
+          "to": {
+            "code": "DAD",
+            "city": "Da Nang",
+            "lat": 16.04,
+            "lng": 108.2,
+            "zh": "峴港"
+          },
+          "month": "2026-08",
+          "mode": "flight",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "code": "DAD",
+            "city": "Da Nang",
+            "lat": 16.04,
+            "lng": 108.2,
+            "zh": "峴港"
+          },
+          "to": {
+            "code": "TPE",
+            "city": "Taipei",
+            "lat": 25.08,
+            "lng": 121.23,
+            "zh": "台北"
+          },
+          "month": "2026-08",
+          "mode": "flight",
+          "confirmed": true
+        }
+      ]
+    },
+    {
+      "id": "2026-06-europe",
+      "label": {
+        "en": "Summer 2026",
+        "zh": "2026 暑假"
+      },
+      "countries": [
         "uk",
-        "dubai"
+        "france",
+        "spain",
+        "andorra"
       ],
       "legs": [
         {
           "from": {
-            "code": "TPE",
-            "city": "Taipei",
-            "lat": 25.08,
-            "lng": 121.23,
-            "zh": "台北"
-          },
-          "to": {
-            "code": "MUC",
-            "city": "Munich",
-            "lat": 48.35,
-            "lng": 11.79,
-            "zh": "慕尼黑"
-          },
-          "month": null,
-          "mode": "flight",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Munich",
-            "lat": 48.14,
-            "lng": 11.58,
-            "zh": "慕尼黑"
-          },
-          "to": {
-            "city": "Zurich",
-            "lat": 47.38,
-            "lng": 8.54,
-            "zh": "蘇黎世"
-          },
-          "month": null,
-          "mode": "train",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Zurich",
-            "lat": 47.38,
-            "lng": 8.54,
-            "zh": "蘇黎世"
-          },
-          "to": {
-            "city": "Interlaken",
-            "lat": 46.69,
-            "lng": 7.85,
-            "zh": "因特拉肯"
-          },
-          "month": "2024-08",
-          "mode": "train",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Interlaken",
-            "lat": 46.69,
-            "lng": 7.85,
-            "zh": "因特拉肯"
-          },
-          "to": {
-            "city": "Zermatt",
-            "lat": 46.02,
-            "lng": 7.75,
-            "zh": "策馬特"
-          },
-          "month": "2024-08",
-          "mode": "train",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Zermatt",
-            "lat": 46.02,
-            "lng": 7.75,
-            "zh": "策馬特"
-          },
-          "to": {
-            "city": "Lausanne",
-            "lat": 46.52,
-            "lng": 6.63,
-            "zh": "洛桑"
-          },
-          "month": "2024-08",
-          "mode": "train",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Lausanne",
-            "lat": 46.52,
-            "lng": 6.63,
-            "zh": "洛桑"
-          },
-          "to": {
-            "code": "GVA",
-            "city": "Geneva",
-            "lat": 46.24,
-            "lng": 6.11,
-            "zh": "日內瓦"
-          },
-          "month": "2024-08",
-          "mode": "train",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "code": "GVA",
-            "city": "Geneva",
-            "lat": 46.24,
-            "lng": 6.11,
-            "zh": "日內瓦"
+            "code": "CKG",
+            "city": "Chongqing",
+            "lat": 29.72,
+            "lng": 106.64,
+            "zh": "重慶"
           },
           "to": {
             "code": "LHR",
@@ -2529,36 +2651,210 @@
             "lng": -0.45,
             "zh": "倫敦"
           },
-          "month": "2024-08",
+          "month": "2026-06",
           "mode": "flight",
           "confirmed": true
         },
         {
           "from": {
-            "code": "LHR",
+            "code": "LGW",
             "city": "London",
-            "lat": 51.47,
-            "lng": -0.45,
+            "lat": 51.15,
+            "lng": -0.19,
             "zh": "倫敦"
           },
           "to": {
-            "code": "DXB",
-            "city": "Dubai",
-            "lat": 25.25,
-            "lng": 55.36,
-            "zh": "杜拜"
+            "code": "LYS",
+            "city": "Lyon",
+            "lat": 45.73,
+            "lng": 5.08,
+            "zh": "里昂"
           },
-          "month": "2024-09",
+          "month": "2026-06",
           "mode": "flight",
           "confirmed": true
         },
         {
           "from": {
-            "code": "DXB",
-            "city": "Dubai",
-            "lat": 25.25,
-            "lng": 55.36,
-            "zh": "杜拜"
+            "city": "Lyon",
+            "lat": 45.76,
+            "lng": 4.84,
+            "zh": "里昂"
+          },
+          "to": {
+            "city": "Avignon",
+            "lat": 43.95,
+            "lng": 4.81,
+            "zh": "亞維儂"
+          },
+          "month": "2026-07",
+          "mode": "car",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Avignon",
+            "lat": 43.95,
+            "lng": 4.81,
+            "zh": "亞維儂"
+          },
+          "to": {
+            "city": "Marseille",
+            "lat": 43.3,
+            "lng": 5.37,
+            "zh": "馬賽"
+          },
+          "month": "2026-07",
+          "mode": "car",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Marseille",
+            "lat": 43.3,
+            "lng": 5.37,
+            "zh": "馬賽"
+          },
+          "to": {
+            "city": "Nice",
+            "lat": 43.7,
+            "lng": 7.27,
+            "zh": "尼斯"
+          },
+          "month": "2026-07",
+          "mode": "car",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Nice",
+            "lat": 43.7,
+            "lng": 7.27,
+            "zh": "尼斯"
+          },
+          "to": {
+            "city": "Menton",
+            "lat": 43.78,
+            "lng": 7.5,
+            "zh": "芒通"
+          },
+          "month": "2026-07",
+          "mode": "train",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Menton",
+            "lat": 43.78,
+            "lng": 7.5,
+            "zh": "芒通"
+          },
+          "to": {
+            "city": "Monaco",
+            "lat": 43.74,
+            "lng": 7.42,
+            "zh": "摩納哥"
+          },
+          "month": "2026-07",
+          "mode": "train",
+          "confirmed": false
+        },
+        {
+          "from": {
+            "city": "Monaco",
+            "lat": 43.74,
+            "lng": 7.42,
+            "zh": "摩納哥"
+          },
+          "to": {
+            "city": "Nice",
+            "lat": 43.7,
+            "lng": 7.27,
+            "zh": "尼斯"
+          },
+          "month": "2026-07",
+          "mode": "train",
+          "confirmed": false
+        },
+        {
+          "from": {
+            "code": "NCE",
+            "city": "Nice",
+            "lat": 43.66,
+            "lng": 7.21,
+            "zh": "尼斯"
+          },
+          "to": {
+            "code": "BCN",
+            "city": "Barcelona",
+            "lat": 41.3,
+            "lng": 2.08,
+            "zh": "巴賽隆納"
+          },
+          "month": "2026-07",
+          "mode": "flight",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Barcelona",
+            "lat": 41.39,
+            "lng": 2.17,
+            "zh": "巴賽隆納"
+          },
+          "to": {
+            "city": "Andorra la Vella",
+            "lat": 42.51,
+            "lng": 1.52,
+            "zh": "安道爾城"
+          },
+          "month": "2026-07",
+          "mode": "bus",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Andorra la Vella",
+            "lat": 42.51,
+            "lng": 1.52,
+            "zh": "安道爾城"
+          },
+          "to": {
+            "city": "Barcelona",
+            "lat": 41.39,
+            "lng": 2.17,
+            "zh": "巴賽隆納"
+          },
+          "month": "2026-07",
+          "mode": "bus",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "code": "BCN",
+            "city": "Barcelona",
+            "lat": 41.3,
+            "lng": 2.08,
+            "zh": "巴賽隆納"
+          },
+          "to": {
+            "code": "PVG",
+            "city": "Shanghai",
+            "lat": 31.14,
+            "lng": 121.81,
+            "zh": "上海"
+          },
+          "month": "2026-07",
+          "mode": "flight",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "code": "PVG",
+            "city": "Shanghai",
+            "lat": 31.14,
+            "lng": 121.81,
+            "zh": "上海"
           },
           "to": {
             "code": "TPE",
@@ -2567,20 +2863,20 @@
             "lng": 121.23,
             "zh": "台北"
           },
-          "month": "2024-09",
+          "month": "2026-07",
           "mode": "flight",
           "confirmed": true
         }
       ]
     },
     {
-      "id": "2025-01",
+      "id": "2026-06-china",
       "label": {
-        "en": "January 2025",
-        "zh": "2025 年 1 月"
+        "en": "June 2026",
+        "zh": "2026 年 6 月"
       },
       "countries": [
-        "japan"
+        "china"
       ],
       "legs": [
         {
@@ -2592,149 +2888,128 @@
             "zh": "台北"
           },
           "to": {
-            "code": "KIX",
-            "city": "Osaka",
-            "lat": 34.43,
-            "lng": 135.24,
-            "zh": "大阪"
+            "code": "PVG",
+            "city": "Shanghai",
+            "lat": 31.14,
+            "lng": 121.81,
+            "zh": "上海"
           },
-          "month": "2025-01",
+          "month": "2026-06",
           "mode": "flight",
           "confirmed": true
         },
         {
           "from": {
-            "city": "Kyoto",
-            "lat": 34.99,
-            "lng": 135.76,
-            "zh": "京都"
+            "city": "Shanghai",
+            "lat": 31.23,
+            "lng": 121.47,
+            "zh": "上海"
           },
           "to": {
-            "city": "Mt Fuji (Kawaguchiko)",
-            "lat": 35.5,
-            "lng": 138.76,
-            "zh": "富士山（河口湖）"
+            "city": "Hangzhou",
+            "lat": 30.27,
+            "lng": 120.16,
+            "zh": "杭州"
           },
-          "month": "2025-01",
-          "mode": "bus",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Fuji (Shin-Fuji)",
-            "lat": 35.14,
-            "lng": 138.66,
-            "zh": "富士（新富士）"
-          },
-          "to": {
-            "city": "Tokyo",
-            "lat": 35.68,
-            "lng": 139.77,
-            "zh": "東京"
-          },
-          "month": "2025-01",
+          "month": "2026-06",
           "mode": "train",
           "confirmed": true
         },
         {
           "from": {
-            "code": "HND",
-            "city": "Tokyo",
-            "lat": 35.55,
-            "lng": 139.78,
-            "zh": "東京"
+            "city": "Hangzhou",
+            "lat": 30.27,
+            "lng": 120.16,
+            "zh": "杭州"
           },
           "to": {
-            "code": "CTS",
-            "city": "Sapporo",
-            "lat": 42.78,
-            "lng": 141.69,
-            "zh": "札幌"
+            "city": "Zhangjiajie",
+            "lat": 29.12,
+            "lng": 110.48,
+            "zh": "張家界"
           },
-          "month": "2025-01",
-          "mode": "flight",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Sapporo",
-            "lat": 43.06,
-            "lng": 141.35,
-            "zh": "札幌"
-          },
-          "to": {
-            "city": "Otaru",
-            "lat": 43.19,
-            "lng": 141.0,
-            "zh": "小樽"
-          },
-          "month": "2025-01",
+          "month": "2026-06",
           "mode": "train",
           "confirmed": true
         },
         {
           "from": {
-            "city": "Otaru",
-            "lat": 43.19,
-            "lng": 141.0,
-            "zh": "小樽"
+            "city": "Zhangjiajie",
+            "lat": 29.12,
+            "lng": 110.48,
+            "zh": "張家界"
           },
           "to": {
-            "city": "Tomamu",
-            "lat": 43.06,
-            "lng": 142.63,
-            "zh": "占冠（Tomamu）"
+            "city": "Chengdu",
+            "lat": 30.66,
+            "lng": 104.06,
+            "zh": "成都"
           },
-          "month": "2025-01",
+          "month": "2026-06",
           "mode": "train",
           "confirmed": true
         },
         {
           "from": {
-            "city": "Tomamu",
-            "lat": 43.06,
-            "lng": 142.63,
-            "zh": "占冠（Tomamu）"
+            "city": "Chengdu",
+            "lat": 30.66,
+            "lng": 104.06,
+            "zh": "成都"
           },
           "to": {
-            "city": "Hakodate",
-            "lat": 41.77,
-            "lng": 140.73,
-            "zh": "函館"
+            "city": "Leshan",
+            "lat": 29.55,
+            "lng": 103.77,
+            "zh": "樂山"
           },
-          "month": "2025-01",
+          "month": "2026-06",
           "mode": "train",
           "confirmed": true
         },
         {
           "from": {
-            "code": "HKD",
-            "city": "Hakodate",
-            "lat": 41.77,
-            "lng": 140.82,
-            "zh": "函館"
+            "city": "Leshan",
+            "lat": 29.55,
+            "lng": 103.77,
+            "zh": "樂山"
           },
           "to": {
-            "code": "TPE",
-            "city": "Taipei",
-            "lat": 25.08,
-            "lng": 121.23,
-            "zh": "台北"
+            "city": "Chengdu",
+            "lat": 30.66,
+            "lng": 104.06,
+            "zh": "成都"
           },
-          "month": "2025-01",
-          "mode": "flight",
+          "month": "2026-06",
+          "mode": "train",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Chengdu",
+            "lat": 30.66,
+            "lng": 104.06,
+            "zh": "成都"
+          },
+          "to": {
+            "city": "Chongqing",
+            "lat": 29.56,
+            "lng": 106.55,
+            "zh": "重慶"
+          },
+          "month": "2026-06",
+          "mode": "train",
           "confirmed": true
         }
       ]
     },
     {
-      "id": "2025-05",
+      "id": "2026-04",
       "label": {
-        "en": "May 2025",
-        "zh": "2025 年 5 月"
+        "en": "April 2026",
+        "zh": "2026 年 4 月"
       },
       "countries": [
-        "hong-kong"
+        "singapore"
       ],
       "legs": [
         {
@@ -2746,23 +3021,23 @@
             "zh": "台北"
           },
           "to": {
-            "code": "HKG",
-            "city": "Hong Kong",
-            "lat": 22.31,
-            "lng": 113.91,
-            "zh": "香港"
+            "code": "SIN",
+            "city": "Singapore",
+            "lat": 1.36,
+            "lng": 103.99,
+            "zh": "新加坡"
           },
-          "month": "2025-05",
+          "month": "2026-04",
           "mode": "flight",
           "confirmed": true
         },
         {
           "from": {
-            "code": "HKG",
-            "city": "Hong Kong",
-            "lat": 22.31,
-            "lng": 113.91,
-            "zh": "香港"
+            "code": "SIN",
+            "city": "Singapore",
+            "lat": 1.36,
+            "lng": 103.99,
+            "zh": "新加坡"
           },
           "to": {
             "code": "TPE",
@@ -2771,281 +3046,7 @@
             "lng": 121.23,
             "zh": "台北"
           },
-          "month": "2025-05",
-          "mode": "flight",
-          "confirmed": true
-        }
-      ]
-    },
-    {
-      "id": "2025-summer",
-      "label": {
-        "en": "Summer 2025",
-        "zh": "2025 暑假"
-      },
-      "countries": [
-        "usa"
-      ],
-      "legs": [
-        {
-          "from": {
-            "code": "TPE",
-            "city": "Taipei",
-            "lat": 25.08,
-            "lng": 121.23,
-            "zh": "台北"
-          },
-          "to": {
-            "code": "JFK",
-            "city": "New York",
-            "lat": 40.64,
-            "lng": -73.78,
-            "zh": "紐約"
-          },
-          "month": "2025-06",
-          "mode": "flight",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "New York",
-            "lat": 40.71,
-            "lng": -74.0,
-            "zh": "紐約"
-          },
-          "to": {
-            "city": "Boston",
-            "lat": 42.36,
-            "lng": -71.06,
-            "zh": "波士頓"
-          },
-          "month": null,
-          "mode": "ground",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Boston",
-            "lat": 42.36,
-            "lng": -71.06,
-            "zh": "波士頓"
-          },
-          "to": {
-            "city": "New York",
-            "lat": 40.71,
-            "lng": -74.0,
-            "zh": "紐約"
-          },
-          "month": null,
-          "mode": "ground",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "New York",
-            "lat": 40.75,
-            "lng": -73.99,
-            "zh": "紐約"
-          },
-          "to": {
-            "city": "Philadelphia",
-            "lat": 39.95,
-            "lng": -75.17,
-            "zh": "費城"
-          },
-          "month": "2025-07",
-          "mode": "bus",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Philadelphia",
-            "lat": 39.95,
-            "lng": -75.17,
-            "zh": "費城"
-          },
-          "to": {
-            "city": "Washington, D.C.",
-            "lat": 38.9,
-            "lng": -77.04,
-            "zh": "華盛頓特區"
-          },
-          "month": "2025-08",
-          "mode": "bus",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Washington, D.C.",
-            "lat": 38.9,
-            "lng": -77.04,
-            "zh": "華盛頓特區"
-          },
-          "to": {
-            "city": "New York",
-            "lat": 40.75,
-            "lng": -73.99,
-            "zh": "紐約"
-          },
-          "month": "2025-08",
-          "mode": "bus",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "code": "JFK",
-            "city": "New York",
-            "lat": 40.64,
-            "lng": -73.78,
-            "zh": "紐約"
-          },
-          "to": {
-            "code": "SFO",
-            "city": "San Francisco",
-            "lat": 37.62,
-            "lng": -122.38,
-            "zh": "舊金山"
-          },
-          "month": "2025-08",
-          "mode": "flight",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "San Francisco",
-            "lat": 37.78,
-            "lng": -122.42,
-            "zh": "舊金山"
-          },
-          "to": {
-            "city": "Los Angeles",
-            "lat": 34.05,
-            "lng": -118.24,
-            "zh": "洛杉磯"
-          },
-          "month": "2025-08",
-          "mode": "bus",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "code": "LAX",
-            "city": "Los Angeles",
-            "lat": 33.94,
-            "lng": -118.41,
-            "zh": "洛杉磯"
-          },
-          "to": {
-            "code": "TPE",
-            "city": "Taipei",
-            "lat": 25.08,
-            "lng": 121.23,
-            "zh": "台北"
-          },
-          "month": "2025-08",
-          "mode": "flight",
-          "confirmed": true
-        }
-      ]
-    },
-    {
-      "id": "2025-08",
-      "label": {
-        "en": "August 2025",
-        "zh": "2025 年 8 月"
-      },
-      "countries": [
-        "south-korea"
-      ],
-      "legs": [
-        {
-          "from": {
-            "code": "TPE",
-            "city": "Taipei",
-            "lat": 25.08,
-            "lng": 121.23,
-            "zh": "台北"
-          },
-          "to": {
-            "code": "PUS",
-            "city": "Busan",
-            "lat": 35.18,
-            "lng": 128.94,
-            "zh": "釜山"
-          },
-          "month": "2025-08",
-          "mode": "flight",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Busan",
-            "lat": 35.12,
-            "lng": 129.04,
-            "zh": "釜山"
-          },
-          "to": {
-            "city": "Seoul",
-            "lat": 37.55,
-            "lng": 126.97,
-            "zh": "首爾"
-          },
-          "month": "2025-08",
-          "mode": "train",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Seoul",
-            "lat": 37.55,
-            "lng": 126.97,
-            "zh": "首爾"
-          },
-          "to": {
-            "city": "Busan",
-            "lat": 35.12,
-            "lng": 129.04,
-            "zh": "釜山"
-          },
-          "month": "2025-08",
-          "mode": "train",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "code": "PUS",
-            "city": "Busan",
-            "lat": 35.18,
-            "lng": 128.94,
-            "zh": "釜山"
-          },
-          "to": {
-            "code": "CJU",
-            "city": "Jeju",
-            "lat": 33.51,
-            "lng": 126.49,
-            "zh": "濟州"
-          },
-          "month": "2025-08",
-          "mode": "flight",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "code": "CJU",
-            "city": "Jeju",
-            "lat": 33.51,
-            "lng": 126.49,
-            "zh": "濟州"
-          },
-          "to": {
-            "code": "TPE",
-            "city": "Taipei",
-            "lat": 25.08,
-            "lng": 121.23,
-            "zh": "台北"
-          },
-          "month": "2025-08",
+          "month": "2026-05",
           "mode": "flight",
           "confirmed": true
         }
@@ -3300,13 +3301,13 @@
       ]
     },
     {
-      "id": "2026-04",
+      "id": "2025-08",
       "label": {
-        "en": "April 2026",
-        "zh": "2026 年 4 月"
+        "en": "August 2025",
+        "zh": "2025 年 8 月"
       },
       "countries": [
-        "singapore"
+        "south-korea"
       ],
       "legs": [
         {
@@ -3318,23 +3319,76 @@
             "zh": "台北"
           },
           "to": {
-            "code": "SIN",
-            "city": "Singapore",
-            "lat": 1.36,
-            "lng": 103.99,
-            "zh": "新加坡"
+            "code": "PUS",
+            "city": "Busan",
+            "lat": 35.18,
+            "lng": 128.94,
+            "zh": "釜山"
           },
-          "month": "2026-04",
+          "month": "2025-08",
           "mode": "flight",
           "confirmed": true
         },
         {
           "from": {
-            "code": "SIN",
-            "city": "Singapore",
-            "lat": 1.36,
-            "lng": 103.99,
-            "zh": "新加坡"
+            "city": "Busan",
+            "lat": 35.12,
+            "lng": 129.04,
+            "zh": "釜山"
+          },
+          "to": {
+            "city": "Seoul",
+            "lat": 37.55,
+            "lng": 126.97,
+            "zh": "首爾"
+          },
+          "month": "2025-08",
+          "mode": "train",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Seoul",
+            "lat": 37.55,
+            "lng": 126.97,
+            "zh": "首爾"
+          },
+          "to": {
+            "city": "Busan",
+            "lat": 35.12,
+            "lng": 129.04,
+            "zh": "釜山"
+          },
+          "month": "2025-08",
+          "mode": "train",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "code": "PUS",
+            "city": "Busan",
+            "lat": 35.18,
+            "lng": 128.94,
+            "zh": "釜山"
+          },
+          "to": {
+            "code": "CJU",
+            "city": "Jeju",
+            "lat": 33.51,
+            "lng": 126.49,
+            "zh": "濟州"
+          },
+          "month": "2025-08",
+          "mode": "flight",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "code": "CJU",
+            "city": "Jeju",
+            "lat": 33.51,
+            "lng": 126.49,
+            "zh": "濟州"
           },
           "to": {
             "code": "TPE",
@@ -3343,20 +3397,20 @@
             "lng": 121.23,
             "zh": "台北"
           },
-          "month": "2026-05",
+          "month": "2025-08",
           "mode": "flight",
           "confirmed": true
         }
       ]
     },
     {
-      "id": "2026-06-china",
+      "id": "2025-summer",
       "label": {
-        "en": "June 2026",
-        "zh": "2026 年 6 月"
+        "en": "Summer 2025",
+        "zh": "2025 暑假"
       },
       "countries": [
-        "china"
+        "usa"
       ],
       "legs": [
         {
@@ -3368,139 +3422,487 @@
             "zh": "台北"
           },
           "to": {
-            "code": "PVG",
-            "city": "Shanghai",
-            "lat": 31.14,
-            "lng": 121.81,
-            "zh": "上海"
+            "code": "JFK",
+            "city": "New York",
+            "lat": 40.64,
+            "lng": -73.78,
+            "zh": "紐約"
           },
-          "month": "2026-06",
+          "month": "2025-06",
           "mode": "flight",
           "confirmed": true
         },
         {
           "from": {
-            "city": "Shanghai",
-            "lat": 31.23,
-            "lng": 121.47,
-            "zh": "上海"
+            "city": "New York",
+            "lat": 40.71,
+            "lng": -74.0,
+            "zh": "紐約"
           },
           "to": {
-            "city": "Hangzhou",
-            "lat": 30.27,
-            "lng": 120.16,
-            "zh": "杭州"
+            "city": "Boston",
+            "lat": 42.36,
+            "lng": -71.06,
+            "zh": "波士頓"
           },
-          "month": "2026-06",
-          "mode": "train",
+          "month": null,
+          "mode": "ground",
           "confirmed": true
         },
         {
           "from": {
-            "city": "Hangzhou",
-            "lat": 30.27,
-            "lng": 120.16,
-            "zh": "杭州"
+            "city": "Boston",
+            "lat": 42.36,
+            "lng": -71.06,
+            "zh": "波士頓"
           },
           "to": {
-            "city": "Zhangjiajie",
-            "lat": 29.12,
-            "lng": 110.48,
-            "zh": "張家界"
+            "city": "New York",
+            "lat": 40.71,
+            "lng": -74.0,
+            "zh": "紐約"
           },
-          "month": "2026-06",
-          "mode": "train",
+          "month": null,
+          "mode": "ground",
           "confirmed": true
         },
         {
           "from": {
-            "city": "Zhangjiajie",
-            "lat": 29.12,
-            "lng": 110.48,
-            "zh": "張家界"
+            "city": "New York",
+            "lat": 40.75,
+            "lng": -73.99,
+            "zh": "紐約"
           },
           "to": {
-            "city": "Chengdu",
-            "lat": 30.66,
-            "lng": 104.06,
-            "zh": "成都"
+            "city": "Philadelphia",
+            "lat": 39.95,
+            "lng": -75.17,
+            "zh": "費城"
           },
-          "month": "2026-06",
-          "mode": "train",
+          "month": "2025-07",
+          "mode": "bus",
           "confirmed": true
         },
         {
           "from": {
-            "city": "Chengdu",
-            "lat": 30.66,
-            "lng": 104.06,
-            "zh": "成都"
+            "city": "Philadelphia",
+            "lat": 39.95,
+            "lng": -75.17,
+            "zh": "費城"
           },
           "to": {
-            "city": "Leshan",
-            "lat": 29.55,
-            "lng": 103.77,
-            "zh": "樂山"
+            "city": "Washington, D.C.",
+            "lat": 38.9,
+            "lng": -77.04,
+            "zh": "華盛頓特區"
           },
-          "month": "2026-06",
-          "mode": "train",
+          "month": "2025-08",
+          "mode": "bus",
           "confirmed": true
         },
         {
           "from": {
-            "city": "Leshan",
-            "lat": 29.55,
-            "lng": 103.77,
-            "zh": "樂山"
+            "city": "Washington, D.C.",
+            "lat": 38.9,
+            "lng": -77.04,
+            "zh": "華盛頓特區"
           },
           "to": {
-            "city": "Chengdu",
-            "lat": 30.66,
-            "lng": 104.06,
-            "zh": "成都"
+            "city": "New York",
+            "lat": 40.75,
+            "lng": -73.99,
+            "zh": "紐約"
           },
-          "month": "2026-06",
-          "mode": "train",
+          "month": "2025-08",
+          "mode": "bus",
           "confirmed": true
         },
         {
           "from": {
-            "city": "Chengdu",
-            "lat": 30.66,
-            "lng": 104.06,
-            "zh": "成都"
+            "code": "JFK",
+            "city": "New York",
+            "lat": 40.64,
+            "lng": -73.78,
+            "zh": "紐約"
           },
           "to": {
-            "city": "Chongqing",
-            "lat": 29.56,
-            "lng": 106.55,
-            "zh": "重慶"
+            "code": "SFO",
+            "city": "San Francisco",
+            "lat": 37.62,
+            "lng": -122.38,
+            "zh": "舊金山"
           },
-          "month": "2026-06",
-          "mode": "train",
+          "month": "2025-08",
+          "mode": "flight",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "San Francisco",
+            "lat": 37.78,
+            "lng": -122.42,
+            "zh": "舊金山"
+          },
+          "to": {
+            "city": "Los Angeles",
+            "lat": 34.05,
+            "lng": -118.24,
+            "zh": "洛杉磯"
+          },
+          "month": "2025-08",
+          "mode": "bus",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "code": "LAX",
+            "city": "Los Angeles",
+            "lat": 33.94,
+            "lng": -118.41,
+            "zh": "洛杉磯"
+          },
+          "to": {
+            "code": "TPE",
+            "city": "Taipei",
+            "lat": 25.08,
+            "lng": 121.23,
+            "zh": "台北"
+          },
+          "month": "2025-08",
+          "mode": "flight",
           "confirmed": true
         }
       ]
     },
     {
-      "id": "2026-06-europe",
+      "id": "2025-05",
       "label": {
-        "en": "Summer 2026",
-        "zh": "2026 暑假"
+        "en": "May 2025",
+        "zh": "2025 年 5 月"
       },
       "countries": [
+        "hong-kong"
+      ],
+      "legs": [
+        {
+          "from": {
+            "code": "TPE",
+            "city": "Taipei",
+            "lat": 25.08,
+            "lng": 121.23,
+            "zh": "台北"
+          },
+          "to": {
+            "code": "HKG",
+            "city": "Hong Kong",
+            "lat": 22.31,
+            "lng": 113.91,
+            "zh": "香港"
+          },
+          "month": "2025-05",
+          "mode": "flight",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "code": "HKG",
+            "city": "Hong Kong",
+            "lat": 22.31,
+            "lng": 113.91,
+            "zh": "香港"
+          },
+          "to": {
+            "code": "TPE",
+            "city": "Taipei",
+            "lat": 25.08,
+            "lng": 121.23,
+            "zh": "台北"
+          },
+          "month": "2025-05",
+          "mode": "flight",
+          "confirmed": true
+        }
+      ]
+    },
+    {
+      "id": "2025-01",
+      "label": {
+        "en": "January 2025",
+        "zh": "2025 年 1 月"
+      },
+      "countries": [
+        "japan"
+      ],
+      "legs": [
+        {
+          "from": {
+            "code": "TPE",
+            "city": "Taipei",
+            "lat": 25.08,
+            "lng": 121.23,
+            "zh": "台北"
+          },
+          "to": {
+            "code": "KIX",
+            "city": "Osaka",
+            "lat": 34.43,
+            "lng": 135.24,
+            "zh": "大阪"
+          },
+          "month": "2025-01",
+          "mode": "flight",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Kyoto",
+            "lat": 34.99,
+            "lng": 135.76,
+            "zh": "京都"
+          },
+          "to": {
+            "city": "Mt Fuji (Kawaguchiko)",
+            "lat": 35.5,
+            "lng": 138.76,
+            "zh": "富士山（河口湖）"
+          },
+          "month": "2025-01",
+          "mode": "bus",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Fuji (Shin-Fuji)",
+            "lat": 35.14,
+            "lng": 138.66,
+            "zh": "富士（新富士）"
+          },
+          "to": {
+            "city": "Tokyo",
+            "lat": 35.68,
+            "lng": 139.77,
+            "zh": "東京"
+          },
+          "month": "2025-01",
+          "mode": "train",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "code": "HND",
+            "city": "Tokyo",
+            "lat": 35.55,
+            "lng": 139.78,
+            "zh": "東京"
+          },
+          "to": {
+            "code": "CTS",
+            "city": "Sapporo",
+            "lat": 42.78,
+            "lng": 141.69,
+            "zh": "札幌"
+          },
+          "month": "2025-01",
+          "mode": "flight",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Sapporo",
+            "lat": 43.06,
+            "lng": 141.35,
+            "zh": "札幌"
+          },
+          "to": {
+            "city": "Otaru",
+            "lat": 43.19,
+            "lng": 141.0,
+            "zh": "小樽"
+          },
+          "month": "2025-01",
+          "mode": "train",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Otaru",
+            "lat": 43.19,
+            "lng": 141.0,
+            "zh": "小樽"
+          },
+          "to": {
+            "city": "Tomamu",
+            "lat": 43.06,
+            "lng": 142.63,
+            "zh": "占冠（Tomamu）"
+          },
+          "month": "2025-01",
+          "mode": "train",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Tomamu",
+            "lat": 43.06,
+            "lng": 142.63,
+            "zh": "占冠（Tomamu）"
+          },
+          "to": {
+            "city": "Hakodate",
+            "lat": 41.77,
+            "lng": 140.73,
+            "zh": "函館"
+          },
+          "month": "2025-01",
+          "mode": "train",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "code": "HKD",
+            "city": "Hakodate",
+            "lat": 41.77,
+            "lng": 140.82,
+            "zh": "函館"
+          },
+          "to": {
+            "code": "TPE",
+            "city": "Taipei",
+            "lat": 25.08,
+            "lng": 121.23,
+            "zh": "台北"
+          },
+          "month": "2025-01",
+          "mode": "flight",
+          "confirmed": true
+        }
+      ]
+    },
+    {
+      "id": "2024-summer",
+      "label": {
+        "en": "Summer 2024",
+        "zh": "2024 暑假"
+      },
+      "countries": [
+        "germany",
+        "switzerland",
         "uk",
-        "france",
-        "spain"
+        "dubai"
       ],
       "legs": [
         {
           "from": {
-            "code": "CKG",
-            "city": "Chongqing",
-            "lat": 29.72,
-            "lng": 106.64,
-            "zh": "重慶"
+            "code": "TPE",
+            "city": "Taipei",
+            "lat": 25.08,
+            "lng": 121.23,
+            "zh": "台北"
+          },
+          "to": {
+            "code": "MUC",
+            "city": "Munich",
+            "lat": 48.35,
+            "lng": 11.79,
+            "zh": "慕尼黑"
+          },
+          "month": null,
+          "mode": "flight",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Munich",
+            "lat": 48.14,
+            "lng": 11.58,
+            "zh": "慕尼黑"
+          },
+          "to": {
+            "city": "Zurich",
+            "lat": 47.38,
+            "lng": 8.54,
+            "zh": "蘇黎世"
+          },
+          "month": null,
+          "mode": "train",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Zurich",
+            "lat": 47.38,
+            "lng": 8.54,
+            "zh": "蘇黎世"
+          },
+          "to": {
+            "city": "Interlaken",
+            "lat": 46.69,
+            "lng": 7.85,
+            "zh": "因特拉肯"
+          },
+          "month": "2024-08",
+          "mode": "train",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Interlaken",
+            "lat": 46.69,
+            "lng": 7.85,
+            "zh": "因特拉肯"
+          },
+          "to": {
+            "city": "Zermatt",
+            "lat": 46.02,
+            "lng": 7.75,
+            "zh": "策馬特"
+          },
+          "month": "2024-08",
+          "mode": "train",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Zermatt",
+            "lat": 46.02,
+            "lng": 7.75,
+            "zh": "策馬特"
+          },
+          "to": {
+            "city": "Lausanne",
+            "lat": 46.52,
+            "lng": 6.63,
+            "zh": "洛桑"
+          },
+          "month": "2024-08",
+          "mode": "train",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "city": "Lausanne",
+            "lat": 46.52,
+            "lng": 6.63,
+            "zh": "洛桑"
+          },
+          "to": {
+            "code": "GVA",
+            "city": "Geneva",
+            "lat": 46.24,
+            "lng": 6.11,
+            "zh": "日內瓦"
+          },
+          "month": "2024-08",
+          "mode": "train",
+          "confirmed": true
+        },
+        {
+          "from": {
+            "code": "GVA",
+            "city": "Geneva",
+            "lat": 46.24,
+            "lng": 6.11,
+            "zh": "日內瓦"
           },
           "to": {
             "code": "LHR",
@@ -3509,210 +3911,36 @@
             "lng": -0.45,
             "zh": "倫敦"
           },
-          "month": "2026-06",
+          "month": "2024-08",
           "mode": "flight",
           "confirmed": true
         },
         {
           "from": {
-            "code": "LGW",
+            "code": "LHR",
             "city": "London",
-            "lat": 51.15,
-            "lng": -0.19,
+            "lat": 51.47,
+            "lng": -0.45,
             "zh": "倫敦"
           },
           "to": {
-            "code": "LYS",
-            "city": "Lyon",
-            "lat": 45.73,
-            "lng": 5.08,
-            "zh": "里昂"
+            "code": "DXB",
+            "city": "Dubai",
+            "lat": 25.25,
+            "lng": 55.36,
+            "zh": "杜拜"
           },
-          "month": "2026-06",
+          "month": "2024-09",
           "mode": "flight",
           "confirmed": true
         },
         {
           "from": {
-            "city": "Lyon",
-            "lat": 45.76,
-            "lng": 4.84,
-            "zh": "里昂"
-          },
-          "to": {
-            "city": "Avignon",
-            "lat": 43.95,
-            "lng": 4.81,
-            "zh": "亞維儂"
-          },
-          "month": "2026-07",
-          "mode": "car",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Avignon",
-            "lat": 43.95,
-            "lng": 4.81,
-            "zh": "亞維儂"
-          },
-          "to": {
-            "city": "Marseille",
-            "lat": 43.3,
-            "lng": 5.37,
-            "zh": "馬賽"
-          },
-          "month": "2026-07",
-          "mode": "car",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Marseille",
-            "lat": 43.3,
-            "lng": 5.37,
-            "zh": "馬賽"
-          },
-          "to": {
-            "city": "Nice",
-            "lat": 43.7,
-            "lng": 7.27,
-            "zh": "尼斯"
-          },
-          "month": "2026-07",
-          "mode": "car",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Nice",
-            "lat": 43.7,
-            "lng": 7.27,
-            "zh": "尼斯"
-          },
-          "to": {
-            "city": "Menton",
-            "lat": 43.78,
-            "lng": 7.5,
-            "zh": "芒通"
-          },
-          "month": "2026-07",
-          "mode": "train",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Menton",
-            "lat": 43.78,
-            "lng": 7.5,
-            "zh": "芒通"
-          },
-          "to": {
-            "city": "Monaco",
-            "lat": 43.74,
-            "lng": 7.42,
-            "zh": "摩納哥"
-          },
-          "month": "2026-07",
-          "mode": "train",
-          "confirmed": false
-        },
-        {
-          "from": {
-            "city": "Monaco",
-            "lat": 43.74,
-            "lng": 7.42,
-            "zh": "摩納哥"
-          },
-          "to": {
-            "city": "Nice",
-            "lat": 43.7,
-            "lng": 7.27,
-            "zh": "尼斯"
-          },
-          "month": "2026-07",
-          "mode": "train",
-          "confirmed": false
-        },
-        {
-          "from": {
-            "code": "NCE",
-            "city": "Nice",
-            "lat": 43.66,
-            "lng": 7.21,
-            "zh": "尼斯"
-          },
-          "to": {
-            "code": "BCN",
-            "city": "Barcelona",
-            "lat": 41.3,
-            "lng": 2.08,
-            "zh": "巴賽隆納"
-          },
-          "month": "2026-07",
-          "mode": "flight",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Barcelona",
-            "lat": 41.39,
-            "lng": 2.17,
-            "zh": "巴賽隆納"
-          },
-          "to": {
-            "city": "Andorra la Vella",
-            "lat": 42.51,
-            "lng": 1.52,
-            "zh": "安道爾城"
-          },
-          "month": "2026-07",
-          "mode": "bus",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Andorra la Vella",
-            "lat": 42.51,
-            "lng": 1.52,
-            "zh": "安道爾城"
-          },
-          "to": {
-            "city": "Barcelona",
-            "lat": 41.39,
-            "lng": 2.17,
-            "zh": "巴賽隆納"
-          },
-          "month": "2026-07",
-          "mode": "bus",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "code": "BCN",
-            "city": "Barcelona",
-            "lat": 41.3,
-            "lng": 2.08,
-            "zh": "巴賽隆納"
-          },
-          "to": {
-            "code": "PVG",
-            "city": "Shanghai",
-            "lat": 31.14,
-            "lng": 121.81,
-            "zh": "上海"
-          },
-          "month": "2026-07",
-          "mode": "flight",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "code": "PVG",
-            "city": "Shanghai",
-            "lat": 31.14,
-            "lng": 121.81,
-            "zh": "上海"
+            "code": "DXB",
+            "city": "Dubai",
+            "lat": 25.25,
+            "lng": 55.36,
+            "zh": "杜拜"
           },
           "to": {
             "code": "TPE",
@@ -3721,148 +3949,129 @@
             "lng": 121.23,
             "zh": "台北"
           },
-          "month": "2026-07",
+          "month": "2024-09",
           "mode": "flight",
           "confirmed": true
         }
       ]
     },
     {
-      "id": "2026-08",
+      "id": "2023-thailand",
       "label": {
-        "en": "August 2026",
-        "zh": "2026 年 8 月"
+        "en": "2023",
+        "zh": "2023 年"
       },
       "countries": [
-        "vietnam"
+        "thailand"
       ],
       "legs": [
         {
           "from": {
             "code": "TPE",
             "city": "Taipei",
+            "zh": "台北",
             "lat": 25.08,
-            "lng": 121.23,
-            "zh": "台北"
+            "lng": 121.23
           },
           "to": {
-            "code": "HAN",
-            "city": "Hanoi",
-            "lat": 21.22,
-            "lng": 105.81,
-            "zh": "河內"
+            "code": "BKK",
+            "city": "Bangkok",
+            "zh": "曼谷",
+            "lat": 13.69,
+            "lng": 100.75
           },
-          "month": "2026-08",
+          "month": null,
           "mode": "flight",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Hanoi",
-            "lat": 21.03,
-            "lng": 105.85,
-            "zh": "河內"
-          },
-          "to": {
-            "city": "Sapa",
-            "lat": 22.34,
-            "lng": 103.84,
-            "zh": "沙壩"
-          },
-          "month": "2026-08",
-          "mode": "bus",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Lao Cai",
-            "lat": 22.49,
-            "lng": 103.97,
-            "zh": "老街"
-          },
-          "to": {
-            "city": "Hanoi",
-            "lat": 21.03,
-            "lng": 105.85,
-            "zh": "河內"
-          },
-          "month": "2026-08",
-          "mode": "train",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "city": "Hanoi",
-            "lat": 21.03,
-            "lng": 105.85,
-            "zh": "河內"
-          },
-          "to": {
-            "city": "Ha Long Bay",
-            "lat": 20.95,
-            "lng": 107.08,
-            "zh": "下龍灣"
-          },
-          "month": "2026-08",
-          "mode": "bus",
           "confirmed": false
         },
         {
           "from": {
-            "city": "Ha Long Bay",
-            "lat": 20.95,
-            "lng": 107.08,
-            "zh": "下龍灣"
+            "code": "BKK",
+            "city": "Bangkok",
+            "zh": "曼谷",
+            "lat": 13.69,
+            "lng": 100.75
           },
           "to": {
-            "city": "Hanoi",
-            "lat": 21.03,
-            "lng": 105.85,
-            "zh": "河內"
+            "city": "Pattaya",
+            "zh": "芭達雅",
+            "lat": 12.93,
+            "lng": 100.88
           },
-          "month": "2026-08",
-          "mode": "bus",
+          "month": null,
+          "mode": "ground",
+          "confirmed": false
+        },
+        {
+          "from": {
+            "city": "Pattaya",
+            "zh": "芭達雅",
+            "lat": 12.93,
+            "lng": 100.88
+          },
+          "to": {
+            "city": "Bangkok",
+            "zh": "曼谷",
+            "lat": 13.75,
+            "lng": 100.5
+          },
+          "month": null,
+          "mode": "ground",
           "confirmed": true
         },
         {
           "from": {
-            "code": "HAN",
-            "city": "Hanoi",
-            "lat": 21.22,
-            "lng": 105.81,
-            "zh": "河內"
-          },
-          "to": {
-            "code": "DAD",
-            "city": "Da Nang",
-            "lat": 16.04,
-            "lng": 108.2,
-            "zh": "峴港"
-          },
-          "month": "2026-08",
-          "mode": "flight",
-          "confirmed": true
-        },
-        {
-          "from": {
-            "code": "DAD",
-            "city": "Da Nang",
-            "lat": 16.04,
-            "lng": 108.2,
-            "zh": "峴港"
+            "code": "BKK",
+            "city": "Bangkok",
+            "zh": "曼谷",
+            "lat": 13.69,
+            "lng": 100.75
           },
           "to": {
             "code": "TPE",
             "city": "Taipei",
+            "zh": "台北",
             "lat": 25.08,
-            "lng": 121.23,
-            "zh": "台北"
+            "lng": 121.23
           },
-          "month": "2026-08",
+          "month": null,
           "mode": "flight",
-          "confirmed": true
+          "confirmed": false
         }
       ]
+    },
+    {
+      "id": "2022-myanmar",
+      "label": {
+        "en": "2022",
+        "zh": "2022 年"
+      },
+      "countries": [
+        "myanmar"
+      ],
+      "legs": []
+    },
+    {
+      "id": "2012-netherlands",
+      "label": {
+        "en": "2012",
+        "zh": "2012 年"
+      },
+      "countries": [
+        "netherlands"
+      ],
+      "legs": []
+    },
+    {
+      "id": "2010-malaysia",
+      "label": {
+        "en": "2010",
+        "zh": "2010 年"
+      },
+      "countries": [
+        "malaysia"
+      ],
+      "legs": []
     }
   ],
   "shelf": [
@@ -3949,6 +4158,21 @@
     },
     {
       "country": "usa"
+    },
+    {
+      "country": "andorra"
+    },
+    {
+      "country": "thailand"
+    },
+    {
+      "country": "myanmar"
+    },
+    {
+      "country": "netherlands"
+    },
+    {
+      "country": "malaysia"
     }
   ]
 }
