@@ -1,0 +1,1871 @@
+/* tuan photography 陳亮元 · design 2 · "Pen and wash"
+   A travel sketchbook map. The pen goes down first: coastlines in fine-liner with the nib's
+   pressure swelling and thinning along them, borders in a lighter broken line, the mountains
+   hatched, and every country lettered in small capitals. Then light washes go over it, a little
+   off the lines (paint.js). The painting is made once per zoom band and laid on a canvas that
+   d3-zoom moves; the pen and the lettering are drawn over it live.
+   Design 1's books stand at the sixteen places. Choosing one magnifies the map into the country,
+   and as the camera settles the cover photograph dissolves in across the whole window: a gallery
+   of that country's photographs (swipe for the next), with the guide or the photographs page
+   below it. The small globe in the corner opens into the Flights view, a sketchbook spread with
+   the globe on the left page and his journeys on the right. */
+(() => {
+  'use strict';
+
+  const S = window.SITE;
+  const WC = window.WC;
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  const narrow = matchMedia('(max-width: 47.99rem)');
+  const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  // the data keeps a few typographic dashes (a date range, a price range); the page shows none
+  const clean = (s) => String(s ?? '').replace(/(\d)\s*[–—]\s*(\d)/g, '$1-$2').replace(/\s+[–—]\s+/g, ', ').replace(/[–—]/g, '-');
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const easeInOut = (x) => (x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2);
+  const expOut = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * x));
+
+  /* ------------------------------------------------------------ words */
+
+  const T = {
+    en: {
+      ig: 'Instagram',
+      mapLabel: 'Map of the places travelled',
+      mapHint: 'Drag, or use the arrow keys, to move the map. Scroll, or press plus and minus, to zoom. Tab moves through the books.',
+      zoomGroup: 'Zoom', zoomIn: 'Zoom in', zoomOut: 'Zoom out', world: 'Whole map', credit: 'Map: Natural Earth',
+      flights: 'Flights', globeLabel: 'Flights: open the globe of journeys',
+      flightsTitle: 'Flights', flightsHow: 'Drag to turn the globe',
+      flightsLede: (n) => `${n} journeys. Choose one to follow its flights on the globe.`,
+      journeyAria: (d) => `Follow the journey of ${d}`,
+      keyLabel: 'Key', keyBeen: 'Travelled',
+      indexTitle: 'Photographs', indexOpen: 'Show the photographs', indexClose: 'Close',
+      count: (n, p) => `${n} photographs from ${p} places`,
+      seePhotos: 'See the photographs',
+      hintGuide: 'Scroll for the guide', hintPhotos: 'Scroll for the photographs',
+      coverLabel: (p) => `Photographs of ${p}`,
+      prev: 'Previous', next: 'Next',
+      camera: 'Camera', lens: 'Lens', settings: 'Settings',
+      ofN: (i, n) => `${i} of ${n}`,
+      madeOf: (p) => `${p}: how this was made`,
+      lang: 'Language', site: 'Site',
+      nPhotos: (n) => (n === 1 ? '1 photograph' : `${n} photographs`),
+      seas: { pacific: 'Pacific Ocean', indian: 'Indian Ocean', atlantic: 'Atlantic Ocean', southern: 'Southern Ocean', arctic: 'Arctic Ocean' },
+      opening: (p) => `${p} is open.`,
+      endLine: 'Every photograph here is his own, made on the trip.',
+      bookAria: (p, s) => `${p}: ${s}`,
+    },
+    zh: {
+      ig: 'Instagram',
+      mapLabel: '走過的地方地圖',
+      mapHint: '拖曳或用方向鍵移動地圖；捲動，或按加號、減號縮放。Tab 鍵逐一走過每本書。',
+      zoomGroup: '縮放', zoomIn: '放大', zoomOut: '縮小', world: '整張地圖', credit: '地圖：Natural Earth',
+      flights: '飛過的航線', globeLabel: '飛過的航線：打開旅程地球',
+      flightsTitle: '飛過的航線', flightsHow: '拖曳轉動地球',
+      flightsLede: (n) => `${n} 段旅程。選一段，在地球上看它的航線。`,
+      journeyAria: (d) => `看 ${d} 的旅程`,
+      keyLabel: '圖例', keyBeen: '去過',
+      indexTitle: '照片', indexOpen: '顯示照片', indexClose: '關閉',
+      count: (n, p) => `${p} 個地方，${n} 張照片`,
+      seePhotos: '看照片',
+      hintGuide: '往下看攻略', hintPhotos: '往下看照片',
+      coverLabel: (p) => `${p}的照片`,
+      prev: '上一張', next: '下一張',
+      camera: '相機', lens: '鏡頭', settings: '參數',
+      ofN: (i, n) => `第 ${i} 張，共 ${n} 張`,
+      madeOf: (p) => `${p}：這張怎麼拍`,
+      lang: '語言', site: '網站',
+      nPhotos: (n) => `${n} 張照片`,
+      seas: { pacific: '太平洋', indian: '印度洋', atlantic: '大西洋', southern: '南冰洋', arctic: '北冰洋' },
+      opening: (p) => `已打開${p}。`,
+      endLine: '這裡每張照片都是他自己在旅途中拍的。',
+      bookAria: (p, s) => `${p}：${s}`,
+    },
+  };
+  let lang = 'en';
+  try {
+    const q = new URLSearchParams(location.search).get('lang');
+    const saved = localStorage.getItem('tlap-lang');
+    if (q === 'zh' || q === 'en') lang = q;
+    else if (saved === 'zh' || saved === 'en') lang = saved;
+  } catch (e) { /* storage blocked: stay in English */ }
+
+  const t = (k) => (T[lang][k] !== undefined ? T[lang][k] : (S.i18n[lang][k] !== undefined ? S.i18n[lang][k] : k));
+  const L = (o) => clean(o ? (typeof o === 'string' ? o : o[lang] !== undefined ? o[lang] : o.en) : '');
+  const cityName = (c) => (typeof c === 'object' && c ? L(c) : clean(c || ''));
+
+  /* ------------------------------------------------------------ data */
+
+  const countries = Object.fromEntries(S.countries.map((c) => [c.id, c]));
+  const books = S.books.map((b) => ({ ...b, view: b.guide ? `guide-${b.guide}` : `place-${b.country}` }));
+  const bookByCountry = Object.fromEntries(books.map((b) => [b.country, b]));
+  const guide = S.guides.barcelona;
+  const order = books.map((b) => countries[b.country]).filter(Boolean);
+  const placeLL = (cid) => (cid === guide.country ? guide.ll : countries[cid].ll);
+  const indexOrder = order.flatMap((c) => c.photos.filter((id) => S.slides[id]));
+  const coverFor = (cid, want) => {
+    if (want && S.slides[want] && S.slides[want].country === cid) return want;
+    const b = bookByCountry[cid];
+    return b.photo || countries[cid].photos[0] || null;
+  };
+  const coords = ([lat, lng]) => `${Math.abs(lat).toFixed(3)}°${lat >= 0 ? 'N' : 'S'} · ${Math.abs(lng).toFixed(3)}°${lng >= 0 ? 'E' : 'W'}`;
+  const nameParts = (cid) => {
+    const b = bookByCountry[cid], c = countries[cid];
+    const place = L(b.title), country = L(c.name);
+    return place === country ? [place] : [place, country];
+  };
+  const nameHTML = (cid) => nameParts(cid).map(esc).join(`<i>${lang === 'zh' ? '｜' : '|'}</i>`);
+  const imgSrc = (s, size) => `../images/web/${size ? size + '/' : ''}${s.file}`;
+  const srcset = (s) => `${imgSrc(s, 640)} 640w, ${imgSrc(s, 1280)} 1280w, ${imgSrc(s)} ${s.w}w`;
+  const ISO = { spain: '724', uk: '826', france: '250', germany: '276', switzerland: '756', taiwan: '158', japan: '392', 'south-korea': '410', 'hong-kong': '344', china: '156', singapore: '702', vietnam: '704', dubai: '784', australia: '036', 'new-zealand': '554', usa: '840' };
+
+  const photosOf = (cid) => countries[cid].photos.filter((id) => S.slides[id]);
+
+  // the flights, from his journeys' own legs in order; where a journey has none, a line from where
+  // he sets out to each of its places. Where he sets out from is never named or marked.
+  const FROM = S.flightsFrom ? [S.flightsFrom[1], S.flightsFrom[0]] : [121.56, 25.03];
+  const atFrom = (ll, code) => code === 'TPE' || code === 'TSA' || d3.geoDistance(ll, FROM) < 0.012;
+  const routeList = [];
+  const routeKey = (q) => `${q.mode}|${q.from[0].toFixed(2)},${q.from[1].toFixed(2)}|${q.to[0].toFixed(2)},${q.to[1].toFixed(2)}`;
+  const journeys = (S.journeys || []).map((j) => {
+    let legs;
+    if (Array.isArray(j.legs) && j.legs.length) {
+      legs = j.legs.filter((l) => l && l.from && l.to).map((l) => ({ from: [l.from.lng, l.from.lat], to: [l.to.lng, l.to.lat], mode: l.mode || 'flight', a: l.from, b: l.to }));
+    } else {
+      legs = (j.countries || []).filter((cid) => countries[cid]).map((cid) => { const ll = placeLL(cid); return { from: FROM, to: [ll[1], ll[0]], mode: 'flight', a: null, b: { cid } }; });
+    }
+    legs = legs.filter((q) => d3.geoDistance(q.from, q.to) > 0.0005);
+    const idx = legs.map((q) => {
+      const k = routeKey(q);
+      let i = routeList.findIndex((x) => x.key === k);
+      if (i < 0) { routeList.push({ from: q.from, to: q.to, mode: q.mode, key: k }); i = routeList.length - 1; }
+      return i;
+    });
+    // the stops along the way, in order, once each
+    const stops = [];
+    legs.forEach((q, n) => {
+      [[q.a, q.from, true], [q.b, q.to, false]].forEach(([end, ll, dep]) => {
+        if (!end || atFrom(ll, end.code)) return;
+        const key = end.cid || end.city;
+        if (!key || stops.some((s) => s.key === key)) return;
+        stops.push({ key, ll, city: end.zh ? { en: end.city, zh: end.zh } : end.city, cid: end.cid, via: idx[n], dep });
+      });
+    });
+    return { ...j, legs, idx, stops };
+  });
+  const flights = WC.routes(routeList);
+  /* ------------------------------------------------------------ elements */
+
+  const html = document.documentElement;
+  const app = $('#app');
+  const mapEl = $('#map');
+  const canvas = $('#paint');
+  const ctx = canvas.getContext('2d');
+  const pinsEl = $('#pins');
+  const penEl = $('#pen');
+  const leaf = $('#leaf');
+  const leafScroll = $('#leaf-scroll');
+  const leafContent = $('#leaf-content');
+  const cover = $('#cover');
+  const track = $('#cover-track');
+  const flightsEl = $('#flights');
+  const viewer = $('#viewer');
+  const live = $('#live');
+  const indexEl = $('#index');
+  const indexBody = $('#index-body');
+  const indexScroll = $('#index-scroll');
+  const SVGNS = 'http://www.w3.org/2000/svg';
+
+  /* ------------------------------------------------------------ the map's frame */
+
+  // an equirectangular plate centred on 10°E, so the relief image lies straight on it and the
+  // Pacific seam falls where nothing he visited is. The whole sphere is drawn, pole to pole: the
+  // sea is bare paper away from the coasts, so the drawing simply runs on to the window's edges
+  const LON0 = 10, LAT_N = 90, LAT_S = -90;
+  const R0 = 8; // texture px per degree of the whole-world painting
+  const state = {
+    W: 1, H: 1, dpr: 1, S0: 1,
+    z: d3.zoomIdentity,
+    w110: null, w50: null,
+    land110: null, land50: null, travel: [], seams: null,
+    coast110: null, coast50: null, borders110: null, borders50: null, landFill110: null,
+    labels: new Map(), photoPts: [],
+    feats: {},
+    relief: null, reliefFine: null,
+    base: null, regions: [], job: null,
+    drawQueued: false, settle: 0,
+    before: null,
+  };
+  const wrapU = (lon) => ((((lon - LON0) % 360) + 540) % 360) - 180;
+  const baseXY = (ll) => [state.W / 2 + wrapU(ll[1]) * state.S0, state.H / 2 - ll[0] * state.S0];
+  const P = (ll, z = state.z) => { const b = baseXY(ll); return [z.applyX(b[0]), z.applyY(b[1])]; };
+  const invertLL = (x, y) => {
+    const u = (state.z.invertX(x) - state.W / 2) / state.S0;
+    const lat = -(state.z.invertY(y) - state.H / 2) / state.S0;
+    return [((u + LON0 + 540) % 360) - 180, lat];
+  };
+  const pxPerDeg = (z = state.z) => z.k * state.S0;
+  const projDeg = d3.geoEquirectangular().rotate([-LON0, 0]).scale(180 / Math.PI).translate([0, 0]).precision(0);
+  const pathDeg = (geo) => { const p = new Path2D(); d3.geoPath(projDeg, p)(geo); return p; };
+
+  function sizeMap() {
+    state.W = Math.max(1, mapEl.clientWidth);
+    state.H = Math.max(1, mapEl.clientHeight);
+    state.dpr = Math.min(2, window.devicePixelRatio || 1);
+    canvas.width = Math.round(state.W * state.dpr);
+    canvas.height = Math.round(state.H * state.dpr);
+    state.S0 = state.W / 360;
+    zoom.extent([[0, 0], [state.W, state.H]])
+      .translateExtent([[0, state.H / 2 - LAT_N * state.S0], [state.W, state.H / 2 - LAT_S * state.S0]]);
+    penEl.setAttribute('viewBox', `0 0 ${state.W} ${state.H}`);
+  }
+
+  /* ------------------------------------------------------------ the painting, by zoom band */
+
+  const bandOf = (p) => {
+    const need = p * Math.min(1.5, state.dpr) * 0.85;
+    return need <= R0 ? 0 : Math.ceil(2 * Math.log2(need / R0));
+  };
+  const resOf = (b) => R0 * Math.pow(2, b / 2);
+  // the view in world degrees (u east of 10°E, v = -latitude)
+  function viewRect(z) {
+    const p = pxPerDeg(z);
+    const u0 = (z.invertX(0) - state.W / 2) / state.S0, v0 = (z.invertY(0) - state.H / 2) / state.S0;
+    return { u0, v0, u1: u0 + state.W / p, v1: v0 + state.H / p };
+  }
+  const covers = (t, v) => t.u0 <= v.u0 + 0.0001 && t.v0 <= v.v0 + 0.0001 && t.u0 + t.w / t.r >= v.u1 - 0.0001 && t.v0 + t.h / t.r >= v.v1 - 0.0001;
+  const paintEnv = {
+    LON0, LAT_N, LAT_S,
+    land: () => state.land50,
+    travel: () => state.travel,
+    seams: () => state.seams,
+    relief: (r) => (r >= 22 && state.reliefFine ? state.reliefFine : state.relief),
+  };
+
+  async function paintBase() {
+    if (state.base || !state.land50 || !state.relief) return;
+    const job = { r: R0, u0: -180, v0: -LAT_N, w: 360 * R0, h: (LAT_N - LAT_S) * R0 };
+    try {
+      const c = await WC.paint(job, paintEnv);
+      state.base = { canvas: c, ...job, b: 0, ready: performance.now() };
+      app.classList.add('is-painted');
+      queueDraw();
+      ensureTextures(state.z);
+      // the finer relief, for close dives, arrives quietly once the first painting is up (not on phones)
+      if (!narrow.matches) setTimeout(loadFineRelief, 1200);
+    } catch (e) { /* the placeholder wash stays */ }
+  }
+
+  let settleTimer = 0;
+  function ensureTextures(z) {
+    if (!state.base) return;
+    const p = pxPerDeg(z);
+    const b = bandOf(p);
+    if (b === 0) return;
+    const r = resOf(b);
+    const v = viewRect(z);
+    const fit = state.regions.find((t) => t.b === b && covers(t, v));
+    if (fit) { fit.used = performance.now(); return; }
+    if (state.job && state.job.b === b && covers(state.job, v)) return;
+    if (state.job) state.job.cancelled = true;
+    // the view and a margin around it, clamped to the sheet, within a pixel budget
+    const vw = v.u1 - v.u0, vh = v.v1 - v.v0;
+    let m = 0.16;
+    let u0, v0, u1, v1;
+    for (let i = 0; i < 4; i++) {
+      u0 = Math.max(-180, v.u0 - vw * m); u1 = Math.min(180, v.u1 + vw * m);
+      v0 = Math.max(-LAT_N, v.v0 - vh * m); v1 = Math.min(-LAT_S, v.v1 + vh * m);
+      if ((u1 - u0) * (v1 - v0) * r * r < 4.2e6) break;
+      m *= 0.5;
+    }
+    const job = { b, r, u0, v0, w: Math.max(2, Math.ceil((u1 - u0) * r)), h: Math.max(2, Math.ceil((v1 - v0) * r)), cancelled: false };
+    if (job.w * job.h > 6e6) return; // a sliver of world at extreme zoom: the coarser painting serves
+    state.job = job;
+    if (r >= 22 && !state.reliefFine && !narrow.matches) loadFineRelief();
+    WC.paint(job, paintEnv).then((c) => {
+      if (state.job === job) state.job = null;
+      featherEdges(c);
+      state.regions.push({ canvas: c, b, r, u0: job.u0, v0: job.v0, w: job.w, h: job.h, ready: performance.now(), used: performance.now() });
+      // keep a few; drop the least recently used
+      if (state.regions.length > 4) {
+        state.regions.sort((a, b2) => b2.used - a.used);
+        state.regions.length = 4;
+      }
+      queueDraw();
+    }).catch(() => { if (state.job === job) state.job = null; });
+  }
+  // a regional painting fades out at its own edges, so it never shows a seam against the coarser one
+  function featherEdges(c) {
+    const g = c.getContext('2d');
+    const f = 36;
+    g.save();
+    g.globalCompositeOperation = 'destination-out';
+    const sides = [
+      [0, 0, c.width, f, 0, 0, 0, f], [0, c.height - f, c.width, f, 0, c.height, 0, c.height - f],
+      [0, 0, f, c.height, 0, 0, f, 0], [c.width - f, 0, f, c.height, c.width, 0, c.width - f, 0],
+    ];
+    for (const [x, y, w, h, x0, y0, x1, y1] of sides) {
+      const gr = g.createLinearGradient(x0, y0, x1, y1);
+      gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+      g.fillStyle = gr; g.fillRect(x, y, w, h);
+    }
+    g.restore();
+  }
+  function loadFineRelief() {
+    if (state.reliefFineLoading) return;
+    state.reliefFineLoading = true;
+    const im = new Image();
+    im.src = '../vendor/relief/SR_50M-10800.jpg';
+    im.decode().then(() => { state.reliefFine = im; }).catch(() => {});
+  }
+
+  /* ------------------------------------------------------------ drawing a frame */
+
+  const PAPER = 'rgb(251, 250, 245)';
+  const INK = (a) => WC.ink(a);
+  const PENCIL = (a) => `rgba(98, 92, 86, ${a})`;
+  const WARM = 'rgb(212, 82, 60)';
+  const SEAS = [
+    { id: 'pacific', ll: [12, 168] },
+    { id: 'indian', ll: [-24, 80] },
+    { id: 'atlantic', ll: [26, -42] },
+    { id: 'southern', ll: [-58, 40] },
+    { id: 'arctic', ll: [82, 20] },
+  ];
+  // every other country, lettered quietly: by importance, then by how close the view has come
+  const NAMES = window.COUNTRY_NAMES || {};
+  const MINE = new Set(Object.values(ISO));
+  const others = Object.entries(NAMES)
+    .filter(([id, n]) => !MINE.has(String(id).padStart(3, '0')) && n && n.at && n.en)
+    .map(([id, n]) => ({ id, en: n.en, zh: n.zh || n.en, ll: [n.at[1], n.at[0]], rank: n.rank || 6, min: n.min || 5 }))
+    .sort((a, b) => a.rank - b.rank || a.min - b.min);
+  const hashOf = (s) => { let h = 2166136261; for (const c of String(s)) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return h >>> 0; };
+  const sprites = new Map();
+  function sprite(key, text, o) {
+    const k = `${key}|${lang}|${o.size}|${state.dpr}`;
+    let s = sprites.get(k);
+    if (!s) {
+      const h = hashOf(key);
+      s = WC.letter(text, { ...o, zh: lang === 'zh', dpr: state.dpr, seed: (h % 9973) + 1 });
+      s.tilt = (((h >> 8) % 100) / 100 - 0.5) * 0.035;
+      sprites.set(k, s);
+    }
+    return s;
+  }
+  const nameSize = (rank) => (lang === 'zh' ? [12, 12, 12, 11.5, 11, 10.5, 10.5, 10.5][rank] || 10.5 : [13, 13, 13, 12, 11.2, 10.6, 10.2, 10][rank] || 10);
+  const overlaps = (a, list) => { for (const b of list) if (a[0] < b[2] && a[2] > b[0] && a[1] < b[3] && a[3] > b[1]) return true; return false; };
+
+  function draw() {
+    state.drawQueued = false;
+    const now = performance.now();
+    const { W, H, dpr, z } = state;
+    const p = pxPerDeg();
+    const X0 = z.x + (z.k * W) / 2, Y0 = z.y + (z.k * H) / 2;
+    let again = false;
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = PAPER;
+    ctx.fillRect(0, 0, W, H);
+
+    // before the painting is ready (and while it fades in): a first flat wash on the land
+    const baseA = state.base ? Math.min(1, (now - state.base.ready) / 600) : 0;
+    if (baseA < 1 && state.landFill110) {
+      ctx.setTransform(dpr * p, 0, 0, dpr * p, dpr * X0, dpr * Y0);
+      ctx.fillStyle = 'rgb(244, 240, 222)';
+      ctx.fill(state.landFill110);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    // the painting: the whole sheet, then any finer regional paintings over it
+    if (state.base) {
+      const c = 2 * Math.log2(Math.max(1e-6, (p * Math.min(1.5, dpr) * 0.85) / R0));
+      const list = [state.base, ...state.regions.slice().sort((a, b) => a.r - b.r)];
+      for (const tx of list) {
+        let a = Math.min(1, (now - tx.ready) / 600);
+        if (now - tx.ready < 620) again = true;
+        if (tx.b > 0) a *= c >= tx.b - 1.2 ? 1 : clamp(1 + (c - tx.b + 1.2) / 1.6, 0, 1);
+        if (a <= 0.01) continue;
+        const dx = X0 + tx.u0 * p, dy = Y0 + tx.v0 * p, sc = p / tx.r;
+        const sx0 = Math.max(0, -dx / sc), sy0 = Math.max(0, -dy / sc);
+        const sx1 = Math.min(tx.w, (W - dx) / sc), sy1 = Math.min(tx.h, (H - dy) / sc);
+        if (sx1 <= sx0 || sy1 <= sy0) continue;
+        ctx.globalAlpha = a;
+        ctx.imageSmoothingQuality = sc < 1 ? 'high' : 'medium';
+        ctx.drawImage(tx.canvas, sx0, sy0, sx1 - sx0, sy1 - sy0, dx + sx0 * sc, dy + sy0 * sc, (sx1 - sx0) * sc, (sy1 - sy0) * sc);
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    ctx.save();
+    ctx.beginPath(); ctx.rect(X0 - 180 * p, Y0 - 89.4 * p, 360 * p, 178.8 * p); ctx.clip();
+    // pencil: small crosses where the 30° lines meet, finer as you come close
+    const step = p > 40 ? 5 : p > 14 ? 10 : 30;
+    const arm = 3.5;
+    ctx.strokeStyle = PENCIL(0.26);
+    ctx.lineWidth = 0.6;
+    ctx.beginPath();
+    const vr = viewRect(z);
+    for (let lon = -180; lon < 180; lon += step) {
+      const u = wrapU(lon);
+      if (u < vr.u0 - 1 || u > vr.u1 + 1) continue;
+      for (let lat = -60; lat <= 75; lat += step) {
+        if (-lat < vr.v0 - 1 || -lat > vr.v1 + 1) continue;
+        const x = X0 + u * p, y = Y0 - lat * p;
+        ctx.moveTo(x - arm, y); ctx.lineTo(x + arm, y);
+        ctx.moveTo(x, y - arm); ctx.lineTo(x, y + arm);
+      }
+    }
+    ctx.stroke();
+
+    // the borders: a lighter, broken line, as a pen does when it hardly touches
+    const fine = p > 12 && state.coast50;
+    const borders = fine ? state.borders50 : state.borders110;
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    if (borders) {
+      ctx.setTransform(dpr * p, 0, 0, dpr * p, dpr * X0, dpr * Y0);
+      ctx.setLineDash([2.2 / p, 2.8 / p]);
+      ctx.strokeStyle = INK(p > 14 ? 0.46 : 0.38); ctx.lineWidth = (p > 14 ? 0.7 : 0.6) / p; ctx.stroke(borders);
+      ctx.setLineDash([]);
+    }
+    // the coasts: one confident line of the fine-liner, its weight swelling and thinning as it goes
+    const coast = fine ? state.coast50 : state.coast110;
+    if (coast) {
+      const w = Math.min(1.35, 0.78 + p * 0.005);
+      ctx.strokeStyle = INK(0.9);
+      coast.forEach((path, i) => { ctx.lineWidth = (w * [0.55, 0.78, 1, 1.26, 1.6][i]) / p; ctx.stroke(path); });
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.restore();
+
+    // where each photograph was made, once close enough to tell them apart
+    const close = p > 36;
+    state.photoPts = [];
+    if (close) {
+      for (const id of indexOrder) {
+        const [x, y] = P(S.slides[id].ll);
+        if (x < -10 || y < -10 || x > W + 10 || y > H + 10) continue;
+        state.photoPts.push({ id, p: [x, y] });
+        ctx.beginPath(); ctx.arc(x, y, 3.6, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(251, 250, 245, 0.92)'; ctx.fill();
+        ctx.lineWidth = 1; ctx.strokeStyle = INK(0.9); ctx.stroke();
+        ctx.beginPath(); ctx.arc(x, y, 1.4, 0, Math.PI * 2);
+        ctx.fillStyle = WARM; ctx.fill();
+      }
+    }
+
+    // the books: a pen leader from each place to where its book stands, and the place itself
+    layoutPins();
+    const taken = [];
+    if (!diving) {
+      ctx.lineWidth = 0.8;
+      ctx.strokeStyle = INK(0.6);
+      for (const b of pinList) {
+        if (Math.hypot(b.x - b.ax, b.y - b.ay) > 6) { ctx.beginPath(); ctx.moveTo(b.ax, b.ay); ctx.lineTo(b.x, b.y); ctx.stroke(); }
+      }
+      for (const b of pinList) {
+        ctx.beginPath(); ctx.arc(b.ax, b.ay, 3.5, 0, Math.PI * 2);
+        ctx.fillStyle = PAPER; ctx.fill();
+        ctx.lineWidth = 1.1; ctx.strokeStyle = INK(0.95); ctx.stroke();
+        ctx.beginPath(); ctx.arc(b.ax, b.ay, 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = WARM; ctx.fill();
+      }
+      for (const b of pinList) taken.push(...b.boxes);
+    }
+
+    // lettering: the oceans in italic, then every other country by importance, never on each
+    // other and never on his books or their names
+    if (fontsReady) {
+      const placed = new Set();
+      const seaA = clamp((26 - p) / 10, 0, 1);
+      if (seaA > 0) {
+        for (const s of SEAS) {
+          const sp = sprite(`sea-${s.id}`, T[lang].seas[s.id], { size: lang === 'zh' ? 13 : 15, italic: lang !== 'zh', caps: false, track: 0.22, colour: 'rgb(48, 96, 128)', halo: 0 });
+          const [x, y] = P(s.ll);
+          const box = [x - sp.inkW / 2 - 4, y - 10, x + sp.inkW / 2 + 4, y + 10];
+          if (box[0] < 8 || box[2] > W - 8 || box[1] < 8 || box[3] > H - 8 || overlaps(box, taken)) continue;
+          taken.push(box);
+          ctx.globalAlpha = 0.9 * seaA;
+          ctx.drawImage(sp.c, x - sp.inkW / 2 - sp.bx, y - sp.by + sp.size * 0.34, sp.w, sp.h);
+        }
+        ctx.globalAlpha = 1;
+      }
+      const zw = Math.log2((360 * p) / 256);
+      for (const n of others) {
+        if (n.min > zw + 1.0) continue;
+        const [x, y] = P(n.ll);
+        if (x < -60 || y < -20 || x > W + 60 || y > H + 20) continue;
+        const sp = sprite(n.id, lang === 'zh' ? n.zh : n.en, { size: nameSize(n.rank), weight: 500, colour: 'rgb(104, 96, 88)', halo: 3.2 });
+        const hw = sp.inkW / 2 + 3, hh = sp.size * 0.62;
+        const box = [x - hw, y - hh, x + hw, y + hh];
+        if (box[0] < 6 || box[2] > W - 6 || box[1] < 6 || box[3] > H - 6 || overlaps(box, taken)) continue;
+        taken.push(box);
+        placed.add(n.id);
+        let a = state.labels.get(n.id) || 0;
+        a = Math.min(1, a + 0.2);
+        state.labels.set(n.id, a);
+        if (a < 1) again = true;
+        ctx.save();
+        ctx.globalAlpha = a;
+        ctx.translate(x, y);
+        ctx.rotate(sp.tilt);
+        ctx.drawImage(sp.c, -sp.inkW / 2 - sp.bx, -sp.by + sp.size * 0.34, sp.w, sp.h);
+        ctx.restore();
+      }
+      for (const id of state.labels.keys()) if (!placed.has(id)) state.labels.delete(id);
+    }
+
+    placePen();
+    if (again) state.settle = Math.max(state.settle, 1);
+    if (state.settle > 0) { state.settle -= 1; queueDraw(); }
+  }
+
+  function queueDraw() {
+    if (state.drawQueued) return;
+    state.drawQueued = true;
+    requestAnimationFrame(draw);
+  }
+
+  /* ------------------------------------------------------------ zoom and pan */
+
+  const zoom = d3.zoom()
+    .scaleExtent([1, 160])
+    .on('start', (e) => { if (e.sourceEvent && e.sourceEvent.type !== 'wheel') mapEl.classList.add('is-dragging'); })
+    .on('zoom', (e) => {
+      state.z = e.transform;
+      state.settle = 2;
+      queueDraw();
+      updateZoomButtons();
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(() => ensureTextures(state.z), 140);
+    })
+    .on('end', () => mapEl.classList.remove('is-dragging'));
+  const sel = d3.select(mapEl);
+  sel.call(zoom).on('dblclick.zoom', null);
+  mapEl.addEventListener('dblclick', (e) => {
+    if (e.target.closest('.book')) return;
+    const r = mapEl.getBoundingClientRect();
+    sel.interrupt().transition().duration(reduce.matches ? 0 : 450).ease(d3.easeExpOut).call(zoom.scaleBy, e.shiftKey ? 0.5 : 2, [e.clientX - r.left, e.clientY - r.top]);
+  });
+
+  const constrain = (tr) => zoom.constrain()(tr, [[0, 0], [state.W, state.H]], zoom.translateExtent());
+  function moveTo(target, dur = 900) {
+    const tr = constrain(target);
+    const d = reduce.matches ? 0 : dur;
+    if (d === 0) sel.interrupt().call(zoom.transform, tr);
+    else sel.interrupt().transition().duration(d).ease(d3.easeExpOut).call(zoom.transform, tr);
+    return tr;
+  }
+  function fitTransform(lls, pad) {
+    const pts = lls.map(baseXY);
+    const xs = pts.map((q) => q[0]), ys = pts.map((q) => q[1]);
+    const x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+    const { W, H } = state;
+    const k = clamp(Math.min((W - pad.l - pad.r) / Math.max(1, x1 - x0), (H - pad.t - pad.b) / Math.max(1, y1 - y0)), 1, 160);
+    const cx = (x0 + x1) / 2, cy = (y0 + y1) / 2;
+    const sx = pad.l + (W - pad.l - pad.r) / 2, sy = pad.t + (H - pad.t - pad.b) / 2;
+    return d3.zoomIdentity.translate(sx - cx * k, sy - cy * k).scale(k);
+  }
+  function homeTransform() {
+    const small = narrow.matches;
+    const pad = small ? { l: 60, r: 60, t: 130, b: 190 } : { l: 70, r: 110, t: 100, b: 130 };
+    // a phone opens on the crowded half, Asia and Oceania, where ten of the places are
+    const near = small ? order.filter((c) => (c.continent === 'asia' && c.id !== 'dubai') || c.continent === 'oceania') : order;
+    return fitTransform(near.map((c) => placeLL(c.id)), pad);
+  }
+  function centerOn(ll, k, dur) {
+    const b = baseXY(ll);
+    const kk = k || state.z.k;
+    moveTo(d3.zoomIdentity.translate(state.W / 2 - b[0] * kk, state.H / 2 + 30 - b[1] * kk).scale(kk), dur);
+  }
+  function inView(ll, margin = 0.15) {
+    const q = P(ll);
+    return q[0] > state.W * margin && q[0] < state.W * (1 - margin) && q[1] > state.H * margin && q[1] < state.H * (1 - margin);
+  }
+  // the dive's landing: the country filling the view, the place itself at the centre
+  function diveTransform(cid) {
+    const ll = placeLL(cid);
+    const f = state.feats[cid];
+    let k = 30;
+    if (f) {
+      const b = d3.geoBounds(f);
+      let w = b[1][0] - b[0][0];
+      if (w < 0) w += 360;
+      const span = Math.min(w, 60), hspan = Math.min(b[1][1] - b[0][1], 40);
+      const kx = (state.W - 80) / (span * state.S0), ky = (state.H - 120) / (hspan * state.S0);
+      k = Math.min(kx, ky);
+    }
+    k = clamp(k * 0.9, 12, 150);
+    const q = baseXY(ll);
+    return constrain(d3.zoomIdentity.translate(state.W / 2 - q[0] * k, state.H / 2 - q[1] * k).scale(k));
+  }
+  function spotAt(ll, z) {
+    const q = P(ll, z);
+    const r = mapEl.getBoundingClientRect();
+    return [r.left + q[0], r.top + q[1]];
+  }
+
+  const zIn = $('#zoom-in'), zOut = $('#zoom-out'), zAll = $('#zoom-world');
+  const zoomBy = (f) => sel.interrupt().transition().duration(reduce.matches ? 0 : 420).ease(d3.easeExpOut).call(zoom.scaleBy, f);
+  zIn.addEventListener('click', () => zoomBy(2));
+  zOut.addEventListener('click', () => zoomBy(0.5));
+  zAll.addEventListener('click', () => moveTo(homeTransform()));
+  function updateZoomButtons() {
+    zIn.disabled = state.z.k >= 159.9;
+    zOut.disabled = state.z.k <= 1.001;
+  }
+  mapEl.addEventListener('keydown', (e) => {
+    if (e.target !== mapEl) return;
+    const step = 90;
+    const pan = { ArrowLeft: [step, 0], ArrowRight: [-step, 0], ArrowUp: [0, step], ArrowDown: [0, -step] }[e.key];
+    if (pan) {
+      e.preventDefault();
+      sel.interrupt().transition().duration(reduce.matches ? 0 : 260).ease(d3.easeExpOut).call(zoom.translateBy, pan[0] / state.z.k, pan[1] / state.z.k);
+    } else if (e.key === '+' || e.key === '=') { e.preventDefault(); zoomBy(2); }
+    else if (e.key === '-' || e.key === '_') { e.preventDefault(); zoomBy(0.5); }
+    else if (e.key === '0') { e.preventDefault(); moveTo(homeTransform()); }
+  });
+
+  /* ------------------------------------------------------------ books standing on the map */
+
+  let pinList = [];
+  const bookStatus = (b) => (b.band === 'bandNone' ? t('bandNone') : t(b.status));
+  function renderPins() {
+    const keep = new Map(pinList.map((q) => [q.id, q]));
+    pinsEl.textContent = '';
+    pinList = order.map((c) => {
+      const b = bookByCountry[c.id];
+      const title = esc(L(b.title));
+      const s = b.photo ? S.slides[b.photo] : null;
+      const face = s
+        ? `<span class="book__face"><img src="${imgSrc(s, 640)}" alt="" width="${s.w}" height="${s.h}" decoding="async">`
+        : `<span class="book__face book__face--blank"><b>${title}</b>`;
+      const el = document.createElement('div');
+      el.className = 'pin';
+      el.dataset.country = c.id;
+      el.innerHTML =
+        `<div class="pin__stage"><a class="book book--${b.tone}" href="#${b.view}" aria-label="${esc(T[lang].bookAria(L(b.title), bookStatus(b)))}" data-view="${b.view}"><span class="book__box">` +
+        `<span class="book__spine"><b>${title}</b><i>${esc(t('series'))}</i></span>` +
+        `${face}<span class="book__band"><b>${title}</b><span>${esc(t(b.band))}</span></span></span>` +
+        `<span class="book__back"><i>${esc(t('series'))}</i></span><span class="book__edge"></span>` +
+        `<span class="book__top"></span><span class="book__shadow"></span></span></a></div>` +
+        `<div class="pin__label" aria-hidden="true"><b>${title}</b><i>${esc(L(c.note))}</i></div>`;
+      pinsEl.appendChild(el);
+      const prev = keep.get(b.id);
+      return { id: b.id, country: c.id, book: b, el, ll: placeLL(c.id), x: prev ? prev.x : NaN, y: prev ? prev.y : NaN, ax: 0, ay: 0, lw: 0 };
+    });
+    measurePins();
+    bindPins();
+  }
+  function measurePins() { for (const q of pinList) q.lw = q.el.querySelector('.pin__label b').offsetWidth + 6; }
+
+  function bookScale() {
+    const p = pxPerDeg();
+    const small = narrow.matches;
+    const base = small ? 0.17 : 0.25;
+    const max = small ? 0.32 : 0.46;
+    return Math.min(max, base * Math.pow(Math.max(0.5, p / 5.4), 0.3));
+  }
+
+  function layoutPins() {
+    const s = bookScale();
+    const small = narrow.matches;
+    const bw = 192 * s, bh = 272 * s;
+    const below = small ? 4 : 20;
+    for (const q of pinList) {
+      const a = P(q.ll);
+      q.ax = a[0]; q.ay = a[1];
+      if (Number.isNaN(q.x)) { q.x = q.ax; q.y = q.ay; }
+      q.hw = small ? bw / 2 + 2 : Math.max(bw / 2 + 3, q.lw / 2 + 2);
+    }
+    // pulled toward its place, pushed apart from its neighbours: books never cover each other
+    const pull = 0.3;
+    for (const q of pinList) { q.x += (q.ax - q.x) * pull; q.y += (q.ay - q.y) * pull; }
+    for (let it = 0; it < 10; it++) {
+      for (let i = 0; i < pinList.length; i++) {
+        const a = pinList[i];
+        for (let j = i + 1; j < pinList.length; j++) {
+          const b = pinList[j];
+          const ox = a.hw + b.hw - Math.abs(a.x - b.x);
+          if (ox <= 0) continue;
+          const oy = Math.min(a.y + below, b.y + below) - Math.max(a.y - bh - 4, b.y - bh - 4);
+          if (oy <= 0) continue;
+          if (ox < oy * (small ? 2.4 : 1.1)) {
+            const dir = a.x < b.x || (a.x === b.x && i < j) ? -1 : 1;
+            a.x += (dir * ox) / 2; b.x -= (dir * ox) / 2;
+          } else {
+            const dir = a.y < b.y ? -1 : 1;
+            a.y += (dir * oy) / 2; b.y -= (dir * oy) / 2;
+          }
+        }
+      }
+    }
+    // on a phone, names that would sit on another book or name wait until their book wakes
+    const taken = [];
+    for (const q of pinList) {
+      let free = true;
+      if (small) {
+        const r = [q.x - q.lw / 2, q.y + 4, q.x + q.lw / 2, q.y + 20];
+        for (const o of pinList) {
+          if (o === q) continue;
+          if (r[0] < o.x + bw / 2 && r[2] > o.x - bw / 2 && r[1] < o.y && r[3] > o.y - bh) { free = false; break; }
+        }
+        if (free) for (const t2 of taken) if (r[0] < t2[2] && r[2] > t2[0] && r[1] < t2[3] && r[3] > t2[1]) { free = false; break; }
+        if (free) taken.push(r);
+      }
+      q.el.classList.toggle('is-quiet', !free);
+      // the room it takes, kept clear of the lettering of other countries
+      q.boxes = [[q.x - bw / 2 - 3, q.y - bh - 6, q.x + bw / 2 + 3, q.y + 6]];
+      if (free) q.boxes.push([q.x - q.lw / 2 - 2, q.y + 4, q.x + q.lw / 2 + 2, q.y + 24]);
+    }
+    for (const q of pinList) {
+      q.el.style.setProperty('--x', `${q.x.toFixed(1)}px`);
+      q.el.style.setProperty('--y', `${q.y.toFixed(1)}px`);
+      q.el.style.setProperty('--s', s.toFixed(3));
+    }
+  }
+
+  function bindPins() {
+    for (const q of pinList) {
+      const a = q.el.querySelector('.book');
+      a.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') setActive({ country: q.country, from: 'map' }); });
+      a.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') clearActiveSoon(); });
+      a.addEventListener('focus', () => {
+        if (diving) return;
+        setActive({ country: q.country, from: 'map' });
+        if (!inView(q.ll, 0.08)) centerOn(q.ll, Math.max(state.z.k, homeTransform().k), 600);
+      });
+      a.addEventListener('blur', () => clearActiveSoon());
+      a.addEventListener('click', (e) => { e.preventDefault(); go(q.book.view); });
+    }
+  }
+
+  /* ------------------------------------------------------------ the pen marks a place on the map, never the index */
+
+  function ringD(r, rx = 1) {
+    const n = 30;
+    const start = Math.random() * Math.PI * 2;
+    const turns = 1.1 + Math.random() * 0.12;
+    const stretch = 1 + (Math.random() - 0.5) * 0.16;
+    const rot = Math.random() * Math.PI;
+    const ph = Math.random() * 6;
+    const pts = [];
+    for (let i = 0; i <= n; i++) {
+      const th = start + (turns * Math.PI * 2 * i) / n;
+      const rr = r * (1 + 0.05 * Math.sin(3 * th + ph) + (Math.random() - 0.5) * 0.03) * (1 + 0.07 * (i / n));
+      const x = Math.cos(th) * rr * stretch * rx, y = Math.sin(th) * rr;
+      pts.push([x * Math.cos(rot) - y * Math.sin(rot), x * Math.sin(rot) + y * Math.cos(rot)]);
+    }
+    return d3.line().curve(d3.curveCatmullRom.alpha(0.5))(pts);
+  }
+  function drawStroke(path, delay = 0, dur = 420) {
+    if (reduce.matches) return;
+    const len = path.getTotalLength();
+    path.style.strokeDasharray = `${len} ${len + 4}`;
+    path.style.strokeDashoffset = len;
+    const a = path.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }], { duration: dur, delay, easing: 'cubic-bezier(0.45, 0.05, 0.25, 1)', fill: 'forwards' });
+    a.onfinish = () => { path.style.strokeDasharray = ''; path.style.strokeDashoffset = ''; a.cancel(); };
+  }
+  function erase(nodes) { nodes.forEach((n) => { n.classList.add('fading'); setTimeout(() => n.remove(), 300); }); }
+  function tween(dur, fn, done, ease = expOut) {
+    const t0 = performance.now();
+    let id = 0, stopped = false;
+    const tick = (now) => {
+      if (stopped) return;
+      const x = Math.min(1, (now - t0) / dur);
+      fn(ease(x), x);
+      if (x < 1) id = requestAnimationFrame(tick);
+      else if (done) done();
+    };
+    id = requestAnimationFrame(tick);
+    return { cancel: () => { stopped = true; cancelAnimationFrame(id); } };
+  }
+
+  let active = null, marks = [], clearTimer = 0, easeTimer = 0;
+  const activeCountry = () => (active ? active.country || (active.slide && S.slides[active.slide].country) : null);
+  function setActive(next) {
+    if (diving) return;
+    clearTimeout(clearTimer);
+    if (active && next && active.country === next.country && active.slide === next.slide) return;
+    erase(marks.filter((m) => m !== diveRing)); marks = diveRing ? [diveRing] : [];
+    active = next;
+    const cid = activeCountry();
+    pinList.forEach((q) => q.el.classList.toggle('awake', q.country === cid));
+    const pin = pinList.find((q) => q.country === cid);
+    if (next.slide) marks.push(penRing(ringD(13), S.slides[next.slide].ll));
+    else if (pin) marks.push(penRing(ringD(19, 1.15), pin.ll));
+    placePen();
+    marks.forEach((m) => drawStroke(m.firstChild, 0, 440));
+    $$('.group.is-awake', indexBody).forEach((g) => { if (g.dataset.country !== cid) g.classList.remove('is-awake'); });
+    const g = cid && indexBody.querySelector(`.group[data-country="${cid}"]`);
+    if (g) g.classList.add('is-awake');
+    // a photograph picked in the index brings its place into view on the map
+    if (next.from === 'index' && next.slide) {
+      clearTimeout(easeTimer);
+      easeTimer = setTimeout(() => { const ll = S.slides[next.slide].ll; if (!inView(ll, 0.14)) centerOn(ll, state.z.k, 900); }, 380);
+    }
+  }
+  function clearActive() {
+    erase(marks.filter((m) => m !== diveRing)); marks = diveRing ? [diveRing] : [];
+    $$('.group.is-awake', indexBody).forEach((g) => g.classList.remove('is-awake'));
+    pinList.forEach((q) => q.el.classList.remove('awake'));
+    active = null;
+    clearTimeout(easeTimer);
+  }
+  function clearActiveSoon() { clearTimeout(clearTimer); clearTimer = setTimeout(clearActive, 160); }
+  function penRing(d, ll) {
+    const g = document.createElementNS(SVGNS, 'g');
+    g.dataset.ll = JSON.stringify(ll);
+    g.dataset.s = '1';
+    const p = document.createElementNS(SVGNS, 'path');
+    p.setAttribute('class', 'ring');
+    p.setAttribute('d', d);
+    g.appendChild(p);
+    penEl.appendChild(g);
+    return g;
+  }
+  function placePen() {
+    for (const m of marks) {
+      if (!m.dataset.ll) continue;
+      const q = P(JSON.parse(m.dataset.ll));
+      const s = m.dataset.s || '1';
+      m.setAttribute('transform', `translate(${q[0].toFixed(1)} ${q[1].toFixed(1)})${s === '1' ? '' : ` scale(${s})`}`);
+    }
+  }
+
+  // hovering the map itself: a photograph's spot, a place, a travelled country
+  let hoverQueued = false, lastMove = null;
+  function hitTest(x, y) {
+    if (state.photoPts) {
+      let best = null, bd = 11;
+      for (const q of state.photoPts) { const d = Math.hypot(q.p[0] - x, q.p[1] - y); if (d < bd) { bd = d; best = q.id; } }
+      if (best) return { slide: best };
+    }
+    for (const q of pinList) if (Math.hypot(q.ax - x, q.ay - y) < 14) return { country: q.country };
+    const ll = invertLL(x, y);
+    for (const c of S.countries) { const f = state.feats[c.id]; if (f && d3.geoContains(f, ll)) return { country: c.id }; }
+    return null;
+  }
+  mapEl.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse' || e.buttons || diving) return;
+    lastMove = e;
+    if (hoverQueued) return;
+    hoverQueued = true;
+    requestAnimationFrame(() => {
+      hoverQueued = false;
+      const ev = lastMove;
+      if (ev.target.closest && ev.target.closest('.book')) return;
+      const r = mapEl.getBoundingClientRect();
+      const hit = hitTest(ev.clientX - r.left, ev.clientY - r.top);
+      mapEl.classList.toggle('is-pointing', !!hit);
+      if (hit) setActive({ ...hit, from: 'map' });
+      else if (active) clearActiveSoon();
+    });
+  });
+  mapEl.addEventListener('pointerleave', () => { mapEl.classList.remove('is-pointing'); clearActiveSoon(); });
+  mapEl.addEventListener('click', (e) => {
+    if (e.target.closest('.book') || e.defaultPrevented || diving) return;
+    const r = mapEl.getBoundingClientRect();
+    const hit = hitTest(e.clientX - r.left, e.clientY - r.top);
+    if (!hit) return;
+    // a photograph's spot dives into its place, with that photograph first
+    if (hit.slide) go(bookByCountry[S.slides[hit.slide].country].view, hit.slide);
+    else { const q = pinList.find((x) => x.country === hit.country); if (q) go(q.book.view); }
+  });
+
+  /* ------------------------------------------------------------ the index of photographs, a drawer */
+
+  const indexTab = $('#index-tab');
+  const indexPanel = $('#index-panel');
+  function setIndex(open, focus = true) {
+    indexEl.classList.toggle('is-open', open);
+    app.classList.toggle('is-indexed', open);
+    indexTab.setAttribute('aria-expanded', String(open));
+    indexPanel.inert = !open;
+    if (open && focus) requestAnimationFrame(() => $('#index-close').focus({ preventScroll: true }));
+    if (!open && focus) indexTab.focus({ preventScroll: true });
+    if (!open) clearActiveSoon();
+  }
+  indexTab.addEventListener('click', () => setIndex(!indexEl.classList.contains('is-open')));
+  $('#index-close').addEventListener('click', () => setIndex(false));
+
+  function renderIndex() {
+    $('#index-count').textContent = T[lang].count(indexOrder.length, S.countries.length);
+    $('#index-n').textContent = String(indexOrder.length);
+    indexBody.innerHTML = order.map((c) => {
+      const b = bookByCountry[c.id];
+      const ids = c.photos.filter((id) => S.slides[id]);
+      const thumbs = ids.map((id) => {
+        const s = S.slides[id];
+        return `<li><button type="button" class="thumb" data-slide="${id}" aria-label="${esc(L(s.place))}">` +
+          `<img src="${imgSrc(s, 640)}" alt="" loading="lazy" decoding="async" width="${s.w}" height="${s.h}">` +
+          `<span class="thumb__name">${esc(L(s.place))}</span></button></li>`;
+      }).join('');
+      return `<section class="group" data-country="${c.id}" aria-labelledby="g-${c.id}">` +
+        `<h3><button type="button" class="group__name" id="g-${c.id}" data-view="${b.view}">${nameHTML(c.id)}</button>` +
+        `<span class="group__meta">${esc(L(c.date))}</span></h3>` +
+        (thumbs ? `<ul class="thumbs">${thumbs}</ul>` : `<p class="group__none">${esc(t('bandNone'))}</p>`) +
+        `</section>`;
+    }).join('');
+  }
+  indexBody.addEventListener('pointerover', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    const th = e.target.closest('.thumb'), gn = e.target.closest('.group__name');
+    if (th) setActive({ slide: th.dataset.slide, from: 'index' });
+    else if (gn) setActive({ country: gn.closest('.group').dataset.country, from: 'index' });
+  });
+  indexBody.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') clearActiveSoon(); });
+  indexBody.addEventListener('focusin', (e) => {
+    const th = e.target.closest('.thumb'), gn = e.target.closest('.group__name');
+    if (th) setActive({ slide: th.dataset.slide, from: 'index' });
+    else if (gn) setActive({ country: gn.closest('.group').dataset.country, from: 'index' });
+  });
+  indexBody.addEventListener('click', (e) => {
+    if (diving) return;
+    const th = e.target.closest('.thumb'), gn = e.target.closest('.group__name');
+    // a photograph in the index dives into its place, with that photograph as the cover
+    if (th) { const s = S.slides[th.dataset.slide]; setIndex(false, false); go(bookByCountry[s.country].view, th.dataset.slide); }
+    else if (gn) { setIndex(false, false); go(gn.dataset.view); }
+  });
+
+  /* ------------------------------------------------------------ the leaf: the page the dive lands on */
+
+  let page = null, pageCover = null;
+  let tocObserver = null;
+  let diving = false;
+
+  function viewCountry(view) {
+    if (view.startsWith('guide-')) return S.guides[view.slice(6)] ? S.guides[view.slice(6)].country : null;
+    return view.slice(6);
+  }
+  function validView(view) {
+    if (!view) return false;
+    if (view.startsWith('guide-')) return !!S.guides[view.slice(6)];
+    if (view.startsWith('place-')) return !!countries[view.slice(6)];
+    return false;
+  }
+  const isGuide = (view) => view.startsWith('guide-') || (view.startsWith('place-') && view.slice(6) === guide.country);
+
+  function renderLeaf(view) {
+    const cid = viewCountry(view);
+    const ll = placeLL(cid);
+    $('#leaf-where').innerHTML = `<b>${nameHTML(cid)}</b><span>${esc(coords(ll))}</span>`;
+    if (tocObserver) { tocObserver.disconnect(); tocObserver = null; }
+    renderCover(cid, view);
+    if (isGuide(view)) renderGuide(); else renderPlace(countries[cid]);
+    watchCover();
+  }
+
+  /* the cover: a full-window gallery of the country's photographs. Nothing across the middle;
+     the place and the country in the bottom-left corner, small words at the edges */
+  const gal = { cid: null, list: [], i: 0, dx: 0, slots: [], anim: null, wheel: 0, lock: 0 };
+  const wrapI = (i) => { const n = gal.list.length; return ((i % n) + n) % n; };
+  function renderCover(cid, view) {
+    gal.cid = cid;
+    const has = gal.list.length > 0;
+    leaf.classList.toggle('is-plain', !has);
+    leaf.classList.toggle('is-single', gal.list.length < 2);
+    leaf.classList.remove('is-scrolled');
+    if (!has) { cover.hidden = true; track.textContent = ''; gal.slots = []; return; }
+    cover.hidden = false;
+    cover.setAttribute('aria-label', T[lang].coverLabel(L(bookByCountry[cid].title)));
+    $('#cover-hint').textContent = isGuide(view) ? t('hintGuide') : t('hintPhotos');
+    if (!gal.slots.length) {
+      gal.slots = [-1, 0, 1].map((pos) => {
+        const el = document.createElement('figure');
+        el.className = 'slide';
+        const img = document.createElement('img');
+        img.decoding = 'async';
+        img.draggable = false;
+        img.alt = '';
+        el.appendChild(img);
+        track.appendChild(el);
+        return { el, img, pos, id: null };
+      });
+    }
+    fillSlides();
+  }
+  function fillSlides() {
+    const n = gal.list.length;
+    for (const s of gal.slots) {
+      const id = gal.list[wrapI(gal.i + s.pos)];
+      s.el.style.setProperty('--pos', String(s.pos));
+      s.el.classList.toggle('is-current', s.pos === 0);
+      s.el.hidden = n < 2 && s.pos !== 0;
+      if (s.pos !== 0) s.el.setAttribute('aria-hidden', 'true'); else s.el.removeAttribute('aria-hidden');
+      const sl = S.slides[id];
+      if (s.id !== id || s.lang !== lang) {
+        if (s.id !== id) {
+          s.img.width = sl.w; s.img.height = sl.h;
+          s.img.sizes = '100vw';
+          s.img.srcset = srcset(sl);
+          s.img.src = imgSrc(sl, 1280);
+          if (s.pos === 0) s.img.fetchPriority = 'high';
+        }
+        s.img.alt = L(sl.alt);
+        s.id = id; s.lang = lang;
+      }
+    }
+    const cur = S.slides[gal.list[gal.i]];
+    $('#cover-place').textContent = L(cur.place);
+    $('#cover-country').textContent = L(countries[gal.cid].name);
+    $('#cover-count').textContent = n > 1 ? `${gal.i + 1} / ${n}` : '';
+    pageCover = gal.list[gal.i];
+    // the next ones along, fetched before they are asked for
+    if (n > 3) [2, -2].forEach((d) => { const im = new Image(); im.sizes = '100vw'; im.srcset = srcset(S.slides[gal.list[wrapI(gal.i + d)]]); });
+  }
+  function setDx(px) { gal.dx = px; track.style.setProperty('--dx', `${px.toFixed(1)}px`); }
+  function galStep(d, from = gal.dx) {
+    if (gal.list.length < 2 || !leaf.classList.contains('is-open')) return;
+    if (gal.anim) { gal.anim.cancel(); gal.anim = null; }
+    const Wd = cover.clientWidth || innerWidth;
+    const commit = () => {
+      gal.i = wrapI(gal.i + d);
+      for (const s of gal.slots) { s.pos -= d; if (s.pos < -1) s.pos = 1; else if (s.pos > 1) s.pos = -1; }
+      setDx(0);
+      fillSlides();
+      wake();
+    };
+    if (reduce.matches) { commit(); return; }
+    const to = -d * Wd;
+    gal.anim = tween(Math.max(260, 520 * Math.min(1, Math.abs(to - from) / Wd)), (e) => setDx(from + (to - from) * e), () => { gal.anim = null; commit(); }, expOut);
+  }
+  function springBack() {
+    if (gal.anim) gal.anim.cancel();
+    const from = gal.dx;
+    if (reduce.matches || Math.abs(from) < 1) { setDx(0); return; }
+    gal.anim = tween(360, (e) => setDx(from * (1 - e)), () => { gal.anim = null; }, expOut);
+  }
+  $('#cover-prev').addEventListener('click', () => galStep(-1));
+  $('#cover-next').addEventListener('click', () => galStep(1));
+  $('#cover-hint').addEventListener('click', () => {
+    leafContent.scrollIntoView({ behavior: reduce.matches ? 'auto' : 'smooth', block: 'start' });
+    const first = $('#leaf-title', leafContent);
+    if (first) { first.setAttribute('tabindex', '-1'); first.focus({ preventScroll: true }); }
+  });
+  // a finger or the mouse moves the photograph with it, and lets it settle on the nearest one
+  let drag = null;
+  cover.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('button') || !leaf.classList.contains('is-open') || (e.pointerType === 'mouse' && e.button !== 0)) return;
+    drag = { x: e.clientX, y: e.clientY, id: e.pointerId, horiz: null, t: performance.now(), vx: 0, lx: e.clientX };
+  });
+  cover.addEventListener('pointermove', (e) => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
+    if (drag.horiz === null) {
+      if (Math.hypot(dx, dy) < 7) return;
+      drag.horiz = Math.abs(dx) > Math.abs(dy);
+      if (!drag.horiz) { drag = null; return; }
+      try { cover.setPointerCapture(e.pointerId); } catch (err) { /* fine */ }
+      if (gal.anim) { gal.anim.cancel(); gal.anim = null; }
+      cover.classList.add('is-dragging');
+    }
+    const now = performance.now();
+    drag.vx = (e.clientX - drag.lx) / Math.max(8, now - drag.t);
+    drag.lx = e.clientX; drag.t = now;
+    setDx(gal.list.length < 2 ? dx * 0.25 : dx);
+  });
+  const dragEnd = (e) => {
+    if (!drag || (e && e.pointerId !== drag.id)) return;
+    const was = drag;
+    drag = null;
+    cover.classList.remove('is-dragging');
+    if (!was.horiz) return;
+    const Wd = cover.clientWidth || innerWidth;
+    if (gal.list.length > 1 && (gal.dx < -Wd * 0.18 || was.vx < -0.45)) galStep(1);
+    else if (gal.list.length > 1 && (gal.dx > Wd * 0.18 || was.vx > 0.45)) galStep(-1);
+    else springBack();
+  };
+  cover.addEventListener('pointerup', dragEnd);
+  cover.addEventListener('pointercancel', dragEnd);
+  // a sideways sweep on the trackpad: one photograph per sweep
+  cover.addEventListener('wheel', (e) => {
+    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY) * 1.2) return;
+    e.preventDefault();
+    const now = performance.now();
+    if (now < gal.lock) { gal.lock = now + 220; return; }
+    gal.wheel += e.deltaX;
+    clearTimeout(gal.wheelT);
+    gal.wheelT = setTimeout(() => { gal.wheel = 0; }, 180);
+    if (Math.abs(gal.wheel) > 46) { galStep(gal.wheel > 0 ? 1 : -1); gal.wheel = 0; gal.lock = now + 520; }
+  }, { passive: false });
+  // the words on the cover step back after a still moment, and return with any movement
+  let stillTimer = 0;
+  function wake() {
+    leaf.classList.remove('is-still');
+    clearTimeout(stillTimer);
+    stillTimer = setTimeout(() => { if (page) leaf.classList.add('is-still'); }, 2500);
+  }
+  ['pointermove', 'pointerdown', 'keydown', 'focusin'].forEach((ev) => leaf.addEventListener(ev, wake, { passive: true }));
+  leafScroll.addEventListener('scroll', () => { if (leafScroll.scrollTop > 40) leaf.classList.add('is-scrolled'); }, { passive: true });
+  const coverInView = () => !cover.hidden && leafScroll.scrollTop < cover.offsetHeight * 0.5;
+  leaf.addEventListener('keydown', (e) => {
+    if ((e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') || !coverInView()) return;
+    if (e.target.closest && e.target.closest('.leaf__content')) return;
+    e.preventDefault();
+    galStep(e.key === 'ArrowRight' ? 1 : -1);
+  });
+  // the bar at the top comes in once the page has risen over the cover
+  function watchCover() {
+    leaf.classList.toggle('is-past', leaf.classList.contains('is-plain'));
+  }
+  leafScroll.addEventListener('scroll', () => {
+    if (!cover.hidden) leaf.classList.toggle('is-past', leafScroll.scrollTop > cover.offsetHeight * 0.85);
+  }, { passive: true });
+
+
+  function rowsOf(ids) {
+    const target = narrow.matches ? 1 : 2.8;
+    const rows = [];
+    let row = [], sum = 0;
+    for (const id of ids) {
+      const ar = S.slides[id].w / S.slides[id].h;
+      row.push([id, ar]); sum += ar;
+      if (sum >= target * 0.88 || row.length === 3) { rows.push({ row, sum }); row = []; sum = 0; }
+    }
+    if (row.length) rows.push({ row, sum, last: true });
+    return rows;
+  }
+  const pageEnd = (photos = true) => `<footer class="page-end"><button class="word" type="button" data-back>${esc(t('back'))}</button>${photos ? `<span>${esc(t('endLine'))}</span>` : ''}</footer>`;
+
+  function renderPlace(c) {
+    const ids = c.photos.filter((id) => S.slides[id]);
+    let body;
+    if (ids.length) {
+      body = `<div class="rows">${rowsOf(ids).map((r) => `<div class="row">${r.row.map(([id, ar]) => {
+        const s = S.slides[id];
+        return `<figure class="piece" data-ar="${ar.toFixed(4)}"><button type="button" data-slide="${id}" aria-label="${esc(T[lang].madeOf(L(s.place)))}">` +
+          `<img src="${imgSrc(s, 1280)}" srcset="${srcset(s)}" sizes="(max-width: 48rem) 94vw, 40vw" width="${s.w}" height="${s.h}" alt="${esc(L(s.alt))}" loading="lazy" decoding="async"></button>` +
+          `<figcaption><b>${esc(L(s.place))}</b><span>${esc(L(s.where))}</span></figcaption></figure>`;
+      }).join('')}${r.last && r.sum < 2.2 && !narrow.matches ? `<span class="piece piece--rest" aria-hidden="true" data-ar="${(2.8 - r.sum).toFixed(4)}"></span>` : ''}</div>`).join('')}</div>`;
+    } else {
+      body = `<div class="no-photos"><b>${esc(t('bandNone'))}</b></div>`;
+    }
+    const b = bookByCountry[c.id];
+    const title = L(b.title), name = L(c.name);
+    leafContent.className = 'leaf__content place';
+    leafContent.innerHTML = `<div class="wrap">
+      <header class="place-top">
+        <h1 class="page-title" id="leaf-title">${esc(title)}</h1>
+        <p class="meta">${name !== title ? `<span>${esc(name)}</span>` : ''}<span>${esc(L(c.date))}</span>${ids.length ? `<span>${esc(T[lang].nPhotos(ids.length))}</span>` : ''}</p>
+        <p class="page-lede">${esc(L(c.note))}</p>
+        <p class="quiet-line">${esc(t('bookNot'))}</p>
+      </header>${body}${pageEnd(ids.length > 0)}</div>`;
+    $$('[data-ar]', leafContent).forEach((n) => n.style.setProperty('--ar', n.dataset.ar));
+  }
+
+  function renderGuide() {
+    const dict = guide.i18n[lang] || guide.i18n.en;
+    const slideText = (key) => {
+      const m = key.match(/^(sp|sa|sl)_(.+)$/);
+      if (!m || !S.slides[m[2]]) return null;
+      const s = S.slides[m[2]];
+      if (m[1] === 'sp') return L(s.place);
+      if (m[1] === 'sa') return L(s.alt);
+      return T[lang].madeOf(L(s.place));
+    };
+    const get = (k) => (dict[k] !== undefined ? dict[k] : (slideText(k) !== null ? slideText(k) : (guide.i18n.en[k] !== undefined ? guide.i18n.en[k] : null)));
+    leafContent.className = 'leaf__content guide';
+    leafContent.innerHTML = guide.html;
+    $$('[data-i18n]', leafContent).forEach((el) => { const v = get(el.dataset.i18n); if (v !== null) el.textContent = v; });
+    $$('[data-i18n-html]', leafContent).forEach((el) => { const v = get(el.dataset.i18nHtml); if (v !== null) el.innerHTML = v; });
+    $$('[data-i18n-alt]', leafContent).forEach((el) => { const v = get(el.dataset.i18nAlt); if (v !== null) el.alt = v; });
+    $$('[data-i18n-aria]', leafContent).forEach((el) => { const v = get(el.dataset.i18nAria); if (v !== null) el.setAttribute('aria-label', v); });
+    const walker = document.createTreeWalker(leafContent, NodeFilter.SHOW_TEXT);
+    for (let n = walker.nextNode(); n; n = walker.nextNode()) if (/[–—]/.test(n.nodeValue)) n.nodeValue = clean(n.nodeValue);
+    const h1 = $('h1', leafContent);
+    if (h1) h1.id = 'leaf-title';
+    const meta = $('.guide-top .meta', leafContent);
+    if (meta) {
+      const facts = document.createElement('p');
+      facts.className = 'guide-facts';
+      facts.textContent = L(guide.facts);
+      meta.after(facts);
+    }
+    const wrap = $('.wrap', leafContent) || leafContent;
+    wrap.insertAdjacentHTML('beforeend', pageEnd());
+    $$('[data-ar]', leafContent).forEach((n) => n.style.setProperty('--ar', n.dataset.ar));
+    // the contents: the section being read is marked
+    const links = $$('.toc a', leafContent);
+    const heads = links.map((a) => leafContent.querySelector(a.getAttribute('href'))).filter(Boolean);
+    if ('IntersectionObserver' in window && heads.length) {
+      tocObserver = new IntersectionObserver(() => {
+        let top = null;
+        for (const h of heads) if (h.getBoundingClientRect().top < window.innerHeight * 0.4) top = h;
+        links.forEach((a) => (top && a.getAttribute('href') === `#${top.id}` ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current')));
+      }, { root: leafScroll, threshold: [0, 1], rootMargin: '0px 0px -55% 0px' });
+      heads.forEach((h) => tocObserver.observe(h));
+    }
+  }
+
+  leafContent.addEventListener('click', (e) => {
+    const a = e.target.closest('a, button');
+    if (!a) return;
+    if (a.hasAttribute('data-back')) { e.preventDefault(); back(); return; }
+    if (a.dataset.slide) {
+      e.preventDefault();
+      const list = $$('[data-slide]', leafContent).map((x) => x.dataset.slide).filter((v, i, arr) => arr.indexOf(v) === i);
+      openViewer(a.dataset.slide, list, { from: 'page' });
+      return;
+    }
+    const href = a.getAttribute('href') || '';
+    if (href.startsWith('#') && href.length > 1) {
+      e.preventDefault();
+      const target = leafContent.querySelector(href);
+      if (target) {
+        target.scrollIntoView({ behavior: reduce.matches ? 'auto' : 'smooth', block: 'start' });
+        target.setAttribute('tabindex', '-1');
+        target.focus({ preventScroll: true });
+      }
+    }
+  });
+
+  /* ------------------------------------------------------------ the dive */
+
+  let pageGen = 0, diveTimers = [], diveRing = null, diveTween = null, revealTween = null;
+  const later = (fn, ms) => { const id = setTimeout(fn, ms); diveTimers.push(id); return id; };
+  function clearDive() {
+    diveTimers.forEach(clearTimeout); diveTimers = [];
+    if (diveRing) { erase([diveRing]); marks = marks.filter((m) => m !== diveRing); diveRing = null; }
+    if (diveTween) { diveTween.cancel(); diveTween = null; }
+    if (revealTween) { revealTween.cancel(); revealTween = null; }
+    leaf.getAnimations().forEach((a) => a.cancel());
+  }
+  // the photograph dissolves in over the whole window at once: m runs 0 (not there) to 1 (all there)
+  function setDissolve(m) {
+    cover.style.setProperty('--fade', m.toFixed(4));
+    cover.style.setProperty('--blur', `${(8 * (1 - m)).toFixed(2)}px`);
+    cover.style.setProperty('--sc', (1.04 - 0.04 * m).toFixed(4));
+  }
+  function clearDissolve() { ['--fade', '--blur', '--sc'].forEach((k) => cover.style.removeProperty(k)); }
+  function settleOpen(gen) {
+    if (gen !== pageGen) return;
+    leaf.classList.remove('is-dissolving');
+    leaf.classList.add('is-open');
+    clearDissolve();
+    later(() => { if (gen === pageGen) leaf.classList.add('is-captioned'); }, reduce.matches ? 0 : 60);
+    if (diveRing) { erase([diveRing]); marks = marks.filter((m) => m !== diveRing); diveRing = null; }
+    const target = leaf.classList.contains('is-plain') ? $('#leaf-back') : $('#cover-back');
+    target.focus({ preventScroll: true });
+    wake();
+  }
+
+  function openPage(view, opts = {}) {
+    pageGen += 1;
+    const gen = pageGen;
+    clearDive();
+    const cid = viewCountry(view);
+    const ll = placeLL(cid);
+    page = view;
+    gal.list = photosOf(cid);
+    gal.i = Math.max(0, gal.list.indexOf(coverFor(cid, opts.cover)));
+    if (gal.anim) { gal.anim.cancel(); gal.anim = null; }
+    setDx(0);
+    renderLeaf(view);
+    leafScroll.scrollTop = 0;
+    app.inert = true;
+    setIndex(false, false);
+    clearActive();
+    globe.stop();
+    live.textContent = T[lang].opening(L(bookByCountry[cid].title));
+    const landing = diveTransform(cid);
+    ensureTextures(landing);
+    if (!diving) state.before = state.z;
+    diving = true;
+    app.classList.add('is-diving');
+    leaf.classList.remove('is-open', 'is-captioned', 'is-dissolving', 'is-leaving', 'is-still');
+    const hasCover = !leaf.classList.contains('is-plain');
+    if (opts.animate && !reduce.matches) {
+      // 1. the map magnifies into the country while the pen tightens a ring on the spot
+      moveTo(landing, 2000);
+      diveRing = penRing(ringD(14), ll);
+      marks.push(diveRing);
+      drawStroke(diveRing.firstChild, 0, 500);
+      diveTween = tween(2000, (e) => { if (diveRing) { diveRing.dataset.s = (6 - 5 * e).toFixed(3); placePen(); } });
+      // 2. in the last third of the zoom, while the camera still moves, the photograph dissolves
+      //    in across the whole window, from soft to sharp; the drawing softens away beneath it
+      later(() => {
+        if (gen !== pageGen) return;
+        leaf.hidden = false;
+        app.classList.add('is-soft');
+        if (!hasCover) {
+          leaf.classList.add('is-open');
+          leaf.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 900, easing: 'cubic-bezier(0.45, 0, 0.55, 1)' }).onfinish = () => settleOpen(gen);
+          return;
+        }
+        leaf.classList.add('is-dissolving');
+        setDissolve(0);
+        revealTween = tween(1800, (e) => setDissolve(e), () => settleOpen(gen), easeInOut);
+      }, hasCover ? 1330 : 1700);
+    } else {
+      moveTo(landing, 0);
+      leaf.hidden = false;
+      app.classList.add('is-soft');
+      if (opts.animate) {
+        // reduced motion: a plain fade
+        leaf.classList.add('is-open');
+        leaf.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 300, easing: 'ease-out' }).onfinish = () => settleOpen(gen);
+      } else {
+        settleOpen(gen);
+      }
+    }
+  }
+
+  function closePage(opts = {}) {
+    if (!page) return;
+    pageGen += 1;
+    const gen = pageGen;
+    clearDive();
+    const cid = viewCountry(page);
+    const pin = pinList.find((q) => q.country === cid);
+    const ll = placeLL(cid);
+    page = null;
+    clearTimeout(stillTimer);
+    if (tocObserver) { tocObserver.disconnect(); tocObserver = null; }
+    const back0 = state.before || homeTransform();
+    const surface = () => {
+      diving = false;
+      state.before = null;
+      app.inert = false;
+      app.classList.remove('is-soft');
+      moveTo(back0, opts.animate ? 1600 : 0);
+      if (opts.animate && !reduce.matches) later(() => app.classList.remove('is-diving'), 450);
+      else app.classList.remove('is-diving');
+      if (opts.animate && !reduce.matches) {
+        // the ring loosens and lets go
+        const ring = penRing(ringD(14), ll);
+        marks.push(ring);
+        placePen();
+        diveTween = tween(1400, (e) => { if (ring.isConnected) { ring.dataset.s = (1 + 5 * e).toFixed(3); ring.style.setProperty('--o', (1 - e).toFixed(3)); placePen(); } }, () => { ring.remove(); marks = marks.filter((m) => m !== ring); });
+      }
+      queueDraw();
+      if (!flightsOpen) globe.start();
+      if (pin && opts.focus !== false) pin.el.querySelector('.book').focus({ preventScroll: true });
+    };
+    const done = () => {
+      if (gen !== pageGen) return;
+      leaf.hidden = true;
+      leaf.classList.remove('is-open', 'is-captioned', 'is-dissolving', 'is-leaving', 'is-past', 'is-still', 'is-scrolled');
+      leafContent.textContent = '';
+      clearDissolve();
+    };
+    const atCover = !leaf.classList.contains('is-plain') && leafScroll.scrollTop < 80;
+    if (opts.animate && !reduce.matches && atCover) {
+      // the same dissolve, reversed and a little quicker, then the camera draws back out
+      leaf.classList.remove('is-captioned');
+      later(() => {
+        if (gen !== pageGen) return;
+        leaf.classList.remove('is-open');
+        leaf.classList.add('is-dissolving');
+        app.classList.remove('is-soft');
+        revealTween = tween(1250, (e) => setDissolve(1 - e), () => { done(); surface(); }, easeInOut);
+      }, 140);
+    } else if (opts.animate) {
+      leaf.classList.add('is-leaving');
+      leaf.animate([{ opacity: 1 }, { opacity: 0 }], { duration: reduce.matches ? 200 : 420, easing: 'ease-in-out', fill: 'forwards' }).onfinish = () => { done(); surface(); };
+    } else {
+      done();
+      surface();
+    }
+  }
+
+  /* ------------------------------------------------------------ a photograph, larger, with how it was made */
+
+  let photo = null, photoList = indexOrder, photoFrom = 'index';
+  const vImg = document.createElement('img');
+  $('.viewer__frame').appendChild(vImg);
+  function slideFacts(s) {
+    const set = [s.focal, s.aperture, s.shutter, s.iso && `ISO ${s.iso}`].filter(Boolean);
+    let h = '';
+    if (s.camera) h += `<dt>${esc(t('camera'))}</dt><dd>${esc(s.camera)}</dd>`;
+    if (s.lens) h += `<dt>${esc(t('lens'))}</dt><dd>${esc(s.lens)}</dd>`;
+    if (set.length) h += `<dt>${esc(t('settings'))}</dt><dd class="facts__set">${set.map((v) => `<span>${esc(v)}</span>`).join('')}</dd>`;
+    if (s.best) h += `<dt>${esc(t('best'))}</dt><dd>${esc(L(s.best))}</dd>`;
+    return h ? `<dl class="facts" aria-label="${esc(t('made'))}">${h}</dl>` : '';
+  }
+  function renderViewer() {
+    const s = S.slides[photo];
+    vImg.classList.add('is-loading');
+    vImg.onload = () => vImg.classList.remove('is-loading');
+    vImg.width = s.w; vImg.height = s.h;
+    vImg.sizes = '(max-width: 48rem) 100vw, 72vw';
+    vImg.srcset = srcset(s);
+    vImg.src = imgSrc(s, 1280);
+    vImg.alt = L(s.alt);
+    if (vImg.complete) vImg.classList.remove('is-loading');
+    const i = photoList.indexOf(photo);
+    const b = bookByCountry[s.country];
+    const seeAll = b && page !== b.view ? `<button type="button" class="word viewer__go" data-view="${b.view}" data-cover="${photo}">${esc(L(b.title))}: ${esc(t('seePhotos'))}</button>` : '';
+    $('#viewer-cap').innerHTML =
+      `<h2 id="viewer-title">${esc(L(s.place))}</h2>` +
+      `<p class="meta">${esc(L(s.where))}</p>` +
+      `<p class="viewer__ll">${esc(coords(s.ll))}</p>` +
+      (s.note ? `<p class="viewer__note">${esc(L(s.note))}</p>` : '') +
+      slideFacts(s) + seeAll;
+    $('#viewer-count').textContent = photoList.length > 1 ? T[lang].ofN(i + 1, photoList.length) : '';
+    $('#viewer-prev').hidden = $('#viewer-next').hidden = photoList.length < 2;
+  }
+  function showViewer(id, list, from) {
+    photo = id;
+    photoList = list && list.includes(id) ? list : indexOrder;
+    photoFrom = from || 'index';
+    renderViewer();
+    const wasHidden = viewer.hidden;
+    viewer.hidden = false;
+    app.inert = true;
+    leaf.inert = true;
+    if (wasHidden) requestAnimationFrame(() => $('#viewer-close').focus({ preventScroll: true }));
+  }
+  function hideViewer() {
+    if (!photo) return;
+    const id = photo;
+    photo = null;
+    viewer.hidden = true;
+    leaf.inert = false;
+    app.inert = !!page;
+    if (page) {
+      const b = leafContent.querySelector(`[data-slide="${id}"]`);
+      (b || $('#leaf-back')).focus({ preventScroll: false });
+    } else {
+      setActive({ slide: id, from: 'viewer' });
+      const ll = S.slides[id].ll;
+      if (!inView(ll, 0.12) || pxPerDeg() < 36) centerOn(ll, Math.max(state.z.k, 40 / state.S0), 1000);
+      mapEl.focus({ preventScroll: true });
+    }
+  }
+  function step(d) {
+    const i = photoList.indexOf(photo);
+    const n = photoList.length;
+    photo = photoList[(i + d + n) % n];
+    renderViewer();
+    try { history.replaceState({ ...(history.state || {}), wc: true, photo, page }, '', `#photo-${photo}`); } catch (e) { /* fine */ }
+  }
+  $('#viewer-prev').addEventListener('click', () => step(-1));
+  $('#viewer-next').addEventListener('click', () => step(1));
+  $('#viewer-close').addEventListener('click', () => back());
+  $('#viewer-cap').addEventListener('click', (e) => {
+    const g = e.target.closest('.viewer__go');
+    if (!g) return;
+    const view = g.dataset.view, cov = g.dataset.cover;
+    hideViewer();
+    clearActive();
+    try { history.replaceState({ wc: true, page: view, cover: cov }, '', `#${view}`); } catch (err) { /* fine */ }
+    if (page) closePage({ animate: false, focus: false });
+    openPage(view, { animate: true, cover: cov });
+  });
+  let swipe = null;
+  viewer.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse') swipe = { x: e.clientX, y: e.clientY }; });
+  viewer.addEventListener('pointerup', (e) => {
+    if (!swipe) return;
+    const dx = e.clientX - swipe.x, dy = e.clientY - swipe.y;
+    swipe = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.4) step(dx < 0 ? 1 : -1);
+  });
+
+  /* ------------------------------------------------------------ history: every page and photograph has an address */
+
+  function parse(hash) {
+    const h = decodeURIComponent((hash || '').replace(/^#/, ''));
+    const st = history.state || {};
+    if (h === 'flights') return { page: null, photo: null, flights: true };
+    if (h.startsWith('photo-') && S.slides[h.slice(6)]) return { page: validView(st.page) ? st.page : null, photo: h.slice(6), cover: st.cover };
+    if (validView(h)) return { page: h, photo: null, cover: st.cover };
+    return { page: null, photo: null };
+  }
+  function apply(want, animate) {
+    if (want.photo !== photo && photo) hideViewer();
+    if (!want.flights && flightsOpen) closeFlights({ animate: animate && !want.page });
+    if (want.page !== page) {
+      if (page) closePage({ animate: animate && !want.page && !want.flights, focus: !want.page && !want.flights });
+      if (want.page) openPage(want.page, { animate, cover: want.cover });
+    }
+    if (want.flights && !flightsOpen) openFlights({ animate });
+    if (want.photo && want.photo !== photo) showViewer(want.photo, photoList, photoFrom);
+  }
+  function go(view, coverId) {
+    if (page === view || diving) return;
+    if (opening && !opening.done) opening.skip();
+    try { history.pushState({ wc: true, page: view, cover: coverId || null }, '', `#${view}`); } catch (e) { /* fine */ }
+    if (page) closePage({ animate: false, focus: false });
+    openPage(view, { animate: true, cover: coverId });
+  }
+  function goFlights() {
+    if (flightsOpen || diving) return;
+    if (opening && !opening.done) opening.skip();
+    try { history.pushState({ wc: true, flights: true }, '', '#flights'); } catch (e) { /* fine */ }
+    openFlights({ animate: true });
+  }
+  function openViewer(id, list, opts = {}) {
+    try { history.pushState({ wc: true, page, cover: pageCover, photo: id }, '', `#photo-${id}`); } catch (e) { /* fine */ }
+    showViewer(id, list, opts.from);
+  }
+  function back() {
+    if (history.state && history.state.wc) history.back();
+    else {
+      try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* fine */ }
+      apply({ page: null, photo: null }, true);
+    }
+  }
+  window.addEventListener('popstate', () => apply(parse(location.hash), true));
+  $('#leaf-back').addEventListener('click', () => back());
+  $('#cover-back').addEventListener('click', () => back());
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (photo || page || flightsOpen) { e.preventDefault(); back(); }
+    else if (indexEl.classList.contains('is-open')) { e.preventDefault(); setIndex(false); }
+  });
+  viewer.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') { e.preventDefault(); step(1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); step(-1); }
+  });
+
+  /* ------------------------------------------------------------ language */
+
+  function applyWords() {
+    html.lang = lang === 'zh' ? 'zh-Hant' : 'en';
+    $$('[data-t]').forEach((el) => { const v = t(el.dataset.t); if (typeof v === 'string') el.textContent = v; });
+    $$('[data-t-aria]').forEach((el) => { const v = t(el.dataset.tAria); if (typeof v === 'string') el.setAttribute('aria-label', v); });
+    $$('.lang').forEach((g) => g.setAttribute('aria-label', T[lang].lang));
+    $$('.lang button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+    $('#ig').setAttribute('aria-label', `${t('follow')}: tuan_1127`);
+    $('#globe').setAttribute('aria-label', T[lang].globeLabel);
+  }
+  function setLang(next) {
+    if (next === lang) return;
+    lang = next;
+    try { localStorage.setItem('tlap-lang', lang); } catch (e) { /* fine */ }
+    applyWords();
+    clearActive();
+    renderPins();
+    renderIndex();
+    if (page) {
+      const top = leafScroll.scrollTop;
+      renderLeaf(page);
+      leafScroll.scrollTop = top;
+    }
+    if (flightsOpen) { const n = jOn; renderJourneys(); focusJourney(n, true); }
+    if (photo) renderViewer();
+    state.settle = 4;
+    queueDraw();
+  }
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('.lang button');
+    if (b) setLang(b.dataset.lang);
+  });
+
+  /* ------------------------------------------------------------ the paper and the swatches */
+
+  let fontsReady = false;
+  function makeMaterials() {
+    const tooth = WC.toothTile(384);
+    tooth.toBlob((b) => { if (b) html.style.setProperty('--tooth', `url(${URL.createObjectURL(b)})`); });
+    // brush dabs for the key and the guide's rules, painted with the map's own colours
+    const dab = (rgb, w, h, seed, body = 0.42) => {
+      // a single brush stroke: tapered at both ends, its middle wandering, pooled darker at its edge, dry-brush streaks along it
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      const g = c.getContext('2d');
+      const { NH, NL, NM } = WC.noise();
+      const id = g.createImageData(w, h);
+      for (let x = 0; x < w; x++) {
+        const nx = x / (w - 1);
+        const taper = Math.pow(Math.sin(Math.PI * Math.min(1, Math.max(0, nx * 1.04 - 0.02))), 0.45);
+        const wob = NM[((seed * 7) & 511) * 512 + ((x * 3) & 511)] - 0.5;
+        const th = 0.5 * (0.22 + 0.78 * taper) * (0.92 + 0.3 * (NL[((seed * 3) & 511) * 512 + ((x >> 1) & 511)] - 0.5));
+        const cy = 0.5 + wob * 0.18;
+        for (let y = 0; y < h; y++) {
+          const d = Math.abs(y / (h - 1) - cy) / Math.max(0.02, th);
+          const edgeN = (NH[((y + seed) & 511) * 512 + (x & 511)] - 0.5) * 0.12;
+          let a = 0;
+          if (d < 1 + edgeN) {
+            const rim = Math.exp(-Math.pow((d - 0.9) / 0.1, 2)) * 0.32;
+            const streak = 0.72 + 0.28 * NL[(((y * 6) + seed * 11) & 511) * 512 + ((x >> 3) & 511)];
+            const blot = 0.8 + 0.4 * NL[(((y + seed) >> 1) & 511) * 512 + ((x >> 1) & 511)];
+            const gran = 0.82 + 0.36 * NH[((y * 2 + seed) & 511) * 512 + ((x * 2) & 511)];
+            a = (body * blot * streak + rim) * gran;
+            const soft = 1 + edgeN - d;
+            if (soft < 0.06) a *= soft / 0.06;
+          }
+          const i = (y * w + x) * 4;
+          id.data[i] = rgb[0]; id.data[i + 1] = rgb[1]; id.data[i + 2] = rgb[2]; id.data[i + 3] = Math.max(0, Math.min(255, a * 255));
+        }
+      }
+      g.putImageData(id, 0, 0);
+      return c;
+    };
+    const set = (name, c) => c.toBlob((b) => { if (b) html.style.setProperty(name, `url(${URL.createObjectURL(b)})`); });
+    set('--dab-warm', dab([234, 136, 112], 120, 36, 3, 0.55));
+    set('--dab-sea', dab([150, 196, 222], 720, 150, 9, 0.34));
+    set('--stroke', dab([140, 190, 220], 520, 22, 21, 0.5));
+    set('--dab-ochre', dab([226, 196, 128], 360, 40, 33, 0.42));
+  }
+
+  /* ------------------------------------------------------------ the globe in the corner, and the Flights view it opens */
+
+  const globeBtn = $('#globe');
+  const globeCanvas = $('#globe-canvas');
+  const globe = new WC.Globe(globeCanvas, { land: null, travel: null, flights, reduce: () => reduce.matches });
+  globeBtn.addEventListener('click', () => goFlights());
+  function sizeGlobe() { globe.resize(narrow.matches ? 92 : 184); }
+  let opening = null;
+
+  const fCanvas = $('#flights-canvas');
+  const journeysEl = $('#journeys');
+  const big = new WC.BigGlobe(fCanvas, {
+    land: null, travel: null, borders: null, flights, reduce: () => reduce.matches,
+    letter: (text) => sprite(`city-${text}`, text, { size: 12.5, weight: 500, colour: 'rgb(38, 34, 33)', halo: 3.4 }),
+  });
+  let flightsOpen = false, jOn = -1, jLeave = 0;
+  const stopName = (s) => (s.cid ? L(bookByCountry[s.cid].title) : cityName(s.city));
+  const routeLine = (j) => {
+    const names = [];
+    for (const s of j.stops) { if (!s.city) continue; const nm = cityName(s.city); if (!names.includes(nm)) names.push(nm); }
+    return names.join(lang === 'zh' ? '、' : ', ');
+  };
+  function renderJourneys() {
+    $('#flights-lede').textContent = T[lang].flightsLede(journeys.length);
+    journeysEl.innerHTML = journeys.map((j, n) => {
+      const places = (j.countries || []).filter((cid) => bookByCountry[cid]).map((cid) => {
+        const b = bookByCountry[cid];
+        const s = b.photo ? S.slides[b.photo] : null;
+        const thumb = s
+          ? `<img src="${imgSrc(s, 640)}" alt="" loading="lazy" decoding="async" width="${s.w}" height="${s.h}">`
+          : '<span class="jplace__blank" aria-hidden="true"></span>';
+        return `<li><button type="button" class="jplace" data-view="${b.view}">${thumb}<span class="jplace__name">${esc(L(b.title))}</span></button></li>`;
+      }).join('');
+      const route = routeLine(j);
+      return `<li class="journey" data-j="${n}">` +
+        `<h3 class="journey__head"><button type="button" class="journey__date" data-j="${n}" aria-label="${esc(T[lang].journeyAria(L(j.date)))}">${esc(L(j.date))}</button></h3>` +
+        (route ? `<p class="journey__route">${esc(route)}</p>` : '') +
+        `<ul class="journey__places">${places}</ul></li>`;
+    }).join('');
+  }
+  function focusJourney(n, force) {
+    clearTimeout(jLeave);
+    if (n === jOn && !force) return;
+    jOn = n;
+    $$('.journey', journeysEl).forEach((el) => el.classList.toggle('is-on', +el.dataset.j === n));
+    flightsEl.classList.toggle('is-following', n >= 0);
+    if (n < 0) { big.focus(null); return; }
+    const j = journeys[n];
+    big.focus({
+      flights: j.idx,
+      dests: j.stops.map((s) => ({ ll: s.ll, name: stopName(s), via: s.via, dep: s.dep })),
+      ends: j.legs.flatMap((q) => [q.from, q.to]),
+    });
+  }
+  journeysEl.addEventListener('pointerover', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    const li = e.target.closest('.journey');
+    if (li) focusJourney(+li.dataset.j);
+  });
+  journeysEl.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') jLeave = setTimeout(() => focusJourney(-1), 260); });
+  journeysEl.addEventListener('focusin', (e) => { const li = e.target.closest('.journey'); if (li) focusJourney(+li.dataset.j); });
+  journeysEl.addEventListener('focusout', (e) => { if (!journeysEl.contains(e.relatedTarget)) jLeave = setTimeout(() => focusJourney(-1), 260); });
+  journeysEl.addEventListener('click', (e) => {
+    const pl = e.target.closest('.jplace');
+    if (pl) {
+      // a place in a journey: straight into it on the map
+      const view = pl.dataset.view;
+      closeFlights({ animate: false, focus: false });
+      try { history.replaceState({ wc: true, page: view, cover: null }, '', `#${view}`); } catch (err) { /* fine */ }
+      openPage(view, { animate: true });
+      return;
+    }
+    const d = e.target.closest('.journey__date');
+    if (d) focusJourney(+d.dataset.j);
+  });
+  $('#flights-back').addEventListener('click', () => back());
+
+  function sizeBig() {
+    const small = narrow.matches;
+    const s = small ? Math.min(innerWidth - 20, innerHeight * 0.56) : Math.min(innerWidth * 0.5 - 56, innerHeight - 150);
+    const px = Math.max(220, Math.round(s));
+    flightsEl.style.setProperty('--gs', `${px}px`);
+    big.resize(px);
+  }
+  // the small globe's sphere and the large one's, on the screen: centre and radius
+  const sphereOf = (el, cy, rf) => { const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height * cy, r: r.width * rf }; };
+  const flyFrom = (a, b) => `translate(${(a.x - b.x).toFixed(1)}px, ${(a.y - b.y).toFixed(1)}px) scale(${(a.r / b.r).toFixed(4)})`;
+
+  function openFlights(opts = {}) {
+    flightsOpen = true;
+    renderJourneys();
+    jOn = -1;
+    flightsEl.classList.remove('is-following', 'is-closing');
+    flightsEl.hidden = false;
+    flightsEl.scrollTop = 0;
+    app.inert = true;
+    setIndex(false, false);
+    clearActive();
+    globe.stop();
+    big.o.land = state.land110;
+    big.o.travel = globe.o.travel;
+    big.o.borders = state.bordersGeo110;
+    big.rot = [globe.lon, -18]; big.k = 1; big.vel = [0, 0]; big.anim = null; big.focus(null);
+    sizeBig();
+    big.start();
+    if (opts.animate && !reduce.matches) {
+      // the globe lifts out of its corner and grows onto the left-hand page
+      const a = sphereOf(globeCanvas, 0.46, 0.43), b = sphereOf(fCanvas, 0.47, 0.4);
+      app.classList.add('is-flying');
+      flightsEl.classList.add('is-arriving');
+      fCanvas.animate([{ transform: flyFrom(a, b) }, { transform: 'none' }], { duration: 950, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' });
+      flightsEl.getBoundingClientRect();
+      requestAnimationFrame(() => requestAnimationFrame(() => flightsEl.classList.remove('is-arriving')));
+    } else {
+      app.classList.add('is-flying');
+      if (opts.animate) flightsEl.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 250, easing: 'ease-out' });
+    }
+    live.textContent = t('flightsTitle');
+    requestAnimationFrame(() => $('#flights-back').focus({ preventScroll: true }));
+  }
+  function closeFlights(opts = {}) {
+    if (!flightsOpen) return;
+    flightsOpen = false;
+    clearTimeout(jLeave);
+    jOn = -1;
+    big.focus(null);
+    globe.lon = big.rot[0];
+    const finish = () => {
+      flightsEl.hidden = true;
+      flightsEl.classList.remove('is-closing', 'is-following');
+      fCanvas.getAnimations().forEach((x) => x.cancel());
+      big.stop();
+      app.classList.remove('is-flying');
+      if (!page) { app.inert = false; globe.start(); }
+    };
+    if (opts.animate && !reduce.matches && flightsEl.scrollTop < 40) {
+      // and settles back into its corner
+      const a = sphereOf(globeCanvas, 0.46, 0.43);
+      const b = sphereOf(fCanvas, 0.47, 0.4);
+      big.anim = { t0: performance.now(), dur: 700, from: big.rot.slice(), to: [big.rot[0], -18], k0: big.k, k1: 1 };
+      flightsEl.classList.add('is-closing');
+      const an = fCanvas.animate([{ transform: 'none' }, { transform: flyFrom(a, b) }], { duration: 760, easing: 'cubic-bezier(0.7, 0, 0.84, 0)', fill: 'forwards' });
+      an.onfinish = finish;
+    } else if (opts.animate) {
+      flightsEl.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 220, easing: 'ease-in', fill: 'forwards' }).onfinish = () => { flightsEl.getAnimations().forEach((x) => x.cancel()); finish(); };
+    } else finish();
+    if (!page) app.inert = false;
+    if (!page && opts.focus !== false) globeBtn.focus({ preventScroll: true });
+  }
+
+  /* ------------------------------------------------------------ start */
+
+  function featsFor(w) {
+    const geoms = w.objects.countries.geometries;
+    const out = {};
+    for (const [cid, iso] of Object.entries(ISO)) {
+      const g = geoms.find((x) => String(x.id).padStart(3, '0') === iso);
+      if (!g) continue;
+      let f = topojson.feature(w, g);
+      // France is marked where he went: mainland and Corsica, not the overseas departments
+      if (cid === 'france' && f.geometry.type === 'MultiPolygon') {
+        f = { ...f, geometry: { type: 'MultiPolygon', coordinates: f.geometry.coordinates.filter((poly) => { const [lon, lat] = d3.geoCentroid({ type: 'Polygon', coordinates: poly }); return lon > -6 && lon < 11 && lat > 40 && lat < 52; }) } };
+      }
+      out[cid] = f;
+    }
+    return out;
+  }
+
+  async function loadWorld() {
+    const w110 = await fetch('../vendor/countries-110m.json').then((r) => r.json());
+    state.w110 = w110;
+    state.land110 = topojson.feature(w110, w110.objects.land);
+    state.coast110 = WC.pressure(topojson.mesh(w110, w110.objects.land)).map(pathDeg);
+    state.bordersGeo110 = topojson.mesh(w110, w110.objects.countries, (a, b) => a !== b);
+    state.borders110 = pathDeg(state.bordersGeo110);
+    state.landFill110 = pathDeg(state.land110);
+    const f110 = featsFor(w110);
+    globe.o.land = state.land110;
+    globe.o.travel = Object.values(f110);
+    big.o.land = state.land110; big.o.travel = globe.o.travel; big.o.borders = state.bordersGeo110;
+    sizeGlobe();
+    if (flightsOpen) big.kick();
+    queueDraw();
+    const relief = new Image();
+    relief.src = '../vendor/relief/SR_50M-4096.jpg';
+    const reliefReady = relief.decode().then(() => { state.relief = relief; }).catch(() => {});
+    const w50 = await fetch('../vendor/countries-50m.json').then((r) => r.json());
+    state.w50 = w50;
+    state.land50 = topojson.feature(w50, w50.objects.land);
+    state.coast50 = WC.pressure(topojson.mesh(w50, w50.objects.land)).map(pathDeg);
+    state.borders50 = pathDeg(topojson.mesh(w50, w50.objects.countries, (a, b) => a !== b));
+    state.feats = featsFor(w50);
+    state.travel = Object.values(state.feats);
+    const isos = new Set(Object.values(ISO));
+    const id3 = (g) => String(g.id).padStart(3, '0');
+    state.seams = topojson.mesh(w50, w50.objects.countries, (a, b) => a !== b && isos.has(id3(a)) && isos.has(id3(b)));
+    queueDraw();
+    await reliefReady;
+    paintBase();
+  }
+
+  function start() {
+    applyWords();
+    renderIndex();
+    setIndex(false, false);
+    sizeMap();
+    renderPins();
+    makeMaterials();
+    moveTo(homeTransform(), 0);
+    state.settle = 6;
+    queueDraw();
+    if (document.fonts && document.fonts.load) {
+      Promise.all([document.fonts.load('italic 400 15px "Alegreya Sans"'), document.fonts.load('500 12px "Alegreya Sans"'), document.fonts.load('700 12px "Alegreya Sans"'), document.fonts.load('500 12px "Noto Sans TC"', '台灣')])
+        .then(() => { fontsReady = true; sprites.clear(); measurePins(); state.settle = 4; queueDraw(); })
+        .catch(() => { fontsReady = true; queueDraw(); });
+    } else fontsReady = true;
+
+    const want = parse(location.hash);
+    let first = false;
+    try { first = !sessionStorage.getItem('wc-opened'); sessionStorage.setItem('wc-opened', '1'); } catch (e) { first = false; }
+    const playOpening = first && !reduce.matches && !want.page && !want.photo && !want.flights;
+    if (playOpening) app.classList.add('is-opening');
+
+    loadWorld().then(() => {
+      if (playOpening) {
+        const oc = $('#opening');
+        oc.hidden = false;
+        opening = WC.opening({
+          canvas: oc, land: state.land110, travel: globe.o.travel, flights, LON0, LAT_N, LAT_S,
+          target: () => {
+            const z = state.z;
+            return { scale: (z.k * state.S0 * 180) / Math.PI, translate: [z.x + (z.k * state.W) / 2, z.y + (z.k * state.H) / 2] };
+          },
+          onUnroll: () => {},
+          onDone: () => { app.classList.remove('is-opening'); app.classList.add('is-arrived'); if (!page && !flightsOpen) globe.start(); },
+        });
+        const skip = () => { if (opening && !opening.done) opening.skip(); };
+        ['pointerdown', 'wheel', 'keydown'].forEach((ev) => window.addEventListener(ev, skip, { once: true, passive: true }));
+      } else if (!page && !flightsOpen) {
+        globe.start();
+      }
+    }).catch(() => { app.classList.remove('is-opening'); });
+
+    // a page or photograph named in the address opens directly
+    if (want.page || want.photo || want.flights) {
+      try { history.replaceState({ wc: false, page: want.page, photo: want.photo, flights: !!want.flights }, '', location.href); } catch (e) { /* fine */ }
+      apply(want, false);
+    }
+    let rz = 0;
+    window.addEventListener('resize', () => {
+      cancelAnimationFrame(rz);
+      rz = requestAnimationFrame(() => {
+        const c = invertLL(state.W / 2, state.H / 2);
+        const k = state.z.k;
+        sizeMap();
+        sizeGlobe();
+        if (flightsOpen) sizeBig();
+        const b = baseXY([c[1], c[0]]);
+        state.z = d3.zoomIdentity.translate(state.W / 2 - b[0] * k, state.H / 2 - b[1] * k).scale(k);
+        sel.call(zoom.transform, state.z);
+        state.settle = 4;
+        queueDraw();
+      });
+    });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) { globe.stop(); big.stop(); } else if (flightsOpen) big.start(); else if (!page) globe.start(); });
+    updateZoomButtons();
+  }
+  WC.state = state; // for inspection in the console
+  start();
+})();
