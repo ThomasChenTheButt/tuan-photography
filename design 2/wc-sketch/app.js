@@ -111,7 +111,8 @@
   const coverFor = (cid, want) => {
     if (want && S.slides[want] && S.slides[want].country === cid) return want;
     const b = bookByCountry[cid];
-    return b.photo || countries[cid].photos[0] || null;
+    // the arrival opens on the wide photograph; the book wears the upright one
+    return b.cover || b.photo || countries[cid].photos[0] || null;
   };
   const coords = ([lat, lng]) => `${Math.abs(lat).toFixed(3)}°${lat >= 0 ? 'N' : 'S'} · ${Math.abs(lng).toFixed(3)}°${lng >= 0 ? 'E' : 'W'}`;
   const nameParts = (cid) => {

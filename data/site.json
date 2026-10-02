@@ -3868,11 +3868,13 @@
   "shelf": [
     {
       "guide": "barcelona",
-      "photo": "casa-batllo"
+      "photo": "casa-batllo",
+      "cover": "sagrada-plaza"
     },
     {
       "country": "uk",
       "photo": "st-pauls",
+      "cover": "westminster-bridge",
       "title": {
         "en": "London",
         "zh": "倫敦"
@@ -3880,46 +3882,56 @@
     },
     {
       "country": "france",
-      "photo": "calanque-tall"
+      "photo": "calanque-tall",
+      "cover": "calanque"
     },
     {
       "country": "germany",
-      "photo": "neuschwanstein"
+      "photo": "neuschwanstein",
+      "cover": "neuschwanstein"
     },
     {
       "country": "switzerland",
-      "photo": "matterhorn-flag"
+      "photo": "zermatt-dusk",
+      "cover": "matterhorn-lake"
     },
     {
       "country": "taiwan",
-      "photo": "taipei-101"
+      "photo": "taipei-101",
+      "cover": "taipei-night"
     },
     {
       "country": "japan",
-      "photo": "fushimi-inari"
+      "photo": "fushimi-inari",
+      "cover": "fuji-lake"
     },
     {
       "country": "south-korea"
     },
     {
       "country": "hong-kong",
-      "photo": "peak-night"
+      "photo": "temple-street",
+      "cover": "peak-night"
     },
     {
       "country": "china",
-      "photo": "shanghai-towers"
+      "photo": "shanghai-towers",
+      "cover": "lujiazui"
     },
     {
       "country": "singapore",
-      "photo": "jewel"
+      "photo": "jewel",
+      "cover": "marina-bay"
     },
     {
       "country": "vietnam",
-      "photo": "sapa-terraces"
+      "photo": "sapa-terraces",
+      "cover": "sapa-valley"
     },
     {
       "country": "dubai",
       "photo": "burj-khalifa",
+      "cover": "dubai-above",
       "title": {
         "en": "Dubai",
         "zh": "杜拜"
@@ -3927,11 +3939,13 @@
     },
     {
       "country": "australia",
-      "photo": "gold-coast"
+      "photo": "gold-coast",
+      "cover": "gold-coast"
     },
     {
       "country": "new-zealand",
-      "photo": "aoraki"
+      "photo": "tekapo-stars",
+      "cover": "aoraki"
     },
     {
       "country": "usa"

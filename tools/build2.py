@@ -90,13 +90,15 @@ def main():
         if "guide" in x:
             g = next(y for y in D["guides"] if y["id"] == x["guide"])
             books.append({"id": g["id"], "country": g["country"], "guide": g["id"], "title": g["title"],
-                          "photo": x.get("photo") or g["lead"], "band": "bandGuide", "status": "bookOpen",
+                          "photo": x.get("photo") or g["lead"], "cover": x.get("cover") or g["lead"],
+                          "band": "bandGuide", "status": "bookOpen",
                           "tone": TONES[i % 3]})
         else:
             c = b.COUNTRIES[x["country"]]
             photo = x.get("photo") or next((s["id"] for s in D["slides"] if s["country"] == c["id"]), None)
             books.append({"id": c["id"], "country": c["id"], "guide": None,
                           "title": x.get("title") or {"en": c["en"], "zh": c["zh"]}, "photo": photo,
+                          "cover": x.get("cover") or photo,
                           "band": "bandPhotos" if photo else "bandNone", "status": "bookNot",
                           "tone": TONES[i % 3]})
     i18n = {
