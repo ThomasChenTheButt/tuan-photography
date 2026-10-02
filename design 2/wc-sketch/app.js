@@ -225,7 +225,7 @@
     w110: null, w50: null,
     land110: null, land50: null, travel: [], seams: null,
     coast110: null, coast50: null, borders110: null, borders50: null, landFill110: null,
-    lakes: null, lakesPath: null, lakesBigPath: null,
+    lakes: null, lakesPath: null, lakesBigPath: null, lakesX: null, lakesAll: null, lakesXPath: null,
     labels: new Map(), photoPts: [],
     feats: {},
     relief: null, reliefFine: null,
@@ -264,6 +264,8 @@
     return need <= R0 ? 0 : Math.ceil(2 * Math.log2(need / R0));
   };
   const resOf = (b) => R0 * Math.pow(2, b / 2);
+  // close enough for the smaller lakes (about where the photographs' own points appear)
+  const LAKES_R = 45;
   // the view in world degrees (u east of 10°E, v = -latitude)
   function viewRect(z) {
     const p = pxPerDeg(z);
@@ -276,7 +278,7 @@
     land: () => state.land50,
     travel: () => state.travel,
     seams: () => state.seams,
-    lakes: () => state.lakes,
+    lakes: (r) => (r >= LAKES_R && state.lakesAll ? state.lakesAll : state.lakes),
     relief: (r) => (r >= 22 && state.reliefFine ? state.reliefFine : state.relief),
   };
 
@@ -320,6 +322,7 @@
     if (job.w * job.h > 6e6) return; // a sliver of world at extreme zoom: the coarser painting serves
     state.job = job;
     if (r >= 22 && !state.reliefFine && !narrow.matches) loadFineRelief();
+    if (r >= LAKES_R && !state.lakesX) moreLakes();
     WC.paint(job, paintEnv).then((c) => {
       if (state.job === job) state.job = null;
       featherEdges(c);
@@ -354,6 +357,37 @@
   const bitmapOf = (src) => (window.createImageBitmap
     ? fetch(src).then((r) => r.blob()).then((b) => createImageBitmap(b)).catch(() => null)
     : Promise.resolve(null));
+  // the smaller lakes the 50m drawing lacks (Zurich, Lucerne, Thun, Brienz and their like), from
+  // Natural Earth 10m: fetched only when someone comes close, on the map or the Flights globe.
+  // The file keeps whole thousandths of a degree: each ring's first point, then the steps between
+  let lakesXP = null;
+  function moreLakes() {
+    if (!lakesXP) {
+      const dec = (r) => {
+        const o = [];
+        let x = 0, y = 0;
+        for (let i = 0; i < r.length; i += 2) { x += r[i]; y += r[i + 1]; o.push([x / 1000, y / 1000]); }
+        o.push(o[0]);
+        return o;
+      };
+      lakesXP = fetch('map/lakes-10m-extra.json').then((r) => r.json()).then((d) => {
+        const fc = {
+          type: 'FeatureCollection',
+          features: d.lakes.map(([name, polys]) => ({ type: 'Feature', properties: { name }, geometry: { type: 'MultiPolygon', coordinates: polys.map((p) => p.map(dec)) } })),
+        };
+        state.lakesX = fc;
+        state.lakesAll = { type: 'FeatureCollection', features: [...(state.lakes ? state.lakes.features : []), ...fc.features] };
+        state.lakesXPath = pathDeg(fc);
+        // the close paintings made without them are made again
+        if (state.job && state.job.r >= LAKES_R) { state.job.cancelled = true; state.job = null; }
+        state.regions = state.regions.filter((t) => t.r < LAKES_R);
+        ensureTextures(state.z);
+        queueDraw();
+        return fc;
+      }).catch(() => { lakesXP = null; return null; });
+    }
+    return lakesXP;
+  }
   function loadFineRelief() {
     if (state.reliefFineLoading) return;
     state.reliefFineLoading = true;
@@ -481,7 +515,10 @@
       coast.forEach((path, i) => { ctx.lineWidth = (w * [0.55, 0.78, 1, 1.26, 1.6][i]) / p; ctx.stroke(path); });
       // the lakes' shores, a little lighter: the great lakes from afar, all of them closer in
       const lakes = fine ? state.lakesPath : state.lakesBigPath;
-      if (lakes && state.base) { ctx.strokeStyle = INK(0.82); ctx.lineWidth = (w * 0.82) / p; ctx.stroke(lakes); }
+      if (lakes && state.base) {
+        ctx.strokeStyle = INK(0.82); ctx.lineWidth = (w * 0.82) / p; ctx.stroke(lakes);
+        if (state.lakesXPath && resOf(bandOf(p)) >= LAKES_R) ctx.stroke(state.lakesXPath);
+      }
     }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.restore();
@@ -1391,8 +1428,11 @@
     const book = viewBook(view);
     const ll = bookLL(book);
     page = view;
-    gal.list = photosOf(book);
-    gal.i = Math.max(0, gal.list.indexOf(coverFor(book, opts.cover)));
+    // the cover's gallery counts from the photograph it opens on (1 / N), then walks on through the
+    // rest of the place's photographs in their usual order; the page below keeps that order
+    const all = photosOf(book), first = coverFor(book, opts.cover);
+    gal.list = all.includes(first) ? [first, ...all.filter((id) => id !== first)] : all;
+    gal.i = 0;
     if (gal.anim) { gal.anim.cancel(); gal.anim = null; }
     setDx(0);
     renderLeaf(view);
@@ -2011,6 +2051,7 @@
       big.o.lakes = lk;
       if (flightsOpen) big.kick();
     }).catch(() => {});
+    big.o.moreLakes = moreLakes;
     const w50 = await fetch('../vendor/countries-50m.json').then((r) => r.json());
     state.w50 = w50;
     state.land50 = topojson.feature(w50, w50.objects.land);

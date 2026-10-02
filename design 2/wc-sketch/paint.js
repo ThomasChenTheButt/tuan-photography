@@ -228,7 +228,7 @@
   /*
     job: { r: texture px per degree, u0, v0: world origin of the texture in degrees (u east of the
            map's centre meridian, v = -latitude), w, h: size in px }
-    env: { LON0, LAT_N, LAT_S, land() -> GeoJSON, travel() -> [GeoJSON], seams() -> mesh, lakes() -> GeoJSON|null,
+    env: { LON0, LAT_N, LAT_S, land() -> GeoJSON, travel() -> [GeoJSON], seams() -> mesh, lakes(r) -> GeoJSON|null,
            relief(r) -> image|null }
     Resolves to a canvas; rejects with 'cancelled' when job.cancelled turns true.
     The washes are laid first, each a few pixels off the line it belongs to; the pen's hatching
@@ -248,7 +248,7 @@
     const landPath = new Path2D();
     d3.geoPath(proj, landPath)(env.land(r));
     // the lakes are cut out of the land (filled even-odd), so the sea's wash finds their shores too
-    const lakes = env.lakes ? env.lakes() : null;
+    const lakes = env.lakes ? env.lakes(r) : null;
     const lakePath = new Path2D();
     if (lakes) { d3.geoPath(proj, lakePath)(lakes); landPath.addPath(lakePath); }
     const travelPath = new Path2D();

@@ -332,7 +332,7 @@
 
     o: { land, travel, borders (110m), hi: { land, travel, borders } (50m, once loaded), home: [lng, lat],
          places: [[lng, lat]], reduce(), letter(text) -> sprite, onLeg(i),
-         lakes (Natural Earth 50m, once loaded), relief() -> { coarse, fine } images (for the hatching) }
+         lakes (Natural Earth 50m, once loaded), moreLakes() -> Promise<GeoJSON|null> (the 10m supplement), relief() -> { coarse, fine } images (for the hatching) }
     focus({ key, legs: [{ from, to, mode, fromName, toName, fromHome, toHome }] } | null)
   */
   const RAD = Math.PI / 180;
@@ -934,6 +934,8 @@
       const hi = this.o.hi;
       if (!hi || !hi.land) return;
       const close = rp.keys.filter((kf) => kf.to.k >= HI_K);
+      // a journey that comes close in sends for the smaller lakes, so they are there when it arrives
+      if (close.length) this.fineLakes();
       const groups = [];
       for (const kf of close) {
         let g = groups.find((x) => d3.geoDistance(x.items[0].c, kf.to.c) < 0.3);
@@ -953,7 +955,7 @@
           const geo = {};
           const next = () => {
             const st = steps.shift();
-            if (!st) { reg.geo = geo; reg.ready = true; return; }
+            if (!st) { reg.geo = geo; reg.ready = true; this.lakesInto(reg); return; }
             geo[st[0]] = st[1] ? capClip(st[1], c, r) : null;
             setTimeout(next, 16);
           };
@@ -962,6 +964,36 @@
         return reg;
       });
     }
+    // the smaller lakes (Natural Earth 10m, those the 50m drawing lacks), sent for only once the
+    // globe is to come close in; when they arrive they join each close drawing, and the hatching
+    // made where they lie is made again so it keeps off them
+    fineLakes() {
+      if (this.lxAsked || !this.o.moreLakes) return;
+      this.lxAsked = true;
+      this.o.moreLakes().then((fc) => {
+        if (!fc) { this.lxAsked = false; return; }
+        this.lakesX = fc;
+        this.lakesAll = { type: 'FeatureCollection', features: [...(this.o.lakes ? this.o.lakes.features : []), ...fc.features] };
+        for (const reg of this.regions.values()) if (reg.ready) this.lakesInto(reg);
+        const ps = polysOf(fc);
+        for (const [key, t] of this.htiles) {
+          const [z, x, y] = key.split('/').map(Number);
+          const T = 360 / (1 << z), w = -180 + x * T, e = w + T, n = latOfY(180 - y * T), so = latOfY(180 - (y + 1) * T);
+          if (ps.some((p) => !(p.e < w || p.w > e || p.n < so || p.s > n))) this.htiles.delete(key);
+        }
+        this.kick();
+      });
+    }
+    lakesInto(reg) {
+      if (!this.lakesX || reg.lx) return;
+      reg.lx = true;
+      // the lakes within the region's reach (small enough to need no cutting at its edge)
+      const near = polysOf(this.lakesX).filter((p) => d3.geoDistance(reg.c, [(p.w + p.e) / 2, (p.s + p.n) / 2]) < reg.r + 0.02);
+      if (!near.length) return;
+      const own = reg.geo.lakes && reg.geo.lakes.type === 'MultiPolygon' ? reg.geo.lakes.coordinates : [];
+      reg.geo = { ...reg.geo, lakes: { type: 'MultiPolygon', coordinates: [...own, ...near.map((p) => p.poly)] } };
+    }
+
     /* -------------------------------- the mountains' hatching, close in */
 
     // the relief to hatch from: the finer image, once it has arrived, for the tiles that need it
@@ -1033,7 +1065,7 @@
       if (t) { t.used = this.frameNo; return t; }
       if (performance.now() <= until) {
         const hi = this.o.hi;
-        t = hatchTile(z, x, y, src.cut, (hi && hi.land) || this.o.land, this.o.lakes, 0x51ed);
+        t = hatchTile(z, x, y, src.cut, (hi && hi.land) || this.o.land, this.lakesAll || this.o.lakes, 0x51ed);
         t.used = this.frameNo;
         this.htiles.set(key, t);
         if (this.htiles.size > 420) {
@@ -1432,9 +1464,12 @@
         for (const p of shown) { const q = clamp(fin * 1.5 - (p.st.leg / Math.max(1, nL)) * 0.5, 0, 1); p.r *= 1 + 0.45 * Math.sin(Math.PI * q); }
       }
       for (const p of shown) this.ring(p.st.v, p.age, a, p.r, p.st.seed, p.r > 4);
-      // the names: the newest first while travelling, in the order reached once it is all drawn
+      // the names: the newest first while travelling, in the order reached once it is all drawn;
+      // names still being written go ahead of the rest, the one begun first ahead of the others,
+      // so none is pushed out half-written
       const done = rt >= rp.total;
-      if (!done) shown.sort((p, q) => q.st.pop - p.st.pop);
+      const writing = (p) => (p.age > 0.2 && p.age < 1.1 && p.st.spot != null ? 1 : 0);
+      if (!done) shown.sort((p, q) => writing(q) - writing(p) || (writing(p) ? p.st.pop - q.st.pop : q.st.pop - p.st.pop));
       const boxes = this.boxes;
       boxes.length = 0;
       for (const sh of shown) { const e = (sh.r + 1.8) * cam.lw; boxes.push([sh.x - e, sh.y - e, sh.x + e, sh.y + e]); }
@@ -1446,12 +1481,17 @@
         const g = (r + 3.6) * lw;
         const spots = [[g, 0], [-g - sp.inkW, 0], [-sp.inkW / 2, -g - 5 * lw], [-sp.inkW / 2, g + 7 * lw], [g * 0.8, -g - 2 * lw], [-g * 0.8 - sp.inkW, -g - 2 * lw], [g * 0.8, g + 4 * lw], [-g * 0.8 - sp.inkW, g + 4 * lw]];
         let box = null, px = 0, py = 0;
-        for (const [ox, oy] of spots) {
+        // the side it was given before is tried first, so a name does not hop about; then the
+        // others in turn. A name is never cut by the globe's edge or laid over another name or
+        // ring: where no side has room it is left out
+        const edge = (cam.lens ? cam.rf : Math.min(cam.R, s * 0.5)) - 4;
+        const order = st.spot != null ? [st.spot, ...spots.keys()].filter((v, i, a) => a.indexOf(v) === i) : [...spots.keys()];
+        for (const si of order) {
+          const [ox, oy] = spots[si];
           const bx = [x + ox - 2, y + oy - sp.size * 0.72, x + ox + sp.inkW + 2, y + oy + sp.size * 0.42];
-          const inside = cam.lens
-            ? [[bx[0], bx[1]], [bx[2], bx[1]], [bx[0], bx[3]], [bx[2], bx[3]]].every((q) => Math.hypot(q[0] - cam.cx, q[1] - cam.cy) < cam.rf - 4)
-            : bx[0] > 2 && bx[2] < s - 2 && bx[1] > 2 && bx[3] < s - 2;
-          if (inside && !boxes.some((o) => bx[0] < o[2] && bx[2] > o[0] && bx[1] < o[3] && bx[3] > o[1])) { box = bx; px = x + ox - sp.bx; py = y + oy - sp.by + sp.size * 0.35; break; }
+          const inside = [[bx[0], bx[1]], [bx[2], bx[1]], [bx[0], bx[3]], [bx[2], bx[3]]].every((q) => Math.hypot(q[0] - cam.cx, q[1] - cam.cy) < edge)
+            && bx[0] > 2 && bx[2] < s - 2 && bx[1] > 2 && bx[3] < s - 2;
+          if (inside && !boxes.some((o) => bx[0] < o[2] && bx[2] > o[0] && bx[1] < o[3] && bx[3] > o[1])) { box = bx; px = x + ox - sp.bx; py = y + oy - sp.by + sp.size * 0.35; st.spot = si; break; }
         }
         if (!box) continue;
         boxes.push(box);
@@ -1504,6 +1544,7 @@
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, s, s);
       castShadow(ctx, s * 0.53, Math.min(cy + rf * 1.12, s * 0.955), rf * 0.86, lw);
+      if (this.k >= HI_K) this.fineLakes();
       const geo = this.geoFor();
       WC.paintGlobe(ctx, this.proj, {
         land: geo.land, travel: geo.travel, borders: geo.borders, lw, grain: 1,
