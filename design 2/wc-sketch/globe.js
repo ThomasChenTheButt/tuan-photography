@@ -631,7 +631,8 @@
         L.fromName = q.fromName; L.toName = q.toName;
         L.frame = fit([q.from, q.to], 0.62);
         L.cc = [...new Set([this.countryAt(q.from), this.countryAt(q.to)].filter(Boolean))].sort();
-        L.dur = L.mode === 'flight' ? 1200 + 1000 * Math.min(1, L.d / 1.4) : 1000 + 600 * Math.min(1, L.d / 0.05);
+        // ground legs within a country go quickly; long flights take their time
+        L.dur = L.mode === 'flight' ? 1200 + 1000 * Math.min(1, L.d / 1.4) : 520 + 380 * Math.min(1, L.d / 0.05);
         return L;
       });
       const overview = fit(stops.map((st) => st.ll), 0.74);
@@ -683,6 +684,14 @@
       for (const L of legs) {
         if (!L.a.home) L.a.pop = Math.min(L.a.pop, L.at - 40);
         if (!L.b.home) L.b.pop = Math.min(L.b.pop, L.at + L.d0);
+      }
+      // the visitor's speed (1x, 1.5x, 2x) shortens the whole timetable alike
+      const sp = (this.o.speed && this.o.speed()) || 1;
+      if (sp !== 1) {
+        for (const k of plan.keys) { k.at /= sp; k.dur = Math.max(1, k.dur / sp); }
+        for (const L of legs) { L.at /= sp; L.d0 /= sp; L.lead /= sp; }
+        for (const st of stops) if (isFinite(st.pop)) st.pop /= sp;
+        plan.total /= sp;
       }
       return { key: j.key, legs, stops, overview, keys: plan.keys, total: plan.total, t0: now, next: 0, home: stops.some((s) => s.home) };
     }
@@ -830,12 +839,36 @@
       if (!live || !this.PV[n - 1]) return;
       // where the pen is now
       const x = this.PX[n - 1], y = this.PY[n - 1];
-      if (L.mode === 'flight') {
-        ctx.beginPath(); ctx.arc(x, y, 3 * lw, 0, Math.PI * 2); ctx.fillStyle = `rgba(251, 250, 245, ${0.92 * a})`; ctx.fill();
-        ctx.beginPath(); ctx.arc(x, y, 1.9 * lw, 0, Math.PI * 2); ctx.globalAlpha = a; ctx.fillStyle = HEAD; ctx.fill(); ctx.globalAlpha = 1;
-        return;
-      }
+      if (L.mode === 'flight') { this.plane(n, a); return; }
       this.runner(n, a);
+    }
+    // a flight's travelling mark: a small airliner drawn in ink, seen from above, nose along
+    // the way it flies, on a paper halo so it reads over any wash
+    plane(n, a) {
+      const { ctx, PX, PY, cam } = this;
+      const lw = cam.lw, x = PX[n - 1], y = PY[n - 1];
+      let j = n - 1, back = 0;
+      while (j > 0 && back < 5 * lw) { back += Math.hypot(PX[j] - PX[j - 1], PY[j] - PY[j - 1]); j--; }
+      const ang = j === n - 1 ? 0 : Math.atan2(y - PY[j], x - PX[j]);
+      const s = 1.55 * lw;
+      ctx.save();
+      ctx.translate(x, y); ctx.rotate(ang); ctx.scale(s, s);
+      // nose at +x: fuselage, swept wings, tailplane
+      ctx.beginPath();
+      ctx.moveTo(5.2, 0);
+      ctx.quadraticCurveTo(4.6, -0.7, 3.4, -0.75);
+      ctx.lineTo(0.9, -0.75); ctx.lineTo(-1.4, -5.4); ctx.lineTo(-2.5, -5.4); ctx.lineTo(-1.0, -0.75);
+      ctx.lineTo(-3.6, -0.6); ctx.lineTo(-4.7, -2.3); ctx.lineTo(-5.4, -2.3); ctx.lineTo(-4.9, -0.45);
+      ctx.lineTo(-5.4, 0);
+      ctx.lineTo(-4.9, 0.45); ctx.lineTo(-5.4, 2.3); ctx.lineTo(-4.7, 2.3); ctx.lineTo(-3.6, 0.6);
+      ctx.lineTo(-1.0, 0.75); ctx.lineTo(-2.5, 5.4); ctx.lineTo(-1.4, 5.4); ctx.lineTo(0.9, 0.75);
+      ctx.lineTo(3.4, 0.75);
+      ctx.quadraticCurveTo(4.6, 0.7, 5.2, 0);
+      ctx.closePath();
+      ctx.lineJoin = 'round';
+      ctx.strokeStyle = `rgba(251, 250, 245, ${0.95 * a})`; ctx.lineWidth = 2.4; ctx.stroke();
+      ctx.fillStyle = ink(0.9 * a); ctx.fill();
+      ctx.restore();
     }
     // the travelling mark of a leg over land: a small ink capsule, a smudge of wash behind it
     runner(n, a) {
@@ -949,6 +982,24 @@
         const g = Math.min(1, (rt - L.at) / L.d0);
         this.drawLeg(L, easeInOut(g), a, g < 1);
       }
+      // the finale: once the whole journey is drawn, a warm light runs along it from the first
+      // leg to the last, the line swells under it, and the route stays a little stronger after
+      const fin = rt >= rp.total && !this.o.reduce() ? clamp((rt - rp.total) / 1500, 0, 1) : (rt >= rp.total ? 1 : 0);
+      if (fin > 0) {
+        const nL = rp.legs.length, u = easeInOut(fin) * (nL + 0.8);
+        rp.legs.forEach((L, i) => {
+          const sweep = this.o.reduce() ? 0 : Math.max(0, 1 - Math.abs(u - (i + 0.5)) / 1.1);
+          const w = Math.max(sweep, 0.35 * fin);
+          if (w < 0.02) return;
+          const nn = this.trace(L, 0, 1, L.mode === 'flight' ? 0.7 : 0.9);
+          this.line(nn, 0, 1.2 * cam.lw, 1.4 * cam.lw);
+          ctx.strokeStyle = WASH(0.42 * w * a); ctx.lineWidth = (3.6 + 6 * w) * cam.lw; ctx.lineCap = 'round'; ctx.stroke();
+          this.line(nn);
+          ctx.strokeStyle = ink(0.92 * a); ctx.lineWidth = (1 + 0.85 * w) * cam.lw;
+          if (L.mode !== 'flight' && L.mode !== 'train') ctx.setLineDash(L.mode === 'car' ? [2.6 * cam.lw, 2.2 * cam.lw] : [4.4 * cam.lw, 3.4 * cam.lw]);
+          ctx.stroke(); ctx.setLineDash([]);
+        });
+      }
       if (rp.home) this.homeDot(a);
       const shown = this.shown || (this.shown = []);
       shown.length = 0;
@@ -962,6 +1013,11 @@
         let near = Infinity;
         for (const q of shown) if (q !== p) near = Math.min(near, Math.hypot(p.x - q.x, p.y - q.y));
         p.r = clamp((near / cam.lw) * 0.4, 2.4, 7.2);
+      }
+      // in the finale each place's ring swells once, in the order they were reached
+      if (fin > 0 && fin < 1) {
+        const nL = rp.legs.length;
+        for (const p of shown) { const q = clamp(fin * 1.5 - (p.st.leg / Math.max(1, nL)) * 0.5, 0, 1); p.r *= 1 + 0.45 * Math.sin(Math.PI * q); }
       }
       for (const p of shown) this.ring(p.st.v, p.age, a, p.r, p.st.seed, p.r > 4);
       // the names: the newest first while travelling, in the order reached once it is all drawn

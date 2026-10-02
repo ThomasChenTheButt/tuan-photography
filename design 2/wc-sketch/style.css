@@ -541,6 +541,14 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 .flights__under > * { grid-area: 1 / 1; }
 .flights__how { color: var(--ink-2); font-size: 0.66rem; transition: opacity 400ms; }
 /* the leg being travelled, under the globe, in the journey list's own hand */
+/* the replay's speed: three words under the globe, the one in use underlined in ink */
+.flights__speed { display: flex; justify-content: center; align-items: baseline; gap: 0.9rem; margin-top: 0.55rem; }
+.flights__speed-label { font-family: var(--sans); font-weight: 500; font-size: 0.66rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-3); }
+:lang(zh-Hant) .flights__speed-label { font-size: 0.75rem; letter-spacing: 0.14em; }
+.speed__btn { font: 500 0.82rem/1 var(--sans); font-variant-numeric: tabular-nums; color: var(--ink-2); padding: 0.55rem 0.2rem; min-width: 2.75rem; min-height: 2.75rem; background: none; border: 0; cursor: pointer; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 0.35em; text-decoration-thickness: 1px; transition: color 200ms, text-decoration-color 200ms; }
+.speed__btn:hover { color: var(--ink); text-decoration-color: var(--ink-3); }
+.speed__btn[aria-pressed="true"] { color: var(--ink); text-decoration-color: var(--ink); }
+.speed__btn:focus-visible { outline: 1px solid var(--ink); outline-offset: 2px; }
 .flights__leg { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; column-gap: 0.85rem; text-align: center; opacity: 0; transition: opacity 360ms var(--soft); }
 .flights__when { font-size: 0.66rem; color: var(--ink); }
 .flights__way { font-size: 0.98rem; font-style: italic; color: var(--ink-2); font-variant-numeric: lining-nums; }
