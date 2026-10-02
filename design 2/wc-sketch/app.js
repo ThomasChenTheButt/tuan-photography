@@ -1228,6 +1228,27 @@
   /* ------------------------------------------------------------ the dive */
 
   let pageGen = 0, diveTimers = [], diveRing = null, diveTween = null, revealTween = null;
+  // the place's name, shown large as the map arrives at it
+  const arrival = $('#arrival');
+  let arrivalAnim = null;
+  function showArrival(cid) {
+    const title = L(bookByCountry[cid].title), country = L(countries[cid].name);
+    $('#arrival-name').textContent = title;
+    $('#arrival-where').textContent = (country !== title ? country + '   ' : '') + coords(placeLL(cid)).replace(' · ', '  ');
+    arrival.classList.add('is-on');
+    if (arrivalAnim) arrivalAnim.cancel();
+    arrivalAnim = arrival.animate([
+      { opacity: 0, filter: 'blur(6px)', transform: 'translateY(0.6rem) scale(0.985)' },
+      { opacity: 1, filter: 'blur(0px)', transform: 'none' },
+    ], { duration: 900, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'forwards' });
+  }
+  function hideArrival(ms = 700) {
+    if (!arrival.classList.contains('is-on')) return;
+    if (arrivalAnim) arrivalAnim.cancel();
+    arrivalAnim = arrival.animate([{ opacity: 1, filter: 'blur(0px)' }, { opacity: 0, filter: 'blur(4px)' }], { duration: ms, easing: 'cubic-bezier(0.45, 0, 0.55, 1)', fill: 'forwards' });
+    arrivalAnim.onfinish = () => { arrival.classList.remove('is-on'); };
+  }
+  function dropArrival() { if (arrivalAnim) arrivalAnim.cancel(); arrivalAnim = null; arrival.classList.remove('is-on'); }
   const later = (fn, ms) => { const id = setTimeout(fn, ms); diveTimers.push(id); return id; };
   function clearDive() {
     diveTimers.forEach(clearTimeout); diveTimers = [];
@@ -1235,6 +1256,7 @@
     if (diveTween) { diveTween.cancel(); diveTween = null; }
     if (revealTween) { revealTween.cancel(); revealTween = null; }
     leaf.getAnimations().forEach((a) => a.cancel());
+    dropArrival();
   }
   // the photograph dissolves in over the whole window at once: m runs 0 (not there) to 1 (all there)
   function setDissolve(m) {
@@ -1287,6 +1309,8 @@
       marks.push(diveRing);
       drawStroke(diveRing.firstChild, 0, 500);
       diveTween = tween(2000, (e) => { if (diveRing) { diveRing.dataset.s = (6 - 5 * e).toFixed(3); placePen(); } });
+      // 1b. as the map arrives, the place's name rises large in the middle: you are entering it
+      later(() => { if (gen === pageGen) showArrival(cid); }, 900);
       // 2. in the last third of the zoom, while the camera still moves, the photograph dissolves
       //    in across the whole window, from soft to sharp; the drawing softens away beneath it
       later(() => {
@@ -1294,14 +1318,16 @@
         leaf.hidden = false;
         app.classList.add('is-soft');
         if (!hasCover) {
+          hideArrival(700);
           leaf.classList.add('is-open');
           leaf.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 900, easing: 'cubic-bezier(0.45, 0, 0.55, 1)' }).onfinish = () => settleOpen(gen);
           return;
         }
+        hideArrival(1100);
         leaf.classList.add('is-dissolving');
         setDissolve(0);
         revealTween = tween(1800, (e) => setDissolve(e), () => settleOpen(gen), easeInOut);
-      }, hasCover ? 1330 : 1700);
+      }, hasCover ? 2250 : 2500);
     } else {
       moveTo(landing, 0);
       leaf.hidden = false;
@@ -1831,6 +1857,7 @@
     globe.o.land = state.land110;
     globe.o.travel = Object.values(f110);
     big.o.land = state.land110; big.o.travel = globe.o.travel; big.o.borders = state.bordersGeo110;
+    big.o.countries = topojson.feature(w110, w110.objects.countries).features;
     sizeGlobe();
     if (flightsOpen) big.kick();
     queueDraw();

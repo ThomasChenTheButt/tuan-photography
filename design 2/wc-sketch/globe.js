@@ -320,7 +320,7 @@
   const FRAME = 0.47;    // past this radius the globe is seen through a round frame
   const HI_K = 3;        // closer than this, the 50m drawing of the region in view
   const K_MIN = 0.92, K_MAX = 40;
-  const CAP = 16000;     // the longest replay, start to end
+  const CAP = 7000;      // the longest replay, start to end (his call: never more than 7 s)
   const MAXP = 512;
   const expoInOut = (x) => (x <= 0 ? 0 : x >= 1 ? 1 : x < 0.5 ? Math.pow(2, 20 * x - 10) / 2 : (2 - Math.pow(2, -20 * x + 10)) / 2);
   const outBack = (x) => { const c = 2.1; return 1 + (c + 1) * Math.pow(x - 1, 3) + c * Math.pow(x - 1, 2); };
@@ -580,6 +580,38 @@
       }
       this.kick();
     }
+    // which country a place lies in (looking a little around it, for airports on the shore)
+    countryAt(ll) {
+      const fs = this.o.countries || [];
+      if (!fs.length) return null;
+      this._cAt = this._cAt || new Map();
+      const k = ll[0].toFixed(3) + ',' + ll[1].toFixed(3);
+      if (this._cAt.has(k)) return this._cAt.get(k);
+      let hit = null;
+      const tries = [[0, 0], [0.25, 0], [-0.25, 0], [0, 0.25], [0, -0.25], [0.6, 0], [-0.6, 0], [0, 0.6], [0, -0.6]];
+      for (const [dx, dy] of tries) { hit = fs.find((f) => d3.geoContains(f, [ll[0] + dx, ll[1] + dy])); if (hit) break; }
+      const id = hit ? String(hit.id || hit.properties.name) : null;
+      if (hit) { this._cFeat = this._cFeat || new Map(); this._cFeat.set(id, hit); }
+      this._cAt.set(k, id);
+      return id;
+    }
+    // the corners of a country's land near a place: its far-flung parts (overseas islands,
+    // Alaska, Hawaii) are left out so the frame stays on the country he travelled in
+    countryPts(id, near) {
+      const f = this._cFeat && this._cFeat.get(id);
+      if (!f) return [];
+      const g = f.geometry;
+      const polys = g.type === 'Polygon' ? [g.coordinates] : g.coordinates;
+      const pts = [];
+      for (const poly of polys) {
+        const part = { type: 'Polygon', coordinates: poly };
+        if (d3.geoDistance(d3.geoCentroid(part), near) > 0.36) continue;
+        const [[w, s], [e, n]] = d3.geoBounds(part);
+        if (e < w) continue;
+        pts.push([w, s], [e, s], [w, n], [e, n]);
+      }
+      return pts;
+    }
     build(j, now) {
       // the stops, each once, in the order they are reached; an airport and its city, named
       // alike, are one stop, and the legs are joined there
@@ -598,51 +630,55 @@
         L.i = i;
         L.fromName = q.fromName; L.toName = q.toName;
         L.frame = fit([q.from, q.to], 0.62);
-        if (L.mode === 'flight' && L.d > 0.02) {
-          // a flight is seen from a little to the south of its way, so its lift shows as an arch
-          const mid = d3.geoInterpolate(q.from, q.to)(0.5);
-          const n = [L.A[1] * L.B[2] - L.A[2] * L.B[1], L.A[2] * L.B[0] - L.A[0] * L.B[2], L.A[0] * L.B[1] - L.A[1] * L.B[0]];
-          const nl = Math.hypot(...n) || 1;
-          const m = vec(mid), dl = 0.2 * L.d * (n[2] > 0 ? -1 : 1);
-          const c = [0, 1, 2].map((i) => Math.cos(dl) * m[i] + Math.sin(dl) * (n[i] / nl));
-          const cc = [Math.atan2(c[1], c[0]) / RAD, Math.asin(clamp(c[2], -1, 1)) / RAD];
-          const span = Math.max(d3.geoDistance(cc, q.from), d3.geoDistance(cc, q.to));
-          L.frame = { c: cc, k: clamp((0.66 * FRAME) / (BASE * Math.sin(Math.min(span, Math.PI / 2))), K_MIN, K_MAX) };
-        }
+        L.cc = [...new Set([this.countryAt(q.from), this.countryAt(q.to)].filter(Boolean))].sort();
         L.dur = L.mode === 'flight' ? 1200 + 1000 * Math.min(1, L.d / 1.4) : 1000 + 600 * Math.min(1, L.d / 0.05);
         return L;
       });
       const overview = fit(stops.map((st) => st.ll), 0.74);
       legs.forEach((L, i) => { L.a = ends[i][0]; L.b = ends[i][1]; });
+      // the big picture stays in sight: every leg is framed with the whole of the country (or
+      // countries) it touches, and legs in a row within the same countries share one view, so
+      // the camera holds still while a train hops from town to town
+      for (let i = 0; i < legs.length;) {
+        const key = legs[i].cc.join('|');
+        let e = i;
+        while (e + 1 < legs.length && legs[e + 1].cc.join('|') === key && legs[e + 1].mode !== 'flight' && legs[i].mode !== 'flight') e++;
+        const pts = [];
+        for (let m = i; m <= e; m++) pts.push(legs[m].a.ll, legs[m].b.ll);
+        for (const cid of legs[i].cc) pts.push(...this.countryPts(cid, legs[i].a.ll));
+        const frame = fit(pts, 0.68);
+        for (let m = i; m <= e; m++) legs[m].frame = frame;
+        i = e + 1;
+      }
       // the timetable
       const cur = { c: this.centre, k: this.k };
       const lay = (beat, f, hold) => {
         let t = 0;
         const keys = [];
-        const intro = clamp(camDur(cur, overview), 700, 1300);
+        const intro = clamp(camDur(cur, overview), 450, 800);
         keys.push({ at: 0, dur: intro, to: overview, leg: 0 });
         t = intro + hold;
         let prev = overview;
         for (const L of legs) {
-          const natural = camDur(prev, L.frame);
+          const natural = L.frame === prev ? 0 : camDur(prev, L.frame);
           L.lead = Math.min(natural * 0.36, 420) * f;
           L.d0 = L.dur * f;
           const at = t;
-          keys.push({ at, dur: Math.max(450, Math.min(natural, L.lead + L.d0)), to: L.frame, leg: L.i });
+          keys.push({ at, dur: L.frame === prev ? 1 : Math.max(320, Math.min(natural, L.lead + L.d0)), to: L.frame, leg: L.i });
           L.at = at + L.lead;
           t = L.at + L.d0 + beat;
           prev = L.frame;
         }
-        const out = clamp(camDur(prev, overview) + 200, 1100, 1700);
+        const out = clamp(camDur(prev, overview), 600, 900);
         keys.push({ at: t, dur: out, to: overview, leg: legs.length });
         return { keys, total: t + out };
       };
-      let plan = lay(420, 1, 450);
-      if (plan.total > CAP) plan = lay(140, 1, 260);
-      if (plan.total > CAP) {
+      let plan = lay(260, 1, 200);
+      if (plan.total > CAP) plan = lay(60, 1, 80);
+      for (let n = 0; n < 6 && plan.total > CAP; n++) {
         const fixed = plan.total - legs.reduce((s, L) => s + L.lead + L.d0, 0);
-        const f = Math.max(0.35, (CAP - fixed) / (plan.total - fixed));
-        plan = lay(140, f, 260);
+        const f = Math.max(0.12, (CAP - fixed) / Math.max(1, plan.total - fixed));
+        plan = lay(60, f * (n ? 0.97 : 1), 80);
       }
       for (const L of legs) {
         if (!L.a.home) L.a.pop = Math.min(L.a.pop, L.at - 40);
