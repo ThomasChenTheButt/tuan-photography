@@ -3,63 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Design 2 - five versions</title>
-  <link rel="stylesheet" href="fonts.css">
-  <style>
-    :root { color-scheme: light; --ink: oklch(24% 0.01 250); --ink-2: oklch(46% 0.012 250); --ground: oklch(97.5% 0.004 250); --rule: oklch(86% 0.006 250); --go: oklch(45% 0.12 255); }
-    * { box-sizing: border-box; margin: 0; }
-    body { min-height: 100svh; background: var(--ground); color: var(--ink); font: 400 1rem/1.6 "Geist", "Noto Sans TC", system-ui, sans-serif; padding: clamp(2rem, 6vw, 5rem) clamp(1rem, 5vw, 4rem); }
-    h1 { font: 500 clamp(1.6rem, 1.2rem + 1.6vw, 2.4rem)/1.2 "Geist", "Noto Sans TC", sans-serif; letter-spacing: -0.01em; }
-    p.say { color: var(--ink-2); margin-top: 0.5rem; max-width: 52ch; }
-    h2 { font: 500 1.1rem/1.3 "Geist", "Noto Sans TC", sans-serif; margin-top: 3rem; letter-spacing: 0.02em; }
-    h2 + p.say { margin-top: 0.35rem; }
-    h2 + ol, p.say + ol { margin-top: 1rem; }
-    ol { list-style: none; padding: 0; margin-top: 2.5rem; border-top: 1px solid var(--rule); max-width: 60rem; }
-    li a { display: grid; grid-template-columns: minmax(9rem, 14rem) 1fr; gap: 0.25rem 2rem; padding: 1.25rem 0; border-bottom: 1px solid var(--rule); color: inherit; text-decoration: none; }
-    li a:hover b, li a:focus-visible b { color: var(--go); }
-    a:focus-visible { outline: 2px solid var(--go); outline-offset: 4px; }
-    b { font-weight: 500; font-size: 1.2rem; }
-    b span { display: block; font-size: 0.95rem; color: var(--ink-2); font-weight: 400; }
-    li a > span { color: var(--ink-2); }
-    @media (max-width: 40rem) { li a { grid-template-columns: 1fr; } }
-  </style>
+  <title>tuan photography 陳亮元</title>
+  <!-- design 2 is Pen and wash; the address keeps whatever comes after it (?opening, #place-japan) -->
+  <script>location.replace('wc-sketch/' + location.search + location.hash);</script>
+  <noscript><meta http-equiv="refresh" content="0; url=wc-sketch/"></noscript>
 </head>
 <body>
-  <h1>Design 2 · 五個版本</h1>
-  <p class="say">The home page as a map. Five versions to choose from; each opens the guide from a book. 首頁是一張地圖，五個版本，挑一個。</p>
-  <h2>Round 4 · 第四輪</h2>
-  <p class="say">Watercolour, four ways. Full-screen map with every country named; the photo dissolves in full screen with a caption in the corner; swipe for more photos, scroll down for the guide; click the small globe for your journeys. 水彩的四種畫法。</p>
-  <ol>
-    <li><a href="wc-classic/"><b>Watercolour, refined<span>水彩・精修</span></b><span>The one you liked, finished properly: lighter, finer, full screen. 你喜歡的那一版，更細緻、滿版。</span></a></li>
-    <li><a href="wc-wet/"><b>Wet in wet<span>濕中濕</span></b><span>Looser and more painterly: colours bleed into each other, the deep sea darkens. 更自由的畫法，顏色互相暈開。</span></a></li>
-    <li><a href="wc-sketch/"><b>Pen and wash<span>鋼筆淡彩</span></b><span>A travel sketchbook: ink drawing first, light washes over it. 旅行速寫本：先畫線，再上淡彩。</span></a></li>
-    <li><a href="wc-indigo/"><b>Two pigments<span>藍與柿</span></b><span>Only indigo and persimmon on washi paper: calm and graphic. 只用靛藍和柿色兩種顏料。</span></a></li>
-  </ol>
-  <h2>Round 3 · 第三輪</h2>
-  <p class="say">One flat map with every place at a glance, books on it, the plate's slow zoom, a soft photo reveal, Marked's type, and a small globe of his flights. Five map styles. 一張看得到所有地方的地圖，五種畫法。</p>
-  <ol>
-    <li><a href="emboss/"><b>Blind emboss<span>壓印紙</span></b><span>White on white: the world pressed into paper, lit from one side. Only the photos have colour. 白紙上壓出來的世界，只有照片有顏色。</span></a></li>
-    <li><a href="relief/"><b>Swiss relief<span>瑞士地形圖</span></b><span>The real mountains of the world, shaded by hand-atlas rules in soft daylight colours. 真實的山脈地形，像精緻的地圖冊。</span></a></li>
-    <li><a href="inkwash/"><b>Ink and silk<span>水墨</span></b><span>The world in ink wash on pale paper, with a small red seal on every place. 水墨畫的世界地圖，每個地方一枚印章。</span></a></li>
-    <li><a href="riso/"><b>Two-ink riso<span>雙色印刷</span></b><span>A risograph print in two overprinting inks: bold, graphic, joyful. 兩色孔版印刷的地圖，大膽又有趣。</span></a></li>
-    <li><a href="watercolour/"><b>Field watercolour<span>水彩</span></b><span>A traveller's map painted in watercolour, lettered like a journal. 旅人手繪的水彩地圖。</span></a></li>
-  </ol>
-  <h2>Round 2 · 第二輪</h2>
-  <p class="say">After his notes on round 1: pick a place, the map zooms in, the cover photograph appears, the guide begins. 選一個地方，地圖放大，封面照片出現，攻略開始。</p>
-  <ol>
-    <li><a href="dive/"><b>The dive<span>俯衝</span></b><span>One beautiful globe, nothing in the way. Touch a place and fall into its photograph. 一顆漂亮的地球儀，點一個地方就掉進那張照片。</span></a></li>
-    <li><a href="plate/"><b>Atlas plate<span>地圖冊，第二版</span></b><span>The circled atlas, corrected: no circles on the index, the plate dives into the photograph. 圈起來的地圖冊修正版。</span></a></li>
-    <li><a href="marked/"><b>Marked spots<span>標記的地點</span></b><span>His reference, made light: a ring, a leader line, a caption, then the photograph. 他給的參考圖，做成淺色版。</span></a></li>
-    <li><a href="orbit/"><b>Globe and index<span>地球儀與索引</span></b><span>The globe kept with its books, photographs laid around it like prints on a desk. 地球儀加書，照片像相片攤在桌上。</span></a></li>
-    <li><a href="flyover/"><b>Flyover<span>飛越</span></b><span>The map seen from a window seat; choosing a place is a descent. 從機窗往下看的地圖，選一個地方就降落。</span></a></li>
-  </ol>
-  <h2>Round 1 · 第一輪</h2>
-  <ol>
-    <li><a href="departures/"><b>Departures<span>出發</span></b><span>A daylight departure board: choose a flight, the map flies there and the book rises. 機場出發看板，選一班，地圖就飛過去。</span></a></li>
-    <li><a href="pinned/"><b>Saved places<span>收藏的地點</span></b><span>Your Google Maps idea, made calm and light: books stand on the map like pins, photos appear as you zoom in. 像 Google 地圖，書像圖釘站在地圖上。</span></a></li>
-    <li><a href="routes/"><b>Flight lines<span>航線</span></b><span>An in-flight magazine route map: lines from Taipei to every place, the book waits at the end of each line. 機上雜誌的航線圖，從台北出發的每一條線。</span></a></li>
-    <li><a href="globe/"><b>Desk globe<span>地球儀</span></b><span>A globe you turn with your hand, or let it spin and choose for you. 用手轉的地球儀，也可以讓它幫你選。</span></a></li>
-    <li><a href="atlas/"><b>Circled atlas<span>圈起來的地圖冊</span></b><span>A printed atlas and a pen: every photo is a stamp in the index, circled on the map. 印刷地圖冊加一支筆，每張照片都圈在地圖上。</span></a></li>
-  </ol>
+  <p><a href="wc-sketch/">tuan photography 陳亮元</a></p>
 </body>
 </html>
