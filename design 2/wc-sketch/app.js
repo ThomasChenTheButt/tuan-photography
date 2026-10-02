@@ -37,6 +37,9 @@
       flightsTitle: 'Flights', flightsHow: 'Drag to turn the globe',
       flightsLede: (n) => `${n} journeys. Choose one to follow its flights on the globe.`,
       journeyAria: (d) => `Follow the journey of ${d}`,
+      modes: { flight: 'flight', train: 'train', bus: 'bus', car: 'car', ground: 'overland' },
+      legTail: (b, m) => `${b} · ${m}`,
+      wholeJourney: 'The whole journey',
       keyLabel: 'Key', keyBeen: 'Travelled',
       indexTitle: 'Photographs', indexOpen: 'Show the photographs', indexClose: 'Close',
       count: (n, p) => `${n} photographs from ${p} places`,
@@ -63,6 +66,9 @@
       flightsTitle: '飛過的航線', flightsHow: '拖曳轉動地球',
       flightsLede: (n) => `${n} 段旅程。選一段，在地球上看它的航線。`,
       journeyAria: (d) => `看 ${d} 的旅程`,
+      modes: { flight: '飛機', train: '火車', bus: '巴士', car: '開車', ground: '陸路' },
+      legTail: (b, m) => `${b}・${m}`,
+      wholeJourney: '整趟旅程',
       keyLabel: '圖例', keyBeen: '去過',
       indexTitle: '照片', indexOpen: '顯示照片', indexClose: '關閉',
       count: (n, p) => `${p} 個地方，${n} 張照片`,
@@ -1542,7 +1548,7 @@
       renderLeaf(page);
       leafScroll.scrollTop = top;
     }
-    if (flightsOpen) { const n = jOn; renderJourneys(); focusJourney(n, true); }
+    if (flightsOpen) { const n = jOn; renderJourneys(); if (n >= 0) { focusJourney(n, true); showLeg(big.legNow); } }
     if (photo) renderViewer();
     state.settle = 4;
     queueDraw();
@@ -1610,12 +1616,44 @@
 
   const fCanvas = $('#flights-canvas');
   const journeysEl = $('#journeys');
+  const legWhen = $('#flights-when');
+  const legWay = $('#flights-way');
+  // at rest the globe sends flights from Taipei to each of the other places
+  const otherPlaces = S.countries.filter((c) => c.id !== S.home).map((c) => { const ll = placeLL(c.id); return [ll[1], ll[0]]; });
   const big = new WC.BigGlobe(fCanvas, {
-    land: null, travel: null, borders: null, flights, reduce: () => reduce.matches,
+    land: null, travel: null, borders: null, hi: null, home: FROM, places: otherPlaces, reduce: () => reduce.matches,
     letter: (text) => sprite(`city-${text}`, text, { size: 12.5, weight: 500, colour: 'rgb(38, 34, 33)', halo: 3.4 }),
+    onLeg: (i) => showLeg(i),
   });
-  let flightsOpen = false, jOn = -1, jLeave = 0;
-  const stopName = (s) => (s.cid ? L(bookByCountry[s.cid].title) : cityName(s.city));
+  let flightsOpen = false, jOn = -1, jLeave = 0, lastPointer = '';
+  // a leg's end, named in the language in use
+  const endName = (e) => (!e ? '' : e.cid ? L(bookByCountry[e.cid].title) : clean(lang === 'zh' ? e.zh || e.city : e.city));
+  const replayOf = (n) => {
+    const j = journeys[n];
+    return {
+      key: j.id || `j${n}`,
+      legs: j.legs.map((q) => ({
+        from: q.from, to: q.to, mode: q.mode,
+        fromName: q.a ? endName(q.a) : '', toName: endName(q.b),
+        fromHome: !q.a || atFrom(q.from, q.a.code), toHome: atFrom(q.to, q.b && q.b.code),
+      })),
+    };
+  };
+  // the line under the globe: the journey's date, and the leg being travelled
+  function showLeg(i) {
+    if (i < 0 || jOn < 0) return;
+    const j = journeys[jOn];
+    const q = j.legs[i];
+    legWhen.textContent = L(j.date);
+    if (q) {
+      // the arrow is a character of the running text, set a little lighter than the names
+      const arrow = document.createElement('span');
+      arrow.className = 'flights__arrow';
+      arrow.textContent = '→';
+      legWay.replaceChildren(q.a ? endName(q.a) : L({ en: 'Taipei', zh: '台北' }), arrow, T[lang].legTail(endName(q.b), T[lang].modes[q.mode] || T[lang].modes.ground));
+    } else legWay.textContent = T[lang].wholeJourney;
+    if (!reduce.matches) legWay.animate([{ opacity: 0.15, transform: 'translateY(3px)' }, { opacity: 1, transform: 'none' }], { duration: 460, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' });
+  }
   const routeLine = (j) => {
     const names = [];
     for (const s of j.stops) { if (!s.city) continue; const nm = cityName(s.city); if (!names.includes(nm)) names.push(nm); }
@@ -1634,7 +1672,7 @@
       }).join('');
       const route = routeLine(j);
       return `<li class="journey" data-j="${n}">` +
-        `<h3 class="journey__head"><button type="button" class="journey__date" data-j="${n}" aria-label="${esc(T[lang].journeyAria(L(j.date)))}">${esc(L(j.date))}</button></h3>` +
+        `<h3 class="journey__head"><button type="button" class="journey__date" data-j="${n}" aria-pressed="${n === jOn}" aria-label="${esc(T[lang].journeyAria(L(j.date)))}">${esc(L(j.date))}</button></h3>` +
         (route ? `<p class="journey__route">${esc(route)}</p>` : '') +
         `<ul class="journey__places">${places}</ul></li>`;
     }).join('');
@@ -1643,27 +1681,39 @@
     clearTimeout(jLeave);
     if (n === jOn && !force) return;
     jOn = n;
-    $$('.journey', journeysEl).forEach((el) => el.classList.toggle('is-on', +el.dataset.j === n));
-    flightsEl.classList.toggle('is-following', n >= 0);
-    if (n < 0) { big.focus(null); return; }
-    const j = journeys[n];
-    big.focus({
-      flights: j.idx,
-      dests: j.stops.map((s) => ({ ll: s.ll, name: stopName(s), via: s.via, dep: s.dep })),
-      ends: j.legs.flatMap((q) => [q.from, q.to]),
+    $$('.journey', journeysEl).forEach((el) => {
+      const on = +el.dataset.j === n;
+      el.classList.toggle('is-on', on);
+      const d = $('.journey__date', el);
+      if (d) d.setAttribute('aria-pressed', String(on));
     });
+    flightsEl.classList.toggle('is-following', n >= 0);
+    big.focus(n < 0 ? null : replayOf(n));
   }
+  // what pressed last: a touch plays a journey first and dives on the next tap
+  journeysEl.addEventListener('pointerdown', (e) => { lastPointer = e.pointerType; }, true);
+  journeysEl.addEventListener('keydown', () => { lastPointer = 'key'; }, true);
   journeysEl.addEventListener('pointerover', (e) => {
     if (e.pointerType !== 'mouse') return;
     const li = e.target.closest('.journey');
     if (li) focusJourney(+li.dataset.j);
   });
   journeysEl.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') jLeave = setTimeout(() => focusJourney(-1), 260); });
-  journeysEl.addEventListener('focusin', (e) => { const li = e.target.closest('.journey'); if (li) focusJourney(+li.dataset.j); });
-  journeysEl.addEventListener('focusout', (e) => { if (!journeysEl.contains(e.relatedTarget)) jLeave = setTimeout(() => focusJourney(-1), 260); });
+  journeysEl.addEventListener('focusin', (e) => {
+    if (lastPointer === 'touch' || lastPointer === 'pen') return;
+    const li = e.target.closest('.journey');
+    if (li) focusJourney(+li.dataset.j);
+  });
+  journeysEl.addEventListener('focusout', (e) => {
+    if (lastPointer === 'touch' || lastPointer === 'pen') return;
+    if (!journeysEl.contains(e.relatedTarget)) jLeave = setTimeout(() => focusJourney(-1), 260);
+  });
   journeysEl.addEventListener('click', (e) => {
+    const li = e.target.closest('.journey');
+    const n = li ? +li.dataset.j : -1;
+    const touch = lastPointer === 'touch' || lastPointer === 'pen';
     const pl = e.target.closest('.jplace');
-    if (pl) {
+    if (pl && !(touch && n !== jOn)) {
       // a place in a journey: straight into it on the map
       const view = pl.dataset.view;
       closeFlights({ animate: false, focus: false });
@@ -1671,14 +1721,16 @@
       openPage(view, { animate: true });
       return;
     }
-    const d = e.target.closest('.journey__date');
-    if (d) focusJourney(+d.dataset.j);
+    if (n < 0) return;
+    // a tap on the journey being travelled puts the globe back at rest
+    if (touch && n === jOn && !pl) { focusJourney(-1); return; }
+    focusJourney(n);
   });
   $('#flights-back').addEventListener('click', () => back());
 
   function sizeBig() {
     const small = narrow.matches;
-    const s = small ? Math.min(innerWidth - 20, innerHeight * 0.56) : Math.min(innerWidth * 0.5 - 56, innerHeight - 150);
+    const s = small ? Math.min(innerWidth - 28, innerHeight * 0.42) : Math.min(innerWidth * 0.5 - 56, innerHeight - 150);
     const px = Math.max(220, Math.round(s));
     flightsEl.style.setProperty('--gs', `${px}px`);
     big.resize(px);
@@ -1701,7 +1753,7 @@
     big.o.land = state.land110;
     big.o.travel = globe.o.travel;
     big.o.borders = state.bordersGeo110;
-    big.rot = [globe.lon, -18]; big.k = 1; big.vel = [0, 0]; big.anim = null; big.focus(null);
+    big.rot = [globe.lon, -18]; big.k = 1; big.vel = [0, 0]; big.tw = null; big.focus(null);
     sizeBig();
     big.start();
     if (opts.animate && !reduce.matches) {
@@ -1738,7 +1790,7 @@
       // and settles back into its corner
       const a = sphereOf(globeCanvas, 0.46, 0.43);
       const b = sphereOf(fCanvas, 0.47, 0.4);
-      big.anim = { t0: performance.now(), dur: 700, from: big.rot.slice(), to: [big.rot[0], -18], k0: big.k, k1: 1 };
+      big.toward({ c: [-big.rot[0], 18], k: 1 }, 700);
       flightsEl.classList.add('is-closing');
       const an = fCanvas.animate([{ transform: 'none' }, { transform: flyFrom(a, b) }], { duration: 760, easing: 'cubic-bezier(0.7, 0, 0.84, 0)', fill: 'forwards' });
       an.onfinish = finish;
@@ -1792,6 +1844,8 @@
     state.borders50 = pathDeg(topojson.mesh(w50, w50.objects.countries, (a, b) => a !== b));
     state.feats = featsFor(w50);
     state.travel = Object.values(state.feats);
+    // the Flights globe draws the places it closes in on from the finer drawing
+    big.o.hi = { land: state.land50, travel: { type: 'FeatureCollection', features: state.travel }, borders: topojson.mesh(w50, w50.objects.countries, (a, b) => a !== b) };
     const isos = new Set(Object.values(ISO));
     const id3 = (g) => String(g.id).padStart(3, '0');
     state.seams = topojson.mesh(w50, w50.objects.countries, (a, b) => a !== b && isos.has(id3(a)) && isos.has(id3(b)));
@@ -1867,5 +1921,6 @@
     updateZoomButtons();
   }
   WC.state = state; // for inspection in the console
+  WC.big = big;
   start();
 })();

@@ -77,10 +77,10 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 [hidden] { display: none !important; }
 
 /* the lettering of names and controls: spaced capitals, quiet */
-.caps, .word, .lang__btn, .zoom__btn, .index__tab, .index__title, .index__close, .group__name, .leaf__where b, .toc h2, .sheet thead th, .day__light, .ate, .quiet-line, .globe__cap, .cover__ctl, .cover__hint, .journey__date, .flights__how {
+.caps, .word, .lang__btn, .zoom__btn, .index__tab, .index__title, .index__close, .group__name, .leaf__where b, .toc h2, .sheet thead th, .day__light, .ate, .quiet-line, .globe__cap, .cover__ctl, .cover__hint, .journey__date, .flights__how, .flights__when {
   font-size: 0.72rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; line-height: 1.3;
 }
-:lang(zh-Hant) :is(.caps, .word, .lang__btn, .zoom__btn, .index__tab, .index__title, .index__close, .group__name, .leaf__where b, .toc h2, .sheet thead th, .day__light, .ate, .quiet-line, .globe__cap, .cover__ctl, .cover__hint, .journey__date, .flights__how) {
+:lang(zh-Hant) :is(.caps, .word, .lang__btn, .zoom__btn, .index__tab, .index__title, .index__close, .group__name, .leaf__where b, .toc h2, .sheet thead th, .day__light, .ate, .quiet-line, .globe__cap, .cover__ctl, .cover__hint, .journey__date, .flights__how, .flights__when) {
   font-size: 0.8rem; letter-spacing: 0.26em; text-transform: none;
 }
 /* lettered straight onto the painting: a paper halo keeps it legible over any wash */
@@ -529,7 +529,17 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 .flights__page--globe { position: sticky; top: 0; height: 100vh; height: 100svh; display: grid; place-items: center; align-content: center; gap: 0.4rem; }
 .flights__globe { display: block; width: var(--gs, 30rem); height: var(--gs, 30rem); transform-origin: 50% 47%; cursor: grab; touch-action: pan-y; }
 .flights__globe.is-turning { cursor: grabbing; }
-.flights__how { margin-top: 0.2rem; color: var(--ink-2); font-size: 0.66rem; transition: opacity 400ms; }
+.flights__under { display: grid; place-items: center; min-height: 1.75rem; margin-top: 0.2rem; padding: 0 1rem; }
+.flights__under > * { grid-area: 1 / 1; }
+.flights__how { color: var(--ink-2); font-size: 0.66rem; transition: opacity 400ms; }
+/* the leg being travelled, under the globe, in the journey list's own hand */
+.flights__leg { display: flex; flex-wrap: wrap; justify-content: center; align-items: baseline; column-gap: 0.85rem; text-align: center; opacity: 0; transition: opacity 360ms var(--soft); }
+.flights__when { font-size: 0.66rem; color: var(--ink); }
+.flights__way { font-size: 0.98rem; font-style: italic; color: var(--ink-2); font-variant-numeric: lining-nums; }
+:lang(zh-Hant) .flights__way { font-style: normal; font-size: 0.92rem; letter-spacing: 0.04em; }
+.flights__arrow { font-family: var(--serif-zh); font-style: normal; font-size: 0.82em; color: var(--ink-2); margin: 0 0.4em; }
+.flights.is-following .flights__how { opacity: 0; }
+.flights.is-following .flights__leg { opacity: 1; }
 .flights__page--list { align-self: start; width: min(36rem, 100%); padding: clamp(4.5rem, 12vh, 7.5rem) clamp(1.75rem, 4.5vw, 4.5rem) 5rem; }
 .flights__title { font-size: clamp(2.4rem, 1.6rem + 2.4vw, 3.6rem); font-weight: 400; line-height: 1; letter-spacing: -0.01em; }
 :lang(zh-Hant) .flights__title { font-family: var(--serif-zh); font-weight: 500; letter-spacing: 0.08em; line-height: 1.2; }
@@ -545,6 +555,7 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 }
 .journey.is-on .journey__date { background: var(--dab-ochre, var(--ochre-wash)) center / 100% 100% no-repeat; color: var(--ink); }
 .journey__date:hover { color: var(--warm-deep); }
+.journey.is-on .journey__route { color: var(--ink); }
 .journey__route { margin: 0.1rem 0 0.75rem; max-width: 32rem; font-size: 0.95rem; font-style: italic; line-height: 1.45; color: var(--ink-2); text-wrap: pretty; }
 :lang(zh-Hant) .journey__route { font-style: normal; font-size: 0.9rem; letter-spacing: 0.04em; }
 .journey__places { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.6rem 1.1rem; }
@@ -557,9 +568,9 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 .jplace:hover .jplace__name, .jplace:focus-visible .jplace__name { color: var(--warm-deep); }
 .jplace:hover img, .jplace:focus-visible img { transform: translateY(-2px); box-shadow: 0 6px 14px -8px oklch(20% 0.012 50 / 0.5); }
 .flights__back { position: fixed; z-index: 3; left: var(--edge); top: calc(var(--edge) - 0.65rem); -webkit-text-stroke: 3.5px var(--paper); paint-order: stroke fill; }
-.flights.is-arriving .flights__page--list, .flights.is-arriving .flights__back, .flights.is-arriving .flights__how { opacity: 0; transform: translateY(14px); }
-.flights__page--list, .flights__back { transition: opacity 700ms var(--soft) 260ms, transform 900ms var(--ease) 260ms; }
-.flights.is-closing .flights__page--list, .flights.is-closing .flights__back, .flights.is-closing .flights__how { opacity: 0; transition: opacity 240ms ease-in; }
+.flights.is-arriving .flights__page--list, .flights.is-arriving .flights__back, .flights.is-arriving .flights__under { opacity: 0; transform: translateY(14px); }
+.flights__page--list, .flights__back, .flights__under { transition: opacity 700ms var(--soft) 260ms, transform 900ms var(--ease) 260ms; }
+.flights.is-closing .flights__page--list, .flights.is-closing .flights__back, .flights.is-closing .flights__under { opacity: 0; transition: opacity 240ms ease-in; }
 
 /* ---------------------------------------------------------- narrower windows */
 
@@ -616,9 +627,13 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 
   .flights__spread { grid-template-columns: minmax(0, 1fr); }
   .flights__spread::after { display: none; }
-  .flights__page--globe { position: relative; height: auto; padding-top: 3.6rem; }
-  .flights__back { position: absolute; }
-  .flights__how { margin-top: -0.6rem; }
+  /* the globe stays in view at the top while the journeys scroll under it */
+  .flights__page--globe {
+    z-index: 2; height: auto; padding: 2.6rem 0 0.55rem; gap: 0;
+    background-color: var(--paper); background-image: var(--tooth, none); background-size: 192px 192px; background-blend-mode: soft-light;
+    border-bottom: 1px solid var(--hair);
+  }
+  .flights__under { margin-top: -0.4rem; }
   .flights__page--list { width: 100%; padding: 1.4rem var(--edge) 3rem; }
   .flights__title { font-size: 2.2rem; }
   .journeys { margin-top: 1.6rem; }
