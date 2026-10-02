@@ -431,7 +431,8 @@
         slot: (i * inv) % Math.max(1, n),
         D: 1500 + 900 * Math.min(1, p.d / 1.9),
       }));
-      this.PERIOD = Math.max(n * this.GAP, 7000);
+      // all fifteen leave Taipei together; the near ones land first. Then a pause, and again.
+      this.PERIOD = Math.max(...this.idle.map((f) => f.D), 0) + 2400 + 1400;
       this.homeV = vec(home);
     }
     route(a, b, mode, seed) {
@@ -1010,7 +1011,7 @@
       ctx.lineCap = 'round'; ctx.lineJoin = 'round';
       // the routes stay on the near side of the globe, inside its outline
       ctx.beginPath(); ctx.arc(cx, cy, cam.lens ? rf - 0.6 : R + 0.5, 0, Math.PI * 2); ctx.clip();
-      // at rest: flights leaving Taipei for the other fifteen places, a few at a time
+      // at rest: flights leaving Taipei for the other fifteen places, all at once
       const ia = rp ? 0 : still ? 1 : clamp((now - this.idleT0 - 150) / 500, 0, 1);
       if (ia > 0) {
         if (still) {
@@ -1023,9 +1024,8 @@
         } else {
           const t = now - this.idleT0 - 300;
           for (const F of this.idle) {
-            const off = F.slot * this.GAP;
-            if (t < off) continue;
-            const local = (t - off) % this.PERIOD;
+            if (t < 0) continue;
+            const local = t % this.PERIOD;
             if (local < F.D + 2400) this.drawIdle(F, local, ia);
           }
         }
