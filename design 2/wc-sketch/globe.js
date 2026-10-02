@@ -75,7 +75,9 @@
 
   /*
     o: { land, travel, borders, round (1 a sphere .. 0 the flat map), grat, lw, R (a length for
-         the wash widths; defaults to the projection's scale), grain (pattern scale), dim }
+         the wash widths; defaults to the projection's scale), grain (pattern scale), dim,
+         r0 (the outline's radius, where the projection's scale is not the globe's), clipR (clip to
+         a circle of this radius instead of the sphere's outline, for the unrolling sheet), edgeA }
   */
   WC.paintGlobe = (ctx, proj, o) => {
     const path = d3.geoPath(proj, ctx);
@@ -87,11 +89,11 @@
     const [cx, cy] = proj.translate();
     // closer in, the globe is seen through a round frame, like a magnifier laid on the page
     const lens = o.frame != null && o.frame < proj.scale() - 0.5;
-    const r0 = lens ? o.frame : proj.scale();
+    const r0 = lens ? o.frame : o.r0 || proj.scale();
     ctx.save();
     ctx.lineJoin = 'round'; ctx.lineCap = 'round';
     ctx.beginPath();
-    if (lens) ctx.arc(cx, cy, r0, 0, Math.PI * 2); else path(SPHERE);
+    if (lens) ctx.arc(cx, cy, r0, 0, Math.PI * 2); else if (o.clipR) ctx.arc(cx, cy, o.clipR, 0, Math.PI * 2); else path(SPHERE);
     ctx.fillStyle = PAPER; ctx.fill();
     ctx.clip();
     let lp = null;
@@ -124,7 +126,7 @@
       }
     }
     const hatch = round * (o.hatch == null ? 1 : o.hatch);
-    if (hatch > 0.02 && o.shade !== false) hatchShade(ctx, cx, cy, proj.scale(), hatch, lw);
+    if (hatch > 0.02 && o.shade !== false) hatchShade(ctx, cx, cy, o.r0 || proj.scale(), hatch, lw);
     // a faint pencil graticule
     if (o.grat !== 0) {
       ctx.beginPath(); path(graticule);
@@ -139,9 +141,10 @@
     if (lp) { ctx.strokeStyle = ink(0.86); ctx.lineWidth = 0.75 * lw; ctx.stroke(lp); }
     ctx.restore();
     // the outline: one confident circle of the pen, and a second just off it where the nib lifted
-    if (round > 0) {
+    const edgeA = o.edgeA == null ? round : o.edgeA;
+    if (edgeA > 0.003) {
       ctx.save();
-      ctx.globalAlpha = round;
+      ctx.globalAlpha *= edgeA;
       ctx.beginPath(); ctx.arc(cx, cy, r0, 0, Math.PI * 2);
       ctx.strokeStyle = ink(0.88); ctx.lineWidth = 1.1 * lw; ctx.stroke();
       ctx.beginPath(); ctx.arc(cx + 0.8 * lw, cy + 0.5 * lw, r0 + 0.6 * lw, -0.3, 1.9);
@@ -385,6 +388,69 @@
     return polys.length ? { type: 'MultiPolygon', coordinates: polys } : lines.length ? { type: 'MultiLineString', coordinates: lines } : null;
   }
 
+  function makeRoute(a, b, mode, seed) {
+    const A = vec(a), B = vec(b);
+    const d = Math.acos(clamp(A[0] * B[0] + A[1] * B[1] + A[2] * B[2], -1, 1));
+    let s = seed * 7919 + 17;
+    const r = () => ((s = (s * 16807) % 2147483647) / 2147483647);
+    // a flight across the Pacific is bowed partway toward a steady eastward (or westward) course,
+    // so it leaves Asia low across the page, about 20 to 30 degrees, rather than climbing toward
+    // the Arctic as the true shortest way does (his call, 2026-10-02)
+    let dl = b[0] - a[0];
+    if (dl > 180) dl -= 360; else if (dl < -180) dl += 360;
+    const pacific = mode === 'flight' && Math.abs(dl) > 90 && ((a[0] > 60 && b[0] < -30) || (a[0] < -30 && b[0] > 60));
+    return {
+      bend: pacific ? 0.6 : 0, lon0: a[0], dl, my0: Math.log(Math.tan(Math.PI / 4 + (a[1] * RAD) / 2)), my1: Math.log(Math.tan(Math.PI / 4 + (b[1] * RAD) / 2)),
+      A, B, d, sinD: Math.sin(d), mode, from: a, to: b, Bv: B,
+      H: mode === 'flight' ? 0.03 + 0.15 * Math.sin(d / 2) : 0,
+      f1: Math.PI * 2 * (1.3 + r()), p1: r() * 6.283, f2: Math.PI * 2 * (3.6 + r() * 2), p2: r() * 6.283,
+    };
+  }
+
+  // a point u (0..1) along a route, on the unit sphere: the great circle, or for a flight across
+  // the Pacific the great circle bowed toward the steady course (a rhumb line). Shared by the
+  // Flights globe and the opening's flat map, so the two agree. Written into CXYZ.
+  const CXYZ = [0, 0, 0];
+  function course(r, u) {
+    const A = r.A, B = r.B;
+    let x, y, z;
+    if (r.sinD < 1e-7) { x = A[0]; y = A[1]; z = A[2]; } else {
+      const a = Math.sin((1 - u) * r.d) / r.sinD, b = Math.sin(u * r.d) / r.sinD;
+      x = a * A[0] + b * B[0]; y = a * A[1] + b * B[1]; z = a * A[2] + b * B[2];
+      if (r.bend) {
+        const lo = (r.lon0 + r.dl * u) * RAD, la = 2 * Math.atan(Math.exp(r.my0 + (r.my1 - r.my0) * u)) - Math.PI / 2;
+        const k = r.bend, cl = Math.cos(la);
+        x = (1 - k) * x + k * cl * Math.cos(lo); y = (1 - k) * y + k * cl * Math.sin(lo); z = (1 - k) * z + k * Math.sin(la);
+        const m = Math.hypot(x, y, z) || 1; x /= m; y /= m; z /= m;
+      }
+    }
+    CXYZ[0] = x; CXYZ[1] = y; CXYZ[2] = z;
+    return CXYZ;
+  }
+
+  // a flight's travelling mark: a small airliner drawn in ink, seen from above, nose along
+  // the way it flies (ang), on a paper halo so it reads over any wash
+  function drawPlane(ctx, x, y, ang, s, a) {
+    ctx.save();
+    ctx.translate(x, y); ctx.rotate(ang); ctx.scale(s, s);
+    // nose at +x: fuselage, swept wings, tailplane
+    ctx.beginPath();
+    ctx.moveTo(5.2, 0);
+    ctx.quadraticCurveTo(4.6, -0.7, 3.4, -0.75);
+    ctx.lineTo(0.9, -0.75); ctx.lineTo(-1.4, -5.4); ctx.lineTo(-2.5, -5.4); ctx.lineTo(-1.0, -0.75);
+    ctx.lineTo(-3.6, -0.6); ctx.lineTo(-4.7, -2.3); ctx.lineTo(-5.4, -2.3); ctx.lineTo(-4.9, -0.45);
+    ctx.lineTo(-5.4, 0);
+    ctx.lineTo(-4.9, 0.45); ctx.lineTo(-5.4, 2.3); ctx.lineTo(-4.7, 2.3); ctx.lineTo(-3.6, 0.6);
+    ctx.lineTo(-1.0, 0.75); ctx.lineTo(-2.5, 5.4); ctx.lineTo(-1.4, 5.4); ctx.lineTo(0.9, 0.75);
+    ctx.lineTo(3.4, 0.75);
+    ctx.quadraticCurveTo(4.6, 0.7, 5.2, 0);
+    ctx.closePath();
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = `rgba(251, 250, 245, ${0.95 * a})`; ctx.lineWidth = 2.4; ctx.stroke();
+    ctx.fillStyle = ink(0.9 * a); ctx.fill();
+    ctx.restore();
+  }
+
   WC.BigGlobe = class {
     constructor(canvas, o) {
       this.c = canvas;
@@ -435,24 +501,7 @@
       this.PERIOD = Math.max(...this.idle.map((f) => f.D), 0) + 2400 + 1400;
       this.homeV = vec(home);
     }
-    route(a, b, mode, seed) {
-      const A = vec(a), B = vec(b);
-      const d = Math.acos(clamp(A[0] * B[0] + A[1] * B[1] + A[2] * B[2], -1, 1));
-      let s = seed * 7919 + 17;
-      const r = () => ((s = (s * 16807) % 2147483647) / 2147483647);
-      // a flight across the Pacific is bowed partway toward a steady eastward (or westward) course,
-      // so it leaves Asia low across the page, about 20 to 30 degrees, rather than climbing toward
-      // the Arctic as the true shortest way does (his call, 2026-10-02)
-      let dl = b[0] - a[0];
-      if (dl > 180) dl -= 360; else if (dl < -180) dl += 360;
-      const pacific = mode === 'flight' && Math.abs(dl) > 90 && ((a[0] > 60 && b[0] < -30) || (a[0] < -30 && b[0] > 60));
-      return {
-        bend: pacific ? 0.6 : 0, lon0: a[0], dl, my0: Math.log(Math.tan(Math.PI / 4 + (a[1] * RAD) / 2)), my1: Math.log(Math.tan(Math.PI / 4 + (b[1] * RAD) / 2)),
-        A, B, d, sinD: Math.sin(d), mode, from: a, to: b, Bv: B,
-        H: mode === 'flight' ? 0.03 + 0.15 * Math.sin(d / 2) : 0,
-        f1: Math.PI * 2 * (1.3 + r()), p1: r() * 6.283, f2: Math.PI * 2 * (3.6 + r() * 2), p2: r() * 6.283,
-      };
-    }
+    route(a, b, mode, seed) { return makeRoute(a, b, mode, seed); }
     resize(css) {
       const dpr = Math.min(2, window.devicePixelRatio || 1);
       this.dpr = dpr;
@@ -764,21 +813,10 @@
       const { cam, BX, BY, PX, PY, PV, PU } = this;
       const est = cam.R * Math.max(r.d, 1e-4) * (1 + r.H) * Math.max(0, u1 - u0);
       const n = Math.max(2, Math.min(MAXP, Math.ceil(est / 4) + 2));
-      const A = r.A, B = r.B;
       for (let i = 0; i < n; i++) {
         const u = u0 + ((u1 - u0) * i) / (n - 1);
-        let x, y, z;
-        if (r.sinD < 1e-7) { x = A[0]; y = A[1]; z = A[2]; } else {
-          const a = Math.sin((1 - u) * r.d) / r.sinD, b = Math.sin(u * r.d) / r.sinD;
-          x = a * A[0] + b * B[0]; y = a * A[1] + b * B[1]; z = a * A[2] + b * B[2];
-          if (r.bend) {
-            // the steady course at u (a rhumb line), blended in and set back on the sphere
-            const lo = (r.lon0 + r.dl * u) * RAD, la = 2 * Math.atan(Math.exp(r.my0 + (r.my1 - r.my0) * u)) - Math.PI / 2;
-            const k = r.bend, cl = Math.cos(la);
-            x = (1 - k) * x + k * cl * Math.cos(lo); y = (1 - k) * y + k * cl * Math.sin(lo); z = (1 - k) * z + k * Math.sin(la);
-            const m = Math.hypot(x, y, z) || 1; x /= m; y /= m; z /= m;
-          }
-        }
+        const q = course(r, u);
+        const x = q[0], y = q[1], z = q[2];
         const x1 = x * cam.cl - y * cam.sl, y1 = x * cam.sl + y * cam.cl;
         const X = x1 * cam.cp - z * cam.sp, Z = z * cam.cp + x1 * cam.sp;
         const h = 1 + r.H * Math.sin(Math.PI * u);
@@ -897,25 +935,7 @@
       let j = n - 1, back = 0;
       while (j > 0 && back < 5 * lw) { back += Math.hypot(PX[j] - PX[j - 1], PY[j] - PY[j - 1]); j--; }
       const ang = j === n - 1 ? 0 : Math.atan2(y - PY[j], x - PX[j]);
-      const s = 1.55 * lw;
-      ctx.save();
-      ctx.translate(x, y); ctx.rotate(ang); ctx.scale(s, s);
-      // nose at +x: fuselage, swept wings, tailplane
-      ctx.beginPath();
-      ctx.moveTo(5.2, 0);
-      ctx.quadraticCurveTo(4.6, -0.7, 3.4, -0.75);
-      ctx.lineTo(0.9, -0.75); ctx.lineTo(-1.4, -5.4); ctx.lineTo(-2.5, -5.4); ctx.lineTo(-1.0, -0.75);
-      ctx.lineTo(-3.6, -0.6); ctx.lineTo(-4.7, -2.3); ctx.lineTo(-5.4, -2.3); ctx.lineTo(-4.9, -0.45);
-      ctx.lineTo(-5.4, 0);
-      ctx.lineTo(-4.9, 0.45); ctx.lineTo(-5.4, 2.3); ctx.lineTo(-4.7, 2.3); ctx.lineTo(-3.6, 0.6);
-      ctx.lineTo(-1.0, 0.75); ctx.lineTo(-2.5, 5.4); ctx.lineTo(-1.4, 5.4); ctx.lineTo(0.9, 0.75);
-      ctx.lineTo(3.4, 0.75);
-      ctx.quadraticCurveTo(4.6, 0.7, 5.2, 0);
-      ctx.closePath();
-      ctx.lineJoin = 'round';
-      ctx.strokeStyle = `rgba(251, 250, 245, ${0.95 * a})`; ctx.lineWidth = 2.4; ctx.stroke();
-      ctx.fillStyle = ink(0.9 * a); ctx.fill();
-      ctx.restore();
+      drawPlane(ctx, x, y, ang, 1.55 * lw, a);
     }
     // the travelling mark of a leg over land: a small ink capsule, a smudge of wash behind it
     runner(n, a) {
@@ -1214,79 +1234,294 @@
   /* ------------------------------------------------------------ the opening: a globe that unrolls into the map */
 
   /*
-    o: { canvas, land, travel, flights, LON0, LAT_N, LAT_S, target(): { scale, translate } of the flat
-         map (d3 equirectangular), onUnroll(), onDone() }
-    returns { skip() }
+    One continuous piece of motion, about seven seconds:
+      the globe fades in and turns; the site's name settles above it, a moment later
+      the globe unrolls into the flat map, onto the exact place the map lies, and the name glides
+        down to the middle of the window on the same timing
+      as the map settles, every flight draws itself across it at once (the near ones land first),
+        each with a small plane at its head and a ring of the pen where it lands; the opening's own
+        drawing of the map dissolves into the real one underneath
+      the name holds while they land, then the name and the flights fade together, leaving the
+        map as it always rests
+    Skipped (a click, a key, a scroll), everything resolves to the clean map in under half a second.
+
+    o: { canvas, title (the element holding the name), land, travel, flights (WC.routes), home [lng, lat],
+         LON0, target(): { scale, translate } of the flat map (d3 equirectangular), onDone() }
+    returns { skip(), done, elapsed }
   */
+  const GLOBE = 2500, UNROLL = 1600, FLY_AT = GLOBE + UNROLL * 0.78, DISSOLVE = 900, CLEAR = 1200, SKIP = 450;
+  WC.OPENING = { GLOBE, UNROLL, FLY_AT, CLEAR };
   WC.opening = (o) => {
     const c = o.canvas;
     const ctx = c.getContext('2d');
+    const title = o.title;
     const dpr = Math.min(2, window.devicePixelRatio || 1);
-    let W = 0, H = 0;
+    let W = 0, H = 0, titleH = 0;
     const size = () => {
       W = window.innerWidth; H = window.innerHeight;
       c.width = Math.round(W * dpr); c.height = Math.round(H * dpr);
+      if (title) titleH = title.offsetHeight;
     };
     size();
-    const SPIN = 300, SCATTER = 3000, UNROLL = 1500, FADE = 700;
-    const start = performance.now();
-    let raf = 0, done = false, unrolled = false;
-    const lon0 = -96, lat0 = -20;
+    window.addEventListener('resize', size);
+    const lon0 = -84, lat0 = -20, SPEED = 0.008;
     const mutate = d3.geoProjectionMutator((t) => (l, p) => {
       const a = d3.geoOrthographicRaw(l, p), b = d3.geoEquirectangularRaw(l, p);
       return [(1 - t) * a[0] * mutate.k + t * b[0], (1 - t) * a[1] * mutate.k + t * b[1]];
     });
     mutate.k = 1;
+    const globeAt = () => {
+      const R = Math.min(W, H) * (W < 700 ? 0.36 : 0.28);
+      return { R, cx: W / 2, cy: H * 0.58 };
+    };
 
+    /* the routes on the flat map: each sampled once along its course (the same bowed course the
+       Flights globe flies), its longitude unwrapped so a flight over the Pacific runs on past the
+       map's edge and comes back in at the other, rather than crossing the whole world */
+    const home = o.home;
+    const near = (a, b) => d3.geoDistance(a, b) < 0.012;
+    const seen = new Set();
+    const legs = [];
+    for (const f of o.flights) {
+      // a flight out and its flight home draw the same line: drawn once
+      const k = [f.from, f.to].map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).sort().join('|') + (f.mode === 'flight' ? 'f' : 'g');
+      if (seen.has(k)) continue;
+      seen.add(k);
+      const r = makeRoute(f.from, f.to, f.mode, legs.length + 5);
+      const fly = f.mode === 'flight';
+      const n = fly ? 72 : 16;
+      const U = new Float32Array(n), V = new Float32Array(n);
+      let prev = 0;
+      for (let i = 0; i < n; i++) {
+        const q = course(r, i / (n - 1));
+        const lon = Math.atan2(q[1], q[0]) / RAD, lat = Math.asin(clamp(q[2], -1, 1)) / RAD;
+        let u = ((((lon - o.LON0) % 360) + 540) % 360) - 180;
+        if (i) { while (u - prev > 180) u -= 360; while (u - prev < -180) u += 360; }
+        U[i] = u; V[i] = lat; prev = u;
+      }
+      const len = d3.geoDistance(f.from, f.to);
+      legs.push({
+        r, fly, n, U, V, len,
+        dur: fly ? 650 + 1100 * Math.min(1, len / 1.75) : 600 + 900 * Math.min(1, len / 0.25),
+        at: FLY_AT + (fly ? 0 : 200),
+        to: f.to, home: near(f.to, home),
+        lift: fly ? 0.05 + 0.05 * Math.min(1, len / 1.5) : 0,
+      });
+    }
+    // each place landed at is ringed once, by the first flight to reach it; where he sets out
+    // from is never marked
+    const rings = [];
+    legs.filter((L) => L.fly && !L.home).sort((a, b) => a.dur - b.dur).forEach((L) => {
+      if (rings.some((q) => near(q.to, L.to))) return;
+      rings.push({ to: L.to, t: L.at + L.dur, seed: rings.length + 3 });
+    });
+    const LAND = Math.max(...legs.map((L) => L.at + L.dur), FLY_AT) + 380;
+    const CLEAR_AT = LAND + 120;
+    const END = CLEAR_AT + CLEAR;
+    const PX = new Float32Array(80), PY = new Float32Array(80);
+
+    // a leg's points on the screen, offset by `shift` world-widths, up to `head` (0..1);
+    // lifted a little off the map in the middle, as a flight is
+    function place(L, head, shift, S, tx, ty, lw) {
+      const k = S * RAD;
+      const m = Math.max(2, Math.ceil(head * (L.n - 1)) + 1);
+      const x0 = tx + (L.U[0] + shift) * k, y0 = ty - L.V[0] * k;
+      const x1 = tx + (L.U[L.n - 1] + shift) * k, y1 = ty - L.V[L.n - 1] * k;
+      const ch = Math.hypot(x1 - x0, y1 - y0) || 1;
+      // the lift bows upward on the page
+      let nx = (y1 - y0) / ch, ny = -(x1 - x0) / ch;
+      if (ny > 0 || (ny === 0 && nx < 0)) { nx = -nx; ny = -ny; }
+      const amp = 0.55 * lw;
+      for (let i = 0; i < m; i++) {
+        let u = i / (L.n - 1);
+        let j = i;
+        if (i === m - 1) { u = head; j = head * (L.n - 1); }
+        const j0 = Math.min(L.n - 2, Math.floor(j)), fr = j - j0;
+        const U = L.U[j0] + (L.U[j0 + 1] - L.U[j0]) * fr, V = L.V[j0] + (L.V[j0 + 1] - L.V[j0]) * fr;
+        const h = L.lift * ch * Math.sin(Math.PI * u);
+        const env = Math.min(1, u * 7, (1 - u) * 7);
+        const w = (Math.sin(u * L.r.f1 + L.r.p1) * 0.62 + Math.sin(u * L.r.f2 + L.r.p2) * 0.38) * env * amp;
+        PX[i] = tx + (U + shift) * k + nx * (h + w);
+        PY[i] = ty - V * k + ny * (h + w);
+      }
+      return m;
+    }
+    function stroke(m, from = 0) {
+      ctx.beginPath();
+      ctx.moveTo(PX[from], PY[from]);
+      for (let i = from + 1; i < m; i++) ctx.lineTo(PX[i], PY[i]);
+    }
+
+    function drawFlights(el, S, tx, ty, a) {
+      const lw = W < 700 ? 0.95 : 1.15;
+      const k = S * RAD;
+      ctx.save();
+      // the world's own width: nothing is drawn past its edges
+      ctx.beginPath(); ctx.rect(tx - 180 * k, ty - 90 * k, 360 * k, 180 * k); ctx.clip();
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      for (const L of legs) {
+        const g = (el - L.at) / L.dur;
+        if (g <= 0) continue;
+        const head = easeInOut(Math.min(1, g));
+        const lo = Math.min(L.U[0], L.U[L.n - 1]), hi = Math.max(L.U[0], L.U[L.n - 1]);
+        for (const shift of [-360, 0, 360]) {
+          if (hi + shift < -182 || lo + shift > 182) continue;
+          const m = place(L, head, shift, S, tx, ty, lw);
+          if (!L.fly) {
+            // a leg over land: a faint dotted pen line
+            stroke(m);
+            ctx.setLineDash([0.2, 3 * lw]);
+            ctx.strokeStyle = ink(0.42 * a); ctx.lineWidth = 1.4 * lw; ctx.stroke();
+            ctx.setLineDash([]);
+            continue;
+          }
+          // the wash first, a little off the pen line; then the pen
+          ctx.save(); ctx.translate(1.1 * lw, 1.3 * lw);
+          stroke(m); ctx.strokeStyle = WASH(0.22 * a); ctx.lineWidth = 3.2 * lw; ctx.stroke();
+          ctx.restore();
+          stroke(m); ctx.strokeStyle = ink(0.74 * a); ctx.lineWidth = 0.95 * lw; ctx.stroke();
+          // in flight: the last stretch warms to vermilion toward the plane
+          const live = clamp(1 - (g - 1) / 0.35, 0, 1);
+          if (live <= 0) continue;
+          const tl = Math.max(1, Math.round(m * 0.3));
+          for (let i = Math.max(1, m - tl); i < m; i++) {
+            const q = 1 - (m - i) / tl;
+            ctx.beginPath(); ctx.moveTo(PX[i - 1], PY[i - 1]); ctx.lineTo(PX[i], PY[i]);
+            ctx.strokeStyle = `rgba(212, 82, 60, ${0.9 * q * live * a})`; ctx.lineWidth = (0.95 + 0.6 * q) * lw; ctx.stroke();
+          }
+          let j = m - 1, back = 0;
+          while (j > 0 && back < 5 * lw) { back += Math.hypot(PX[j] - PX[j - 1], PY[j] - PY[j - 1]); j--; }
+          const ang = Math.atan2(PY[m - 1] - PY[j], PX[m - 1] - PX[j]);
+          drawPlane(ctx, PX[m - 1], PY[m - 1], ang, 1.3 * lw, live * a);
+        }
+      }
+      // the landings: a ring of the pen pops in where each place is reached
+      for (const q of rings) {
+        const x = (el - q.t) / 460;
+        if (x <= 0) continue;
+        const sc = outBack(clamp(x, 0, 1));
+        const pts = ringOf(q.seed);
+        const r = 5 * lw * sc;
+        let u = ((((q.to[0] - o.LON0) % 360) + 540) % 360) - 180;
+        ctx.save();
+        ctx.translate(tx + u * k, ty - q.to[1] * k);
+        ctx.beginPath();
+        for (let i = 0; i < pts.length; i++) { const p = pts[i]; if (i) ctx.lineTo(p[0] * r, p[1] * r); else ctx.moveTo(p[0] * r, p[1] * r); }
+        ctx.strokeStyle = ink(0.84 * a * Math.min(1, x * 3)); ctx.lineWidth = 1.1 * lw; ctx.stroke();
+        ctx.beginPath(); ctx.arc(0, 0, 1.6 * lw, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(212, 82, 60, ${0.85 * a * Math.min(1, x * 2)})`; ctx.fill();
+        ctx.restore();
+      }
+      ctx.restore();
+    }
+
+    // the name: above the globe, then gliding down to the middle as the globe unrolls
+    function setTitle(el) {
+      if (!title) return;
+      const g = globeAt();
+      const top = g.cy - g.R;
+      const h = titleH || 100;
+      // centred in the paper above the globe, clear of the margins' lettering
+      const yc = clamp(top * 0.5 + H * 0.02, 64 + h / 2, top - 18 - h / 2);
+      const yTop = (Number.isFinite(yc) ? yc : top * 0.5) - H / 2;
+      const inA = easeOut(clamp((el - 260) / 1100, 0, 1));
+      const inB = easeOut(clamp((el - 520) / 1000, 0, 1));
+      const gl = easeInOut(clamp((el - GLOBE) / UNROLL, 0, 1));
+      const out = easeInOut(clamp((el - CLEAR_AT) / CLEAR, 0, 1));
+      const st = title.style;
+      st.setProperty('--oy', `${(yTop * (1 - gl) + 14 * (1 - inA)).toFixed(2)}px`);
+      st.setProperty('--os', (1 + 0.14 * gl).toFixed(4));
+      st.setProperty('--oa', (inA * (1 - out)).toFixed(3));
+      st.setProperty('--ot', (0.09 * (1 - inA)).toFixed(4));
+      st.setProperty('--ob', (inB * (1 - out)).toFixed(3));
+      st.setProperty('--oby', `${(8 * (1 - inB)).toFixed(2)}px`);
+    }
+
+    const start = performance.now();
+    let raf = 0, done = false, el = 0, painting = false;
     function frame(now) {
       if (done) return;
-      const el = now - start;
+      el = now - start;
+      if (!painting) { painting = true; c.classList.add('is-painting'); }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, W, H);
-      const R = Math.min(W, H) * (W < 700 ? 0.36 : 0.3);
+      const { R, cx, cy } = globeAt();
       const target = o.target();
-      const spin = Math.min(el, SPIN + SCATTER) * 0.007;
-      if (el < SPIN + SCATTER) {
-        const fadeIn = Math.min(1, el / 350);
-        const proj = d3.geoOrthographic().clipAngle(90).precision(0.5).scale(R * (0.94 + 0.06 * easeOut(fadeIn))).translate([W / 2, H / 2]).rotate([lon0 - spin, lat0]);
+      const S = target.scale;
+      setTitle(el);
+      if (el < GLOBE) {
+        // the globe, turning
+        const fadeIn = Math.min(1, el / 420);
+        ctx.fillStyle = PAPER; ctx.fillRect(0, 0, W, H);
+        const proj = d3.geoOrthographic().clipAngle(90).precision(0.5).scale(R * (0.94 + 0.06 * easeOut(fadeIn))).translate([cx, cy]).rotate([lon0 - el * SPEED, lat0]);
         ctx.globalAlpha = fadeIn;
-        castShadow(ctx, W / 2 + R * 0.08, H / 2 + R * 1.12, R * 0.86, 1.3);
+        castShadow(ctx, cx + R * 0.08, cy + R * 1.12, R * 0.86, 1.3);
         WC.paintGlobe(ctx, proj, { land: o.land, travel: o.travel, lw: 1.3, grain: 1, R: R * 0.8 });
-        WC.paintFlights(ctx, proj, o.flights, Math.max(0, el - 150), { ortho: true, lw: 1.5, alpha: fadeIn, stagger: 110, ground: false });
         ctx.globalAlpha = 1;
       } else {
-        // it unrolls: orthographic into the map's own equirectangular plate, onto the exact place it will lie
-        if (!unrolled) { unrolled = true; if (o.onUnroll) o.onUnroll(); }
-        const x = Math.min(1, (el - SPIN - SCATTER) / UNROLL);
+        // it unrolls: orthographic into the map's own equirectangular plate, onto the exact place
+        // it will lie; then that drawing dissolves into the real map underneath
+        const x = Math.min(1, (el - GLOBE) / UNROLL);
         const t = easeInOut(x);
-        const S = target.scale;
-        mutate.k = R / S;
-        const rot = [lon0 - (SPIN + SCATTER) * 0.007, lat0];
-        const dl = ((-o.LON0 - rot[0]) % 360 + 540) % 360 - 180;
-        const proj = mutate(t).scale(S)
-          .translate([W / 2 + (target.translate[0] - W / 2) * t, H / 2 + (target.translate[1] - H / 2) * t])
-          .rotate([rot[0] + dl * t, rot[1] * (1 - t)])
-          .precision(0.5);
-        if (t < 0.985) proj.clipAngle(90 + 89.9 * Math.min(1, t * 1.15)); else proj.clipAngle(null);
-        ctx.save();
-        ctx.globalAlpha = 1 - t * 0.25;
-        WC.paintGlobe(ctx, proj, { land: o.land, travel: o.travel, round: 1 - t, grat: 1 - t, lw: 1.3 - 0.4 * t, grain: 1, R: R * 0.8 * (1 - t) + 60 * t });
-        WC.paintFlights(ctx, proj, o.flights, 1e9, { alpha: 1 - Math.min(1, x * 2.5), lw: 1.3, still: true, ground: false });
-        ctx.restore();
-        if (x >= 1) { finish(); return; }
+        const mapA = 1 - easeInOut(clamp((el - GLOBE - UNROLL) / DISSOLVE, 0, 1));
+        if (mapA > 0.002) {
+          mutate.k = R / S;
+          const rot = [lon0 - GLOBE * SPEED, lat0];
+          const dl = ((-o.LON0 - rot[0]) % 360 + 540) % 360 - 180;
+          const proj = mutate(t).scale(S)
+            .translate([cx + (target.translate[0] - cx) * t, cy + (target.translate[1] - cy) * t])
+            .rotate([rot[0] + dl * t, rot[1] * (1 - t)])
+            .precision(0.5);
+          // clipped to a circle round the centre that widens to the whole sphere, and also cut
+          // along the far meridian, where the flat half of the drawing would otherwise jump a
+          // whole world's width
+          if (t < 0.001) proj.clipAngle(90);
+          else {
+            const circle = d3.geoClipCircle((90 + 89.9 * Math.min(1, t * 1.15)) * RAD);
+            proj.preclip((stream) => d3.geoClipAntimeridian(circle(stream)));
+          }
+          ctx.save();
+          ctx.globalAlpha = mapA;
+          ctx.fillStyle = PAPER; ctx.fillRect(0, 0, W, H);
+          if (t < 1) {
+            // the shadow lifts away as the globe opens
+            ctx.globalAlpha = mapA * (1 - t);
+            castShadow(ctx, cx + R * 0.08, cy + R * 1.12, R * 0.86, 1.3);
+            ctx.globalAlpha = mapA;
+          }
+          // (the sheet is clipped to a circle that opens out fast, not to the sphere's outline,
+          // which folds over itself once the far side starts to show)
+          WC.paintGlobe(ctx, proj, {
+            land: o.land, travel: o.travel, round: Math.pow(1 - t, 3), grat: 1 - t, edgeA: Math.pow(1 - t, 4),
+            lw: 1.3 - 0.4 * t, grain: 1, R: R * 0.8 * (1 - t) + 60 * t, r0: R, clipR: R * (1 + 24 * t),
+          });
+          ctx.restore();
+        }
+        if (el >= FLY_AT) {
+          const fa = 1 - easeInOut(clamp((el - CLEAR_AT) / CLEAR, 0, 1));
+          if (fa > 0) drawFlights(el, S, target.translate[0], target.translate[1], fa);
+        }
+        if (o.onClear && !cleared && el >= CLEAR_AT + 300) { cleared = true; o.onClear(); }
+        if (el >= END) { finish(false); return; }
       }
       raf = requestAnimationFrame(frame);
     }
-    function finish() {
+    let cleared = false;
+    function finish(skipped) {
       if (done) return;
       done = true;
       cancelAnimationFrame(raf);
-      if (!unrolled && o.onUnroll) o.onUnroll();
-      c.classList.add('is-gone');
-      setTimeout(() => { c.hidden = true; c.width = c.height = 1; }, FADE);
-      if (o.onDone) o.onDone();
+      window.removeEventListener('resize', size);
+      if (!cleared && o.onClear) { cleared = true; o.onClear(); }
+      const rest = () => { c.hidden = true; c.width = c.height = 1; if (o.onDone) o.onDone(); };
+      if (skipped) {
+        // resolve quickly: the drawing and the name fade together onto the map
+        c.classList.add('is-gone');
+        if (title) title.classList.add('is-gone');
+        setTimeout(rest, SKIP);
+      } else rest();
     }
     raf = requestAnimationFrame(frame);
-    return { skip: finish, get done() { return done; } };
+    return { skip: () => finish(true), get done() { return done; }, get elapsed() { return el; }, get end() { return END; } };
   };
 })();

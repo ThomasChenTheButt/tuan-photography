@@ -55,6 +55,8 @@
       nPhotos: (n) => (n === 1 ? '1 photograph' : `${n} photographs`),
       seas: { pacific: 'Pacific Ocean', indian: 'Indian Ocean', atlantic: 'Atlantic Ocean', southern: 'Southern Ocean', arctic: 'Arctic Ocean' },
       opening: (p) => `${p} is open.`,
+      // the name the opening sets over the globe; ?name=1 to 5 in the address chooses one
+      names: ["Tuan's Photography Journey", 'Tuan, Through the Lens', 'Where Tuan Has Been', 'A Journey in Photographs', "Tuan's Travels, in Photographs"],
       endLine: 'Every photograph here is his own, made on the trip.',
       bookAria: (p, s) => `${p}: ${s}`,
     },
@@ -84,6 +86,7 @@
       nPhotos: (n) => `${n} 張照片`,
       seas: { pacific: '太平洋', indian: '印度洋', atlantic: '大西洋', southern: '南冰洋', arctic: '北冰洋' },
       opening: (p) => `已打開${p}。`,
+      names: ['Tuan 的攝影旅程', 'Tuan 的鏡頭之旅', 'Tuan 去過的地方', '用照片走過的路', 'Tuan 的旅行照片'],
       endLine: '這裡每張照片都是他自己在旅途中拍的。',
       bookAria: (p, s) => `${p}：${s}`,
     },
@@ -96,6 +99,8 @@
     else if (saved === 'zh' || saved === 'en') lang = saved;
   } catch (e) { /* storage blocked: stay in English */ }
 
+  const ask = new URLSearchParams(location.search);
+  const nameN = clamp(parseInt(ask.get('name'), 10) || 1, 1, 5) - 1;
   const t = (k) => (T[lang][k] !== undefined ? T[lang][k] : (S.i18n[lang][k] !== undefined ? S.i18n[lang][k] : k));
   const L = (o) => clean(o ? (typeof o === 'string' ? o : o[lang] !== undefined ? o[lang] : o.en) : '');
   const cityName = (c) => (typeof c === 'object' && c ? L(c) : clean(c || ''));
@@ -488,7 +493,12 @@
     // the books: a pen leader from each place to where its book stands, and the place itself
     layoutPins();
     const taken = [];
-    if (!diving) {
+    // (held back while the opening plays, then drawn in with the books)
+    const leadA = app.classList.contains('is-opening') ? 0 : state.leadIn ? clamp((now - state.leadIn - 200) / 900, 0, 1) : 1;
+    if (leadA < 1 && state.leadIn) again = true;
+    if (!diving && leadA > 0) {
+      ctx.save();
+      ctx.globalAlpha = leadA;
       ctx.lineWidth = 0.8;
       ctx.strokeStyle = INK(0.6);
       for (const b of pinList) {
@@ -501,8 +511,9 @@
         ctx.beginPath(); ctx.arc(b.ax, b.ay, 1.5, 0, Math.PI * 2);
         ctx.fillStyle = WARM; ctx.fill();
       }
-      for (const b of pinList) taken.push(...b.boxes);
+      ctx.restore();
     }
+    if (!diving) for (const b of pinList) taken.push(...b.boxes);
 
     // lettering: the oceans in italic, then every other country by importance, never on each
     // other and never on his books or their names
@@ -1596,6 +1607,7 @@
     $$('.lang button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
     $('#ig').setAttribute('aria-label', `${t('follow')}: tuan_1127`);
     $('#globe').setAttribute('aria-label', T[lang].globeLabel);
+    $('#opener-name').textContent = T[lang].names[nameN];
   }
   function setLang(next) {
     if (next === lang) return;
@@ -1920,6 +1932,7 @@
     const f110 = featsFor(w110);
     globe.o.land = state.land110;
     globe.o.travel = Object.values(f110);
+    worldReady();
     big.o.land = state.land110; big.o.travel = globe.o.travel; big.o.borders = state.bordersGeo110;
     big.o.countries = topojson.feature(w110, w110.objects.countries).features;
     sizeGlobe();
@@ -1945,6 +1958,9 @@
     paintBase();
   }
 
+  let worldReady = () => {};
+  const world110 = new Promise((r) => { worldReady = r; });
+
   function start() {
     applyWords();
     renderIndex();
@@ -1964,28 +1980,43 @@
     const want = parse(location.hash);
     let first = false;
     try { first = !sessionStorage.getItem('wc-opened'); sessionStorage.setItem('wc-opened', '1'); } catch (e) { first = false; }
+    // ?opening in the address plays it every time, for review
+    if (ask.has('opening')) first = true;
     const playOpening = first && !reduce.matches && !want.page && !want.photo && !want.flights;
-    if (playOpening) app.classList.add('is-opening');
-
-    loadWorld().then(() => {
-      if (playOpening) {
-        const oc = $('#opening');
-        oc.hidden = false;
+    const opener = $('#opener');
+    const oc = $('#opening');
+    if (playOpening) {
+      app.classList.add('is-opening');
+      // the paper covers the map at once, so the map is never seen before the globe
+      oc.hidden = false;
+      opener.className = 'opener';
+    }
+    const restOpening = () => { app.classList.remove('is-opening'); oc.hidden = true; opener.className = 'sr'; queueDraw(); };
+    const loading = loadWorld();
+    if (playOpening) {
+      // the name waits for its typeface (never more than a moment), so it never changes face mid-motion
+      const faces = document.fonts && document.fonts.load
+        ? Promise.race([Promise.all([document.fonts.load('400 48px "Alegreya"', T.en.names[nameN]), document.fonts.load('500 48px "Noto Serif TC"', T.zh.names[nameN] + '陳亮元'), document.fonts.load('500 12px "Alegreya Sans"')]), new Promise((r) => setTimeout(r, 1500))]).catch(() => {})
+        : Promise.resolve();
+      Promise.all([world110, faces]).then(() => {
+        if (page || flightsOpen) { restOpening(); globe.start(); return; }
         opening = WC.opening({
-          canvas: oc, land: state.land110, travel: globe.o.travel, flights, LON0, LAT_N, LAT_S,
+          canvas: oc, title: opener, land: state.land110, travel: globe.o.travel, flights, home: FROM, LON0,
           target: () => {
             const z = state.z;
             return { scale: (z.k * state.S0 * 180) / Math.PI, translate: [z.x + (z.k * state.W) / 2, z.y + (z.k * state.H) / 2] };
           },
-          onUnroll: () => {},
-          onDone: () => { app.classList.remove('is-opening'); app.classList.add('is-arrived'); if (!page && !flightsOpen) globe.start(); },
+          // as the name and the flights fade, the books and the margins come back
+          onClear: () => { app.classList.remove('is-opening'); state.leadIn = performance.now(); queueDraw(); app.classList.add('is-arrived'); setTimeout(() => app.classList.remove('is-arrived'), 1300); if (!page && !flightsOpen) globe.start(); },
+          onDone: () => { opener.className = 'sr'; },
         });
         const skip = () => { if (opening && !opening.done) opening.skip(); };
-        ['pointerdown', 'wheel', 'keydown'].forEach((ev) => window.addEventListener(ev, skip, { once: true, passive: true }));
-      } else if (!page && !flightsOpen) {
-        globe.start();
-      }
-    }).catch(() => { app.classList.remove('is-opening'); });
+        ['pointerdown', 'wheel', 'keydown', 'touchmove'].forEach((ev) => window.addEventListener(ev, skip, { once: true, passive: true }));
+      });
+      loading.catch(() => restOpening());
+    } else {
+      loading.then(() => { if (!page && !flightsOpen) globe.start(); }).catch(() => {});
+    }
 
     // a page or photograph named in the address opens directly
     if (want.page || want.photo || want.flights) {
