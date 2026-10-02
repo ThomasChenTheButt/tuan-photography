@@ -1,0 +1,611 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-02T06:30:00Z",
+  "title": "Design System: tuan photography 陳亮元 · design 2 \"Pen and wash\"",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Sketchbook Paper",
+        "canonical": "oklch(98.4% 0.0075 95)",
+        "tonalRamp": [
+          "oklch(15% 0.0045 95)",
+          "oklch(25% 0.0075 95)",
+          "oklch(35% 0.0075 95)",
+          "oklch(45% 0.0075 95)",
+          "oklch(55% 0.0075 95)",
+          "oklch(65% 0.0075 95)",
+          "oklch(80% 0.0075 95)",
+          "oklch(95% 0.0045 95)"
+        ]
+      },
+      "paper-2": {
+        "role": "neutral",
+        "displayName": "Second Paper",
+        "canonical": "oklch(95.4% 0.011 88)",
+        "tonalRamp": [
+          "oklch(15% 0.0066 88)",
+          "oklch(25% 0.0110 88)",
+          "oklch(35% 0.0110 88)",
+          "oklch(45% 0.0110 88)",
+          "oklch(55% 0.0110 88)",
+          "oklch(65% 0.0110 88)",
+          "oklch(80% 0.0110 88)",
+          "oklch(95% 0.0066 88)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Fine-liner",
+        "canonical": "oklch(24.5% 0.008 45)",
+        "tonalRamp": [
+          "oklch(15% 0.0048 45)",
+          "oklch(25% 0.0080 45)",
+          "oklch(35% 0.0080 45)",
+          "oklch(45% 0.0080 45)",
+          "oklch(55% 0.0080 45)",
+          "oklch(65% 0.0080 45)",
+          "oklch(80% 0.0080 45)",
+          "oklch(95% 0.0048 45)"
+        ]
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Faded Ink",
+        "canonical": "oklch(41% 0.012 60)",
+        "tonalRamp": [
+          "oklch(15% 0.0072 60)",
+          "oklch(25% 0.0120 60)",
+          "oklch(35% 0.0120 60)",
+          "oklch(45% 0.0120 60)",
+          "oklch(55% 0.0120 60)",
+          "oklch(65% 0.0120 60)",
+          "oklch(80% 0.0120 60)",
+          "oklch(95% 0.0072 60)"
+        ]
+      },
+      "ink-3": {
+        "role": "neutral",
+        "displayName": "Pencil-pale Ink",
+        "canonical": "oklch(62% 0.014 65)",
+        "tonalRamp": [
+          "oklch(15% 0.0084 65)",
+          "oklch(25% 0.0140 65)",
+          "oklch(35% 0.0140 65)",
+          "oklch(45% 0.0140 65)",
+          "oklch(55% 0.0140 65)",
+          "oklch(65% 0.0140 65)",
+          "oklch(80% 0.0140 65)",
+          "oklch(95% 0.0084 65)"
+        ]
+      },
+      "hair": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "oklch(88% 0.012 80)",
+        "tonalRamp": [
+          "oklch(15% 0.0072 80)",
+          "oklch(25% 0.0120 80)",
+          "oklch(35% 0.0120 80)",
+          "oklch(45% 0.0120 80)",
+          "oklch(55% 0.0120 80)",
+          "oklch(65% 0.0120 80)",
+          "oklch(80% 0.0120 80)",
+          "oklch(95% 0.0072 80)"
+        ]
+      },
+      "shade": {
+        "role": "neutral",
+        "displayName": "Shade",
+        "canonical": "oklch(20% 0.012 50)",
+        "tonalRamp": [
+          "oklch(15% 0.0072 50)",
+          "oklch(25% 0.0120 50)",
+          "oklch(35% 0.0120 50)",
+          "oklch(45% 0.0120 50)",
+          "oklch(55% 0.0120 50)",
+          "oklch(65% 0.0120 50)",
+          "oklch(80% 0.0120 50)",
+          "oklch(95% 0.0072 50)"
+        ]
+      },
+      "sea": {
+        "role": "secondary",
+        "displayName": "Cerulean Sea",
+        "canonical": "oklch(82% 0.05 228)",
+        "tonalRamp": [
+          "oklch(15% 0.0300 228)",
+          "oklch(25% 0.0500 228)",
+          "oklch(35% 0.0500 228)",
+          "oklch(45% 0.0500 228)",
+          "oklch(55% 0.0500 228)",
+          "oklch(65% 0.0500 228)",
+          "oklch(80% 0.0500 228)",
+          "oklch(95% 0.0300 228)"
+        ]
+      },
+      "sea-deep": {
+        "role": "secondary",
+        "displayName": "Deep Cerulean",
+        "canonical": "oklch(42% 0.085 240)",
+        "tonalRamp": [
+          "oklch(15% 0.0510 240)",
+          "oklch(25% 0.0850 240)",
+          "oklch(35% 0.0850 240)",
+          "oklch(45% 0.0850 240)",
+          "oklch(55% 0.0850 240)",
+          "oklch(65% 0.0850 240)",
+          "oklch(80% 0.0850 240)",
+          "oklch(95% 0.0510 240)"
+        ]
+      },
+      "warm": {
+        "role": "primary",
+        "displayName": "Travelling Vermilion",
+        "canonical": "oklch(64% 0.15 36)",
+        "tonalRamp": [
+          "oklch(15% 0.0900 36)",
+          "oklch(25% 0.1500 36)",
+          "oklch(35% 0.1500 36)",
+          "oklch(45% 0.1500 36)",
+          "oklch(55% 0.1500 36)",
+          "oklch(65% 0.1500 36)",
+          "oklch(80% 0.1500 36)",
+          "oklch(95% 0.0900 36)"
+        ]
+      },
+      "warm-deep": {
+        "role": "primary",
+        "displayName": "Deep Vermilion",
+        "canonical": "oklch(49% 0.15 34)",
+        "tonalRamp": [
+          "oklch(15% 0.0900 34)",
+          "oklch(25% 0.1500 34)",
+          "oklch(35% 0.1500 34)",
+          "oklch(45% 0.1500 34)",
+          "oklch(55% 0.1500 34)",
+          "oklch(65% 0.1500 34)",
+          "oklch(80% 0.1500 34)",
+          "oklch(95% 0.0900 34)"
+        ]
+      },
+      "warm-wash": {
+        "role": "primary",
+        "displayName": "Vermilion Wash",
+        "canonical": "oklch(91.5% 0.04 40)",
+        "tonalRamp": [
+          "oklch(15% 0.0240 40)",
+          "oklch(25% 0.0400 40)",
+          "oklch(35% 0.0400 40)",
+          "oklch(45% 0.0400 40)",
+          "oklch(55% 0.0400 40)",
+          "oklch(65% 0.0400 40)",
+          "oklch(80% 0.0400 40)",
+          "oklch(95% 0.0240 40)"
+        ]
+      },
+      "ochre-wash": {
+        "role": "tertiary",
+        "displayName": "Ochre Wash",
+        "canonical": "oklch(93% 0.04 85)",
+        "tonalRamp": [
+          "oklch(15% 0.0240 85)",
+          "oklch(25% 0.0400 85)",
+          "oklch(35% 0.0400 85)",
+          "oklch(45% 0.0400 85)",
+          "oklch(55% 0.0400 85)",
+          "oklch(65% 0.0400 85)",
+          "oklch(80% 0.0400 85)",
+          "oklch(95% 0.0240 85)"
+        ]
+      },
+      "canvas-paper": {
+        "role": "neutral",
+        "displayName": "Sketchbook Paper (canvas)",
+        "canonical": "rgb(251, 250, 245)",
+        "tonalRamp": [
+          "oklch(15% 0.0045 95)",
+          "oklch(25% 0.0075 95)",
+          "oklch(35% 0.0075 95)",
+          "oklch(45% 0.0075 95)",
+          "oklch(55% 0.0075 95)",
+          "oklch(65% 0.0075 95)",
+          "oklch(80% 0.0075 95)",
+          "oklch(95% 0.0045 95)"
+        ]
+      },
+      "fineliner": {
+        "role": "neutral",
+        "displayName": "Fine-liner (canvas)",
+        "canonical": "rgb(38, 34, 33)",
+        "tonalRamp": [
+          "oklch(15% 0.0048 45)",
+          "oklch(25% 0.0080 45)",
+          "oklch(35% 0.0080 45)",
+          "oklch(45% 0.0080 45)",
+          "oklch(55% 0.0080 45)",
+          "oklch(65% 0.0080 45)",
+          "oklch(80% 0.0080 45)",
+          "oklch(95% 0.0048 45)"
+        ]
+      },
+      "vermilion-head": {
+        "role": "primary",
+        "displayName": "Travelling Vermilion (canvas)",
+        "canonical": "rgb(212, 82, 60)",
+        "tonalRamp": [
+          "oklch(15% 0.1020 33)",
+          "oklch(25% 0.1700 33)",
+          "oklch(35% 0.1700 33)",
+          "oklch(45% 0.1700 33)",
+          "oklch(55% 0.1700 33)",
+          "oklch(65% 0.1700 33)",
+          "oklch(80% 0.1700 33)",
+          "oklch(95% 0.1020 33)"
+        ]
+      },
+      "route-wash": {
+        "role": "primary",
+        "displayName": "Route Wash (canvas, used at 0.2 to 0.42 alpha)",
+        "canonical": "rgba(226, 122, 98, a)",
+        "tonalRamp": [
+          "oklch(15% 0.0780 36)",
+          "oklch(25% 0.1300 36)",
+          "oklch(35% 0.1300 36)",
+          "oklch(45% 0.1300 36)",
+          "oklch(55% 0.1300 36)",
+          "oklch(65% 0.1300 36)",
+          "oklch(80% 0.1300 36)",
+          "oklch(95% 0.0780 36)"
+        ]
+      },
+      "pencil": {
+        "role": "neutral",
+        "displayName": "Pencil (canvas graticule)",
+        "canonical": "rgb(98, 92, 86)",
+        "tonalRamp": [
+          "oklch(15% 0.0060 60)",
+          "oklch(25% 0.0100 60)",
+          "oklch(35% 0.0100 60)",
+          "oklch(45% 0.0100 60)",
+          "oklch(55% 0.0100 60)",
+          "oklch(65% 0.0100 60)",
+          "oklch(80% 0.0100 60)",
+          "oklch(95% 0.0060 60)"
+        ]
+      },
+      "country-lettering": {
+        "role": "neutral",
+        "displayName": "Country Lettering (canvas)",
+        "canonical": "rgb(104, 96, 88)",
+        "tonalRamp": [
+          "oklch(15% 0.0072 65)",
+          "oklch(25% 0.0120 65)",
+          "oklch(35% 0.0120 65)",
+          "oklch(45% 0.0120 65)",
+          "oklch(55% 0.0120 65)",
+          "oklch(65% 0.0120 65)",
+          "oklch(80% 0.0120 65)",
+          "oklch(95% 0.0072 65)"
+        ]
+      },
+      "ocean-lettering": {
+        "role": "secondary",
+        "displayName": "Ocean Lettering (canvas)",
+        "canonical": "rgb(48, 96, 128)",
+        "tonalRamp": [
+          "oklch(15% 0.0360 240)",
+          "oklch(25% 0.0600 240)",
+          "oklch(35% 0.0600 240)",
+          "oklch(45% 0.0600 240)",
+          "oklch(55% 0.0600 240)",
+          "oklch(65% 0.0600 240)",
+          "oklch(80% 0.0600 240)",
+          "oklch(95% 0.0360 240)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The arrival name card only: the place's name, large in the centre as the dive lands."
+      },
+      "opening-title": {
+        "displayName": "Opening title",
+        "purpose": "The opening's title over the turning globe: Tuan, Through the Lens / Tuan 的鏡頭之旅."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "A place page's title (Alegreya); the Barcelona guide's title uses the same size in Alegreya Sans."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Guide section headings over a cerulean brush stroke."
+      },
+      "caption": {
+        "displayName": "Cover caption",
+        "purpose": "The place name at the cover's bottom-left corner."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Interface text."
+      },
+      "reading": {
+        "displayName": "Reading",
+        "purpose": "Guide prose, 65ch."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Spaced capitals for every word-control, menu word, index head, journey date and table head."
+      },
+      "place-name": {
+        "displayName": "Place name",
+        "purpose": "His places' names under their books on the map, small capitals with a paper halo."
+      }
+    },
+    "washes": {
+      "source": "paint.js, multipliers over paper rgb(251, 250, 245)",
+      "sea": [
+        0.6,
+        0.81,
+        0.93
+      ],
+      "ochre": [
+        0.97,
+        0.88,
+        0.66
+      ],
+      "sapGreen": [
+        0.8,
+        0.89,
+        0.66
+      ],
+      "polar": [
+        0.9,
+        0.93,
+        0.96
+      ],
+      "travelled": [
+        0.98,
+        0.66,
+        0.57
+      ]
+    },
+    "shadows": [
+      {
+        "name": "lift",
+        "value": "0 1px 2px oklch(22% 0.025 55 / 0.1), 0 10px 28px -12px oklch(22% 0.025 55 / 0.32)",
+        "purpose": "The index drawer only."
+      },
+      {
+        "name": "page-rising",
+        "value": "0 -18px 40px -24px oklch(20% 0.012 50 / 0.45)",
+        "purpose": "A place or guide page rising over the cover."
+      },
+      {
+        "name": "thumb-hover",
+        "value": "0 7px 16px -9px oklch(22% 0.025 55 / 0.5)",
+        "purpose": "Index thumbnail on hover, with a 2px lift."
+      },
+      {
+        "name": "cap-shadow",
+        "value": "0 1px 2px oklch(15% 0.01 50 / 0.55), 0 0 18px oklch(15% 0.01 50 / 0.3)",
+        "purpose": "Text-shadow under paper-coloured words on the cover."
+      },
+      {
+        "name": "paper-halo",
+        "value": "-webkit-text-stroke: 3.5px var(--paper); paint-order: stroke fill",
+        "purpose": "Lettering laid on the painting."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Arrivals and responses."
+      },
+      {
+        "name": "soft",
+        "value": "cubic-bezier(0.45, 0, 0.55, 1)",
+        "purpose": "Dissolves and fades."
+      },
+      {
+        "name": "chrome-fade",
+        "value": "420ms",
+        "purpose": "Margins and books stepping back for a dive."
+      },
+      {
+        "name": "dive-zoom",
+        "value": "2000ms",
+        "purpose": "Map magnifies into the place; pen ring tightens (drawn in 500ms)."
+      },
+      {
+        "name": "arrival-card",
+        "value": "in at 900ms, 900ms rise from 6px blur; out over 1100ms",
+        "purpose": "Place name card."
+      },
+      {
+        "name": "photo-dissolve",
+        "value": "starts 2250ms, 1800ms, opacity 0 to 1, blur 8px to 0, scale 1.04 to 1",
+        "purpose": "Cover photograph over the whole window."
+      },
+      {
+        "name": "dive-back",
+        "value": "dissolve reversed 1250ms, camera back 1600ms, ring lets go 1400ms",
+        "purpose": "Return to the map."
+      },
+      {
+        "name": "cover-still",
+        "value": "2500ms",
+        "purpose": "Cover controls step back to 62% after stillness."
+      },
+      {
+        "name": "opening",
+        "value": "globe 2500ms, unroll 1600ms, flights from 78% of unroll, dissolve 900ms, clear 1200ms, skip 450ms",
+        "purpose": "First visit of a session only."
+      },
+      {
+        "name": "flights-open",
+        "value": "950ms",
+        "purpose": "Corner globe grows onto the left page; closes in 760ms."
+      },
+      {
+        "name": "replay-cap",
+        "value": "7000ms at 1x; slow up to 16000ms",
+        "purpose": "A journey's replay, start to end."
+      },
+      {
+        "name": "finale",
+        "value": "1500ms",
+        "purpose": "Warm wash sweeping a finished journey."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "transitions 1ms; no opening; dive becomes 300ms fade",
+        "purpose": "prefers-reduced-motion: reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "single-column-guide",
+        "value": "64rem"
+      },
+      {
+        "name": "phone",
+        "value": "47.99rem"
+      }
+    ],
+    "scope": "design 2/wc-sketch only. Root DESIGN.md is design 1. Other design 2 folders are unmaintained alternatives."
+  },
+  "components": [
+    {
+      "name": "Word control",
+      "kind": "button",
+      "refersTo": "word-control",
+      "description": "The site's only button form: a spaced-capital word, underlined, at least 2.75rem tall; no box, no icon.",
+      "html": "<button class=\"ds-word\" type=\"button\">Back to the map</button>",
+      "css": ".ds-word { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 0.1rem; background: none; border: 0; border-radius: 0; cursor: pointer; font-family: \"Alegreya Sans\", \"Noto Sans TC\", system-ui, sans-serif; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; line-height: 1.3; color: var(--ink, oklch(24.5% 0.008 45)); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.55em; transition: color 180ms; } .ds-word:hover { color: var(--warm-deep, oklch(49% 0.15 34)); } .ds-word:focus-visible { outline: 2px solid var(--warm-deep, oklch(49% 0.15 34)); outline-offset: 3px; }"
+    },
+    {
+      "name": "Language switch",
+      "kind": "nav",
+      "refersTo": "lang-button",
+      "description": "EN / 中文 in the top-right margin; the language in use underlined in ink, lettered with a paper halo.",
+      "html": "<div class=\"ds-lang\" role=\"group\" aria-label=\"Language\"><button class=\"ds-lang__btn\" aria-pressed=\"true\">EN</button><button class=\"ds-lang__btn\" aria-pressed=\"false\" lang=\"zh-Hant\">中文</button></div>",
+      "css": ".ds-lang { display: flex; gap: 0.15rem; } .ds-lang__btn { min-width: 2.75rem; min-height: 2.75rem; padding: 0 0.45rem; background: none; border: 0; border-radius: 0; cursor: pointer; font-family: \"Alegreya Sans\", \"Noto Sans TC\", system-ui, sans-serif; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink-2, oklch(41% 0.012 60)); -webkit-text-stroke: 3.5px var(--paper, oklch(98.4% 0.0075 95)); paint-order: stroke fill; } .ds-lang__btn:hover { color: var(--ink, oklch(24.5% 0.008 45)); } .ds-lang__btn[aria-pressed=\"true\"] { color: var(--ink, oklch(24.5% 0.008 45)); text-decoration: underline; text-underline-offset: 0.4em; text-decoration-thickness: 1px; } .ds-lang__btn:focus-visible { outline: 2px solid var(--warm-deep, oklch(49% 0.15 34)); outline-offset: 3px; }"
+    },
+    {
+      "name": "Instagram link",
+      "kind": "custom",
+      "refersTo": "word-control",
+      "description": "The only contact: Instagram, then the handle tuan_1127.",
+      "html": "<a class=\"ds-ig\" href=\"https://www.instagram.com/tuan_1127/\">Instagram <b>tuan_1127</b></a>",
+      "css": ".ds-ig { display: inline-flex; align-items: center; gap: 0.35rem; min-height: 2.75rem; font-family: \"Alegreya Sans\", \"Noto Sans TC\", system-ui, sans-serif; font-size: 0.85rem; font-style: italic; color: var(--ink-2, oklch(41% 0.012 60)); text-decoration: none; } .ds-ig b { font-style: normal; font-weight: 500; color: var(--ink, oklch(24.5% 0.008 45)); transition: color 180ms; } .ds-ig:hover b { color: var(--warm-deep, oklch(49% 0.15 34)); } .ds-ig:focus-visible { outline: 2px solid var(--warm-deep, oklch(49% 0.15 34)); outline-offset: 3px; }"
+    },
+    {
+      "name": "Speed words",
+      "kind": "chip",
+      "refersTo": "speed-button",
+      "description": "The Flights replay speed: Slow, 0.5x, 1x, 1.5x, 2x as words; the one in use underlined in ink.",
+      "html": "<div class=\"ds-speed\"><span class=\"ds-speed__label\">Speed</span><button class=\"ds-speed__btn\">Slow</button><button class=\"ds-speed__btn\">0.5×</button><button class=\"ds-speed__btn\" aria-pressed=\"true\">1×</button><button class=\"ds-speed__btn\">1.5×</button><button class=\"ds-speed__btn\">2×</button></div>",
+      "css": ".ds-speed { display: flex; align-items: baseline; gap: 0.9rem; } .ds-speed__label { font-family: \"Alegreya Sans\", \"Noto Sans TC\", system-ui, sans-serif; font-weight: 500; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-3, oklch(62% 0.014 65)); } .ds-speed__btn { font: 500 0.82rem/1 \"Alegreya Sans\", \"Noto Sans TC\", system-ui, sans-serif; font-variant-numeric: tabular-nums; color: var(--ink-2, oklch(41% 0.012 60)); padding: 0.55rem 0.2rem; min-width: 2.75rem; min-height: 2.75rem; background: none; border: 0; border-radius: 0; cursor: pointer; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 0.35em; text-decoration-thickness: 1px; transition: color 200ms, text-decoration-color 200ms; } .ds-speed__btn:hover { color: var(--ink, oklch(24.5% 0.008 45)); text-decoration-color: var(--ink-3, oklch(62% 0.014 65)); } .ds-speed__btn[aria-pressed=\"true\"] { color: var(--ink, oklch(24.5% 0.008 45)); text-decoration-color: var(--ink, oklch(24.5% 0.008 45)); } .ds-speed__btn:focus-visible { outline: 1px solid var(--ink, oklch(24.5% 0.008 45)); outline-offset: 2px; }"
+    },
+    {
+      "name": "Cover caption",
+      "kind": "custom",
+      "refersTo": "cover-caption",
+      "description": "The only writing on a photograph: place, country and count at the bottom-left, in paper over a soft darkening.",
+      "html": "<div class=\"ds-cover\"><div class=\"ds-cover__shade\"></div><p class=\"ds-cover__cap\"><b>Park Güell</b><span>Spain</span><span class=\"ds-cover__n\">1 / 6</span></p></div>",
+      "css": ".ds-cover { position: relative; height: 16rem; background: linear-gradient(135deg, oklch(55% 0.06 60), oklch(38% 0.04 230)); overflow: hidden; } .ds-cover__shade { position: absolute; left: 0; right: 0; bottom: 0; height: 60%; background: linear-gradient(to top, oklch(16% 0.012 50 / 0.7), oklch(16% 0.012 50 / 0.28) 50%, transparent); } .ds-cover__cap { position: absolute; left: 1.5rem; bottom: 1.25rem; margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.15rem 0.9rem; color: var(--paper, oklch(98.4% 0.0075 95)); text-shadow: 0 1px 2px oklch(15% 0.01 50 / 0.55), 0 0 18px oklch(15% 0.01 50 / 0.3); font-family: \"Alegreya Sans\", \"Noto Sans TC\", system-ui, sans-serif; } .ds-cover__cap b { font-family: \"Alegreya\", \"Noto Serif TC\", Georgia, serif; font-weight: 400; font-size: clamp(1.3rem, 1rem + 0.9vw, 1.7rem); line-height: 1.2; } .ds-cover__cap span { font-size: 0.95rem; letter-spacing: 0.04em; opacity: 0.92; } .ds-cover__n { font-size: 0.85rem !important; letter-spacing: 0.08em !important; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Arrival name card",
+      "kind": "custom",
+      "refersTo": "display",
+      "description": "The place's name rising large in the middle of the map as the dive arrives, with country and coordinates under it.",
+      "html": "<div class=\"ds-arrival\"><p class=\"ds-arrival__name\">Barcelona</p><p class=\"ds-arrival__where\">Spain   41.39° N  2.17° E</p></div>",
+      "css": ".ds-arrival { display: grid; justify-items: center; text-align: center; padding: 2rem 1rem; background: var(--paper, oklch(98.4% 0.0075 95)); animation: ds-rise 900ms cubic-bezier(0.16, 1, 0.3, 1) both; } .ds-arrival__name { margin: 0; font-family: \"Alegreya\", \"Noto Serif TC\", Georgia, serif; font-weight: 400; font-size: clamp(3.2rem, 1.6rem + 6.4vw, 8.6rem); line-height: 0.98; letter-spacing: 0.01em; color: var(--ink, oklch(24.5% 0.008 45)); text-shadow: 0 0 0.08em var(--paper, #fbfaf5), 0 0 0.3em var(--paper, #fbfaf5), 0 0 0.7em var(--paper, #fbfaf5); } .ds-arrival__where { margin: 1.1rem 0 0; font-family: \"Alegreya Sans\", \"Noto Sans TC\", system-ui, sans-serif; font-weight: 500; font-size: 0.8125rem; letter-spacing: 0.34em; text-transform: uppercase; color: var(--ink-2, oklch(41% 0.012 60)); white-space: pre; } @keyframes ds-rise { from { opacity: 0; filter: blur(6px); transform: translateY(0.6rem) scale(0.985); } }"
+    },
+    {
+      "name": "Index tab and drawer",
+      "kind": "nav",
+      "refersTo": "index-panel",
+      "description": "The slim vertical Photographs tab at the right edge; opens a 23rem paper drawer with the Lift shadow.",
+      "html": "<button class=\"ds-tab\" type=\"button\">Photographs <span>68</span></button>",
+      "css": ".ds-tab { writing-mode: vertical-rl; display: inline-flex; align-items: center; gap: 0.7rem; min-width: 2.75rem; padding: 1.1rem 0.75rem; background: none; border: 0; border-radius: 0; cursor: pointer; font-family: \"Alegreya Sans\", \"Noto Sans TC\", system-ui, sans-serif; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink, oklch(24.5% 0.008 45)); -webkit-text-stroke: 3.5px var(--paper, oklch(98.4% 0.0075 95)); paint-order: stroke fill; transition: color 180ms; } .ds-tab span { font-variant-numeric: tabular-nums; color: var(--ink-2, oklch(41% 0.012 60)); letter-spacing: 0.1em; } .ds-tab:hover { color: var(--warm-deep, oklch(49% 0.15 34)); } .ds-tab:focus-visible { outline: 2px solid var(--warm-deep, oklch(49% 0.15 34)); outline-offset: 3px; }"
+    },
+    {
+      "name": "Journey row",
+      "kind": "card",
+      "refersTo": "journey-date-active",
+      "description": "A journey in the Flights list: date word, italic route, place thumbnails (a pen-hatched blank where there is no photograph).",
+      "html": "<div class=\"ds-journey\"><button class=\"ds-journey__date\">Summer 2025</button><p class=\"ds-journey__route\">New York, Boston, San Francisco, Los Angeles</p><span class=\"ds-jplace\"><span class=\"ds-jplace__blank\"></span><span class=\"ds-jplace__name\">Boston</span></span></div>",
+      "css": ".ds-journey { padding: 0.9rem 0 1.2rem; border-top: 1px solid var(--ink, oklch(24.5% 0.008 45)); border-bottom: 1px solid var(--hair, oklch(88% 0.012 80)); font-family: \"Alegreya Sans\", \"Noto Sans TC\", system-ui, sans-serif; } .ds-journey__date { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 0.5rem; margin-left: -0.5rem; background: var(--ochre-wash, oklch(93% 0.04 85)); border: 0; border-radius: 0; cursor: pointer; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ink, oklch(24.5% 0.008 45)); transition: color 180ms; } .ds-journey__date:hover { color: var(--warm-deep, oklch(49% 0.15 34)); } .ds-journey__date:focus-visible { outline: 2px solid var(--warm-deep, oklch(49% 0.15 34)); outline-offset: 3px; } .ds-journey__route { margin: 0.1rem 0 0.75rem; font-size: 0.95rem; font-style: italic; line-height: 1.45; color: var(--ink-2, oklch(41% 0.012 60)); } .ds-jplace { display: inline-flex; align-items: center; gap: 0.6rem; min-height: 2.75rem; } .ds-jplace__blank { width: 3.4rem; height: 2.4rem; background: repeating-linear-gradient(-58deg, transparent 0 4px, oklch(24.5% 0.008 45 / 0.3) 4px 4.8px), var(--paper, oklch(98.4% 0.0075 95)); box-shadow: inset 0 0 0 1px oklch(24.5% 0.008 45 / 0.5); } .ds-jplace__name { font-size: 0.98rem; font-weight: 500; font-variant-caps: small-caps; letter-spacing: 0.05em; color: var(--ink, oklch(24.5% 0.008 45)); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Traveller's Sketchbook Map",
+    "overview": "The whole site is one sheet of cold-press sketchbook paper with the world drawn on it the urban sketcher's way: fine-liner first (coasts whose weight swells and thins with the nib, borders as a lighter broken line, mountains hatched from real relief), then light washes laid a few pixels off the lines. The map is the home page. Visitors travel across it instead of scrolling. A place is chosen by its book, and the map dives into that place until the photograph takes the whole window. Under the photograph the place's page or guide rises like a page turned up over a cover.\n\nIt is light and quiet. The paper does most of the work, the ink carries the structure, and colour is a wash, never a fill. Controls are words lettered in the margins, with no bars, panels or icons over the map. The photographs are the only full-strength colour anywhere, and nothing competes with them: when one is on screen, the drawing behind it softens and fades.",
+    "keyCharacteristics": [
+      "One sheet of paper, edge to edge, with its tooth laid over the whole map. Light only.",
+      "Pen first, wash second. Washes sit slightly off their lines and leave white paper showing through.",
+      "Every country lettered by hand in Alegreya Sans small capitals. Names of his places in Alegreya serif.",
+      "Vermilion is the travelling colour: the heads of flights, the dots inside place marks, and the warm wash on countries travelled.",
+      "Square corners on every box. Round shapes appear only as pen marks: rings, dots and the globe.",
+      "Every control is a word, and every string comes in English and 繁體中文."
+    ],
+    "rules": [
+      {
+        "name": "The Wash, Never Fill Rule",
+        "body": "Colour reaches the map only as a transparent wash multiplied over paper: blotched, granulated, its edge wandering, and laid a few pixels off its pen line, with white sparkle wherever the brush skipped. A flat opaque colour on the map is wrong.",
+        "section": "colors"
+      },
+      {
+        "name": "The Travelling Vermilion Rule",
+        "body": "Vermilion marks travel: places he has been, routes, and the things moving along them. It is never a background, a button fill or decoration. Hover and focus use the deep step only.",
+        "section": "colors"
+      },
+      {
+        "name": "The No Hard-coded Ink Rule",
+        "body": "CSS colours come from the `:root` tokens. Canvas colours come from `WC.PAPER`, `WC.ink()` and the constants named here. A new colour gets a token first.",
+        "section": "colors"
+      },
+      {
+        "name": "The Lettered-by-Hand Rule",
+        "body": "Anything written onto the painting carries a paper halo (`-webkit-text-stroke: 3.5px` paper in CSS, a 3.2px stroke on canvas) so it reads over any wash. It is removed in forced-colours mode.",
+        "section": "typography"
+      },
+      {
+        "name": "The Two Hands Rule",
+        "body": "Alegreya serif is for names you arrive at: the opening title, the arrival card, the cover caption and a place's title. Everything else is lettered in Alegreya Sans. In 中文, italic is never used. It becomes upright with added tracking.",
+        "section": "typography"
+      },
+      {
+        "name": "The Paper Is the Surface Rule",
+        "body": "Nothing floats over the map except the books and the index drawer. Margins, controls and lettering sit on the paper itself, with no panels or bars.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** keep the site light only: `color-scheme: light`, paper ground, no dark theme.",
+      "**Do** lay colour on the map as a wash over paper, a few pixels off its pen line, with white paper sparkle left in it.",
+      "**Do** letter everything written on the painting with a paper halo, and countries in Alegreya Sans small capitals by rank.",
+      "**Do** keep vermilion for travel: flight heads, place-mark centres, the travelled-country wash and route washes. Use `warm-deep` for hover and focus.",
+      "**Do** make every control a word of at least 2.75rem, and keep it at the edges.",
+      "**Do** put every string in both English and 繁體中文. In 中文, drop italic and uppercase, add tracking, and use Noto Serif TC 500 for names.",
+      "**Do** strip long dashes from data on the way to the page (ranges become hyphens, asides become commas).",
+      "**Do** keep the Flights replay to 7s at 1x, and keep each leg's country in frame.",
+      "**Do** give every new colour a `:root` token or a named canvas constant before using it."
+    ],
+    "donts": [
+      "**Don't** write anything across a photograph. The cover carries only the bottom-left caption, with its small word-controls at the very edges over a soft darkening.",
+      "**Don't** offer any contact other than Instagram tuan_1127. No email, no form.",
+      "**Don't** single out Taiwan. It is washed like every other country travelled. Taipei appears only as the flights' origin: a small ink dot, never ringed.",
+      "**Don't** show anything that is not his: only his own photographs, his real journeys, dates and places, and camera data read from the file.",
+      "**Don't** use long dashes (– or —) anywhere on the page.",
+      "**Don't** add bars, panels, headers or icons over the map, or round the corners of any box.",
+      "**Don't** fill a shape with flat opaque colour on the map, or use vermilion as a background or button fill.",
+      "**Don't** play the opening for a returning visitor in the same session, under reduced motion, or when the address names a page."
+    ]
+  }
+}
