@@ -167,6 +167,7 @@ what.
   photos) and is refreshed by every build. He opens it by double-clicking
   `photo-list.command`. **Rerun it whenever he adds originals.** Originals are matched to web
   copies by the capture time both files carry, so never strip that from a web copy.
+- A photograph belongs to a city's book (the US is four: `new-york`, `boston`, `san-francisco`, `los-angeles`, each a `shelf` entry with a `place`) through an optional `"city": "<place>"` on its slide; without it, it belongs to its country's book.
 - Camera data shown on the site is read from the photograph's own file. Never invent it.
 - Only publish photos he confirms are his own — some "sample pic" links in his planning docs
   are other people's reference shots.

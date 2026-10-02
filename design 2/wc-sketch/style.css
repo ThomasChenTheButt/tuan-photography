@@ -581,8 +581,8 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 .jplace__blank { background: repeating-linear-gradient(-58deg, transparent 0 4px, oklch(24.5% 0.008 45 / 0.3) 4px 4.8px), var(--paper); box-shadow: inset 0 0 0 1px oklch(24.5% 0.008 45 / 0.5); }
 .jplace__name { font-size: 0.98rem; font-weight: 500; font-variant-caps: small-caps; letter-spacing: 0.05em; }
 :lang(zh-Hant) .jplace__name { font-weight: 500; letter-spacing: 0.1em; }
-.jplace:hover .jplace__name, .jplace:focus-visible .jplace__name { color: var(--warm-deep); }
-.jplace:hover img, .jplace:focus-visible img { transform: translateY(-2px); box-shadow: 0 6px 14px -8px oklch(20% 0.012 50 / 0.5); }
+button.jplace:hover .jplace__name, .jplace:focus-visible .jplace__name { color: var(--warm-deep); }
+button.jplace:hover img, .jplace:focus-visible img { transform: translateY(-2px); box-shadow: 0 6px 14px -8px oklch(20% 0.012 50 / 0.5); }
 .flights__back { position: fixed; z-index: 3; left: var(--edge); top: calc(var(--edge) - 0.65rem); -webkit-text-stroke: 3.5px var(--paper); paint-order: stroke fill; }
 .flights.is-arriving .flights__page--list, .flights.is-arriving .flights__back, .flights.is-arriving .flights__under { opacity: 0; transform: translateY(14px); }
 .flights__page--list, .flights__back, .flights__under { transition: opacity 700ms var(--soft) 260ms, transform 900ms var(--ease) 260ms; }

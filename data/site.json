@@ -2386,8 +2386,8 @@
         "zh": "紐約・波士頓・華盛頓・舊金山・洛杉磯"
       },
       "date": {
-        "en": "2025.6–8",
-        "zh": "2025.6–8"
+        "en": "2014, 2015, 2025",
+        "zh": "2014、2015、2025"
       },
       "ll": [
         40.71,
@@ -2454,16 +2454,16 @@
       "en": "Malaysia",
       "zh": "馬來西亞",
       "note": {
-        "en": "",
-        "zh": ""
+        "en": "Sabah, on Borneo.",
+        "zh": "沙巴，在婆羅洲。"
       },
       "date": {
         "en": "2010",
         "zh": "2010"
       },
       "ll": [
-        3.14,
-        101.69
+        5.98,
+        116.07
       ]
     },
     {
@@ -3412,6 +3412,12 @@
       "countries": [
         "usa"
       ],
+      "places": [
+        "new-york",
+        "boston",
+        "san-francisco",
+        "los-angeles"
+      ],
       "legs": [
         {
           "from": {
@@ -4052,6 +4058,181 @@
       "legs": []
     },
     {
+      "id": "2015-usa",
+      "label": {
+        "en": "2015",
+        "zh": "2015 年"
+      },
+      "countries": [
+        "usa"
+      ],
+      "places": [
+        "new-york",
+        "boston"
+      ],
+      "legs": [
+        {
+          "from": {
+            "code": "TPE",
+            "city": "Taipei",
+            "lat": 25.08,
+            "lng": 121.23,
+            "zh": "台北"
+          },
+          "to": {
+            "code": "JFK",
+            "city": "New York",
+            "lat": 40.64,
+            "lng": -73.78,
+            "zh": "紐約"
+          },
+          "month": null,
+          "mode": "flight",
+          "confirmed": false
+        },
+        {
+          "from": {
+            "city": "New York",
+            "lat": 40.71,
+            "lng": -74.0,
+            "zh": "紐約"
+          },
+          "to": {
+            "city": "Boston",
+            "lat": 42.36,
+            "lng": -71.06,
+            "zh": "波士頓"
+          },
+          "month": null,
+          "mode": "ground",
+          "confirmed": false
+        },
+        {
+          "from": {
+            "city": "Boston",
+            "lat": 42.36,
+            "lng": -71.06,
+            "zh": "波士頓"
+          },
+          "to": {
+            "city": "New York",
+            "lat": 40.71,
+            "lng": -74.0,
+            "zh": "紐約"
+          },
+          "month": null,
+          "mode": "ground",
+          "confirmed": false
+        },
+        {
+          "from": {
+            "code": "JFK",
+            "city": "New York",
+            "lat": 40.64,
+            "lng": -73.78,
+            "zh": "紐約"
+          },
+          "to": {
+            "code": "TPE",
+            "city": "Taipei",
+            "lat": 25.08,
+            "lng": 121.23,
+            "zh": "台北"
+          },
+          "month": null,
+          "mode": "flight",
+          "confirmed": false
+        }
+      ]
+    },
+    {
+      "id": "2014-usa",
+      "label": {
+        "en": "2014",
+        "zh": "2014 年"
+      },
+      "countries": [
+        "usa"
+      ],
+      "places": [
+        "los-angeles"
+      ],
+      "legs": [
+        {
+          "from": {
+            "code": "TPE",
+            "city": "Taipei",
+            "lat": 25.08,
+            "lng": 121.23,
+            "zh": "台北"
+          },
+          "to": {
+            "code": "LAX",
+            "city": "Los Angeles",
+            "lat": 33.94,
+            "lng": -118.41,
+            "zh": "洛杉磯"
+          },
+          "month": null,
+          "mode": "flight",
+          "confirmed": false
+        },
+        {
+          "from": {
+            "city": "Los Angeles",
+            "lat": 34.05,
+            "lng": -118.24,
+            "zh": "洛杉磯"
+          },
+          "to": {
+            "city": "Las Vegas",
+            "lat": 36.17,
+            "lng": -115.14,
+            "zh": "拉斯維加斯"
+          },
+          "month": null,
+          "mode": "ground",
+          "confirmed": false
+        },
+        {
+          "from": {
+            "city": "Las Vegas",
+            "lat": 36.17,
+            "lng": -115.14,
+            "zh": "拉斯維加斯"
+          },
+          "to": {
+            "city": "San Diego",
+            "lat": 32.72,
+            "lng": -117.16,
+            "zh": "聖地牙哥"
+          },
+          "month": null,
+          "mode": "ground",
+          "confirmed": false
+        },
+        {
+          "from": {
+            "code": "LAX",
+            "city": "Los Angeles",
+            "lat": 33.94,
+            "lng": -118.41,
+            "zh": "洛杉磯"
+          },
+          "to": {
+            "code": "TPE",
+            "city": "Taipei",
+            "lat": 25.08,
+            "lng": 121.23,
+            "zh": "台北"
+          },
+          "month": null,
+          "mode": "flight",
+          "confirmed": false
+        }
+      ]
+    },
+    {
       "id": "2012-netherlands",
       "label": {
         "en": "2012",
@@ -4071,7 +4252,46 @@
       "countries": [
         "malaysia"
       ],
-      "legs": []
+      "legs": [
+        {
+          "from": {
+            "code": "TPE",
+            "city": "Taipei",
+            "lat": 25.08,
+            "lng": 121.23,
+            "zh": "台北"
+          },
+          "to": {
+            "code": "BKI",
+            "city": "Kota Kinabalu",
+            "lat": 5.92,
+            "lng": 116.05,
+            "zh": "亞庇"
+          },
+          "month": null,
+          "mode": "flight",
+          "confirmed": false
+        },
+        {
+          "from": {
+            "code": "BKI",
+            "city": "Kota Kinabalu",
+            "lat": 5.92,
+            "lng": 116.05,
+            "zh": "亞庇"
+          },
+          "to": {
+            "code": "TPE",
+            "city": "Taipei",
+            "lat": 25.08,
+            "lng": 121.23,
+            "zh": "台北"
+          },
+          "month": null,
+          "mode": "flight",
+          "confirmed": false
+        }
+      ]
     }
   ],
   "shelf": [
@@ -4157,7 +4377,52 @@
       "cover": "aoraki"
     },
     {
-      "country": "usa"
+      "country": "usa",
+      "place": "new-york",
+      "title": {
+        "en": "New York",
+        "zh": "紐約"
+      },
+      "ll": [
+        40.71,
+        -74.0
+      ]
+    },
+    {
+      "country": "usa",
+      "place": "boston",
+      "title": {
+        "en": "Boston",
+        "zh": "波士頓"
+      },
+      "ll": [
+        42.36,
+        -71.06
+      ]
+    },
+    {
+      "country": "usa",
+      "place": "san-francisco",
+      "title": {
+        "en": "San Francisco",
+        "zh": "舊金山"
+      },
+      "ll": [
+        37.77,
+        -122.42
+      ]
+    },
+    {
+      "country": "usa",
+      "place": "los-angeles",
+      "title": {
+        "en": "Los Angeles",
+        "zh": "洛杉磯"
+      },
+      "ll": [
+        34.05,
+        -118.24
+      ]
     },
     {
       "country": "andorra"

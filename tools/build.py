@@ -419,7 +419,7 @@ def feature(g, root, en, zh, with_country=True):
 
 def shelf(root, en, zh):
     """The guides as books on a ring that never ends, seen from the front like a coverflow: one
-    book per country, in the owner's order. The script turns the ring and places each book.
+    book per shelf entry (a country, or a city within one), in the owner's order. The script turns the ring and places each book.
     A written guide is a book that opens the guide; the others open the country's photographs."""
     en.update(bandGuide="A photographer's guide", bandPhotos="Photographs", bandNone="No photographs yet",
               bookOpen="Read the guide", bookNot="Guide not written yet", series="tuan photography")
@@ -434,9 +434,12 @@ def shelf(root, en, zh):
             key, title, href = f"bk_{g['id']}", g["title"], f"{root}{g['href']}"
             sid, band, status = b.get("photo") or g["lead"], "bandGuide", "bookOpen"
         else:
-            c = COUNTRIES[b["country"]]
-            key, title, href = f"bk_{c['id']}", b.get("title") or {"en": c["en"], "zh": c["zh"]}, f"{root}countries/{c['id']}.html"
-            sid = b.get("photo") or next((x["id"] for x in DATA["slides"] if x["country"] == c["id"]), None)
+            # A book for one city (the four US cities) is keyed by its place and opens its
+            # country's page; its photographs are the slides marked with that city.
+            c, place = COUNTRIES[b["country"]], b.get("place")
+            key, title, href = f"bk_{place or c['id']}", b.get("title") or {"en": c["en"], "zh": c["zh"]}, f"{root}countries/{c['id']}.html"
+            mine = (lambda x: x.get("city") == place) if place else (lambda x: x["country"] == c["id"])
+            sid = b.get("photo") or next((x["id"] for x in DATA["slides"] if mine(x)), None)
             band, status = ("bandPhotos" if sid else "bandNone"), "bookNot"
         en[key], zh[key] = title["en"], title["zh"]
         en[f"bo_{key}"] = f"{title['en']}: {en[status].lower() if status == 'bookOpen' else en[status]}"

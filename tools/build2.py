@@ -10,7 +10,9 @@ one file, design 2/data.js, which every design 2 page loads. Nothing in design 1
 What it writes, as window.SITE:
   countries  every country travelled, with its place on the map (ll) and its photographs
   slides     every photograph: file, shape, names, camera data, place on the map
-  books      the guides as books, one per country, in the owner's order (the same as design 1)
+  books      the guides as books, one per shelf entry (a country, or a city within one such as
+             New York), in the owner's order (the same as design 1). Each has a stable key: the
+             city's place id if it has one, else the guide id or the country id
   guides     each written guide as a ready piece of HTML plus its words in both languages
   i18n       the shared words in both languages
 
@@ -33,7 +35,7 @@ TONES = ("clay", "olive", "slate")
 
 def slide(s):
     keep = ("file", "w", "h", "country", "ll", "place", "where", "alt", "best", "note", "map",
-            "camera", "lens", "focal", "aperture", "shutter", "iso", "guide")
+            "camera", "lens", "focal", "aperture", "shutter", "iso", "guide", "city")
     out = {k: s[k] for k in keep if k in s}
     for field in ("place", "where", "alt", "best", "note"):
         if field in out:
@@ -89,18 +91,23 @@ def main():
     for i, x in enumerate(D["shelf"]):
         if "guide" in x:
             g = next(y for y in D["guides"] if y["id"] == x["guide"])
-            books.append({"id": g["id"], "country": g["country"], "guide": g["id"], "title": g["title"],
+            books.append({"id": g["id"], "key": x.get("place") or g["id"],
+                          "country": g["country"], "guide": g["id"], "title": g["title"],
                           "photo": x.get("photo") or g["lead"], "cover": x.get("cover") or g["lead"],
                           "band": "bandGuide", "status": "bookOpen",
                           "tone": TONES[i % 3]})
         else:
-            c = b.COUNTRIES[x["country"]]
-            photo = x.get("photo") or next((s["id"] for s in D["slides"] if s["country"] == c["id"]), None)
-            books.append({"id": c["id"], "country": c["id"], "guide": None,
+            c, place = b.COUNTRIES[x["country"]], x.get("place")
+            # a city's book holds the photographs marked with that city; a country's, the country's
+            mine = (lambda s: s.get("city") == place) if place else (lambda s: s["country"] == c["id"])
+            photo = x.get("photo") or next((s["id"] for s in D["slides"] if mine(s)), None)
+            books.append({"id": c["id"], "key": place or c["id"], "country": c["id"], "guide": None,
                           "title": x.get("title") or {"en": c["en"], "zh": c["zh"]}, "photo": photo,
                           "cover": x.get("cover") or photo,
                           "band": "bandPhotos" if photo else "bandNone", "status": "bookNot",
                           "tone": TONES[i % 3]})
+    for book, x in zip(books, D["shelf"]):   # a city's book stands at the city on the map
+        book.update({k: x[k] for k in ("place", "ll") if k in x})
     i18n = {
         "en": {"site": b.SITE, "line": "Travel like a photographer", "series": "tuan photography",
                "bandGuide": "A photographer's guide", "bandPhotos": "Photographs", "bandNone": "No photographs yet",
@@ -121,7 +128,8 @@ def main():
         # his real journeys and their legs, taken from his own trip documents (2026-10-02)
         for j in D["journeys"]:
             journeys.append({"id": j["id"], "date": {"en": b.clean_en(j["label"]["en"]), "zh": b.clean_zh(j["label"]["zh"])},
-                             "countries": j["countries"], "legs": j["legs"]})
+                             "countries": j["countries"], "legs": j["legs"],
+                             **({"places": j["places"]} if j.get("places") else {})})
     for c in ([] if journeys else D["countries"]):
         if c["id"] == "taiwan":
             continue

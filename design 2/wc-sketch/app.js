@@ -4,7 +4,8 @@
    hatched, and every country lettered in small capitals. Then light washes go over it, a little
    off the lines (paint.js). The painting is made once per zoom band and laid on a canvas that
    d3-zoom moves; the pen and the lettering are drawn over it live.
-   Design 1's books stand at the sixteen places. Choosing one magnifies the map into the country,
+   Design 1's books stand at their places, one per book (a country, or a city such as New York).
+   Choosing one magnifies the map into the country (or the city),
    and as the camera settles the cover photograph dissolves in across the whole window: a gallery
    of that country's photographs (swipe for the next), with the guide or the photographs page
    below it. The small globe in the corner opens into the Flights view, a sketchbook spread with
@@ -101,31 +102,54 @@
 
   /* ------------------------------------------------------------ data */
 
+  // A BOOK is the unit a visitor sees and chooses: one per shelf entry, usually a country, but a
+  // country may have several (the United States: New York, Boston, San Francisco, Los Angeles).
+  // Each has a key (its city, else its guide or country), its own place on the map and address.
   const countries = Object.fromEntries(S.countries.map((c) => [c.id, c]));
-  const books = S.books.map((b) => ({ ...b, view: b.guide ? `guide-${b.guide}` : `place-${b.country}` }));
-  const bookByCountry = Object.fromEntries(books.map((b) => [b.country, b]));
   const guide = S.guides.barcelona;
-  const order = books.map((b) => countries[b.country]).filter(Boolean);
-  const placeLL = (cid) => (cid === guide.country ? guide.ll : countries[cid].ll);
-  const indexOrder = order.flatMap((c) => c.photos.filter((id) => S.slides[id]));
-  const coverFor = (cid, want) => {
-    if (want && S.slides[want] && S.slides[want].country === cid) return want;
-    const b = bookByCountry[cid];
+  const books = S.books
+    .filter((b) => countries[b.country])
+    .map((b) => {
+      const key = b.key || b.place || b.guide || b.country;
+      return { ...b, key, view: b.guide ? `guide-${b.guide}` : `place-${key}` };
+    });
+  const bookByKey = Object.fromEntries(books.map((b) => [b.key, b]));
+  // a country's first book stands for the country (an old #place-usa opens New York)
+  const bookByCountry = {};
+  for (const b of books) if (!bookByCountry[b.country]) bookByCountry[b.country] = b;
+  const booksOf = (cid) => books.filter((b) => b.country === cid);
+  const bookLL = (b) => b.ll || (b.guide && S.guides[b.guide] && S.guides[b.guide].ll) || countries[b.country].ll;
+  // a country's place on the map: its first book's, or its own where it has no book
+  const placeLL = (cid) => (bookByCountry[cid] ? bookLL(bookByCountry[cid]) : countries[cid].ll);
+  // a city's book holds the photographs marked with that city; a country's, the country's
+  const photosOf = (b) => countries[b.country].photos.filter((id) => S.slides[id] && (!b.place || S.slides[id].city === b.place));
+  const bookOfSlide = (id) => {
+    const s = S.slides[id];
+    return (s.city && bookByKey[s.city]) || booksOf(s.country).find((b) => !b.place) || bookByCountry[s.country] || null;
+  };
+  const indexOrder = [...new Set(books.flatMap(photosOf))];
+  const coverFor = (b, want) => {
+    const mine = photosOf(b);
+    if (want && mine.includes(want)) return want;
     // the arrival opens on the wide photograph; the book wears the upright one
-    return b.cover || b.photo || countries[cid].photos[0] || null;
+    return b.cover || b.photo || mine[0] || null;
+  };
+  // when a book's place was travelled: a city's, the journeys that name it, oldest first
+  // (New York: 2015, Summer 2025); a country's, the country's own dates
+  const bookDate = (b) => {
+    const js = b.place ? (S.journeys || []).filter((j) => Array.isArray(j.places) && j.places.includes(b.place)).reverse() : [];
+    return js.length ? js.map((j) => L(j.date)).join(lang === 'zh' ? '、' : ', ') : L(countries[b.country].date);
   };
   const coords = ([lat, lng]) => `${Math.abs(lat).toFixed(3)}°${lat >= 0 ? 'N' : 'S'} · ${Math.abs(lng).toFixed(3)}°${lng >= 0 ? 'E' : 'W'}`;
-  const nameParts = (cid) => {
-    const b = bookByCountry[cid], c = countries[cid];
-    const place = L(b.title), country = L(c.name);
+  const nameParts = (b) => {
+    const place = L(b.title), country = L(countries[b.country].name);
     return place === country ? [place] : [place, country];
   };
-  const nameHTML = (cid) => nameParts(cid).map(esc).join(`<i>${lang === 'zh' ? '｜' : '|'}</i>`);
+  const nameHTML = (b) => nameParts(b).map(esc).join(`<i>${lang === 'zh' ? '｜' : '|'}</i>`);
   const imgSrc = (s, size) => `../images/web/${size ? size + '/' : ''}${s.file}`;
   const srcset = (s) => `${imgSrc(s, 640)} 640w, ${imgSrc(s, 1280)} 1280w, ${imgSrc(s)} ${s.w}w`;
   const ISO = { spain: '724', uk: '826', france: '250', germany: '276', switzerland: '756', taiwan: '158', japan: '392', 'south-korea': '410', 'hong-kong': '344', china: '156', singapore: '702', vietnam: '704', dubai: '784', australia: '036', 'new-zealand': '554', usa: '840', thailand: '764', myanmar: '104', netherlands: '528', malaysia: '458', andorra: '020' };
 
-  const photosOf = (cid) => countries[cid].photos.filter((id) => S.slides[id]);
 
   // the flights, from his journeys' own legs in order; where a journey has none, a line from where
   // he sets out to each of its places. Where he sets out from is never named or marked.
@@ -340,7 +364,8 @@
   ];
   // every other country, lettered quietly: by importance, then by how close the view has come
   const NAMES = window.COUNTRY_NAMES || {};
-  const MINE = new Set(Object.values(ISO));
+  // (a country whose books are all cities, the United States, keeps its own quiet name too)
+  const MINE = new Set(Object.entries(ISO).filter(([cid]) => booksOf(cid).some((b) => !b.place)).map(([, iso]) => iso));
   const others = Object.entries(NAMES)
     .filter(([id, n]) => !MINE.has(String(id).padStart(3, '0')) && n && n.at && n.en)
     .map(([id, n]) => ({ id, en: n.en, zh: n.zh || n.en, ll: [n.at[1], n.at[0]], rank: n.rank || 6, min: n.min || 5 }))
@@ -576,8 +601,8 @@
     const small = narrow.matches;
     const pad = small ? { l: 60, r: 60, t: 130, b: 190 } : { l: 70, r: 110, t: 100, b: 130 };
     // a phone opens on the crowded half, Asia and Oceania, where ten of the places are
-    const near = small ? order.filter((c) => (c.continent === 'asia' && c.id !== 'dubai') || c.continent === 'oceania') : order;
-    return fitTransform(near.map((c) => placeLL(c.id)), pad);
+    const near = small ? books.filter((b) => { const c = countries[b.country]; return (c.continent === 'asia' && c.id !== 'dubai') || c.continent === 'oceania'; }) : books;
+    return fitTransform(near.map(bookLL), pad);
   }
   function centerOn(ll, k, dur) {
     const b = baseXY(ll);
@@ -588,16 +613,19 @@
     const q = P(ll);
     return q[0] > state.W * margin && q[0] < state.W * (1 - margin) && q[1] > state.H * margin && q[1] < state.H * (1 - margin);
   }
-  // the dive's landing: the country filling the view, the place itself at the centre
-  function diveTransform(cid) {
-    const ll = placeLL(cid);
-    const f = state.feats[cid];
+  // the dive's landing: the country filling the view, the place itself at the centre; a city's
+  // book lands on the city and the country round it (about 7° by 4.5°), not the whole country
+  function diveTransform(b) {
+    const ll = bookLL(b);
+    const f = state.feats[b.country];
     let k = 30;
-    if (f) {
-      const b = d3.geoBounds(f);
-      let w = b[1][0] - b[0][0];
+    if (b.place) {
+      k = Math.min((state.W - 80) / (7 * state.S0), (state.H - 120) / (4.5 * state.S0));
+    } else if (f) {
+      const bb = d3.geoBounds(f);
+      let w = bb[1][0] - bb[0][0];
       if (w < 0) w += 360;
-      const span = Math.min(w, 60), hspan = Math.min(b[1][1] - b[0][1], 40);
+      const span = Math.min(w, 60), hspan = Math.min(bb[1][1] - bb[0][1], 40);
       const kx = (state.W - 80) / (span * state.S0), ky = (state.H - 120) / (hspan * state.S0);
       k = Math.min(kx, ky);
     }
@@ -637,10 +665,10 @@
   let pinList = [];
   const bookStatus = (b) => (b.band === 'bandNone' ? t('bandNone') : t(b.status));
   function renderPins() {
-    const keep = new Map(pinList.map((q) => [q.id, q]));
+    const keep = new Map(pinList.map((q) => [q.key, q]));
     pinsEl.textContent = '';
-    pinList = order.map((c) => {
-      const b = bookByCountry[c.id];
+    pinList = books.map((b) => {
+      const c = countries[b.country];
       const title = esc(L(b.title));
       const s = b.photo ? S.slides[b.photo] : null;
       const face = s
@@ -649,16 +677,17 @@
       const el = document.createElement('div');
       el.className = 'pin';
       el.dataset.country = c.id;
+      el.dataset.key = b.key;
       el.innerHTML =
         `<div class="pin__stage"><a class="book book--${b.tone}" href="#${b.view}" aria-label="${esc(T[lang].bookAria(L(b.title), bookStatus(b)))}" data-view="${b.view}"><span class="book__box">` +
         `<span class="book__spine"><b>${title}</b><i>${esc(t('series'))}</i></span>` +
         `${face}<span class="book__band"><b>${title}</b><span>${esc(t(b.band))}</span></span></span>` +
         `<span class="book__back"><i>${esc(t('series'))}</i></span><span class="book__edge"></span>` +
         `<span class="book__top"></span><span class="book__shadow"></span></span></a></div>` +
-        `<div class="pin__label" aria-hidden="true"><b>${title}</b><i>${esc(L(c.note))}</i></div>`;
+        `<div class="pin__label" aria-hidden="true"><b>${title}</b><i>${esc(b.place ? L(c.name) : L(c.note))}</i></div>`;
       pinsEl.appendChild(el);
-      const prev = keep.get(b.id);
-      return { id: b.id, country: c.id, book: b, el, ll: placeLL(c.id), x: prev ? prev.x : NaN, y: prev ? prev.y : NaN, ax: 0, ay: 0, lw: 0 };
+      const prev = keep.get(b.key);
+      return { id: b.id, key: b.key, country: c.id, book: b, el, ll: bookLL(b), x: prev ? prev.x : NaN, y: prev ? prev.y : NaN, ax: 0, ay: 0, lw: 0 };
     });
     measurePins();
     bindPins();
@@ -734,11 +763,11 @@
   function bindPins() {
     for (const q of pinList) {
       const a = q.el.querySelector('.book');
-      a.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') setActive({ country: q.country, from: 'map' }); });
+      a.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') setActive({ key: q.key, from: 'map' }); });
       a.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') clearActiveSoon(); });
       a.addEventListener('focus', () => {
         if (diving) return;
-        setActive({ country: q.country, from: 'map' });
+        setActive({ key: q.key, from: 'map' });
         if (!inView(q.ll, 0.08)) centerOn(q.ll, Math.max(state.z.k, homeTransform().k), 600);
       });
       a.addEventListener('blur', () => clearActiveSoon());
@@ -788,22 +817,23 @@
   }
 
   let active = null, marks = [], clearTimer = 0, easeTimer = 0;
-  const activeCountry = () => (active ? active.country || (active.slide && S.slides[active.slide].country) : null);
+  // the book being pointed at: named by its key, or by one of its photographs
+  const activeKey = () => (active ? active.key || (active.slide && bookOfSlide(active.slide).key) : null);
   function setActive(next) {
     if (diving) return;
     clearTimeout(clearTimer);
-    if (active && next && active.country === next.country && active.slide === next.slide) return;
+    if (active && next && active.key === next.key && active.slide === next.slide) return;
     erase(marks.filter((m) => m !== diveRing)); marks = diveRing ? [diveRing] : [];
     active = next;
-    const cid = activeCountry();
-    pinList.forEach((q) => q.el.classList.toggle('awake', q.country === cid));
-    const pin = pinList.find((q) => q.country === cid);
+    const key = activeKey();
+    pinList.forEach((q) => q.el.classList.toggle('awake', q.key === key));
+    const pin = pinList.find((q) => q.key === key);
     if (next.slide) marks.push(penRing(ringD(13), S.slides[next.slide].ll));
     else if (pin) marks.push(penRing(ringD(19, 1.15), pin.ll));
     placePen();
     marks.forEach((m) => drawStroke(m.firstChild, 0, 440));
-    $$('.group.is-awake', indexBody).forEach((g) => { if (g.dataset.country !== cid) g.classList.remove('is-awake'); });
-    const g = cid && indexBody.querySelector(`.group[data-country="${cid}"]`);
+    $$('.group.is-awake', indexBody).forEach((g) => { if (g.dataset.key !== key) g.classList.remove('is-awake'); });
+    const g = key && indexBody.querySelector(`.group[data-key="${key}"]`);
     if (g) g.classList.add('is-awake');
     // a photograph picked in the index brings its place into view on the map
     if (next.from === 'index' && next.slide) {
@@ -847,9 +877,16 @@
       for (const q of state.photoPts) { const d = Math.hypot(q.p[0] - x, q.p[1] - y); if (d < bd) { bd = d; best = q.id; } }
       if (best) return { slide: best };
     }
-    for (const q of pinList) if (Math.hypot(q.ax - x, q.ay - y) < 14) return { country: q.country };
+    for (const q of pinList) if (Math.hypot(q.ax - x, q.ay - y) < 14) return { key: q.key };
     const ll = invertLL(x, y);
-    for (const c of S.countries) { const f = state.feats[c.id]; if (f && d3.geoContains(f, ll)) return { country: c.id }; }
+    for (const c of S.countries) {
+      const f = state.feats[c.id];
+      if (!f || !d3.geoContains(f, ll)) continue;
+      // a country of several books: the one whose place is nearest the pointer
+      let best = null, bd = Infinity;
+      for (const q of pinList) { if (q.country !== c.id) continue; const d = Math.hypot(q.ax - x, q.ay - y); if (d < bd) { bd = d; best = q; } }
+      return best ? { key: best.key } : null;
+    }
     return null;
   }
   mapEl.addEventListener('pointermove', (e) => {
@@ -875,8 +912,8 @@
     const hit = hitTest(e.clientX - r.left, e.clientY - r.top);
     if (!hit) return;
     // a photograph's spot dives into its place, with that photograph first
-    if (hit.slide) go(bookByCountry[S.slides[hit.slide].country].view, hit.slide);
-    else { const q = pinList.find((x) => x.country === hit.country); if (q) go(q.book.view); }
+    if (hit.slide) { if (bookOfSlide(hit.slide)) go(bookOfSlide(hit.slide).view, hit.slide); }
+    else if (bookByKey[hit.key]) go(bookByKey[hit.key].view);
   });
 
   /* ------------------------------------------------------------ the index of photographs, a drawer */
@@ -898,18 +935,18 @@
   function renderIndex() {
     $('#index-count').textContent = T[lang].count(indexOrder.length, S.countries.length);
     $('#index-n').textContent = String(indexOrder.length);
-    indexBody.innerHTML = order.map((c) => {
-      const b = bookByCountry[c.id];
-      const ids = c.photos.filter((id) => S.slides[id]);
+    indexBody.innerHTML = books.map((b) => {
+      const c = countries[b.country];
+      const ids = photosOf(b);
       const thumbs = ids.map((id) => {
         const s = S.slides[id];
         return `<li><button type="button" class="thumb" data-slide="${id}" aria-label="${esc(L(s.place))}">` +
           `<img src="${imgSrc(s, 640)}" alt="" loading="lazy" decoding="async" width="${s.w}" height="${s.h}">` +
           `<span class="thumb__name">${esc(L(s.place))}</span></button></li>`;
       }).join('');
-      return `<section class="group" data-country="${c.id}" aria-labelledby="g-${c.id}">` +
-        `<h3><button type="button" class="group__name" id="g-${c.id}" data-view="${b.view}">${nameHTML(c.id)}</button>` +
-        `<span class="group__meta">${esc(L(c.date))}</span></h3>` +
+      return `<section class="group" data-country="${c.id}" data-key="${b.key}" aria-labelledby="g-${b.key}">` +
+        `<h3><button type="button" class="group__name" id="g-${b.key}" data-view="${b.view}">${nameHTML(b)}</button>` +
+        `<span class="group__meta">${esc(bookDate(b))}</span></h3>` +
         (thumbs ? `<ul class="thumbs">${thumbs}</ul>` : `<p class="group__none">${esc(t('bandNone'))}</p>`) +
         `</section>`;
     }).join('');
@@ -918,19 +955,19 @@
     if (e.pointerType !== 'mouse') return;
     const th = e.target.closest('.thumb'), gn = e.target.closest('.group__name');
     if (th) setActive({ slide: th.dataset.slide, from: 'index' });
-    else if (gn) setActive({ country: gn.closest('.group').dataset.country, from: 'index' });
+    else if (gn) setActive({ key: gn.closest('.group').dataset.key, from: 'index' });
   });
   indexBody.addEventListener('pointerleave', (e) => { if (e.pointerType === 'mouse') clearActiveSoon(); });
   indexBody.addEventListener('focusin', (e) => {
     const th = e.target.closest('.thumb'), gn = e.target.closest('.group__name');
     if (th) setActive({ slide: th.dataset.slide, from: 'index' });
-    else if (gn) setActive({ country: gn.closest('.group').dataset.country, from: 'index' });
+    else if (gn) setActive({ key: gn.closest('.group').dataset.key, from: 'index' });
   });
   indexBody.addEventListener('click', (e) => {
     if (diving) return;
     const th = e.target.closest('.thumb'), gn = e.target.closest('.group__name');
     // a photograph in the index dives into its place, with that photograph as the cover
-    if (th) { const s = S.slides[th.dataset.slide]; setIndex(false, false); go(bookByCountry[s.country].view, th.dataset.slide); }
+    if (th && bookOfSlide(th.dataset.slide)) { setIndex(false, false); go(bookOfSlide(th.dataset.slide).view, th.dataset.slide); }
     else if (gn) { setIndex(false, false); go(gn.dataset.view); }
   });
 
@@ -940,41 +977,39 @@
   let tocObserver = null;
   let diving = false;
 
-  function viewCountry(view) {
-    if (view.startsWith('guide-')) return S.guides[view.slice(6)] ? S.guides[view.slice(6)].country : null;
-    return view.slice(6);
+  // the book an address names: #guide-<guide>, #place-<book key>, or an older #place-<country>,
+  // which opens that country's first book (#place-usa opens New York)
+  function viewBook(view) {
+    if (!view) return null;
+    if (view.startsWith('guide-')) return books.find((b) => b.guide === view.slice(6)) || null;
+    if (view.startsWith('place-')) return bookByKey[view.slice(6)] || bookByCountry[view.slice(6)] || null;
+    return null;
   }
-  function validView(view) {
-    if (!view) return false;
-    if (view.startsWith('guide-')) return !!S.guides[view.slice(6)];
-    if (view.startsWith('place-')) return !!countries[view.slice(6)];
-    return false;
-  }
-  const isGuide = (view) => view.startsWith('guide-') || (view.startsWith('place-') && view.slice(6) === guide.country);
+  const validView = (view) => !!viewBook(view);
+  const isGuide = (view) => { const b = viewBook(view); return !!(b && b.guide); };
 
   function renderLeaf(view) {
-    const cid = viewCountry(view);
-    const ll = placeLL(cid);
-    $('#leaf-where').innerHTML = `<b>${nameHTML(cid)}</b><span>${esc(coords(ll))}</span>`;
+    const b = viewBook(view);
+    $('#leaf-where').innerHTML = `<b>${nameHTML(b)}</b><span>${esc(coords(bookLL(b)))}</span>`;
     if (tocObserver) { tocObserver.disconnect(); tocObserver = null; }
-    renderCover(cid, view);
-    if (isGuide(view)) renderGuide(); else renderPlace(countries[cid]);
+    renderCover(b, view);
+    if (isGuide(view)) renderGuide(); else renderPlace(b);
     watchCover();
   }
 
   /* the cover: a full-window gallery of the country's photographs. Nothing across the middle;
      the place and the country in the bottom-left corner, small words at the edges */
-  const gal = { cid: null, list: [], i: 0, dx: 0, slots: [], anim: null, wheel: 0, lock: 0 };
+  const gal = { book: null, list: [], i: 0, dx: 0, slots: [], anim: null, wheel: 0, lock: 0 };
   const wrapI = (i) => { const n = gal.list.length; return ((i % n) + n) % n; };
-  function renderCover(cid, view) {
-    gal.cid = cid;
+  function renderCover(b, view) {
+    gal.book = b;
     const has = gal.list.length > 0;
     leaf.classList.toggle('is-plain', !has);
     leaf.classList.toggle('is-single', gal.list.length < 2);
     leaf.classList.remove('is-scrolled');
     if (!has) { cover.hidden = true; track.textContent = ''; gal.slots = []; return; }
     cover.hidden = false;
-    cover.setAttribute('aria-label', T[lang].coverLabel(L(bookByCountry[cid].title)));
+    cover.setAttribute('aria-label', T[lang].coverLabel(L(b.title)));
     $('#cover-hint').textContent = isGuide(view) ? t('hintGuide') : t('hintPhotos');
     if (!gal.slots.length) {
       gal.slots = [-1, 0, 1].map((pos) => {
@@ -1014,7 +1049,7 @@
     }
     const cur = S.slides[gal.list[gal.i]];
     $('#cover-place').textContent = L(cur.place);
-    $('#cover-country').textContent = L(countries[gal.cid].name);
+    $('#cover-country').textContent = L(countries[gal.book.country].name);
     $('#cover-count').textContent = n > 1 ? `${gal.i + 1} / ${n}` : '';
     pageCover = gal.list[gal.i];
     // the next ones along, fetched before they are asked for
@@ -1134,8 +1169,9 @@
   }
   const pageEnd = (photos = true) => `<footer class="page-end"><button class="word" type="button" data-back>${esc(t('back'))}</button>${photos ? `<span>${esc(t('endLine'))}</span>` : ''}</footer>`;
 
-  function renderPlace(c) {
-    const ids = c.photos.filter((id) => S.slides[id]);
+  function renderPlace(b) {
+    const c = countries[b.country];
+    const ids = photosOf(b);
     let body;
     if (ids.length) {
       body = `<div class="rows">${rowsOf(ids).map((r) => `<div class="row">${r.row.map(([id, ar]) => {
@@ -1147,14 +1183,13 @@
     } else {
       body = `<div class="no-photos"><b>${esc(t('bandNone'))}</b></div>`;
     }
-    const b = bookByCountry[c.id];
     const title = L(b.title), name = L(c.name);
     leafContent.className = 'leaf__content place';
     leafContent.innerHTML = `<div class="wrap">
       <header class="place-top">
         <h1 class="page-title" id="leaf-title">${esc(title)}</h1>
-        <p class="meta">${name !== title ? `<span>${esc(name)}</span>` : ''}<span>${esc(L(c.date))}</span>${ids.length ? `<span>${esc(T[lang].nPhotos(ids.length))}</span>` : ''}</p>
-        <p class="page-lede">${esc(L(c.note))}</p>
+        <p class="meta">${name !== title ? `<span>${esc(name)}</span>` : ''}<span>${esc(bookDate(b))}</span>${ids.length ? `<span>${esc(T[lang].nPhotos(ids.length))}</span>` : ''}</p>
+        ${b.place ? '' : `<p class="page-lede">${esc(L(c.note))}</p>`}
         <p class="quiet-line">${esc(t('bookNot'))}</p>
       </header>${body}${pageEnd(ids.length > 0)}</div>`;
     $$('[data-ar]', leafContent).forEach((n) => n.style.setProperty('--ar', n.dataset.ar));
@@ -1232,10 +1267,10 @@
   // the place's name, shown large as the map arrives at it
   const arrival = $('#arrival');
   let arrivalAnim = null;
-  function showArrival(cid) {
-    const title = L(bookByCountry[cid].title), country = L(countries[cid].name);
+  function showArrival(b) {
+    const title = L(b.title), country = L(countries[b.country].name);
     $('#arrival-name').textContent = title;
-    $('#arrival-where').textContent = (country !== title ? country + '   ' : '') + coords(placeLL(cid)).replace(' · ', '  ');
+    $('#arrival-where').textContent = (country !== title ? country + '   ' : '') + coords(bookLL(b)).replace(' · ', '  ');
     arrival.classList.add('is-on');
     if (arrivalAnim) arrivalAnim.cancel();
     arrivalAnim = arrival.animate([
@@ -1282,11 +1317,11 @@
     pageGen += 1;
     const gen = pageGen;
     clearDive();
-    const cid = viewCountry(view);
-    const ll = placeLL(cid);
+    const book = viewBook(view);
+    const ll = bookLL(book);
     page = view;
-    gal.list = photosOf(cid);
-    gal.i = Math.max(0, gal.list.indexOf(coverFor(cid, opts.cover)));
+    gal.list = photosOf(book);
+    gal.i = Math.max(0, gal.list.indexOf(coverFor(book, opts.cover)));
     if (gal.anim) { gal.anim.cancel(); gal.anim = null; }
     setDx(0);
     renderLeaf(view);
@@ -1295,8 +1330,8 @@
     setIndex(false, false);
     clearActive();
     globe.stop();
-    live.textContent = T[lang].opening(L(bookByCountry[cid].title));
-    const landing = diveTransform(cid);
+    live.textContent = T[lang].opening(L(book.title));
+    const landing = diveTransform(book);
     ensureTextures(landing);
     if (!diving) state.before = state.z;
     diving = true;
@@ -1311,7 +1346,7 @@
       drawStroke(diveRing.firstChild, 0, 500);
       diveTween = tween(2000, (e) => { if (diveRing) { diveRing.dataset.s = (6 - 5 * e).toFixed(3); placePen(); } });
       // 1b. as the map arrives, the place's name rises large in the middle: you are entering it
-      later(() => { if (gen === pageGen) showArrival(cid); }, 900);
+      later(() => { if (gen === pageGen) showArrival(book); }, 900);
       // 2. in the last third of the zoom, while the camera still moves, the photograph dissolves
       //    in across the whole window, from soft to sharp; the drawing softens away beneath it
       later(() => {
@@ -1348,9 +1383,9 @@
     pageGen += 1;
     const gen = pageGen;
     clearDive();
-    const cid = viewCountry(page);
-    const pin = pinList.find((q) => q.country === cid);
-    const ll = placeLL(cid);
+    const book = viewBook(page);
+    const pin = pinList.find((q) => q.key === book.key);
+    const ll = bookLL(book);
     page = null;
     clearTimeout(stillTimer);
     if (tocObserver) { tocObserver.disconnect(); tocObserver = null; }
@@ -1426,7 +1461,7 @@
     vImg.alt = L(s.alt);
     if (vImg.complete) vImg.classList.remove('is-loading');
     const i = photoList.indexOf(photo);
-    const b = bookByCountry[s.country];
+    const b = bookOfSlide(photo);
     const seeAll = b && page !== b.view ? `<button type="button" class="word viewer__go" data-view="${b.view}" data-cover="${photo}">${esc(L(b.title))}: ${esc(t('seePhotos'))}</button>` : '';
     $('#viewer-cap').innerHTML =
       `<h2 id="viewer-title">${esc(L(s.place))}</h2>` +
@@ -1500,8 +1535,8 @@
     const h = decodeURIComponent((hash || '').replace(/^#/, ''));
     const st = history.state || {};
     if (h === 'flights') return { page: null, photo: null, flights: true };
-    if (h.startsWith('photo-') && S.slides[h.slice(6)]) return { page: validView(st.page) ? st.page : null, photo: h.slice(6), cover: st.cover };
-    if (validView(h)) return { page: h, photo: null, cover: st.cover };
+    if (h.startsWith('photo-') && S.slides[h.slice(6)]) return { page: validView(st.page) ? viewBook(st.page).view : null, photo: h.slice(6), cover: st.cover };
+    if (validView(h)) return { page: viewBook(h).view, photo: null, cover: st.cover };
     return { page: null, photo: null };
   }
   function apply(want, animate) {
@@ -1645,8 +1680,10 @@
   const journeysEl = $('#journeys');
   const legWhen = $('#flights-when');
   const legWay = $('#flights-way');
-  // at rest the globe sends flights from Taipei to each of the other places
-  const otherPlaces = S.countries.filter((c) => c.id !== S.home).map((c) => { const ll = placeLL(c.id); return [ll[1], ll[0]]; });
+  // at rest the globe sends flights from Taipei to each of the other books' places
+  // (and to any country travelled that has no book)
+  const otherPlaces = [...books.filter((b) => b.country !== S.home).map(bookLL),
+    ...S.countries.filter((c) => c.id !== S.home && !bookByCountry[c.id]).map((c) => c.ll)].map((ll) => [ll[1], ll[0]]);
   const big = new WC.BigGlobe(fCanvas, {
     land: null, travel: null, borders: null, hi: null, home: FROM, places: otherPlaces, reduce: () => reduce.matches,
     letter: (text) => sprite(`city-${text}`, text, { size: 12.5, weight: 500, colour: 'rgb(38, 34, 33)', halo: 3.4 }),
@@ -1669,7 +1706,14 @@
     if (jOn >= 0) { big.rp = null; focusJourney(jOn, true); }
   }));
   // a leg's end, named in the language in use
-  const endName = (e) => (!e ? '' : e.cid ? L(bookByCountry[e.cid].title) : clean(lang === 'zh' ? e.zh || e.city : e.city));
+  // (a journey without legs flies to its country; where the country's books are cities, the
+  // country is named, since which city is not known)
+  const endName = (e) => {
+    if (!e) return '';
+    if (!e.cid) return clean(lang === 'zh' ? e.zh || e.city : e.city);
+    const b = bookByCountry[e.cid];
+    return L(!b || b.place ? countries[e.cid].name : b.title);
+  };
   const replayOf = (n) => {
     const j = journeys[n];
     return {
@@ -1704,8 +1748,12 @@
   function renderJourneys() {
     $('#flights-lede').textContent = T[lang].flightsLede(journeys.length);
     journeysEl.innerHTML = journeys.map((j, n) => {
-      const places = (j.countries || []).filter((cid) => bookByCountry[cid]).map((cid) => {
-        const b = bookByCountry[cid];
+      // the journey's books: its own places where it names them (the US cities), else its countries'
+      // a country without a book is named, on a hatched blank, and opens nothing
+      const list = Array.isArray(j.places) && j.places.length ? j.places.map((k) => bookByKey[k])
+        : (j.countries || []).filter((cid) => countries[cid]).map((cid) => bookByCountry[cid] || { country: cid, title: countries[cid].name, still: true });
+      const places = list.filter(Boolean).map((b) => {
+        if (b.still) return `<li><span class="jplace jplace--still"><span class="jplace__blank" aria-hidden="true"></span><span class="jplace__name">${esc(L(b.title))}</span></span></li>`;
         const s = b.photo ? S.slides[b.photo] : null;
         const thumb = s
           ? `<img src="${imgSrc(s, 640)}" alt="" loading="lazy" decoding="async" width="${s.w}" height="${s.h}">`
@@ -1754,7 +1802,7 @@
     const li = e.target.closest('.journey');
     const n = li ? +li.dataset.j : -1;
     const touch = lastPointer === 'touch' || lastPointer === 'pen';
-    const pl = e.target.closest('.jplace');
+    const pl = e.target.closest('button.jplace');
     if (pl && !(touch && n !== jOn)) {
       // a place in a journey: straight into it on the map
       const view = pl.dataset.view;
@@ -1941,7 +1989,9 @@
 
     // a page or photograph named in the address opens directly
     if (want.page || want.photo || want.flights) {
-      try { history.replaceState({ wc: false, page: want.page, photo: want.photo, flights: !!want.flights }, '', location.href); } catch (e) { /* fine */ }
+      // an older address (#place-usa) is rewritten as its book's own (#place-new-york)
+      const href = want.page && !want.photo ? `${location.pathname}${location.search}#${want.page}` : location.href;
+      try { history.replaceState({ wc: false, page: want.page, photo: want.photo, flights: !!want.flights }, '', href); } catch (e) { /* fine */ }
       apply(want, false);
     }
     let rz = 0;

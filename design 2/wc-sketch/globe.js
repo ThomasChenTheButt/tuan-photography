@@ -796,6 +796,27 @@
         if (on) ctx.lineTo(PX[i] + dx, PY[i] + dy); else { ctx.moveTo(PX[i] + dx, PY[i] + dy); on = true; }
       }
     }
+    // the part of the points traced that runs behind the globe, seen through it as if it were
+    // glass: a fine dotted line, fainter than the near side. Not when the globe is seen close,
+    // through its round frame, where the far side would only confuse the view.
+    far(n, a) {
+      const { ctx, PX, PY, PV, cam } = this;
+      if (cam.lens || a <= 0.01) return;
+      ctx.beginPath();
+      let on = false, any = false;
+      for (let i = 1; i < n; i++) {
+        if (PV[i] && PV[i - 1]) { on = false; continue; }
+        if (!on) { ctx.moveTo(PX[i - 1], PY[i - 1]); on = true; }
+        ctx.lineTo(PX[i], PY[i]);
+        any = true;
+      }
+      if (!any) return;
+      ctx.save();
+      ctx.setLineDash([0.01, 3.2 * cam.lw]);
+      ctx.lineCap = 'round';
+      ctx.strokeStyle = ink(0.42 * a); ctx.lineWidth = 1.2 * cam.lw; ctx.stroke();
+      ctx.restore();
+    }
     // the railway: a fine line crossed by short sleepers, evenly spaced along the screen
     sleepers(n, a) {
       const { ctx, PX, PY, PV, cam } = this;
@@ -841,7 +862,14 @@
         ctx.strokeStyle = ink(0.84 * a); ctx.lineWidth = (car ? 1.05 : 1.15) * lw; ctx.stroke();
         ctx.setLineDash([]);
       }
-      if (!live || !this.PV[n - 1]) return;
+      this.far(n, a);
+      if (!live) return;
+      // behind the globe the plane (or the mark over land) is still seen, faintly, through it
+      if (!this.PV[n - 1]) {
+        if (cam.lens) return;
+        if (L.mode === 'flight') this.plane(n, 0.4 * a); else this.runner(n, 0.4 * a);
+        return;
+      }
       // where the pen is now
       const x = this.PX[n - 1], y = this.PY[n - 1];
       if (L.mode === 'flight') { this.plane(n, a); return; }
@@ -926,28 +954,34 @@
           const q = (p + 1) / parts;
           ctx.strokeStyle = ink(q * 0.9 * a); ctx.lineWidth = (0.55 + 0.7 * q) * lw; ctx.stroke();
         }
-        if (g < 1 && this.PV[n - 1]) {
+        this.far(n, a);
+        // the head, and behind the globe the same head seen faintly through it
+        const seen = this.PV[n - 1], ha = seen ? a : cam.lens ? 0 : 0.4 * a;
+        if (g < 1 && ha > 0) {
           const x = this.PX[n - 1], y = this.PY[n - 1];
-          ctx.beginPath(); ctx.arc(x, y, 2.7 * lw, 0, Math.PI * 2); ctx.fillStyle = `rgba(251, 250, 245, ${0.9 * a})`; ctx.fill();
-          ctx.beginPath(); ctx.arc(x, y, 1.7 * lw, 0, Math.PI * 2); ctx.globalAlpha = a; ctx.fillStyle = HEAD; ctx.fill(); ctx.globalAlpha = 1;
+          ctx.beginPath(); ctx.arc(x, y, 2.7 * lw, 0, Math.PI * 2); ctx.fillStyle = `rgba(251, 250, 245, ${0.9 * ha})`; ctx.fill();
+          ctx.beginPath(); ctx.arc(x, y, 1.7 * lw, 0, Math.PI * 2); ctx.globalAlpha = ha; ctx.fillStyle = HEAD; ctx.fill(); ctx.globalAlpha = 1;
         }
       }
       if (keep > 0 && tail > 0.05) {
         const n = this.trace(F, 0, tail, 0.6);
         this.line(n);
         ctx.strokeStyle = ink(0.16 * keep * a); ctx.lineWidth = 0.6 * lw; ctx.stroke();
+        this.far(n, 0.45 * keep * a);
       }
       // the landing: a small ring of the pen
       if (g >= 1) {
         const x = (t - F.D) / 460;
         const fade = clamp(1 - (t - F.D - 1500) / 900, 0, 1);
-        if (fade > 0) this.ring(F.Bv, Math.min(1, x), fade * a, 5.4, F.slot + 2, false);
+        if (fade > 0) this.ring(F.Bv, Math.min(1, x), fade * a, 5.4, F.slot + 2, false, true);
       }
     }
     // a place's ring, popping in as x goes 0 to 1
-    ring(v, x, a, size, seed, dot) {
+    ring(v, x, a, size, seed, dot, glass) {
       const { ctx, cam } = this;
-      const p = this.screen(v);
+      let p = this.screen(v);
+      // (a landing behind the globe, when asked, is ringed faintly through it)
+      if (!p && glass && !cam.lens) { p = this.behind(v); a *= 0.4; }
       if (!p) return null;
       const sc = outBack(clamp(x, 0, 1));
       const pts = ringOf(seed);
@@ -970,6 +1004,15 @@
       const sx = cam.cx + cam.R * y1, sy = cam.cy - cam.R * Z;
       if (cam.lens && Math.hypot(sx - cam.cx, sy - cam.cy) > cam.rf - 3) return null;
       this.sxy[0] = sx; this.sxy[1] = sy;
+      return this.sxy;
+    }
+    // a point on the far side of the sphere, where it would show through the globe
+    behind(v) {
+      const { cam } = this;
+      const x1 = v[0] * cam.cl - v[1] * cam.sl, y1 = v[0] * cam.sl + v[1] * cam.cl;
+      const X = x1 * cam.cp - v[2] * cam.sp, Z = v[2] * cam.cp + x1 * cam.sp;
+      if (X > 0.02) return null;
+      this.sxy[0] = cam.cx + cam.R * y1; this.sxy[1] = cam.cy - cam.R * Z;
       return this.sxy;
     }
     homeDot(a) {
@@ -1108,7 +1151,8 @@
       ctx.lineCap = 'round'; ctx.lineJoin = 'round';
       // the routes stay on the near side of the globe, inside its outline
       ctx.beginPath(); ctx.arc(cx, cy, cam.lens ? rf - 0.6 : R + 0.5, 0, Math.PI * 2); ctx.clip();
-      // at rest: flights leaving Taipei for the other fifteen places, all at once
+      // at rest: flights leaving Taipei for every other place, all at once (those behind the
+      // globe seen faintly through it)
       const ia = rp ? 0 : still ? 1 : clamp((now - this.idleT0 - 150) / 500, 0, 1);
       if (ia > 0) {
         if (still) {
@@ -1116,7 +1160,8 @@
             const n = this.trace(F, 0, 1, 0.6);
             this.line(n);
             ctx.strokeStyle = ink(0.42); ctx.lineWidth = 0.75 * cam.lw; ctx.stroke();
-            this.ring(F.Bv, 1, 0.9, 5.4, F.slot + 2, false);
+            this.far(n, 0.6);
+            this.ring(F.Bv, 1, 0.9, 5.4, F.slot + 2, false, true);
           }
         } else {
           const t = now - this.idleT0 - 300;
