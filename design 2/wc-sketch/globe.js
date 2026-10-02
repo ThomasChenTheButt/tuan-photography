@@ -440,7 +440,14 @@
       const d = Math.acos(clamp(A[0] * B[0] + A[1] * B[1] + A[2] * B[2], -1, 1));
       let s = seed * 7919 + 17;
       const r = () => ((s = (s * 16807) % 2147483647) / 2147483647);
+      // a flight across the Pacific is bowed partway toward a steady eastward (or westward) course,
+      // so it leaves Asia low across the page, about 20 to 30 degrees, rather than climbing toward
+      // the Arctic as the true shortest way does (his call, 2026-10-02)
+      let dl = b[0] - a[0];
+      if (dl > 180) dl -= 360; else if (dl < -180) dl += 360;
+      const pacific = mode === 'flight' && Math.abs(dl) > 90 && ((a[0] > 60 && b[0] < -30) || (a[0] < -30 && b[0] > 60));
       return {
+        bend: pacific ? 0.6 : 0, lon0: a[0], dl, my0: Math.log(Math.tan(Math.PI / 4 + (a[1] * RAD) / 2)), my1: Math.log(Math.tan(Math.PI / 4 + (b[1] * RAD) / 2)),
         A, B, d, sinD: Math.sin(d), mode, from: a, to: b, Bv: B,
         H: mode === 'flight' ? 0.03 + 0.15 * Math.sin(d / 2) : 0,
         f1: Math.PI * 2 * (1.3 + r()), p1: r() * 6.283, f2: Math.PI * 2 * (3.6 + r() * 2), p2: r() * 6.283,
@@ -764,6 +771,13 @@
         if (r.sinD < 1e-7) { x = A[0]; y = A[1]; z = A[2]; } else {
           const a = Math.sin((1 - u) * r.d) / r.sinD, b = Math.sin(u * r.d) / r.sinD;
           x = a * A[0] + b * B[0]; y = a * A[1] + b * B[1]; z = a * A[2] + b * B[2];
+          if (r.bend) {
+            // the steady course at u (a rhumb line), blended in and set back on the sphere
+            const lo = (r.lon0 + r.dl * u) * RAD, la = 2 * Math.atan(Math.exp(r.my0 + (r.my1 - r.my0) * u)) - Math.PI / 2;
+            const k = r.bend, cl = Math.cos(la);
+            x = (1 - k) * x + k * cl * Math.cos(lo); y = (1 - k) * y + k * cl * Math.sin(lo); z = (1 - k) * z + k * Math.sin(la);
+            const m = Math.hypot(x, y, z) || 1; x /= m; y /= m; z /= m;
+          }
         }
         const x1 = x * cam.cl - y * cam.sl, y1 = x * cam.sl + y * cam.cl;
         const X = x1 * cam.cp - z * cam.sp, Z = z * cam.cp + x1 * cam.sp;
