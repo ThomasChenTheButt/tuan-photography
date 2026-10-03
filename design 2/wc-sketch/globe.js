@@ -152,22 +152,67 @@
     // the sphere's roundness, for the opening's globe (his call, 2026-10-03: more solid, with an
     // edge): a wash of shade deepening toward the limb away from the light (upper left), laid
     // over the washes and under the pen, and a breath of light where the light falls
-    const solid = o.solid || 0;
+    // Three ways of it, for him to choose from (?globe=1|2|3): 1 "wash", the shade a painter lays
+    // toward the limb; 2 "lit", a sphere under one light, shade falling off like the light does
+    // and a thin bright atmosphere round it; 3 "desk globe", the wash with a meridian ring and
+    // an axis, the way a globe stands on a desk
+    const solid = o.solid || 0, style = o.style || 1;
     if (solid > 0.01) {
       const Rs = o.r0 || proj.scale();
       ctx.save();
       ctx.globalAlpha *= solid;
       ctx.globalCompositeOperation = 'multiply';
-      const sh = ctx.createRadialGradient(cx - Rs * 0.32, cy - Rs * 0.34, Rs * 0.2, cx, cy, Rs * 1.02);
-      sh.addColorStop(0, 'rgba(255, 255, 255, 0)');
-      sh.addColorStop(0.55, 'rgba(120, 108, 96, 0.08)');
-      sh.addColorStop(0.86, 'rgba(96, 86, 76, 0.3)');
-      sh.addColorStop(1, 'rgba(70, 62, 56, 0.52)');
+      let sh;
+      if (style === 2) {
+        // the sun off to the left: day on the left, a soft terminator, night on the right (after
+        // his reference, the Earth on a phone's lock screen, 2026-10-03)
+        sh = ctx.createRadialGradient(cx - Rs * 0.95, cy - Rs * 0.25, Rs * 0.9, cx - Rs * 0.95, cy - Rs * 0.25, Rs * 2.05);
+        sh.addColorStop(0, 'rgba(255, 255, 255, 0)');
+        sh.addColorStop(0.3, 'rgba(150, 140, 130, 0.14)');
+        sh.addColorStop(0.55, 'rgba(60, 56, 60, 0.74)');
+        sh.addColorStop(0.75, 'rgba(22, 24, 34, 0.93)');
+        sh.addColorStop(1, 'rgba(12, 14, 22, 0.97)');
+      } else {
+        sh = ctx.createRadialGradient(cx - Rs * 0.32, cy - Rs * 0.34, Rs * 0.15, cx, cy, Rs * 1.02);
+        sh.addColorStop(0, 'rgba(255, 255, 255, 0)');
+        sh.addColorStop(0.5, 'rgba(120, 108, 96, 0.12)');
+        sh.addColorStop(0.82, 'rgba(90, 80, 70, 0.42)');
+        sh.addColorStop(1, 'rgba(56, 50, 44, 0.74)');
+      }
       ctx.fillStyle = sh;
       ctx.beginPath(); ctx.arc(cx, cy, Rs * 1.02, 0, Math.PI * 2); ctx.fill();
       ctx.globalCompositeOperation = 'source-over';
-      const hi = ctx.createRadialGradient(cx - Rs * 0.42, cy - Rs * 0.44, 0, cx - Rs * 0.42, cy - Rs * 0.44, Rs * 0.55);
-      hi.addColorStop(0, 'rgba(255, 255, 255, 0.34)');
+      if (style === 2) {
+        // the night side's city lights: his places, glowing warm where they lie in the dark
+        const rot = proj.rotate();
+        const centre = [-rot[0], -rot[1]];
+        for (const p of o.lights || []) {
+          if (d3.geoDistance(p, centre) > 1.45) continue;
+          const q = proj(p);
+          if (!q) continue;
+          const d = Math.hypot(q[0] - (cx - Rs * 0.95), q[1] - (cy - Rs * 0.25)) / (Rs * 2.05);
+          const night = clamp((d - 0.42) / 0.3, 0, 1);
+          if (night < 0.05) continue;
+          const g = ctx.createRadialGradient(q[0], q[1], 0, q[0], q[1], Rs * 0.05);
+          g.addColorStop(0, `rgba(255, 214, 150, ${0.95 * night})`);
+          g.addColorStop(0.35, `rgba(255, 190, 110, ${0.45 * night})`);
+          g.addColorStop(1, 'rgba(255, 170, 90, 0)');
+          ctx.fillStyle = g;
+          ctx.beginPath(); ctx.arc(q[0], q[1], Rs * 0.05, 0, Math.PI * 2); ctx.fill();
+        }
+        // the lit limb: a thin line of light along the day side's edge
+        const lim = ctx.createRadialGradient(cx, cy, Rs * 0.9, cx, cy, Rs);
+        lim.addColorStop(0, 'rgba(255, 255, 255, 0)');
+        lim.addColorStop(1, 'rgba(255, 255, 255, 0.5)');
+        ctx.save();
+        ctx.beginPath(); ctx.rect(cx - Rs, cy - Rs, Rs * 1.05, Rs * 2); ctx.clip();
+        ctx.fillStyle = lim;
+        ctx.beginPath(); ctx.arc(cx, cy, Rs, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
+      }
+      const hr = style === 2 ? 0.75 : 0.6, ha = style === 2 ? 0.3 : 0.4;
+      const hi = ctx.createRadialGradient(cx - Rs * 0.55, cy - Rs * 0.4, 0, cx - Rs * 0.55, cy - Rs * 0.4, Rs * hr);
+      hi.addColorStop(0, `rgba(255, 255, 255, ${ha})`);
       hi.addColorStop(1, 'rgba(255, 255, 255, 0)');
       ctx.fillStyle = hi;
       ctx.beginPath(); ctx.arc(cx, cy, Rs, 0, Math.PI * 2); ctx.fill();
@@ -196,14 +241,52 @@
         // a solid globe's edge: a band of shade just inside the rim, and a heavier line
         ctx.save();
         ctx.beginPath(); ctx.arc(cx, cy, r0, 0, Math.PI * 2); ctx.clip();
-        ctx.beginPath(); ctx.arc(cx, cy, r0 - r0 * 0.03, 0, Math.PI * 2);
-        ctx.strokeStyle = ink(0.13 * solid); ctx.lineWidth = r0 * 0.06; ctx.stroke();
+        ctx.beginPath(); ctx.arc(cx, cy, r0 - r0 * 0.035, 0, Math.PI * 2);
+        ctx.strokeStyle = ink(0.18 * solid); ctx.lineWidth = r0 * 0.07; ctx.stroke();
         ctx.restore();
+        if (style === 2) {
+          // a thin bright atmosphere just outside the rim, brightest toward the light
+          ctx.save();
+          ctx.globalAlpha *= solid;
+          const at = ctx.createRadialGradient(cx, cy, r0 * 0.98, cx, cy, r0 * 1.16);
+          at.addColorStop(0, 'rgba(140, 190, 240, 0.7)');
+          at.addColorStop(0.3, 'rgba(150, 195, 240, 0.3)');
+          at.addColorStop(1, 'rgba(160, 200, 240, 0)');
+          ctx.fillStyle = at;
+          ctx.beginPath(); ctx.arc(cx, cy, r0 * 1.16, 0, Math.PI * 2); ctx.arc(cx, cy, r0 * 0.98, 0, Math.PI * 2, true); ctx.fill('evenodd');
+          ctx.restore();
+        }
       }
       ctx.beginPath(); ctx.arc(cx, cy, r0, 0, Math.PI * 2);
-      ctx.strokeStyle = ink(0.88 + 0.1 * solid); ctx.lineWidth = (1.1 + 0.7 * solid) * lw; ctx.stroke();
+      ctx.strokeStyle = ink(0.88 + 0.1 * solid); ctx.lineWidth = (1.1 + 0.9 * solid) * lw; ctx.stroke();
       ctx.beginPath(); ctx.arc(cx + 0.8 * lw, cy + 0.5 * lw, r0 + 0.6 * lw, -0.3, 1.9);
       ctx.strokeStyle = ink(0.4); ctx.lineWidth = 0.7 * lw; ctx.stroke();
+      if (solid > 0.01 && style === 3) {
+        // the desk globe's meridian ring, tilted as the axis is, passing behind the sphere on the
+        // left and in front on the right, with the axis pins at the poles
+        ctx.save();
+        ctx.globalAlpha *= solid;
+        const tilt = -0.41, Rm = r0 * 1.075, wide = Rm * 0.92;   // the ring round the limb, a little foreshortened
+        ctx.translate(cx, cy); ctx.rotate(tilt);
+        // behind: the far half, faint
+        ctx.beginPath(); ctx.ellipse(0, 0, wide, Rm, 0, Math.PI / 2, (3 * Math.PI) / 2);
+        ctx.strokeStyle = ink(0.28); ctx.lineWidth = 1.2 * lw; ctx.stroke();
+        // in front: the near half, a band of two lines with a wash of brass between
+        ctx.beginPath(); ctx.ellipse(0, 0, wide, Rm, 0, -Math.PI / 2, Math.PI / 2);
+        ctx.strokeStyle = 'rgba(190, 158, 92, 0.42)'; ctx.lineWidth = 7 * lw; ctx.stroke();
+        ctx.beginPath(); ctx.ellipse(0, 0, wide, Rm, 0, -Math.PI / 2, Math.PI / 2);
+        ctx.strokeStyle = ink(0.86); ctx.lineWidth = 1.3 * lw; ctx.stroke();
+        ctx.beginPath(); ctx.ellipse(0, 0, wide - 6 * lw, Rm - 6 * lw, 0, -Math.PI / 2, Math.PI / 2);
+        ctx.strokeStyle = ink(0.5); ctx.lineWidth = 0.8 * lw; ctx.stroke();
+        // the axis pins
+        for (const s of [-1, 1]) {
+          ctx.beginPath(); ctx.moveTo(0, s * (r0 - 2 * lw)); ctx.lineTo(0, s * (Rm + 7 * lw));
+          ctx.strokeStyle = ink(0.9); ctx.lineWidth = 2.2 * lw; ctx.stroke();
+          ctx.beginPath(); ctx.arc(0, s * (Rm + 7 * lw), 2.6 * lw, 0, Math.PI * 2);
+          ctx.fillStyle = ink(0.9); ctx.fill();
+        }
+        ctx.restore();
+      }
       ctx.restore();
     }
   };
@@ -1987,6 +2070,9 @@
        map's edge and comes back in at the other, rather than crossing the whole world */
     const home = o.home;
     const near = (a, b) => d3.geoDistance(a, b) < 0.012;
+    // every place he has flown to or from: the night side's city lights (look 2)
+    const lights = [];
+    for (const f of o.flights) for (const p of [f.from, f.to]) if (!lights.some((q) => near(q, p))) lights.push(p);
     const seen = new Set();
     const legs = [];
     for (const f of o.flights) {
@@ -2180,7 +2266,7 @@
           ctx.globalAlpha = fadeIn;
           castShadow(ctx, cx + Rf * 0.08, cyf + Rf * 1.12, Rf * 0.86, 1.3);
           // a solid paper globe, as the small one bottom-left is (his call, 2026-10-03)
-          WC.paintGlobe(ctx, proj, { land: o.land, travel: o.travel, lw: 1.3, grain: 1, R: Rf * 0.8, solid: 1 });
+          WC.paintGlobe(ctx, proj, { land: o.land, travel: o.travel, lw: 1.3, grain: 1, R: Rf * 0.8, solid: 1, style: o.style, lights });
           ctx.globalAlpha = 1;
         }
       } else {
@@ -2225,7 +2311,7 @@
             // the disc's paper is gone within the first eighth of the unroll, before the sheet
             // has grown much, so no white circle spreads over the photograph
             paperA: o.backdrop ? Math.pow(1 - Math.min(1, t * 8), 2) : 1,
-            solid: Math.pow(1 - t, 2),   // the roundness flattens out with the sheet
+            solid: Math.pow(1 - t, 2), style: o.style,   // the roundness flattens out with the sheet
           });
           ctx.restore();
         }

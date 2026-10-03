@@ -109,6 +109,8 @@
   // corridor odd (it was the default for a day). In the address, ?opening plays the classic and
   // ?opening=corridor the corridor, every time
   const OPENING_DEFAULT = 'classic';
+  // the opening globe's look: 1 wash, 2 lit, 3 desk globe (see WC.paintGlobe); his choice pending
+  const GLOBE_STYLE_DEFAULT = 1;
   // photographs on the home map (his note: the map alone "doesn't scream photography"). Two
   // trials behind one switch so they can be compared: ?photos=sea lays one large print in the
   // empty ocean and cycles through every photograph; ?photos=land turns each travelled country's
@@ -2657,6 +2659,8 @@
         opening = WC.opening({
           canvas: oc, title: opener, land: state.land110, travel: globe.o.travel, flights, home: FROM, LON0, SY, corridor,
           backdrop: ocean ? (g, el, until) => ocean.backdrop(g, el, until) : null,
+          // the globe's look, three to choose from (?globe=1|2|3; 1 until he chooses)
+          style: clamp(parseInt(ask.get('globe'), 10) || GLOBE_STYLE_DEFAULT, 1, 3),
           // the globe holds its turn until the painting beneath and the photograph are in
           ready: () => !!state.base && (!ocean || ocean.ready()),
           target: () => {
