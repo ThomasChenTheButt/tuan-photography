@@ -319,8 +319,8 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 
 Open now: `scroll` (2026-10-03), the opening after noomoagency.com (his find) and his own idea:
 the guide books in design 1's row under the name, over the photograph (his pick of four shelves
-tried); as he scrolls the map develops and the books fly to their places; the flights then fly on
-their own. On 8646 (`exp-scroll`). Keep or drop on his word.
+tried); one scroll sets the map developing and the books flying to their places, a second sets
+the flights flying, each playing by itself. On 8646 (`exp-scroll`). Keep or drop on his word.
 
 Dropped on 2026-10-03: `cssglobe`, the opening's globe after a React/Tailwind component he brought
 (the Earth map scrolling behind a round window, inset shadows), rebuilt in plain CSS/JS. He dropped
