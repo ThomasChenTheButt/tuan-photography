@@ -35,8 +35,8 @@
   (`design 1/images/web/new-zealand-aoraki-sea.jpg`, plus a 1280 copy; made by hand, not by the
   build). It fills above and below the map too, and the map sits on the window's bottom edge so
   Antarctica always covers the foot. `?ocean=all`
-  cycles all 93 photographs, `?o=0.5` tries a strength, `?photos=none` turns it off. The trial
-  dial is gone. Switches: `OPENING_DEFAULT`, `MAP_PHOTOS_DEFAULT` in `design 2/wc-sketch/app.js`.
+  cycles all 93 photographs, `?o=0.5` tries a strength, `?photos=none` turns it off. The dial
+  bottom right stays on the page (his call), remembered per browser. Switches: `OPENING_DEFAULT`, `MAP_PHOTOS_DEFAULT` in `design 2/wc-sketch/app.js`.
 
 ## 上次做到哪 Where we left off
 
