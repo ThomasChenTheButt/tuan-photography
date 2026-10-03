@@ -31,7 +31,7 @@
   window. Every latitude-to-pixel step in `app.js`, `paint.js` and `globe.js` carries the factor.
 - **Bottom right is now only:** the tally, Whole map, and the Photo dial. Zoom in / Zoom out and
   the "Map: Natural Earth" credit went at his word (wheel, double click, pinch and +/- keys zoom).
-- **Traffic:** a few of his flights are always in the air over the home map (up to four, out and
+- **Traffic:** a few of his flights are always in the air over the home map (up to six, out and
   home by turns), on their own canvas. Clicking a book turns the sea photograph into that
   place's cover, and it stays; hovering never changes it.
 - **A tally by the zoom words:** "21 / 195 countries · 11% of the world", counted from the data

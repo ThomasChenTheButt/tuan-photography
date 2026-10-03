@@ -479,7 +479,7 @@
 
   /*
     On the home map a handful of his flights are always under way (his request, 2026-10-03: the
-    page was otherwise too still): never all at once, up to four at a time, each on its own route
+    page was otherwise too still): never all at once, up to six at a time, each on its own route
     at its own pace, a new one leaving a moment after one lands, out and home by turns, no route
     twice in a row. Drawn on its own canvas over the pen and under the books, in the opening's
     hand: the fine ink line flown so far with a thread of wash beside it, warming to vermilion
@@ -490,7 +490,7 @@
   WC.traffic = (o) => {
     const c = o.canvas, ctx = c.getContext('2d');
     const SY = o.SY || 1;
-    const AT_ONCE = 4, GAP = [900, 2600], LINGER = 1500;
+    const AT_ONCE = 6, GAP = [500, 1600], LINGER = 1500;   // more in the air, leaving sooner (his call)
     const legs = [];
     const seen = new Set();
     for (const f of o.flights) {
@@ -510,8 +510,8 @@
           U[i] = u; V[i] = lat * SY; prev = u;
         }
         const len = d3.geoDistance(a, b);
-        // about 6s for a short hop, 14s across the Pacific
-        legs.push({ U, V, n, key, to: b, dur: 5200 + Math.min(1, len / 2.1) * 8800, seed: legs.length + 3 });
+        // about 4.5s for a short hop, 11s across the Pacific
+        legs.push({ U, V, n, key, to: b, dur: 4000 + Math.min(1, len / 2.1) * 7000, seed: legs.length + 3 });
       }
     }
     const active = [];
