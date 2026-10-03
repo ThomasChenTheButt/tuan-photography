@@ -2086,8 +2086,9 @@
   // motion: one photograph. ?o=0.35 sets the strength.
   function makeOcean() {
     const HOLD = 12000, FADE = 2500, HOVER_FADE = 900;
-    const strength = clamp(parseFloat(ask.get('o')) || 0.23, 0.05, 0.8);
-    const order = dealPhotos();
+    const strength = clamp(parseFloat(ask.get('o')) || 0.35, 0.05, 0.8);
+    // for now one photograph only, Aoraki (his call, 2026-10-03); ?ocean=all brings back the cycle
+    const order = ask.get('ocean') === 'all' ? dealPhotos() : ['aoraki'];
     const oc = { cur: null, next: null, fadeAt: 0, fadeDur: 0, started: false, i: 0, hover: null, timer: 0, begun: false, preps: new Map(), masks: new Map(), land50: null };
     const P = document.createElement('canvas');
     const pg = P.getContext('2d');
@@ -2101,8 +2102,9 @@
       c = document.createElement('canvas');
       c.width = P.width; c.height = P.height;
       const g = c.getContext('2d');
-      const k = Math.max(c.width / e.bm.width, c.height / e.bm.height);
-      g.filter = 'saturate(0.72)';
+      // fitted to cover the window, drawn a little larger so a photograph's own dark edges (the
+      // car window round Aoraki) stay outside the frame
+      const k = Math.max(c.width / e.bm.width, c.height / e.bm.height) * 1.22;
       g.imageSmoothingQuality = 'high';
       g.drawImage(e.bm, (c.width - e.bm.width * k) / 2, (c.height - e.bm.height * k) / 2, e.bm.width * k, e.bm.height * k);
       for (const key of oc.preps.keys()) if (key !== oc.cur && key !== oc.next && oc.preps.size > 2) oc.preps.delete(key);
@@ -2197,8 +2199,8 @@
         }
         pg.setTransform(1, 0, 0, 1, 0, 0);
         pg.globalCompositeOperation = 'source-over';
+        // the real photograph, laid over the sea as it is (no blend into the paper), at the strength
         ctx.save();
-        ctx.globalCompositeOperation = 'multiply';
         ctx.globalAlpha = strength;
         ctx.drawImage(P, 0, 0, W, H);
         ctx.restore();
@@ -2217,6 +2219,7 @@
     };
   }
   const ocean = OCEAN_PHOTO ? makeOcean() : null;
+  if (ocean) app.classList.add('has-ocean');
   WC.ocean = ocean; // for inspection in the console
   // a hand on a book (or one of its photographs), or none: told to whichever trials are on
   function mapPhotoHover(id) {

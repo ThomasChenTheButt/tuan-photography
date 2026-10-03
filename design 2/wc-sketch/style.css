@@ -126,6 +126,8 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 .app.is-soft .map__paint { filter: blur(5px) saturate(0.85); opacity: 0.55; }
 .map__tooth { transition: opacity 1.6s var(--soft); }
 .app.is-soft .map__tooth { opacity: 0.1; }
+/* with a photograph through the sea, the paper grain stays off it (his call: real photos, no sketch texture) */
+.app.has-ocean .map__tooth { opacity: 0; }
 
 /* the opening: a painted globe of flights that unrolls into this map */
 .opening { position: absolute; inset: 0; z-index: 5; width: 100%; height: 100%; background: var(--paper); pointer-events: none; }
