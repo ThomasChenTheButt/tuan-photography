@@ -2116,10 +2116,15 @@
     }
 
     const start = performance.now();
-    let raf = 0, done = false, el = 0, painting = false;
+    let raf = 0, done = false, el = 0, painting = false, held = 0, real = 0;
     function frame(now) {
       if (done) return;
-      el = now - start;
+      // the globe keeps turning until the map beneath is painted and its photograph is in, so the
+      // unroll never lands on a half-made page (his note, 2026-10-03: things popping in). `real`
+      // keeps the globe turning smoothly through the hold; `el` is the opening's own clock
+      real = now - start;
+      el = real - held;
+      if (el >= GLOBE_END && o.ready && !o.ready() && held < 8000) { held += el - GLOBE_END; el = GLOBE_END; }
       if (!painting) { painting = true; c.classList.add('is-painting'); }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, W, H);
@@ -2137,9 +2142,9 @@
         ctx.fillStyle = PAPER; ctx.fillRect(0, 0, W, H);
         // the backdrop photograph comes up from nothing behind the corridor and the globe, from
         // the first frame to the moment the globe unrolls (his call, 2026-10-03)
-        if (o.backdrop) o.backdrop(ctx, easeInOut(clamp(el / GLOBE_END, 0, 1)));
+        if (o.backdrop) o.backdrop(ctx, el, GLOBE_END);
         if (fadeIn > 0) {
-          const proj = d3.geoOrthographic().clipAngle(90).precision(0.5).scale(Rf * (0.94 + 0.06 * easeOut(fadeIn))).translate([cx, cyf]).rotate([lon0 - el * SPEED, lat0]);
+          const proj = d3.geoOrthographic().clipAngle(90).precision(0.5).scale(Rf * (0.94 + 0.06 * easeOut(fadeIn))).translate([cx, cyf]).rotate([lon0 - real * SPEED, lat0]);
           ctx.globalAlpha = fadeIn;
           castShadow(ctx, cx + Rf * 0.08, cyf + Rf * 1.12, Rf * 0.86, 1.3);
           // a solid paper globe, as the small one bottom-left is (his call, 2026-10-03)
@@ -2154,7 +2159,7 @@
         const mapA = 1 - easeInOut(clamp((el - GLOBE_END - UNROLL) / DISSOLVE, 0, 1));
         if (mapA > 0.002) {
           mutate.k = R / S;
-          const rot = [lon0 - GLOBE_END * SPEED, lat0];
+          const rot = [lon0 - (GLOBE_END + held) * SPEED, lat0];   // where the turning globe got to
           const dl = ((-o.LON0 - rot[0]) % 360 + 540) % 360 - 180;
           const proj = mutate(t).scale(S)
             .translate([cx + (target.translate[0] - cx) * t, cy + (target.translate[1] - cy) * t])
@@ -2173,7 +2178,7 @@
           ctx.fillStyle = PAPER; ctx.fillRect(0, 0, W, H);
           // the backdrop stays under the sheet, whose paper thins as it unrolls, so the sea of the
           // drawn map shows the photograph just as the real map will
-          if (o.backdrop) o.backdrop(ctx, 1);
+          if (o.backdrop) o.backdrop(ctx, el, 0);
           if (t < 1) {
             // the shadow lifts away as the globe opens
             ctx.globalAlpha = mapA * (1 - t);

@@ -31,6 +31,10 @@
   window. Every latitude-to-pixel step in `app.js`, `paint.js` and `globe.js` carries the factor.
 - **Bottom right is now only:** the tally, Whole map, and the Photo dial. Zoom in / Zoom out and
   the "Map: Natural Earth" credit went at his word (wheel, double click, pinch and +/- keys zoom).
+- **Flights view:** a photograph behind the spread (the sea's; a journey's first cover while the
+  hand is on it), the journeys on a translucent leaf of paper.
+- **Opening hold:** the globe keeps turning until the painting and the sea photograph are in, and
+  the backdrop rises from the moment it is decoded, so nothing pops in at the hand-over.
 - **Traffic:** a few of his flights are always in the air over the home map (up to six, out and
   home by turns), on their own canvas. Clicking a book turns the sea photograph into that
   place's cover, and it stays; hovering never changes it.

@@ -1934,10 +1934,36 @@
         `<ul class="journey__places">${places}</ul></li>`;
     }).join('');
   }
+  // the photograph behind the Flights spread: a journey's first place with a cover while the hand
+  // is on it, otherwise whatever the sea shows (his request, 2026-10-03)
+  const fImgs = $$('.flights__photo-img');
+  let fOn = 0, fSrc = '';
+  const seaPhotoId = () => (ocean && ocean.current()) || 'aoraki';
+  const journeyPhotoId = (n) => {
+    const j = journeys[n];
+    if (!j) return null;
+    const keys = Array.isArray(j.places) && j.places.length ? j.places.map((k) => bookByKey[k]).filter(Boolean) : (j.countries || []).flatMap((cid) => booksOf(cid));
+    const b = keys.find((q) => q && (q.cover || q.photo));
+    return b ? b.cover || b.photo : null;
+  };
+  function flightsPhoto(id) {
+    const s = id && S.slides[id];
+    if (!s) return;
+    const src = (ocean && ocean.srcOf(id)) || imgSrc(s, state.W * state.dpr > 1280 ? null : 1280);
+    if (src === fSrc) return;
+    fSrc = src;
+    const next = fImgs[1 - fOn], cur = fImgs[fOn];
+    const show = () => { if (fSrc !== src) return; cur.classList.remove('is-on'); next.classList.add('is-on'); fOn = 1 - fOn; };
+    next.onload = show;
+    next.src = src;
+    if (next.complete && next.naturalWidth) show();
+    flightsEl.classList.add('has-photo');
+  }
   function focusJourney(n, force) {
     clearTimeout(jLeave);
     if (n === jOn && !force) return;
     jOn = n;
+    flightsPhoto(n >= 0 ? journeyPhotoId(n) || seaPhotoId() : seaPhotoId());
     $$('.journey', journeysEl).forEach((el) => {
       const on = +el.dataset.j === n;
       el.classList.toggle('is-on', on);
@@ -2000,6 +2026,8 @@
     flightsOpen = true;
     renderJourneys();
     jOn = -1;
+    if (ocean) flightsEl.style.setProperty('--sea', ocean.strength);
+    flightsPhoto(seaPhotoId());
     flightsEl.classList.remove('is-following', 'is-closing');
     flightsEl.hidden = false;
     flightsEl.scrollTop = 0;
@@ -2252,17 +2280,30 @@
       },
       // the same photograph, whole, laid into another window-sized canvas (the opening's) at a
       // share of the strength: the backdrop the corridor and the globe stand in front of
-      backdrop(g, a) {
+      // el: the opening's clock; until: when it should be fully there (0: at once). It rises from
+      // nothing from the moment the photograph is decoded, so a late arrival never pops in
+      backdrop(g, el, until) {
         if (P.width !== canvas.width || P.height !== canvas.height) { P.width = canvas.width; P.height = canvas.height; oc.preps.clear(); }
         oc.opened = true;
         const id = oc.cur || order[0];
         const cc = id ? prep(id) : null;
-        if (!cc || a <= 0) return;
+        if (!cc) return;
+        let a = 1;
+        if (until) {
+          if (!oc.bdFrom) oc.bdFrom = el;
+          a = easeInOut(clamp((el - oc.bdFrom) / Math.max(400, until - oc.bdFrom), 0, 1));
+        }
+        if (a <= 0) return;
         g.save();
         g.globalAlpha *= strength * a;
         g.drawImage(cc, 0, 0, state.W, state.H);
         g.restore();
       },
+      // decoded and fitted, ready to be seen
+      ready() { const id = oc.cur || order[0]; return !id || !!WC.photoBitmap(src(id)).bm; },
+      // which photograph the sea shows (or is turning to), and the file it uses for one
+      current() { return oc.next || oc.cur || order[0] || null; },
+      srcOf(id) { return S.slides[id] ? src(id) : null; },
       get strength() { return strength; },
       set strength(v) { strength = clamp(v, 0.05, 1); queueDraw(); },
       unhover() {
@@ -2283,6 +2324,7 @@
     range.addEventListener('input', () => {
       ocean.strength = range.value / 100;
       out.value = ocean.strength.toFixed(2);
+      flightsEl.style.setProperty('--sea', ocean.strength);
       try { localStorage.setItem('tlap-ocean', String(ocean.strength)); } catch (e) { /* storage blocked */ }
     });
     dial.hidden = false;
@@ -2613,7 +2655,9 @@
         if (page || flightsOpen) { restOpening(); globe.start(); return; }
         opening = WC.opening({
           canvas: oc, title: opener, land: state.land110, travel: globe.o.travel, flights, home: FROM, LON0, SY, corridor,
-          backdrop: ocean ? (g, a) => ocean.backdrop(g, a) : null,
+          backdrop: ocean ? (g, el, until) => ocean.backdrop(g, el, until) : null,
+          // the globe holds its turn until the painting beneath and the photograph are in
+          ready: () => !!state.base && (!ocean || ocean.ready()),
           target: () => {
             const z = state.z;
             return { scale: (z.k * state.S0 * 180) / Math.PI, translate: [z.x + (z.k * state.W) / 2, z.y + (z.k * state.H) / 2] };
@@ -2622,6 +2666,7 @@
           onClear: () => { app.classList.remove('is-opening'); state.leadIn = performance.now(); queueDraw(); app.classList.add('is-arrived'); setTimeout(() => app.classList.remove('is-arrived'), 1300); if (!page && !flightsOpen) globe.start(); },
           onDone: () => { opener.className = 'sr'; },
         });
+        WC.op = opening; // for inspection in the console
         const skip = () => { if (opening && !opening.done) opening.skip(); };
         ['pointerdown', 'wheel', 'keydown', 'touchmove'].forEach((ev) => window.addEventListener(ev, skip, { once: true, passive: true }));
       });

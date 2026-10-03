@@ -595,7 +595,15 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 
 /* ---------------------------------------------------------- Flights: a sketchbook spread, the globe on the left page, the journeys on the right */
 
-.flights { position: fixed; inset: 0; z-index: 50; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--hair) transparent; }
+.flights { position: fixed; inset: 0; z-index: 50; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: var(--hair) transparent; background: var(--paper); }
+/* the photograph behind the spread: the sea's own, or the journey under the hand (his request,
+   2026-10-03); two layers so one crossfades into the next; --sea is the Photo dial's strength */
+.flights__photo { position: fixed; inset: 0; z-index: -2; overflow: hidden; pointer-events: none; }
+.flights__photo-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 900ms var(--soft); }
+.flights__photo-img.is-on { opacity: var(--sea, 0.9); }
+.flights.has-photo::before { opacity: 0; }
+/* the journeys read on a leaf of paper laid over the photograph */
+.flights.has-photo .flights__page--list { background: color-mix(in oklch, var(--paper) 78%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
 .flights::before {
   content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
   background-color: var(--paper); background-image: var(--tooth, none); background-size: 192px 192px; background-blend-mode: soft-light;
@@ -729,6 +737,8 @@ button.jplace:hover img, .jplace:focus-visible img { transform: translateY(-2px)
     background-color: var(--paper); background-image: var(--tooth, none); background-size: 192px 192px; background-blend-mode: soft-light;
     border-bottom: 1px solid var(--hair);
   }
+  /* with a photograph behind, the pinned globe stands on a leaf of paper too */
+  .flights.has-photo .flights__page--globe { background-color: color-mix(in oklch, var(--paper) 78%, transparent); background-image: none; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
   .flights__under { margin-top: -0.4rem; }
   .flights__page--list { width: 100%; padding: 1.4rem var(--edge) 3rem; }
   .flights__title { font-size: 2.2rem; }
