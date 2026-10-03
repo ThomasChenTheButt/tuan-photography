@@ -222,7 +222,10 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 :lang(zh-Hant) .key { font-style: normal; }
 .key__dab { flex: none; width: 2.4rem; height: 0.85rem; background: var(--dab-warm, none) center / 100% 100% no-repeat; }
 
-.tools { position: absolute; z-index: 6; right: calc(var(--edge) + 3rem); bottom: calc(var(--edge) - 0.6rem); display: flex; align-items: center; gap: 0 1.2rem; flex-wrap: wrap; justify-content: flex-end; }
+.tools { position: absolute; z-index: 6; right: calc(var(--edge) + 3rem); bottom: calc(var(--edge) - 0.6rem); max-width: calc(100% - var(--edge) * 2 - 3rem - 22rem); display: flex; align-items: center; gap: 0 1.2rem; flex-wrap: wrap; justify-content: flex-end; }
+/* the tally: countries travelled out of the world's, and the share of it (his request, 2026-10-03) */
+.tally { margin: 0; min-height: 2.75rem; display: inline-flex; align-items: center; font-size: 0.85rem; font-style: italic; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+:lang(zh-Hant) .tally { font-style: normal; }
 .zoom { display: flex; gap: 0 0.9rem; }
 .zoom__btn { min-height: 2.75rem; padding: 0 0.2rem; color: var(--ink-2); }
 .zoom__btn:hover { color: var(--ink); }
@@ -681,6 +684,7 @@ button.jplace:hover img, .jplace:focus-visible img { transform: translateY(-2px)
   .key { display: none; }
   .credit { display: none; }
   #zoom-world { display: none; }
+  .tally { padding: 0 0.75rem; background: radial-gradient(closest-side, var(--paper) 78%, oklch(98.4% 0.0075 95 / 0) 100%); }
   .tools { right: calc(var(--edge) - 0.55rem); bottom: calc(var(--edge) + 3rem); }
   .zoom { flex-direction: column; align-items: flex-end; gap: 0; }
   /* the coast of Antarctica runs along the bottom of a phone: each word sits on a patch of

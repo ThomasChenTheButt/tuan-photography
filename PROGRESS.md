@@ -29,6 +29,8 @@
 - **The map stands taller (his call, 2026-10-03):** the plate is stretched upright 1.25× (`SY`
   in `app.js`) so at Whole map Greenland touches the top and Antarctica the foot on a desktop
   window. Every latitude-to-pixel step in `app.js`, `paint.js` and `globe.js` carries the factor.
+- **A tally by the zoom words:** "21 / 195 countries · 11% of the world", counted from the data
+  (`WORLD_COUNTRIES = 195`, his figure, in `app.js`).
 - **The photograph through the sea (default since 2026-10-03):** Aoraki lies under the whole
   window and shows wherever there is water, at strength 0.9, the real photo with no paper
   texture, as its own copy cut from his original to the view inside the car window

@@ -44,6 +44,7 @@
       keyLabel: 'Key', keyBeen: 'Travelled',
       indexTitle: 'Photographs', indexOpen: 'Show the photographs', indexClose: 'Close',
       count: (n, p) => `${n} photographs from ${p} places`,
+      tally: (n, all, pct) => `${n} / ${all} countries · ${pct}% of the world`,
       seePhotos: 'See the photographs',
       hintGuide: 'Scroll for the guide', hintPhotos: 'Scroll for the photographs',
       coverLabel: (p) => `Photographs of ${p}`,
@@ -75,6 +76,7 @@
       keyLabel: '圖例', keyBeen: '去過',
       indexTitle: '照片', indexOpen: '顯示照片', indexClose: '關閉',
       count: (n, p) => `${p} 個地方，${n} 張照片`,
+      tally: (n, all, pct) => `${n} / ${all} 個國家，走過世界 ${pct}%`,
       seePhotos: '看照片',
       hintGuide: '往下看攻略', hintPhotos: '往下看照片',
       coverLabel: (p) => `${p}的照片`,
@@ -129,6 +131,7 @@
   // country may have several (the United States: New York, Boston, San Francisco, Los Angeles).
   // Each has a key (its city, else its guide or country), its own place on the map and address.
   const countries = Object.fromEntries(S.countries.map((c) => [c.id, c]));
+  const WORLD_COUNTRIES = 195; // the world's countries, as he counts them (2026-10-03)
   const guide = S.guides.barcelona;
   const books = S.books
     .filter((b) => countries[b.country])
@@ -1747,6 +1750,8 @@
     $('#ig').setAttribute('aria-label', `${t('follow')}: tuan_1127`);
     $('#globe').setAttribute('aria-label', T[lang].globeLabel);
     $('#opener-name').textContent = T[lang].names[nameN];
+    // the tally by the zoom words: his countries out of the world's 195 (his figure), and the share
+    $('#tally').textContent = T[lang].tally(S.countries.length, WORLD_COUNTRIES, Math.round((100 * S.countries.length) / WORLD_COUNTRIES));
   }
   function setLang(next) {
     if (next === lang) return;
