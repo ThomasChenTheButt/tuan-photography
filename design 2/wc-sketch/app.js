@@ -2092,7 +2092,9 @@
     const oc = { cur: null, next: null, fadeAt: 0, fadeDur: 0, started: false, i: 0, hover: null, timer: 0, begun: false, preps: new Map(), masks: new Map(), land50: null };
     const P = document.createElement('canvas');
     const pg = P.getContext('2d');
-    const src = (id) => imgSrc(S.slides[id], state.W * state.dpr > 900 ? 1280 : 640);
+    // the photograph covers the window and is drawn 1.22x larger, so it needs the full-size copy
+    // on any large or Retina screen; the 1280 copy only on small phones
+    const src = (id) => imgSrc(S.slides[id], state.W * state.dpr * 1.22 > 1280 ? null : 1280);
     // a photograph fitted to the window once, let down in colour, kept for as long as it is in play
     const prep = (id) => {
       let c = oc.preps.get(id);
