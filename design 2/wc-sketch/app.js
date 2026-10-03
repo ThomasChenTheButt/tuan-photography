@@ -2733,7 +2733,7 @@
     }
     let corridor = null;
     const hint = $('#scrollhint');
-    const restOpening = () => { shelf.on = false; app.classList.remove('is-opening', 'is-shelf'); oc.hidden = true; opener.className = 'sr'; hint.classList.remove('is-on'); if (corridor) corridor.clear(); queueDraw(); };
+    const restOpening = () => { slideEnd(); shelf.on = false; app.classList.remove('is-opening', 'is-shelf'); oc.hidden = true; opener.className = 'sr'; hint.classList.remove('is-on'); if (corridor) corridor.clear(); queueDraw(); };
     /* the scroll trial: once the photograph is up, the opening plays as far as the wheel, a finger,
        or the keys (space, the arrows, page down) have scrolled, forward or back, about five windows'
        height for the whole of it (slowed at his word, 2026-10-03: the map came too fast), the way noomoagency.com's pages come with the scroll. Until it
@@ -2744,7 +2744,7 @@
        (STAGE, on time); the second, once they have landed, sets the flights flying. Until then the
        map takes no input of its own */
     const STAGE = 2800;
-    const slide = { on: false, live: false, p: 0, at: 0, go: false, touchY: null };
+    const slide = { on: false, live: false, p: 0, at: 0, go: false, over: false, touchY: null };
     const startSlide = () => {
       slide.on = true;
       // the books stand on their shelf under the name from the start
@@ -2759,15 +2759,17 @@
         else if (slide.p >= 1) slide.go = true;
       };
       const stop = (e) => { e.preventDefault(); e.stopPropagation(); };
-      const onWheel = (e) => { if (!slide.on) return; stop(e); if (e.deltaY > 0) nudge(); };
+      // (after the second scroll the wheel is still swallowed until the flights have flown: a
+      // trackpad's scroll runs on for a moment, and those events would skip the opening)
+      const onWheel = (e) => { if (!slide.on) return; stop(e); if (!slide.over && e.deltaY > 0) nudge(); };
       const onTouchStart = (e) => { if (!slide.on) return; slide.touchY = e.touches[0].clientY; };
-      const onTouchMove = (e) => { if (!slide.on || slide.touchY == null) return; stop(e); if (slide.touchY - e.touches[0].clientY > 24) { nudge(); slide.touchY = null; } };
+      const onTouchMove = (e) => { if (!slide.on || slide.touchY == null) return; stop(e); if (!slide.over && slide.touchY - e.touches[0].clientY > 24) { nudge(); slide.touchY = null; } };
       const onTouchEnd = () => { slide.touchY = null; };
       const onKey = (e) => {
-        if (!slide.on) return;
+        if (!slide.on || slide.over) return;
         if ([' ', 'ArrowDown', 'PageDown', 'Enter', 'End'].includes(e.key)) { stop(e); nudge(); }
       };
-      const onDown = (e) => { if (!slide.on || e.pointerType !== 'mouse') return; nudge(); };
+      const onDown = (e) => { if (!slide.on || slide.over || e.pointerType !== 'mouse') return; nudge(); };
       const opts = { capture: true, passive: false };
       window.addEventListener('wheel', onWheel, opts);
       window.addEventListener('touchstart', onTouchStart, { capture: true, passive: true });
@@ -2795,13 +2797,15 @@
       if (shelf.on && shelf.p !== slide.p) { shelf.p = slide.p; queueDraw(); }
       return slide.p;
     };
-    // the second scroll has come: the flights may fly, and the map takes its own input
+    // the second scroll has come: the flights may fly; the map takes its own input once the
+    // opening is done (slide.off, from onDone)
     const slideGo = () => {
       if (!slide.go) return false;
-      slide.on = false; slide.off();
+      slide.over = true;
       hint.classList.remove('is-on');
       return true;
     };
+    const slideEnd = () => { if (slide.on) { slide.on = false; if (slide.off) slide.off(); } };
     const loading = loadWorld();
     if (playOpening) {
       // the name waits for its typeface (never more than a moment), so it never changes face mid-motion
@@ -2827,7 +2831,7 @@
           },
           // as the name and the flights fade, the books and the margins come back
           onClear: () => { shelf.on = false; app.classList.remove('is-opening', 'is-shelf'); state.leadIn = performance.now(); queueDraw(); app.classList.add('is-arrived'); setTimeout(() => app.classList.remove('is-arrived'), 1300); if (!page && !flightsOpen) globe.start(); },
-          onDone: () => { opener.className = 'sr'; },
+          onDone: () => { slideEnd(); opener.className = 'sr'; },
         });
         WC.op = opening; // for inspection in the console
         // skipped by any hand: the timed opening at once; the scroll trial only once the sheet is up
