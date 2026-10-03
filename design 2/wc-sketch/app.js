@@ -102,6 +102,10 @@
   const ask = new URLSearchParams(location.search);
   // his choice (2026-10-02): "Tuan, Through the Lens" / Tuan 的鏡頭之旅; ?name=1 to 5 still shows the others
   const nameN = clamp(parseInt(ask.get('name'), 10) || 2, 1, 5) - 1;
+  // which opening a first visit plays: 'classic' (the globe) or 'corridor' (the trial: a corridor
+  // of his prints first). His call, after comparing. In the address, ?opening plays the classic
+  // and ?opening=corridor the trial, every time
+  const OPENING_DEFAULT = 'classic';
   const t = (k) => (T[lang][k] !== undefined ? T[lang][k] : (S.i18n[lang][k] !== undefined ? S.i18n[lang][k] : k));
   const L = (o) => clean(o ? (typeof o === 'string' ? o : o[lang] !== undefined ? o[lang] : o.en) : '');
   const cityName = (c) => (typeof c === 'object' && c ? L(c) : clean(c || ''));
@@ -2092,8 +2096,9 @@
     const want = parse(location.hash);
     let first = false;
     try { first = !sessionStorage.getItem('wc-opened'); sessionStorage.setItem('wc-opened', '1'); } catch (e) { first = false; }
-    // ?opening in the address plays it every time, for review
+    // ?opening in the address plays it every time, for review; ?opening=corridor plays the corridor trial
     if (ask.has('opening')) first = true;
+    const openingKind = ask.has('opening') ? (ask.get('opening') === 'corridor' ? 'corridor' : 'classic') : OPENING_DEFAULT;
     const playOpening = first && !reduce.matches && !want.page && !want.photo && !want.flights;
     const opener = $('#opener');
     const oc = $('#opening');
@@ -2103,17 +2108,20 @@
       oc.hidden = false;
       opener.className = 'opener';
     }
-    const restOpening = () => { app.classList.remove('is-opening'); oc.hidden = true; opener.className = 'sr'; queueDraw(); };
+    let corridor = null;
+    const restOpening = () => { app.classList.remove('is-opening'); oc.hidden = true; opener.className = 'sr'; if (corridor) corridor.clear(); queueDraw(); };
     const loading = loadWorld();
     if (playOpening) {
       // the name waits for its typeface (never more than a moment), so it never changes face mid-motion
       const faces = document.fonts && document.fonts.load
         ? Promise.race([Promise.all([document.fonts.load('400 48px "Alegreya"', T.en.names[nameN]), document.fonts.load('500 48px "Noto Serif TC"', T.zh.names[nameN] + '陳亮元'), document.fonts.load('500 12px "Alegreya Sans"')]), new Promise((r) => setTimeout(r, 1500))]).catch(() => {})
         : Promise.resolve();
-      Promise.all([world110, faces]).then(() => {
+      // the corridor trial: its prints are fetched and decoded while the world loads
+      if (openingKind === 'corridor') corridor = WC.corridor({ root: $('#corridor'), slides: S.slides, narrow: narrow.matches, src: (s) => imgSrc(s, 640) });
+      Promise.all([world110, faces, corridor && corridor.ready]).then(() => {
         if (page || flightsOpen) { restOpening(); globe.start(); return; }
         opening = WC.opening({
-          canvas: oc, title: opener, land: state.land110, travel: globe.o.travel, flights, home: FROM, LON0,
+          canvas: oc, title: opener, land: state.land110, travel: globe.o.travel, flights, home: FROM, LON0, corridor,
           target: () => {
             const z = state.z;
             return { scale: (z.k * state.S0 * 180) / Math.PI, translate: [z.x + (z.k * state.W) / 2, z.y + (z.k * state.H) / 2] };

@@ -1622,12 +1622,137 @@
          LON0, target(): { scale, translate } of the flat map (d3 equirectangular), onDone() }
     returns { skip(), done, elapsed }
   */
-  const GLOBE = 2500, UNROLL = 1600, FLY_AT = GLOBE + UNROLL * 0.78, DISSOLVE = 900, CLEAR = 1200, SKIP = 450;
-  WC.OPENING = { GLOBE, UNROLL, FLY_AT, CLEAR };
+  const GLOBE = 2500, UNROLL = 1600, DISSOLVE = 900, CLEAR = 1200, SKIP = 450;
+  // the corridor trial (?opening=corridor): how long it runs in front, and how much of the globe's
+  // turning hold it takes back
+  const CORRIDOR = 3300, CORRIDOR_TRIM = 700;
+  WC.OPENING = { GLOBE, UNROLL, FLY_AT: GLOBE + UNROLL * 0.78, CLEAR, CORRIDOR };
+
+  /* ------------------------------------------------------------ the corridor (a trial, ?opening=corridor) */
+
+  /*
+    Before the globe: a corridor of his prints, pinned down four planes of paper (two walls, the
+    floor and the ceiling) drawn in CSS perspective, each print on a thin mat with a soft shadow and
+    plenty of paper between them. The camera glides forward along it (an exponential ease-out), the
+    nearest prints drifting past the edges, and at the end the last prints fall away to the sides,
+    leaving the globe that was turning at the far end all along. Only transforms and opacity move,
+    and every number reaches the stylesheet as a custom property.
+    o: { root (the container), slides (SITE.slides), narrow (phone), src(slide) → the 640px copy }
+    returns { ready (the prints decoded, or a moment and a half), far(el), frame(el), hide(), gone(), clear() }
+  */
+  WC.corridor = (o) => {
+    const root = o.root;
+    const W = window.innerWidth, H = window.innerHeight;
+    const phone = !!o.narrow;
+    const N = phone ? 16 : 32, PER = N / 4;
+    // the eye's distance from the page, the corridor's length, and how far its far end still is
+    // when the glide ends (so the last prints frame the globe before they fall away)
+    const P = phone ? 640 : 900, L = phone ? 2600 : 3600, ZF = phone ? 420 : 700;
+    const D = L - ZF;
+    const hw = W * 0.62, hh = H * 0.62;
+    const GLIDE = 3000, FALL_AT = 2800, FALL = CORRIDOR - FALL_AT;
+    const A = 3.2;
+    const glide = (el) => { const u = clamp(el / GLIDE, 0, 1); return (1 - Math.exp(-A * u)) / (1 - Math.exp(-A)); };
+    const cz = (el) => D * glide(el);
+    // how large the far end looks now, against how it looks when the glide ends
+    const far = (el) => (P + ZF) / (P + L - cz(el));
+
+    // the prints: a spread across his countries, taken in turn
+    const byCountry = new Map();
+    for (const s of Object.values(o.slides)) { if (!byCountry.has(s.country)) byCountry.set(s.country, []); byCountry.get(s.country).push(s); }
+    const countries = [...byCountry.keys()].sort();
+    const picked = [];
+    for (let round = 0; picked.length < N && round < 12; round++) {
+      for (const c of countries) { const s = byCountry.get(c)[round]; if (s && picked.length < N) picked.push(s); }
+    }
+
+    root.innerHTML = '';
+    const farEl = document.createElement('div'); farEl.className = 'corridor__far';
+    const scene = document.createElement('div'); scene.className = 'corridor__scene';
+    const planes = ['left', 'right', 'floor', 'ceiling'].map((n) => { const d = document.createElement('div'); d.className = `corridor__plane corridor__plane--${n}`; scene.appendChild(d); return d; });
+    root.append(farEl, scene);
+    const rs = root.style;
+    rs.setProperty('--cp', P); rs.setProperty('--cl', L); rs.setProperty('--cw', (2 * hw).toFixed(1)); rs.setProperty('--ch', (2 * hh).toFixed(1));
+    rs.setProperty('--cz', 0); rs.setProperty('--ca', 0); rs.setProperty('--dp', 0); rs.setProperty('--vg', 1);
+
+    // print i hangs on plane i % 4 (left, right, floor, ceiling), in ring floor(i / 4) from the near
+    // end; the planes are staggered a little so the rings never line up
+    const MAT = phone ? 4 : 6;
+    const dLast = L - 70, d0 = phone ? 380 : 410;
+    const pitch = (dLast - d0) / (PER - 1);
+    const stagger = [0, 0.5, 0.25, 0.75];
+    const imgs = [];
+    // the floor and ceiling are seen at a grazing angle, which squashes a print's depth: they
+    // take landscapes only, whose short side runs that way; the walls take the rest
+    const used = new Set();
+    const take = (pred) => { const s = picked.find((q) => !used.has(q) && (!pred || pred(q))) || picked.find((q) => !used.has(q)); used.add(s); return s; };
+    for (let i = 0; i < picked.length; i++) {
+      const p = i % 4, k = Math.floor(i / 4);
+      const s = take(p >= 2 ? (q) => q.w >= q.h : null);
+      const d = dLast - (PER - 1 - k) * pitch - stagger[p] * (pitch / 4);
+      const long = (phone ? 185 : 250) + ((i * 37) % 4) * (phone ? 12 : 20);
+      const land = s.w >= s.h;
+      const ch = land ? (long * s.h) / s.w : long * 0.92, cw = land ? long : (long * 0.92 * s.w) / s.h;
+      const pw = cw + 2 * MAT, ph = ch + 2 * MAT;
+      const sw = (((i * 53) % 7) - 3) / 3;
+      const side = (k + (p === 3 ? 1 : 0)) % 2 ? -1 : 1;
+      let px, py, fx = 0, fy = 0;
+      if (p < 2) {
+        // on a wall: local x runs along the corridor, local y is the height
+        const vc = hh + side * 0.14 * hh + sw * 0.03 * hh;
+        px = (p === 0 ? d : L - d) - pw / 2; py = vc - ph / 2; fy = 70;
+      } else {
+        // on the floor or ceiling: local x runs across, local y along the corridor. The ceiling's
+        // prints keep to its edges, so none passes across the name standing at the far end
+        const uc = hw + side * (p === 3 ? 0.7 : 0.55) * hw + sw * 0.04 * hw;
+        px = uc - pw / 2; py = (p === 2 ? L - d : d) - ph / 2; fx = side * 70;
+      }
+      const el = document.createElement('div');
+      el.className = 'print';
+      const st = el.style;
+      st.setProperty('--px', px.toFixed(1)); st.setProperty('--py', py.toFixed(1));
+      st.setProperty('--pw', pw.toFixed(1)); st.setProperty('--ph', ph.toFixed(1));
+      st.setProperty('--pr', (sw * 1.6).toFixed(2)); st.setProperty('--fx', fx); st.setProperty('--fy', fy);
+      const im = new Image();
+      im.decoding = 'async'; im.alt = ''; im.width = s.w; im.height = s.h; im.src = o.src(s);
+      el.appendChild(im);
+      planes[p].appendChild(el);
+      imgs.push(im);
+    }
+    root.hidden = false;
+    // the prints are decoded before the opening starts, but it never waits past a moment and a half;
+    // a print still on its way shows its mat
+    const loads = imgs.map((im) => (im.decode ? im.decode() : new Promise((r) => { im.onload = r; im.onerror = r; })).catch(() => {}).then(() => im.parentNode.classList.add('is-loaded')));
+    const ready = Promise.race([Promise.all(loads), new Promise((r) => setTimeout(r, 1500))]);
+
+    let over = false;
+    const hide = () => { over = true; root.hidden = true; };
+    const clear = () => { hide(); root.classList.remove('is-gone'); root.innerHTML = ''; };
+    return {
+      ready, far, length: CORRIDOR, trim: CORRIDOR_TRIM,
+      frame(el) {
+        if (over) return;
+        rs.setProperty('--cz', cz(el).toFixed(2));
+        rs.setProperty('--vg', (1 - glide(el)).toFixed(3));
+        rs.setProperty('--ca', clamp(el / 350, 0, 1).toFixed(3));
+        rs.setProperty('--dp', easeInOut(clamp((el - FALL_AT) / FALL, 0, 1)).toFixed(4));
+        if (el >= CORRIDOR) hide();
+      },
+      hide, clear,
+      gone() { if (over) return; root.classList.add('is-gone'); setTimeout(hide, SKIP); },
+    };
+  };
+
   WC.opening = (o) => {
     const c = o.canvas;
     const ctx = c.getContext('2d');
     const title = o.title;
+    const corr = o.corridor || null;
+    // with the corridor in front, the globe's turning hold gives back a second of its time
+    const PRE = corr ? corr.length : 0;
+    const GLOBE_END = PRE + (corr ? GLOBE - corr.trim : GLOBE);
+    const FLY_AT = GLOBE_END + UNROLL * 0.78;
+    const TSHIFT = corr ? 500 : 0;
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     let W = 0, H = 0, titleH = 0;
     const size = () => {
@@ -1797,13 +1922,16 @@
       // centred in the paper above the globe, clear of the margins' lettering
       const yc = clamp(top * 0.5 + H * 0.02, 64 + h / 2, top - 18 - h / 2);
       const yTop = (Number.isFinite(yc) ? yc : top * 0.5) - H / 2;
-      const inA = easeOut(clamp((el - 260) / 1100, 0, 1));
-      const inB = easeOut(clamp((el - 520) / 1000, 0, 1));
-      const gl = easeInOut(clamp((el - GLOBE) / UNROLL, 0, 1));
+      const inA = easeOut(clamp((el - 260 - TSHIFT) / 1100, 0, 1));
+      const inB = easeOut(clamp((el - 520 - TSHIFT) / 1000, 0, 1));
+      const gl = easeInOut(clamp((el - GLOBE_END) / UNROLL, 0, 1));
       const out = easeInOut(clamp((el - CLEAR_AT) / CLEAR, 0, 1));
+      // down the corridor the name stands at the far end with the globe, both scaled about the
+      // middle of the window, and grows as the camera nears
+      const far = corr && el < PRE ? corr.far(el) : 1;
       const st = title.style;
-      st.setProperty('--oy', `${(yTop * (1 - gl) + 14 * (1 - inA)).toFixed(2)}px`);
-      st.setProperty('--os', (1 + 0.14 * gl).toFixed(4));
+      st.setProperty('--oy', `${(yTop * far * (1 - gl) + 14 * (1 - inA)).toFixed(2)}px`);
+      st.setProperty('--os', (far * (1 + 0.14 * gl)).toFixed(4));
       st.setProperty('--oa', (inA * (1 - out)).toFixed(3));
       st.setProperty('--ot', (0.09 * (1 - inA)).toFixed(4));
       st.setProperty('--ob', (inB * (1 - out)).toFixed(3));
@@ -1822,24 +1950,30 @@
       const target = o.target();
       const S = target.scale;
       setTitle(el);
-      if (el < GLOBE) {
-        // the globe, turning
-        const fadeIn = Math.min(1, el / 420);
+      if (corr) corr.frame(el);
+      if (el < GLOBE_END) {
+        // the globe, turning: down the corridor it is seen small at the far end, and grows as the
+        // camera nears; once the corridor has gone it turns where it always has
+        const far = corr && el < PRE ? corr.far(el) : 1;
+        const fadeIn = corr ? clamp((el - 650) / 600, 0, 1) : Math.min(1, el / 420);
+        const Rf = R * far, cyf = H / 2 + (cy - H / 2) * far;
         ctx.fillStyle = PAPER; ctx.fillRect(0, 0, W, H);
-        const proj = d3.geoOrthographic().clipAngle(90).precision(0.5).scale(R * (0.94 + 0.06 * easeOut(fadeIn))).translate([cx, cy]).rotate([lon0 - el * SPEED, lat0]);
-        ctx.globalAlpha = fadeIn;
-        castShadow(ctx, cx + R * 0.08, cy + R * 1.12, R * 0.86, 1.3);
-        WC.paintGlobe(ctx, proj, { land: o.land, travel: o.travel, lw: 1.3, grain: 1, R: R * 0.8 });
-        ctx.globalAlpha = 1;
+        if (fadeIn > 0) {
+          const proj = d3.geoOrthographic().clipAngle(90).precision(0.5).scale(Rf * (0.94 + 0.06 * easeOut(fadeIn))).translate([cx, cyf]).rotate([lon0 - el * SPEED, lat0]);
+          ctx.globalAlpha = fadeIn;
+          castShadow(ctx, cx + Rf * 0.08, cyf + Rf * 1.12, Rf * 0.86, 1.3);
+          WC.paintGlobe(ctx, proj, { land: o.land, travel: o.travel, lw: 1.3, grain: 1, R: Rf * 0.8 });
+          ctx.globalAlpha = 1;
+        }
       } else {
         // it unrolls: orthographic into the map's own equirectangular plate, onto the exact place
         // it will lie; then that drawing dissolves into the real map underneath
-        const x = Math.min(1, (el - GLOBE) / UNROLL);
+        const x = Math.min(1, (el - GLOBE_END) / UNROLL);
         const t = easeInOut(x);
-        const mapA = 1 - easeInOut(clamp((el - GLOBE - UNROLL) / DISSOLVE, 0, 1));
+        const mapA = 1 - easeInOut(clamp((el - GLOBE_END - UNROLL) / DISSOLVE, 0, 1));
         if (mapA > 0.002) {
           mutate.k = R / S;
-          const rot = [lon0 - GLOBE * SPEED, lat0];
+          const rot = [lon0 - GLOBE_END * SPEED, lat0];
           const dl = ((-o.LON0 - rot[0]) % 360 + 540) % 360 - 180;
           const proj = mutate(t).scale(S)
             .translate([cx + (target.translate[0] - cx) * t, cy + (target.translate[1] - cy) * t])
@@ -1886,11 +2020,12 @@
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', size);
       if (!cleared && o.onClear) { cleared = true; o.onClear(); }
-      const rest = () => { c.hidden = true; c.width = c.height = 1; if (o.onDone) o.onDone(); };
+      const rest = () => { c.hidden = true; c.width = c.height = 1; if (corr) corr.clear(); if (o.onDone) o.onDone(); };
       if (skipped) {
-        // resolve quickly: the drawing and the name fade together onto the map
+        // resolve quickly: the drawing, the corridor and the name fade together onto the map
         c.classList.add('is-gone');
         if (title) title.classList.add('is-gone');
+        if (corr) corr.gone();
         setTimeout(rest, SKIP);
       } else rest();
     }
