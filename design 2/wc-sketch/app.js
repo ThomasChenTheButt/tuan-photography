@@ -235,6 +235,10 @@
   // Pacific seam falls where nothing he visited is. The whole sphere is drawn, pole to pole: the
   // sea is bare paper away from the coasts, so the drawing simply runs on to the window's edges
   const LON0 = 10, LAT_N = 90, LAT_S = -90;
+  // the plate is stretched upright: a degree of latitude is SY degrees of longitude tall, so the
+  // whole map stands as tall as a desktop window is to its width and Greenland reaches the top
+  // (his call, 2026-10-03). World units are stretched degrees: v = -lat * SY, everywhere.
+  const SY = 1.25;
   const R0 = 8; // texture px per degree of the whole-world painting
   const state = {
     W: 1, H: 1, dpr: 1, S0: 1,
@@ -251,15 +255,15 @@
     before: null,
   };
   const wrapU = (lon) => ((((lon - LON0) % 360) + 540) % 360) - 180;
-  const baseXY = (ll) => [state.W / 2 + wrapU(ll[1]) * state.S0, state.H / 2 - ll[0] * state.S0];
+  const baseXY = (ll) => [state.W / 2 + wrapU(ll[1]) * state.S0, state.H / 2 - ll[0] * SY * state.S0];
   const P = (ll, z = state.z) => { const b = baseXY(ll); return [z.applyX(b[0]), z.applyY(b[1])]; };
   const invertLL = (x, y) => {
     const u = (state.z.invertX(x) - state.W / 2) / state.S0;
-    const lat = -(state.z.invertY(y) - state.H / 2) / state.S0;
+    const lat = -(state.z.invertY(y) - state.H / 2) / state.S0 / SY;
     return [((u + LON0 + 540) % 360) - 180, lat];
   };
   const pxPerDeg = (z = state.z) => z.k * state.S0;
-  const projDeg = d3.geoEquirectangular().rotate([-LON0, 0]).scale(180 / Math.PI).translate([0, 0]).precision(0);
+  const projDeg = WC.plate(SY).rotate([-LON0, 0]).scale(180 / Math.PI).translate([0, 0]).precision(0);
   const pathDeg = (geo) => { const p = new Path2D(); d3.geoPath(projDeg, p)(geo); return p; };
 
   function sizeMap() {
@@ -270,7 +274,7 @@
     canvas.height = Math.round(state.H * state.dpr);
     state.S0 = state.W / 360;
     zoom.extent([[0, 0], [state.W, state.H]])
-      .translateExtent([[0, state.H / 2 - LAT_N * state.S0], [state.W, state.H / 2 - LAT_S * state.S0]]);
+      .translateExtent([[0, state.H / 2 - LAT_N * SY * state.S0], [state.W, state.H / 2 - LAT_S * SY * state.S0]]);
     penEl.setAttribute('viewBox', `0 0 ${state.W} ${state.H}`);
   }
 
@@ -291,7 +295,7 @@
   }
   const covers = (t, v) => t.u0 <= v.u0 + 0.0001 && t.v0 <= v.v0 + 0.0001 && t.u0 + t.w / t.r >= v.u1 - 0.0001 && t.v0 + t.h / t.r >= v.v1 - 0.0001;
   const paintEnv = {
-    LON0, LAT_N, LAT_S,
+    LON0, LAT_N, LAT_S, SY,
     land: () => state.land50,
     travel: () => state.travel,
     seams: () => state.seams,
@@ -301,7 +305,7 @@
 
   async function paintBase() {
     if (state.base || !state.land50 || !state.relief) return;
-    const job = { r: R0, u0: -180, v0: -LAT_N, w: 360 * R0, h: (LAT_N - LAT_S) * R0 };
+    const job = { r: R0, u0: -180, v0: -LAT_N * SY, w: 360 * R0, h: Math.ceil((LAT_N - LAT_S) * SY * R0) };
     try {
       const c = await WC.paint(job, paintEnv);
       landPhotos(c, job);
@@ -332,7 +336,7 @@
     let u0, v0, u1, v1;
     for (let i = 0; i < 4; i++) {
       u0 = Math.max(-180, v.u0 - vw * m); u1 = Math.min(180, v.u1 + vw * m);
-      v0 = Math.max(-LAT_N, v.v0 - vh * m); v1 = Math.min(-LAT_S, v.v1 + vh * m);
+      v0 = Math.max(-LAT_N * SY, v.v0 - vh * m); v1 = Math.min(-LAT_S * SY, v.v1 + vh * m);
       if ((u1 - u0) * (v1 - v0) * r * r < 4.2e6) break;
       m *= 0.5;
     }
@@ -497,7 +501,7 @@
     if (ocean) ocean.draw(now);
 
     ctx.save();
-    ctx.beginPath(); ctx.rect(X0 - 180 * p, Y0 - 89.4 * p, 360 * p, 178.8 * p); ctx.clip();
+    ctx.beginPath(); ctx.rect(X0 - 180 * p, Y0 - 89.4 * SY * p, 360 * p, 178.8 * SY * p); ctx.clip();
     // pencil: small crosses where the 30° lines meet, finer as you come close
     const step = p > 40 ? 5 : p > 14 ? 10 : 30;
     const arm = 3.5;
@@ -509,8 +513,8 @@
       const u = wrapU(lon);
       if (u < vr.u0 - 1 || u > vr.u1 + 1) continue;
       for (let lat = -60; lat <= 75; lat += step) {
-        if (-lat < vr.v0 - 1 || -lat > vr.v1 + 1) continue;
-        const x = X0 + u * p, y = Y0 - lat * p;
+        if (-lat * SY < vr.v0 - 1 || -lat * SY > vr.v1 + 1) continue;
+        const x = X0 + u * p, y = Y0 - lat * SY * p;
         ctx.moveTo(x - arm, y); ctx.lineTo(x + arm, y);
         ctx.moveTo(x, y - arm); ctx.lineTo(x, y + arm);
       }
@@ -714,13 +718,13 @@
     const f = state.feats[b.country];
     let k = 30;
     if (b.place) {
-      k = Math.min((state.W - 80) / (7 * state.S0), (state.H - 120) / (4.5 * state.S0));
+      k = Math.min((state.W - 80) / (7 * state.S0), (state.H - 120) / (4.5 * SY * state.S0));
     } else if (f) {
       const bb = d3.geoBounds(f);
       let w = bb[1][0] - bb[0][0];
       if (w < 0) w += 360;
       const span = Math.min(w, 60), hspan = Math.min(bb[1][1] - bb[0][1], 40);
-      const kx = (state.W - 80) / (span * state.S0), ky = (state.H - 120) / (hspan * state.S0);
+      const kx = (state.W - 80) / (span * state.S0), ky = (state.H - 120) / (hspan * SY * state.S0);
       k = Math.min(kx, ky);
     }
     k = clamp(k * 0.9, 12, 150);
@@ -2104,13 +2108,14 @@
     const oc = { cur: null, next: null, fadeAt: 0, fadeDur: 0, started: false, i: 0, hover: null, timer: 0, begun: false, preps: new Map(), masks: new Map(), land50: null };
     const P = document.createElement('canvas');
     const pg = P.getContext('2d');
-    // the part of a photograph that is used, as fractions of its width and height: Aoraki is seen
-    // through a car window, so only the view inside the frame (his call: the mountain fills the
-    // window, no dark corner). Any photograph not listed is used whole.
-    const CROP = { aoraki: [0.07, 0.22, 0.8, 0.95] };
+    // a photograph with its own copy for the sea: Aoraki is seen through a car window, so the sea
+    // gets the view inside the frame, cut from his original at full size (`-sea.jpg`, made by hand,
+    // with a 1280 copy; his call: the mountain fills the window, no dark corner). Any photograph
+    // not listed is used whole.
+    const SEA_FILE = { aoraki: 'new-zealand-aoraki-sea.jpg' };
     // the photograph covers the window, so it needs the full-size copy on any large or Retina
     // screen; the 1280 copy only on small phones
-    const src = (id) => imgSrc(S.slides[id], state.W * state.dpr * 1.3 > 1280 ? null : 1280);
+    const src = (id) => imgSrc(SEA_FILE[id] ? { file: SEA_FILE[id] } : S.slides[id], state.W * state.dpr > 1280 ? null : 1280);
     // a photograph fitted to the window once, let down in colour, kept for as long as it is in play
     const prep = (id) => {
       let c = oc.preps.get(id);
@@ -2120,12 +2125,10 @@
       c = document.createElement('canvas');
       c.width = P.width; c.height = P.height;
       const g = c.getContext('2d');
-      // the used part of the photograph, fitted to cover the window, centred
-      const [cx0, cy0, cx1, cy1] = CROP[id] || [0, 0, 1, 1];
-      const sx = cx0 * e.bm.width, sy = cy0 * e.bm.height, sw = (cx1 - cx0) * e.bm.width, sh = (cy1 - cy0) * e.bm.height;
-      const k = Math.max(c.width / sw, c.height / sh);
+      // fitted to cover the window, centred
+      const k = Math.max(c.width / e.bm.width, c.height / e.bm.height);
       g.imageSmoothingQuality = 'high';
-      g.drawImage(e.bm, sx, sy, sw, sh, (c.width - sw * k) / 2, (c.height - sh * k) / 2, sw * k, sh * k);
+      g.drawImage(e.bm, (c.width - e.bm.width * k) / 2, (c.height - e.bm.height * k) / 2, e.bm.width * k, e.bm.height * k);
       for (const key of oc.preps.keys()) if (key !== oc.cur && key !== oc.next && oc.preps.size > 2) oc.preps.delete(key);
       oc.preps.set(id, c);
       return c;
@@ -2553,7 +2556,7 @@
       Promise.all([world110, faces, corridor && corridor.ready]).then(() => {
         if (page || flightsOpen) { restOpening(); globe.start(); return; }
         opening = WC.opening({
-          canvas: oc, title: opener, land: state.land110, travel: globe.o.travel, flights, home: FROM, LON0, corridor,
+          canvas: oc, title: opener, land: state.land110, travel: globe.o.travel, flights, home: FROM, LON0, SY, corridor,
           target: () => {
             const z = state.z;
             return { scale: (z.k * state.S0 * 180) / Math.PI, translate: [z.x + (z.k * state.W) / 2, z.y + (z.k * state.H) / 2] };

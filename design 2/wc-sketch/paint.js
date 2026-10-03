@@ -59,6 +59,14 @@
     for (let i = 0; i < NH.length; i++) NH[i] = a[i] * 0.7 + b() * 0.3;
   }
   WC.noise = () => { ensureNoise(); return { NL, NM, NH, N }; };
+  /* the map's plate: equirectangular, stretched upright by sy (a degree of latitude sy times as
+     tall as a degree of longitude); sy 1 is the plain plate carrée */
+  WC.plateRaw = (sy = 1) => {
+    const raw = (l, p) => [l, p * sy];
+    raw.invert = (x, y) => [x, y / sy];
+    return raw;
+  };
+  WC.plate = (sy = 1) => d3.geoProjection(WC.plateRaw(sy));
 
   /* ------------------------------------------------------------ the paper's cold-press tooth */
 
@@ -241,7 +249,8 @@
     const PW = w + pad * 2, PH = h + pad * 2;
     const t0 = performance.now();
 
-    const proj = d3.geoEquirectangular().rotate([-env.LON0, 0]).precision(0.5)
+    const SY = env.SY || 1;
+    const proj = WC.plate(SY).rotate([-env.LON0, 0]).precision(0.5)
       .scale((r * 180) / Math.PI)
       .translate([-u0 * r + pad, -v0 * r + pad])
       .clipExtent([[-60, -60], [PW + 60, PH + 60]]);
@@ -300,9 +309,10 @@
         const uL = -180 - env.LON0 + shift;
         const a = Math.max(u0, uL), b = Math.min(u0 + w / r, uL + 360);
         if (b <= a) continue;
-        const vT = Math.max(v0, -90), vB = Math.min(v0 + h / r, 90);
+        // (v is in stretched degrees; the image's rows are true degrees of latitude)
+        const vT = Math.max(v0, -90 * SY), vB = Math.min(v0 + h / r, 90 * SY);
         if (vB <= vT) continue;
-        qc.drawImage(img, (a - uL) * ri, (vT + 90) * ri, (b - a) * ri, (vB - vT) * ri, (a - u0) * r, (vT - v0) * r, (b - a) * r, (vB - vT) * r);
+        qc.drawImage(img, (a - uL) * ri, (vT / SY + 90) * ri, (b - a) * ri, ((vB - vT) / SY) * ri, (a - u0) * r, (vT - v0) * r, (b - a) * r, (vB - vT) * r);
       }
     }
     const pd = pc.getImageData(0, 0, PW, PH).data;
@@ -331,7 +341,7 @@
     while (j < h) {
       const tStart = performance.now();
       for (; j < h && performance.now() - tStart < 10; j++) {
-        const lat = -(v0 + j / r);
+        const lat = -(v0 + j / r) / SY;
         const alat = Math.abs(lat);
         const polar = ss(58, 70, alat);                 // the land wash cools toward the ice
         const iceFade = 1 - ss(72, 84, alat);           // and fades out before the poles
@@ -430,7 +440,7 @@
         let on = false;
         if (x >= 0 && y >= 0 && x < w && y < h) {
           const ix = x | 0, iy = y | 0;
-          const lat = -(v0 + iy / r);
+          const lat = -(v0 + iy / r) / SY;
           if (Math.abs(lat) < 70) {
             const dev = (206 - qd[(iy * w + ix) << 2]) / 64;
             on = dev > thr && pd[((iy + pad) * PW + ix + pad) << 2] > 200;
@@ -497,7 +507,7 @@
     const { r, u0, v0, w, h } = job;
     const inset = o.inset || 0;
     const alpha = o.alpha == null ? 0.25 : o.alpha;
-    const projection = () => d3.geoEquirectangular().rotate([-env.LON0, 0]).precision(0.5).scale((r * 180) / Math.PI).translate([-u0 * r, -v0 * r]);
+    const projection = () => WC.plate(env.SY || 1).rotate([-env.LON0, 0]).precision(0.5).scale((r * 180) / Math.PI).translate([-u0 * r, -v0 * r]);
     const proj = projection();
     const clipped = projection().clipExtent([[-20, -20], [w + 20, h + 20]]);
     const g = canvas.getContext('2d');

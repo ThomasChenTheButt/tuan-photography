@@ -1787,8 +1787,11 @@
     size();
     window.addEventListener('resize', size);
     const lon0 = -84, lat0 = -20, SPEED = 0.008;
+    // the map's plate it unrolls into, stretched upright as the map is
+    const SY = o.SY || 1;
+    const plateRaw = WC.plateRaw(SY);
     const mutate = d3.geoProjectionMutator((t) => (l, p) => {
-      const a = d3.geoOrthographicRaw(l, p), b = d3.geoEquirectangularRaw(l, p);
+      const a = d3.geoOrthographicRaw(l, p), b = plateRaw(l, p);
       return [(1 - t) * a[0] * mutate.k + t * b[0], (1 - t) * a[1] * mutate.k + t * b[1]];
     });
     mutate.k = 1;
@@ -1819,7 +1822,7 @@
         const lon = Math.atan2(q[1], q[0]) / RAD, lat = Math.asin(clamp(q[2], -1, 1)) / RAD;
         let u = ((((lon - o.LON0) % 360) + 540) % 360) - 180;
         if (i) { while (u - prev > 180) u -= 360; while (u - prev < -180) u += 360; }
-        U[i] = u; V[i] = lat; prev = u;
+        U[i] = u; V[i] = lat * SY; prev = u;   // V in the plate's stretched degrees
       }
       const len = d3.geoDistance(f.from, f.to);
       legs.push({
@@ -1879,7 +1882,7 @@
       const k = S * RAD;
       ctx.save();
       // the world's own width: nothing is drawn past its edges
-      ctx.beginPath(); ctx.rect(tx - 180 * k, ty - 90 * k, 360 * k, 180 * k); ctx.clip();
+      ctx.beginPath(); ctx.rect(tx - 180 * k, ty - 90 * SY * k, 360 * k, 180 * SY * k); ctx.clip();
       ctx.lineCap = 'round'; ctx.lineJoin = 'round';
       for (const L of legs) {
         const g = (el - L.at) / L.dur;
@@ -1926,7 +1929,7 @@
         const r = 5 * lw * sc;
         let u = ((((q.to[0] - o.LON0) % 360) + 540) % 360) - 180;
         ctx.save();
-        ctx.translate(tx + u * k, ty - q.to[1] * k);
+        ctx.translate(tx + u * k, ty - q.to[1] * SY * k);
         ctx.beginPath();
         for (let i = 0; i < pts.length; i++) { const p = pts[i]; if (i) ctx.lineTo(p[0] * r, p[1] * r); else ctx.moveTo(p[0] * r, p[1] * r); }
         ctx.strokeStyle = ink(0.84 * a * Math.min(1, x * 3)); ctx.lineWidth = 1.1 * lw; ctx.stroke();

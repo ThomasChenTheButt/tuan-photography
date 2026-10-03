@@ -26,10 +26,15 @@
   choice), unrolls into the map while the title glides to the centre, every flight draws across
   the map, then all fades. Once a session. `?opening=corridor` replays it; `?opening` plays the
   globe-only version.
+- **The map stands taller (his call, 2026-10-03):** the plate is stretched upright 1.25× (`SY`
+  in `app.js`) so at Whole map Greenland touches the top and Antarctica the foot on a desktop
+  window. Every latitude-to-pixel step in `app.js`, `paint.js` and `globe.js` carries the factor.
 - **The photograph through the sea (default since 2026-10-03):** Aoraki lies under the whole
   window and shows wherever there is water, at strength 0.9, the real photo with no paper
-  texture, cropped to the view inside the car window. It fills above and below the map too, and
-  the map sits on the window's bottom edge so Antarctica always covers the foot. `?ocean=all`
+  texture, as its own copy cut from his original to the view inside the car window
+  (`design 1/images/web/new-zealand-aoraki-sea.jpg`, plus a 1280 copy; made by hand, not by the
+  build). It fills above and below the map too, and the map sits on the window's bottom edge so
+  Antarctica always covers the foot. `?ocean=all`
   cycles all 93 photographs, `?o=0.5` tries a strength, `?photos=none` turns it off. The trial
   dial is gone. Switches: `OPENING_DEFAULT`, `MAP_PHOTOS_DEFAULT` in `design 2/wc-sketch/app.js`.
 
