@@ -2658,14 +2658,14 @@
     const hint = $('#scrollhint');
     const restOpening = () => { app.classList.remove('is-opening'); oc.hidden = true; opener.className = 'sr'; hint.classList.remove('is-on'); if (corridor) corridor.clear(); queueDraw(); };
     /* the scroll trial: once the photograph is up, the opening plays as far as the wheel, a finger,
-       or the keys (space, the arrows, page down) have scrolled, forward or back, about two windows'
-       height for the whole of it, the way noomoagency.com's pages come with the scroll. Until it
+       or the keys (space, the arrows, page down) have scrolled, forward or back, about five windows'
+       height for the whole of it (slowed at his word, 2026-10-03: the map came too fast), the way noomoagency.com's pages come with the scroll. Until it
        has played out the map takes no input of its own. A click or Enter plays the rest */
     const slide = { on: false, live: false, p: 0, goal: 0, lock: 0, fast: false, touchY: null, moved: false };
     const startSlide = () => {
       slide.on = true;
       // (once the books have come in, it cannot be scrolled back before that point)
-      const pull = (dy) => { if (!slide.live) return; slide.goal = clamp(slide.goal + dy / (state.H * 2), slide.lock, 1); slide.moved = true; };
+      const pull = (dy) => { if (!slide.live) return; slide.goal = clamp(slide.goal + dy / (state.H * 5), slide.lock, 1); slide.moved = true; };
       const stop = (e) => { e.preventDefault(); e.stopPropagation(); };
       const onWheel = (e) => { if (!slide.on) return; stop(e); pull(e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? state.H : 1)); };
       const onTouchStart = (e) => { if (!slide.on) return; slide.touchY = e.touches[0].clientY; };
@@ -2673,8 +2673,8 @@
       const onTouchEnd = () => { slide.touchY = null; };
       const onKey = (e) => {
         if (!slide.on || !slide.live) return;
-        if (e.key === ' ' || e.key === 'ArrowDown' || e.key === 'PageDown') { stop(e); slide.goal = clamp(slide.goal + 0.25, slide.lock, 1); slide.moved = true; }
-        else if (e.key === 'ArrowUp' || e.key === 'PageUp') { stop(e); slide.goal = clamp(slide.goal - 0.25, slide.lock, 1); }
+        if (e.key === ' ' || e.key === 'ArrowDown' || e.key === 'PageDown') { stop(e); slide.goal = clamp(slide.goal + 0.12, slide.lock, 1); slide.moved = true; }
+        else if (e.key === 'ArrowUp' || e.key === 'PageUp') { stop(e); slide.goal = clamp(slide.goal - 0.12, slide.lock, 1); }
         else if (e.key === 'End' || e.key === 'Enter') { stop(e); slide.goal = 1; slide.fast = true; }
       };
       const onDown = (e) => { if (!slide.on || !slide.live || e.pointerType !== 'mouse') return; slide.goal = 1; slide.fast = true; };
@@ -2698,7 +2698,7 @@
     const slideFrame = (live) => {
       if (!slide.on) return 1;
       slide.live = !!live;
-      slide.p += (slide.goal - slide.p) * (reduce.matches ? 1 : slide.fast ? 0.1 : 0.08);
+      slide.p += (slide.goal - slide.p) * (reduce.matches ? 1 : slide.fast ? 0.1 : 0.06);
       if (slide.goal >= 1 && slide.p > 0.998) slide.p = 1;
       if (slide.p < 0.0005 && slide.goal <= 0) slide.p = 0;
       hint.classList.toggle('is-on', slide.live && slide.p < 0.03 && !slide.moved);

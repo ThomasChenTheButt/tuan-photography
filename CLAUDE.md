@@ -1,6 +1,6 @@
 > **Experiment `scroll` (2026-10-03).** The opening after noomoagency.com (his find): the same
 > opening as on 8645, but once the photograph is up it plays only as far as he scrolls (wheel,
-> finger, keys; forward or back, about two windows' height for the whole), the way that site's
+> finger, keys; forward or back, about five windows' height for the whole), the way that site's
 > pages come with the scroll. His words: "as I scroll it should turn out just like my anime".
 > Default here (`OPENING_DEFAULT = 'scroll'`; `?opening=classic` plays the timed one). Served on
 > 8646. No skill. Every rule of this file holds.
