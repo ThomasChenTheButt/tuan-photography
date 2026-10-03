@@ -33,7 +33,7 @@
       ig: 'Instagram',
       mapLabel: 'Map of the places travelled',
       mapHint: 'Drag, or use the arrow keys, to move the map. Scroll, or press plus and minus, to zoom. Tab moves through the books.',
-      zoomGroup: 'Zoom', zoomIn: 'Zoom in', zoomOut: 'Zoom out', world: 'Whole map', credit: 'Map: Natural Earth', oceanDial: 'Photo',
+      zoomGroup: 'Zoom', zoomIn: 'Zoom in', zoomOut: 'Zoom out', world: 'Whole map', credit: 'Map: Natural Earth',
       flights: 'Flights', globeLabel: 'Flights: open the globe of journeys',
       flightsTitle: 'Flights', flightsHow: 'Drag to turn the globe', speed: 'Speed', speedSlow: 'Slow',
       flightsLede: (n) => `${n} journeys. Choose one to follow its flights on the globe.`,
@@ -64,7 +64,7 @@
       ig: 'Instagram',
       mapLabel: '走過的地方地圖',
       mapHint: '拖曳或用方向鍵移動地圖；捲動，或按加號、減號縮放。Tab 鍵逐一走過每本書。',
-      zoomGroup: '縮放', zoomIn: '放大', zoomOut: '縮小', world: '整張地圖', credit: '地圖：Natural Earth', oceanDial: '照片',
+      zoomGroup: '縮放', zoomIn: '放大', zoomOut: '縮小', world: '整張地圖', credit: '地圖：Natural Earth',
       flights: '飛過的航線', globeLabel: '飛過的航線：打開旅程地球',
       flightsTitle: '飛過的航線', flightsHow: '拖曳轉動地球', speed: '速度', speedSlow: '慢慢看',
       flightsLede: (n) => `${n} 段旅程。選一段，在地球上看它的航線。`,
@@ -102,18 +102,19 @@
   const ask = new URLSearchParams(location.search);
   // his choice (2026-10-02): "Tuan, Through the Lens" / Tuan 的鏡頭之旅; ?name=1 to 5 still shows the others
   const nameN = clamp(parseInt(ask.get('name'), 10) || 2, 1, 5) - 1;
-  // which opening a first visit plays: 'classic' (the globe) or 'corridor' (the trial: a corridor
-  // of his prints first). His call, after comparing. In the address, ?opening plays the classic
-  // and ?opening=corridor the trial, every time
-  const OPENING_DEFAULT = 'classic';
+  // which opening a first visit plays: 'classic' (the globe) or 'corridor' (a corridor of his
+  // prints first, then the globe). Corridor: his call, 2026-10-03, after comparing. In the
+  // address, ?opening plays the classic and ?opening=corridor the corridor, every time
+  const OPENING_DEFAULT = 'corridor';
   // photographs on the home map (his note: the map alone "doesn't scream photography"). Two
   // trials behind one switch so they can be compared: ?photos=sea lays one large print in the
   // empty ocean and cycles through every photograph; ?photos=land turns each travelled country's
   // wash into its cover photograph; ?photos=ocean (his clarification) lays one photograph under
   // the whole window and lets it show only through the sea; ?photos=both is ocean and land
-  // together; ?photos=none neither. ?photos=ocean&o=0.35 sets the ocean's strength (0.05 to 0.8).
-  // MAP_PHOTOS_DEFAULT is what the page does with no switch in the address: his call
-  const MAP_PHOTOS_DEFAULT = 'none';
+  // together; ?photos=none neither. ?o=0.35 sets the ocean's strength (0.05 to 1) for a look.
+  // MAP_PHOTOS_DEFAULT is what the page does with no switch in the address: the photograph
+  // through the sea, his call, 2026-10-03
+  const MAP_PHOTOS_DEFAULT = 'ocean';
   const mapPhotos = ['sea', 'land', 'ocean', 'both', 'none'].includes(ask.get('photos')) ? ask.get('photos') : MAP_PHOTOS_DEFAULT;
   const SEA_PRINT = mapPhotos === 'sea';
   const OCEAN_PHOTO = mapPhotos === 'ocean' || mapPhotos === 'both';
@@ -2226,20 +2227,9 @@
   }
   const ocean = OCEAN_PHOTO ? makeOcean() : null;
   if (ocean) app.classList.add('has-ocean');
-  // the trial dial, bottom right: slides the strength live and remembers it on this browser
-  if (ocean) {
-    const dial = $('#ocean-dial'), range = $('#ocean-range'), out = $('#ocean-out');
-    try { const v = parseFloat(localStorage.getItem('tlap-ocean')); if (v >= 0.05 && v <= 1 && !ask.has('o')) ocean.strength = v; } catch (e) { /* storage blocked */ }
-    range.value = String(Math.round(ocean.strength * 100));
-    out.value = ocean.strength.toFixed(2);
-    range.addEventListener('input', () => {
-      ocean.strength = range.value / 100;
-      out.value = ocean.strength.toFixed(2);
-      try { localStorage.setItem('tlap-ocean', String(ocean.strength)); } catch (e) { /* storage blocked */ }
-    });
-    dial.hidden = false;
-  }
-  WC.ocean = ocean; // for inspection in the console
+  // the trial dial that set the strength is gone (settled at 0.9); a value it left behind is cleared
+  try { localStorage.removeItem('tlap-ocean'); } catch (e) { /* storage blocked */ }
+  WC.ocean = ocean; // for inspection in the console (WC.ocean.strength = 0.5 tries another strength)
   // a hand on a book (or one of its photographs), or none: told to whichever trials are on
   function mapPhotoHover(id) {
     if (seaPrint) { if (id) seaPrint.hover(id); else seaPrint.unhover(); }

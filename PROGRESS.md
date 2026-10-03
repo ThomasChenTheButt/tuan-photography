@@ -21,20 +21,17 @@
   camera data (exported from Photoshop); the site shows them without it, nothing invented.
 - **Journeys** (`journeys` in `data/site.json`) come from his Drive trip documents plus his own
   corrections: 16 journeys, newest first, every leg's mode and places; Chinese city names.
-- **Opening:** the globe turns under "Tuan, Through the Lens" / Tuan 的鏡頭之旅 (his choice),
-  unrolls into the map while the title glides to the centre, every flight draws across the map,
-  then all fades. `?opening` replays it; `?opening=corridor` plays the trial below.
-- **Three trials are built, all behind switches, none on by default yet** (`OPENING_DEFAULT`
-  and `MAP_PHOTOS_DEFAULT` in `design 2/wc-sketch/app.js`):
-  - `?opening=corridor`: the opening begins with a 3 s glide through a corridor of 150 prints of
-    his photographs (all 93, repeated), dense like his reference, into the globe.
-  - `?photos=ocean`: one full-window photograph seen only through the sea (his idea). Real photo,
-    no paper texture over it, **strength 0.9 (his call)**, Aoraki only for now (`&ocean=all`
-    cycles through all 93). A trial dial bottom right ("Photo", 5 to 100) sets the strength live
-    and is remembered on the browser; it comes off once he settles. Loads the full-size copy on
-    Retina screens.
-  - `?photos=sea` (a print laid in the South Atlantic) and `?photos=land` (covers inside each
-    country) were the first two tries; he preferred the ocean idea.
+- **Opening (default since 2026-10-03):** a 3 s glide through a corridor of 150 prints of his
+  photographs into the globe, which turns under "Tuan, Through the Lens" / Tuan 的鏡頭之旅 (his
+  choice), unrolls into the map while the title glides to the centre, every flight draws across
+  the map, then all fades. Once a session. `?opening=corridor` replays it; `?opening` plays the
+  globe-only version.
+- **The photograph through the sea (default since 2026-10-03):** Aoraki lies under the whole
+  window and shows wherever there is water, at strength 0.9, the real photo with no paper
+  texture, cropped to the view inside the car window. It fills above and below the map too, and
+  the map sits on the window's bottom edge so Antarctica always covers the foot. `?ocean=all`
+  cycles all 93 photographs, `?o=0.5` tries a strength, `?photos=none` turns it off. The trial
+  dial is gone. Switches: `OPENING_DEFAULT`, `MAP_PHOTOS_DEFAULT` in `design 2/wc-sketch/app.js`.
 
 ## 上次做到哪 Where we left off
 
@@ -49,22 +46,20 @@
 - Then 25 US photographs went in with a Washington D.C. book; the corridor opening and the three
   map-photo trials were built; he liked the photograph through the sea at strength 0.9 and asked
   for it clean (no sketch texture) with Aoraki only for now.
-- He stopped to compact the chat and update the app.
+- After compacting: the sea photograph now fills the whole window (no paper above or below the
+  map), Aoraki is cropped inside the car window, Antarctica sits on the bottom edge, and he made
+  the corridor opening and the sea photograph the defaults; the trial dial came off. He asked to
+  keep only localhost:8645 running.
 
 ## 接下來 Next up
 
-**Decide the defaults, then tidy.** Open `localhost:8645/?photos=ocean` and
-`localhost:8645/?opening=corridor`, judge them, then in `design 2/wc-sketch/app.js` set
-`MAP_PHOTOS_DEFAULT` ('ocean' or 'none') and `OPENING_DEFAULT` ('corridor' or 'classic'); remove
-the trial dial from `index.html` / `style.css` / `app.js` once the strength is settled; then pick
-which photographs the sea should cycle through (`order` in `makeOcean`, `?ocean=all` to preview).
-Rebuild: `python3 tools/build2.py`; check: `python3 tools/check_site.py`.
+**Choose the sea's photographs.** Open `localhost:8645/?ocean=all` to see all 93 cycle through;
+he names the ones to keep, and they go in `order` in `makeOcean` (`design 2/wc-sketch/app.js`),
+each with a `CROP` if it has edges to hide. Check: `python3 tools/check_site.py`.
 
 ## 等你決定 Waiting on you
 
-- **Sea photograph:** keep it on for every visitor? Which photographs besides Aoraki? Aoraki's
-  car-window edges show a dark corner; a photo without that framing would sit cleaner.
-- **Corridor opening:** make it the default, or keep the current opening?
+- **Sea photograph:** which photographs besides Aoraki, if any?
 - **Camera data for the 22 US photographs:** re-export from Lightroom with metadata, or drop the
   raw files in, and I'll add it.
 - **Boston** has a book but no photographs yet.
@@ -79,4 +74,4 @@ Rebuild: `python3 tools/build2.py`; check: `python3 tools/check_site.py`.
 
 Say **"continue the travel website"**. Double-click **`start.command`** to open both sites
 (8642 design 1, 8645 design 2), or run `python3 tools/serve.py 8645 "design 2"` from the project
-folder.
+folder. He now works on 8645 only; design 1 is still there and still builds.
