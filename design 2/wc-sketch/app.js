@@ -35,6 +35,7 @@
       mapHint: 'Drag, or use the arrow keys, to move the map. Scroll, or press plus and minus, to zoom. Tab moves through the books.',
       zoomGroup: 'Zoom', world: 'Whole map', oceanDial: 'Photo',
       flights: 'Flights', globeLabel: 'Flights: open the globe of journeys',
+      scrollHint: 'Scroll',
       flightsTitle: 'Flights', flightsHow: 'Drag to turn the globe', speed: 'Speed', speedSlow: 'Slow',
       flightsLede: (n) => `${n} journeys. Choose one to follow its flights on the globe.`,
       journeyAria: (d) => `Follow the journey of ${d}`,
@@ -67,6 +68,7 @@
       mapHint: '拖曳或用方向鍵移動地圖；捲動，或按加號、減號縮放。Tab 鍵逐一走過每本書。',
       zoomGroup: '縮放', world: '整張地圖', oceanDial: '照片',
       flights: '飛過的航線', globeLabel: '飛過的航線：打開旅程地球',
+      scrollHint: '往下捲',
       flightsTitle: '飛過的航線', flightsHow: '拖曳轉動地球', speed: '速度', speedSlow: '慢慢看',
       flightsLede: (n) => `${n} 段旅程。選一段，在地球上看它的航線。`,
       journeyAria: (d) => `看 ${d} 的旅程`,
@@ -108,8 +110,11 @@
   // it) or 'corridor' (a corridor of his prints first). Classic: his call, 2026-10-03, after a
   // friend found the corridor odd (it was the default for a day). The turning globe that used to
   // open the classic went the same day at his word. In the address, ?opening plays the classic
-  // and ?opening=corridor the corridor, every time
-  const OPENING_DEFAULT = 'classic';
+  // and ?opening=corridor the corridor, every time.
+  // The scroll trial (this experiment, after noomoagency.com, his find, 2026-10-03): 'scroll', the
+  // photograph with the name over it, and the map's sheet pulled up over it by scrolling, the way
+  // the next page of that site rises over the first. ?opening plays it; ?opening=classic the timed one
+  const OPENING_DEFAULT = 'scroll';
   // photographs on the home map (his note: the map alone "doesn't scream photography"). Two
   // trials behind one switch so they can be compared: ?photos=sea lays one large print in the
   // empty ocean and cycles through every photograph; ?photos=land turns each travelled country's
@@ -2250,8 +2255,11 @@
         pg.clearRect(0, 0, P.width, P.height);
         // the whole window, plate or not: where the map's sheet ends, the photograph goes on
         // (his call, 2026-10-03: no paper above or below the map, the mountain fills it)
-        if (cc) pg.drawImage(cc, 0, 0);
-        if (nc && a > 0) { pg.globalAlpha = a; pg.drawImage(nc, 0, 0); pg.globalAlpha = 1; }
+        // (while the sheet is being pulled up over the opening's photograph, the photograph is
+        // held still on the screen: laid into the sheet higher by as much as the sheet is down)
+        const sy = -(state.slide || 0) * dpr;
+        if (cc) pg.drawImage(cc, 0, sy);
+        if (nc && a > 0) { pg.globalAlpha = a; pg.drawImage(nc, 0, sy); pg.globalAlpha = 1; }
         pg.globalCompositeOperation = 'destination-out';
         pg.setTransform(dpr * p, 0, 0, dpr * p, dpr * X0, dpr * Y0);
         pg.fillStyle = '#000';
@@ -2639,7 +2647,7 @@
     try { first = !sessionStorage.getItem('wc-opened'); sessionStorage.setItem('wc-opened', '1'); } catch (e) { first = false; }
     // ?opening in the address plays it every time, for review; ?opening=corridor plays the corridor trial
     if (ask.has('opening')) first = true;
-    const openingKind = ask.has('opening') ? (ask.get('opening') === 'corridor' ? 'corridor' : 'classic') : OPENING_DEFAULT;
+    const openingKind = ask.has('opening') ? (['corridor', 'classic', 'scroll'].includes(ask.get('opening')) ? ask.get('opening') : 'scroll') : OPENING_DEFAULT;
     const playOpening = first && !reduce.matches && !want.page && !want.photo && !want.flights;
     const opener = $('#opener');
     const oc = $('#opening');
@@ -2650,7 +2658,69 @@
       opener.className = 'opener';
     }
     let corridor = null;
-    const restOpening = () => { app.classList.remove('is-opening'); oc.hidden = true; opener.className = 'sr'; if (corridor) corridor.clear(); queueDraw(); };
+    const hint = $('#scrollhint');
+    const restOpening = () => { app.classList.remove('is-opening', 'is-sliding'); oc.hidden = true; opener.className = 'sr'; hint.classList.remove('is-on'); if (corridor) corridor.clear(); queueDraw(); };
+    /* the scroll trial: the map's sheet lies below the window and is pulled up over the photograph
+       by the wheel, a finger, or the keys (space, the arrows, page down), the way the next page of
+       noomoagency.com rises over its first. Until it is all the way up the map takes no input of
+       its own. A click, Enter, or a key press on the last stretch pulls it the rest of the way */
+    const slide = { on: false, p: 0, goal: 0, fast: false, touchY: null, moved: false };
+    const startSlide = () => {
+      slide.on = true;
+      app.classList.add('is-sliding');
+      oc.classList.add('is-under');
+      hint.classList.add('is-on');
+      const pull = (dy) => { slide.goal = clamp(slide.goal + dy / (state.H * 0.9), 0, 1); slide.moved = true; };
+      const stop = (e) => { e.preventDefault(); e.stopPropagation(); };
+      const onWheel = (e) => { if (!slide.on) return; stop(e); pull(e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? state.H : 1)); };
+      const onTouchStart = (e) => { if (!slide.on) return; slide.touchY = e.touches[0].clientY; };
+      const onTouchMove = (e) => { if (!slide.on || slide.touchY == null) return; stop(e); const y = e.touches[0].clientY; pull((slide.touchY - y) * 1.6); slide.touchY = y; };
+      const onTouchEnd = () => { slide.touchY = null; };
+      const onKey = (e) => {
+        if (!slide.on) return;
+        if (e.key === ' ' || e.key === 'ArrowDown' || e.key === 'PageDown') { stop(e); slide.goal = clamp(slide.goal + 0.5, 0, 1); slide.moved = true; }
+        else if (e.key === 'ArrowUp' || e.key === 'PageUp') { stop(e); slide.goal = clamp(slide.goal - 0.5, 0, 1); }
+        else if (e.key === 'End' || e.key === 'Enter') { stop(e); slide.goal = 1; slide.fast = true; }
+      };
+      const onDown = (e) => { if (!slide.on || e.pointerType !== 'mouse') return; slide.goal = 1; slide.fast = true; };
+      const opts = { capture: true, passive: false };
+      window.addEventListener('wheel', onWheel, opts);
+      window.addEventListener('touchstart', onTouchStart, { capture: true, passive: true });
+      window.addEventListener('touchmove', onTouchMove, opts);
+      window.addEventListener('touchend', onTouchEnd, { capture: true, passive: true });
+      window.addEventListener('keydown', onKey, opts);
+      window.addEventListener('pointerdown', onDown, { capture: true, passive: true });
+      slide.off = () => {
+        window.removeEventListener('wheel', onWheel, opts);
+        window.removeEventListener('touchstart', onTouchStart, { capture: true });
+        window.removeEventListener('touchmove', onTouchMove, opts);
+        window.removeEventListener('touchend', onTouchEnd, { capture: true });
+        window.removeEventListener('keydown', onKey, opts);
+        window.removeEventListener('pointerdown', onDown, { capture: true });
+      };
+    };
+    // every frame of the opening: the sheet eases toward where the hand has pulled it
+    const slideFrame = () => {
+      if (!slide.on) return 1;
+      slide.p += (slide.goal - slide.p) * (reduce.matches ? 1 : slide.fast ? 0.22 : 0.12);
+      if (slide.goal >= 1 && slide.p > 0.998) slide.p = 1;
+      if (slide.p < 0.0005 && slide.goal <= 0) slide.p = 0;
+      const s = (1 - slide.p) * state.H;
+      state.slide = s;
+      app.style.setProperty('--slide', `${s.toFixed(2)}px`);
+      hint.classList.toggle('is-on', slide.p < 0.03 && !slide.moved);
+      queueDraw();
+      if (slide.p >= 1) {
+        // all the way up: the sheet is the map again, and the map takes its own input
+        slide.on = false; slide.off();
+        state.slide = 0;
+        app.classList.remove('is-sliding'); app.style.removeProperty('--slide');
+        hint.classList.remove('is-on');
+        oc.classList.add('is-gone');
+        queueDraw();
+      }
+      return slide.p;
+    };
     const loading = loadWorld();
     if (playOpening) {
       // the name waits for its typeface (never more than a moment), so it never changes face mid-motion
@@ -2661,8 +2731,10 @@
       if (openingKind === 'corridor') corridor = WC.corridor({ root: $('#corridor'), slides: S.slides, narrow: narrow.matches, src: (s) => imgSrc(s, 640) });
       Promise.all([world110, faces, corridor && corridor.ready]).then(() => {
         if (page || flightsOpen) { restOpening(); globe.start(); return; }
+        if (openingKind === 'scroll') startSlide();
         opening = WC.opening({
           canvas: oc, title: opener, flights, home: FROM, LON0, SY, corridor,
+          slide: openingKind === 'scroll' ? slideFrame : null,
           backdrop: ocean ? (g, el, until) => ocean.backdrop(g, el, until) : null,
           // the photograph stands until the painting beneath and its own copy are in
           ready: () => !!state.base && (!ocean || ocean.ready()),
@@ -2675,7 +2747,12 @@
           onDone: () => { opener.className = 'sr'; },
         });
         WC.op = opening; // for inspection in the console
-        const skip = () => { if (opening && !opening.done) opening.skip(); };
+        // skipped by any hand: the timed opening at once; the scroll trial only once the sheet is up
+        const skip = (e) => {
+          if (!opening || opening.done) return;
+          if (opening.sliding) { window.addEventListener(e.type, skip, { once: true, passive: true }); return; }
+          opening.skip();
+        };
         ['pointerdown', 'wheel', 'keydown', 'touchmove'].forEach((ev) => window.addEventListener(ev, skip, { once: true, passive: true }));
       });
       loading.catch(() => restOpening());

@@ -1887,7 +1887,11 @@
     o: { canvas, title (the element holding the name), flights (WC.routes), home [lng, lat],
          LON0, SY, backdrop(ctx, el, until), ready(), target(): { scale, translate } of the flat map,
          onClear(), onDone() }
-    returns { skip(), done, elapsed, end }
+    o.slide(): the scroll trial (after noomoagency.com, his find, 2026-10-03). Called every frame,
+      it returns how far the map's sheet has been pulled up over the photograph (0 to 1). The
+      photograph stands, the name over it, until the sheet is all the way up; the name goes under
+      the sheet's edge as it passes; then the flights draw as below. No reveal of its own.
+    returns { skip(), done, elapsed, end, sliding }
   */
   const ARRIVE = 2500, REVEAL = 1400, CLEAR = 1200, SKIP = 450;
   // the corridor trial (?opening=corridor): how long it runs in front, and how much of the
@@ -2041,8 +2045,9 @@
     const corr = o.corridor || null;
     // with the corridor in front, the photograph's arrival gives back some of its time
     const PRE = corr ? corr.length : 0;
-    const ARRIVE_END = PRE + (corr ? ARRIVE - corr.trim : ARRIVE);
-    const FLY_AT = ARRIVE_END + REVEAL * 0.5;
+    const scroll = !!o.slide;
+    const ARRIVE_END = PRE + (corr ? ARRIVE - corr.trim : scroll ? 900 : ARRIVE);
+    const FLY_AT = ARRIVE_END + (scroll ? 0 : REVEAL * 0.5);
     const TSHIFT = corr ? 500 : 0;
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     let W = 0, H = 0, titleH = 0;
@@ -2205,24 +2210,33 @@
       // down the corridor the name stands at the far end, scaled about the middle of the window,
       // and grows as the camera nears
       const far = corr && el < PRE ? corr.far(el) * corr.titleK(el) : 1;
+      // pulled up by hand, the sheet's edge passes over the name, which goes under it
+      let under = 1;
+      if (scroll) {
+        const h = titleH || 100, edge = (1 - pulled) * H;
+        under = clamp((edge - (H / 2 - h / 2)) / Math.max(1, h), 0, 1);
+      }
       const st = title.style;
       st.setProperty('--oy', `${(14 * (1 - inA)).toFixed(2)}px`);
       st.setProperty('--os', far.toFixed(4));
-      st.setProperty('--oa', (inA * (1 - out)).toFixed(3));
+      st.setProperty('--oa', (inA * (1 - out) * under).toFixed(3));
       st.setProperty('--ot', (0.09 * (1 - inA)).toFixed(4));
-      st.setProperty('--ob', (inB * (1 - out)).toFixed(3));
+      st.setProperty('--ob', (inB * (1 - out) * under).toFixed(3));
       st.setProperty('--oby', `${(8 * (1 - inB)).toFixed(2)}px`);
     }
 
     const start = performance.now();
-    let raf = 0, done = false, el = 0, painting = false, held = 0;
+    let raf = 0, done = false, el = 0, painting = false, held = 0, pulled = scroll ? 0 : 1;
     function frame(now) {
       if (done) return;
       // the photograph stands until the map beneath is painted and its own copy is in, so the
       // reveal never lands on a half-made page (his note, 2026-10-03: things popping in).
-      // `held` is the wait; `el` is the opening's own clock
+      // `held` is the wait; `el` is the opening's own clock. In the scroll trial it also stands
+      // until the sheet has been pulled all the way up
       el = now - start - held;
-      if (el >= ARRIVE_END && o.ready && !o.ready() && held < 8000) { held += el - ARRIVE_END; el = ARRIVE_END; }
+      if (scroll) pulled = o.slide();
+      const wait = (o.ready && !o.ready() && held < 8000) || pulled < 1;
+      if (el >= ARRIVE_END && wait) { held += el - ARRIVE_END; el = ARRIVE_END; }
       if (!painting) { painting = true; c.classList.add('is-painting'); }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, W, H);
@@ -2230,16 +2244,18 @@
       const S = target.scale;
       setTitle(el);
       if (corr) corr.frame(el);
-      if (el < ARRIVE_END) {
+      if (el < ARRIVE_END || pulled < 1) {
         // the photograph comes up from nothing over the paper, behind the corridor if there is
         // one, from the first frame to the moment the map starts to show (his call, 2026-10-03)
         ctx.fillStyle = PAPER; ctx.fillRect(0, 0, W, H);
-        if (o.backdrop) o.backdrop(ctx, el, ARRIVE_END);
+        // (pulled up by hand, the opening's clock stands still while it waits, so the photograph
+        // rises on real time instead)
+        if (o.backdrop) o.backdrop(ctx, scroll ? now - start : el, ARRIVE_END);
       } else {
         // the paper and the whole photograph thin away, and the map develops beneath: the real
         // one, its sea already holding the photograph at full strength, its land coming up in
         // pen and wash where it lies
-        const mapA = 1 - easeInOut(clamp((el - ARRIVE_END) / REVEAL, 0, 1));
+        const mapA = scroll ? 0 : 1 - easeInOut(clamp((el - ARRIVE_END) / REVEAL, 0, 1));
         if (mapA > 0.002) {
           ctx.save();
           ctx.globalAlpha = mapA;
@@ -2273,6 +2289,6 @@
       } else rest();
     }
     raf = requestAnimationFrame(frame);
-    return { skip: () => finish(true), get done() { return done; }, get elapsed() { return el; }, get end() { return END; } };
+    return { skip: () => finish(true), get done() { return done; }, get elapsed() { return el; }, get end() { return END; }, get sliding() { return scroll && pulled < 1; } };
   };
 })();

@@ -1,3 +1,9 @@
+> **Experiment `scroll` (2026-10-03).** The opening after noomoagency.com (his find): the sea's
+> photograph with the name over it, and the map's sheet pulled up over the photograph by scrolling
+> (wheel, finger, keys), the way the next page of that site rises over the first; once up, the
+> flights draw across and the books come in. Default here (`OPENING_DEFAULT = 'scroll'`;
+> `?opening=classic` plays the timed one). Served on 8646. No skill. Every rule of this file holds.
+
 # tuan photography 陳亮元 — project instructions
 
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
