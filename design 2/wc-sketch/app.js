@@ -2086,7 +2086,7 @@
   // motion: one photograph. ?o=0.35 sets the strength.
   function makeOcean() {
     const HOLD = 12000, FADE = 2500, HOVER_FADE = 900;
-    let strength = clamp(parseFloat(ask.get('o')) || 0.35, 0.05, 1);
+    let strength = clamp(parseFloat(ask.get('o')) || 0.8, 0.05, 1);   // 0.8: his call, 2026-10-03
     // for now one photograph only, Aoraki (his call, 2026-10-03); ?ocean=all brings back the cycle
     const order = ask.get('ocean') === 'all' ? dealPhotos() : ['aoraki'];
     const oc = { cur: null, next: null, fadeAt: 0, fadeDur: 0, started: false, i: 0, hover: null, timer: 0, begun: false, preps: new Map(), masks: new Map(), land50: null };
