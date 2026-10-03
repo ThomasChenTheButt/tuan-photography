@@ -317,10 +317,12 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 - Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
   harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
 
-Open now (2026-10-03): `earth` (8646), the opening's globe as a lit Earth built on the graphics card
-from the site's own maps, nothing downloaded; and `scope` (8647, on top of `earth`), the Earth
-beginning as a small circle in the middle, coming toward the viewer, the map expanding out of it.
-Branches `exp/earth` and `exp/scope`, local.
+Open now (2026-10-03): `scope` (8647), the opening's globe as a lit Earth built on the graphics card
+from the site's own maps (nothing downloaded), beginning as a small circle in the middle, coming
+toward the viewer, the map expanding out of it. Branch `exp/scope`, local.
+
+Dropped on 2026-10-03: `earth`, the same Earth in the ordinary opening (turning in place, then
+unrolling). He dropped it the same day in favour of `scope`, which carries the Earth on.
 
 Dropped on 2026-10-01: `marked-photo`, a friend's idea from a Douyin photo post: a circled spot on the
 home windows (Big Ben's clock, the Matterhorn summit), a drawn line to a print of it up close, a few
