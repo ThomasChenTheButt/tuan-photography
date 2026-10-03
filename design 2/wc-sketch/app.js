@@ -104,12 +104,13 @@
   const ask = new URLSearchParams(location.search);
   // his choice (2026-10-02): "Tuan, Through the Lens" / Tuan 的鏡頭之旅; ?name=1 to 5 still shows the others
   const nameN = clamp(parseInt(ask.get('name'), 10) || 2, 1, 5) - 1;
-  // which opening a first visit plays: 'classic' (the photograph, then the map developing out of
-  // it) or 'corridor' (a corridor of his prints first). Classic: his call, 2026-10-03, after a
-  // friend found the corridor odd (it was the default for a day). The turning globe that used to
-  // open the classic went the same day at his word. In the address, ?opening plays the classic
-  // and ?opening=corridor the corridor, every time
+  // which opening a first visit plays: 'classic' (the globe) or 'corridor' (a corridor of his
+  // prints first, then the globe). Classic: his call, 2026-10-03, after a friend found the
+  // corridor odd (it was the default for a day). In the address, ?opening plays the classic and
+  // ?opening=corridor the corridor, every time
   const OPENING_DEFAULT = 'classic';
+  // the opening globe's look: 1 wash, 2 lit, 3 desk globe (see WC.paintGlobe); his choice pending
+  const GLOBE_STYLE_DEFAULT = 1;
   // photographs on the home map (his note: the map alone "doesn't scream photography"). Two
   // trials behind one switch so they can be compared: ?photos=sea lays one large print in the
   // empty ocean and cycles through every photograph; ?photos=land turns each travelled country's
@@ -2262,7 +2263,7 @@
         // It is not there while the opening plays, and once the map is in view it comes up slowly
         // from nothing over RISE (his call, 2026-10-03); reduced motion: at once
         // (when the opening plays, it brings the photograph up itself as its backdrop, and the map
-        // beneath holds it at full strength for the reveal: no second rise)
+        // beneath holds it at full strength for the dissolve: no second rise)
         if (app.classList.contains('is-opening')) oc.opened = true;
         if (!oc.riseAt) oc.riseAt = oc.opened ? now - RISE : now;
         const rise = reduce.matches ? 1 : easeInOut(clamp((now - oc.riseAt) / RISE, 0, 1));
@@ -2287,7 +2288,7 @@
         toward(id, oc.begun ? FADE : 0);
       },
       // the same photograph, whole, laid into another window-sized canvas (the opening's) at a
-      // share of the strength: the opening's backdrop (the corridor's prints stand in front of it)
+      // share of the strength: the backdrop the corridor and the globe stand in front of
       // el: the opening's clock; until: when it should be fully there (0: at once). It rises from
       // nothing from the moment the photograph is decoded, so a late arrival never pops in
       backdrop(g, el, until) {
@@ -2645,7 +2646,7 @@
     const oc = $('#opening');
     if (playOpening) {
       app.classList.add('is-opening');
-      // the paper covers the map at once, so the map is never seen before the photograph
+      // the paper covers the map at once, so the map is never seen before the globe
       oc.hidden = false;
       opener.className = 'opener';
     }
@@ -2662,9 +2663,11 @@
       Promise.all([world110, faces, corridor && corridor.ready]).then(() => {
         if (page || flightsOpen) { restOpening(); globe.start(); return; }
         opening = WC.opening({
-          canvas: oc, title: opener, flights, home: FROM, LON0, SY, corridor,
+          canvas: oc, title: opener, land: state.land110, travel: globe.o.travel, flights, home: FROM, LON0, SY, corridor,
           backdrop: ocean ? (g, el, until) => ocean.backdrop(g, el, until) : null,
-          // the photograph stands until the painting beneath and its own copy are in
+          // the globe's look, three to choose from (?globe=1|2|3; 1 until he chooses)
+          style: clamp(parseInt(ask.get('globe'), 10) || GLOBE_STYLE_DEFAULT, 1, 3),
+          // the globe holds its turn until the painting beneath and the photograph are in
           ready: () => !!state.base && (!ocean || ocean.ready()),
           target: () => {
             const z = state.z;
