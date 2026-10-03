@@ -33,7 +33,7 @@
       ig: 'Instagram',
       mapLabel: 'Map of the places travelled',
       mapHint: 'Drag, or use the arrow keys, to move the map. Scroll, or press plus and minus, to zoom. Tab moves through the books.',
-      zoomGroup: 'Zoom', zoomIn: 'Zoom in', zoomOut: 'Zoom out', world: 'Whole map', credit: 'Map: Natural Earth',
+      zoomGroup: 'Zoom', zoomIn: 'Zoom in', zoomOut: 'Zoom out', world: 'Whole map', credit: 'Map: Natural Earth', oceanDial: 'Photo',
       flights: 'Flights', globeLabel: 'Flights: open the globe of journeys',
       flightsTitle: 'Flights', flightsHow: 'Drag to turn the globe', speed: 'Speed', speedSlow: 'Slow',
       flightsLede: (n) => `${n} journeys. Choose one to follow its flights on the globe.`,
@@ -64,7 +64,7 @@
       ig: 'Instagram',
       mapLabel: '走過的地方地圖',
       mapHint: '拖曳或用方向鍵移動地圖；捲動，或按加號、減號縮放。Tab 鍵逐一走過每本書。',
-      zoomGroup: '縮放', zoomIn: '放大', zoomOut: '縮小', world: '整張地圖', credit: '地圖：Natural Earth',
+      zoomGroup: '縮放', zoomIn: '放大', zoomOut: '縮小', world: '整張地圖', credit: '地圖：Natural Earth', oceanDial: '照片',
       flights: '飛過的航線', globeLabel: '飛過的航線：打開旅程地球',
       flightsTitle: '飛過的航線', flightsHow: '拖曳轉動地球', speed: '速度', speedSlow: '慢慢看',
       flightsLede: (n) => `${n} 段旅程。選一段，在地球上看它的航線。`,
@@ -2086,7 +2086,7 @@
   // motion: one photograph. ?o=0.35 sets the strength.
   function makeOcean() {
     const HOLD = 12000, FADE = 2500, HOVER_FADE = 900;
-    const strength = clamp(parseFloat(ask.get('o')) || 0.35, 0.05, 0.8);
+    let strength = clamp(parseFloat(ask.get('o')) || 0.35, 0.05, 1);
     // for now one photograph only, Aoraki (his call, 2026-10-03); ?ocean=all brings back the cycle
     const order = ask.get('ocean') === 'all' ? dealPhotos() : ['aoraki'];
     const oc = { cur: null, next: null, fadeAt: 0, fadeDur: 0, started: false, i: 0, hover: null, timer: 0, begun: false, preps: new Map(), masks: new Map(), land50: null };
@@ -2211,6 +2211,8 @@
         oc.hover = id;
         toward(id, HOVER_FADE);
       },
+      get strength() { return strength; },
+      set strength(v) { strength = clamp(v, 0.05, 1); queueDraw(); },
       unhover() {
         if (!oc.hover) return;
         oc.hover = null;
@@ -2220,6 +2222,19 @@
   }
   const ocean = OCEAN_PHOTO ? makeOcean() : null;
   if (ocean) app.classList.add('has-ocean');
+  // the trial dial, bottom right: slides the strength live and remembers it on this browser
+  if (ocean) {
+    const dial = $('#ocean-dial'), range = $('#ocean-range'), out = $('#ocean-out');
+    try { const v = parseFloat(localStorage.getItem('tlap-ocean')); if (v >= 0.05 && v <= 1 && !ask.has('o')) ocean.strength = v; } catch (e) { /* storage blocked */ }
+    range.value = String(Math.round(ocean.strength * 100));
+    out.value = ocean.strength.toFixed(2);
+    range.addEventListener('input', () => {
+      ocean.strength = range.value / 100;
+      out.value = ocean.strength.toFixed(2);
+      try { localStorage.setItem('tlap-ocean', String(ocean.strength)); } catch (e) { /* storage blocked */ }
+    });
+    dial.hidden = false;
+  }
   WC.ocean = ocean; // for inspection in the console
   // a hand on a book (or one of its photographs), or none: told to whichever trials are on
   function mapPhotoHover(id) {
