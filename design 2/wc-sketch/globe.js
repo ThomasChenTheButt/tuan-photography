@@ -2212,8 +2212,10 @@
       // down the corridor the name stands at the far end, scaled about the middle of the window,
       // and grows as the camera nears
       const far = corr && el < PRE ? corr.far(el) * corr.titleK(el) : 1;
+      // over the shelves the name stands higher, and glides to the middle as the books leave
+      const ty = o.shelf ? (o.shelf.titleY() - H / 2) * (1 - easeInOut(pulled)) : 0;
       const st = title.style;
-      st.setProperty('--oy', `${(14 * (1 - inA)).toFixed(2)}px`);
+      st.setProperty('--oy', `${(ty + 14 * (1 - inA)).toFixed(2)}px`);
       st.setProperty('--os', far.toFixed(4));
       st.setProperty('--oa', (inA * (1 - out)).toFixed(3));
       st.setProperty('--ot', (0.09 * (1 - inA)).toFixed(4));
@@ -2252,6 +2254,7 @@
         // one, from the first frame to the moment the map starts to show (his call, 2026-10-03)
         ctx.fillStyle = PAPER; ctx.fillRect(0, 0, W, H);
         if (o.backdrop) o.backdrop(ctx, el, ARRIVE_END);
+        if (o.shelf) o.shelf.draw(ctx, pulled);
       } else {
         // the paper and the whole photograph thin away, and the map develops beneath: the real
         // one, its sea already holding the photograph at full strength, its land coming up in
@@ -2264,6 +2267,7 @@
           if (o.backdrop) o.backdrop(ctx, el, 0);
           ctx.restore();
         }
+        if (o.shelf) o.shelf.draw(ctx, pulled);
         if (el >= FLY_AT) {
           const fa = 1 - easeInOut(clamp((el - CLEAR_AT) / CLEAR, 0, 1));
           if (fa > 0) drawFlights(el, S, target.translate[0], target.translate[1], fa);

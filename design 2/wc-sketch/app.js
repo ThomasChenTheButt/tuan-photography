@@ -250,6 +250,12 @@
   // (his call, 2026-10-03). World units are stretched degrees: v = -lat * SY, everywhere.
   const SY = 1.25;
   const R0 = 8; // texture px per degree of the whole-world painting
+  // the shelf opening (this experiment, his idea, 2026-10-03): the books stand on shelves under
+  // the name, and fly to their places as the map comes with the scroll. p: how far they have gone
+  // v (?shelf=1|2|3, three for him to choose from): 1 rows of shelves, the books flying off one
+  // after another; 2 one long shelf, all taking off together and turning as they go; 3 a pile
+  // of books lying under the name, dealt out from the top
+  const shelf = { on: false, p: 0, titleY: 0, cache: null, v: 1 };
   const state = {
     W: 1, H: 1, dpr: 1, S0: 1,
     z: d3.zoomIdentity,
@@ -903,13 +909,97 @@
       q.boxes = [[q.x - bw / 2 - m, q.y - bh - m, q.x + bw / 2 + m, q.y + m]];
       if (free) q.boxes.push([q.x - q.lw / 2 - m, q.y + 4, q.x + q.lw / 2 + m, q.y + 7 + lh + m]);
     }
-    for (const q of pinList) {
+    const sh = shelf.on ? shelfSlots() : null;
+    pinList.forEach((q, i) => {
       // the leader meets the book at its foot, or under its name when the place lies below both
       q.ly = q.ay > q.y + 7 + lh && !q.el.classList.contains('is-quiet') ? q.y + 7 + lh + 1 : q.y;
-      q.el.style.setProperty('--x', `${q.x.toFixed(1)}px`);
-      q.el.style.setProperty('--y', `${q.y.toFixed(1)}px`);
-      q.el.style.setProperty('--s', s.toFixed(3));
+      let x = q.x, y = q.y, sc = s;
+      if (sh) {
+        // from its slot on the shelf to its place on the map, in the shelf's order, each on a
+        // lifted arc; its name letters in as it lands
+        const o = sh.slots[i];
+        const e = easeInOut(clamp((shelf.p - (sh.stagger * o.order) / Math.max(1, pinList.length - 1)) / (1 - sh.stagger), 0, 1));
+        x = o.x + (q.x - o.x) * e;
+        y = o.y + (q.y - o.y) * e - Math.sin(Math.PI * e) * sh.lift;
+        sc = sh.scale + (s - sh.scale) * e;
+        const st = q.el.style;
+        st.setProperty('--la', clamp((e - 0.8) / 0.2, 0, 1).toFixed(3));
+        // how the book is turned: on the long shelf it turns over as it flies; in the pile it
+        // lies flat, cover up, and stands as it lands
+        const bt = shelf.v === 2 ? 24 + Math.sin(Math.PI * e) * 56 : shelf.v === 3 ? 24 * e : 24;
+        st.setProperty('--bt', `${bt.toFixed(1)}deg`);
+        st.setProperty('--rot', `${((o.rot || 0) * (1 - e)).toFixed(1)}deg`);
+      }
+      q.el.style.setProperty('--x', `${x.toFixed(1)}px`);
+      q.el.style.setProperty('--y', `${y.toFixed(1)}px`);
+      q.el.style.setProperty('--s', sc.toFixed(3));
+    });
+  }
+
+  // the shelves: rows of book slots under the name, as many rows as the window's width asks,
+  // each row centred, and the plank each row stands on
+  function shelfSlots() {
+    const { W, H } = state;
+    const small = narrow.matches;
+    const n = pinList.length;
+    const v = shelf.v;
+    const key = `${W}|${H}|${small}|${n}|${v}|${shelf.titleY.toFixed(0)}`;
+    if (shelf.cache && shelf.cache.key === key) return shelf.cache;
+    const gap = small ? 8 : 14, margin = small ? 16 : 60;
+    const top = shelf.titleY + (small ? 30 : 44);
+    const slots = [], planks = [];
+    let scale, stagger, lift;
+    if (v === 3) {
+      // the pile: lying flat, cover up, each a little askew, the last on top; dealt from the top
+      scale = small ? 0.3 : 0.42;
+      const bw = 192 * scale, bh = 272 * scale;
+      const seed = (i, k) => Math.sin(i * 12.9898 + k * 78.233) * 43758.5453 % 1;
+      const y0 = top + 24 + bh;
+      for (let i = 0; i < n; i++) slots.push({ x: W / 2 + (seed(i, 1) - 0.5) * (small ? 14 : 22), y: y0 - i * 1.6, rot: (seed(i, 2) - 0.5) * 16, order: n - 1 - i });
+      stagger = 0.5; lift = small ? 20 : 40;
+    } else {
+      // rows of shelves (1), or one long shelf the books are sized to fit (2)
+      scale = small ? 0.26 : 0.36;
+      if (v === 2) scale = Math.min(scale, (W - 2 * margin - (n - 1) * gap) / n / 192);
+      const bw = 192 * scale, bh = 272 * scale;
+      const perRow = v === 2 ? n : Math.max(1, Math.floor((W - 2 * margin + gap) / (bw + gap)));
+      const rows = Math.ceil(n / perRow);
+      const per = Math.ceil(n / rows);
+      const pitch = bh + (small ? 26 : 38);
+      for (let r = 0; r < rows; r++) {
+        const count = Math.min(per, n - r * per);
+        const rowW = count * bw + (count - 1) * gap;
+        const x0 = (W - rowW) / 2;
+        const y = top + r * pitch + bh;
+        for (let i = 0; i < count; i++) slots.push({ x: x0 + bw / 2 + i * (bw + gap), y, order: r * per + i });
+        planks.push({ x0: x0 - 14, x1: x0 + rowW + 14, y: y + 1 });
+      }
+      stagger = v === 2 ? 0.12 : 0.35; lift = small ? 28 : 56;
     }
+    shelf.cache = { key, slots, planks, scale, stagger, lift };
+    return shelf.cache;
+  }
+  // the planks, drawn on the opening's canvas in the pen and a wash: a line of ink the books
+  // stand on, the wood's shade beneath it, fading as the books leave
+  function drawShelf(g, p) {
+    if (!shelf.on || !pinList.length) return;
+    const a = clamp(1 - p * 2.2, 0, 1);
+    if (a <= 0) return;
+    const sh = shelfSlots();
+    g.save();
+    for (const k of sh.planks) {
+      g.fillStyle = `rgba(128, 102, 66, ${(0.16 * a).toFixed(3)})`;
+      g.fillRect(k.x0, k.y, k.x1 - k.x0, 7);
+      g.fillStyle = `rgba(128, 102, 66, ${(0.07 * a).toFixed(3)})`;
+      g.fillRect(k.x0 + 4, k.y + 7, k.x1 - k.x0 - 8, 5);
+      g.strokeStyle = `rgba(44, 40, 34, ${(0.8 * a).toFixed(3)})`;
+      g.lineWidth = 1.25; g.lineCap = 'round';
+      g.beginPath(); g.moveTo(k.x0, k.y); g.lineTo(k.x1, k.y); g.stroke();
+      g.strokeStyle = `rgba(44, 40, 34, ${(0.35 * a).toFixed(3)})`;
+      g.lineWidth = 0.8;
+      g.beginPath(); g.moveTo(k.x0 + 2, k.y + 7); g.lineTo(k.x1 - 2, k.y + 7); g.stroke();
+    }
+    g.restore();
   }
 
   function bindPins() {
@@ -2656,7 +2746,7 @@
     }
     let corridor = null;
     const hint = $('#scrollhint');
-    const restOpening = () => { app.classList.remove('is-opening'); oc.hidden = true; opener.className = 'sr'; hint.classList.remove('is-on'); if (corridor) corridor.clear(); queueDraw(); };
+    const restOpening = () => { shelf.on = false; app.classList.remove('is-opening', 'is-shelf'); oc.hidden = true; opener.className = 'sr'; hint.classList.remove('is-on'); if (corridor) corridor.clear(); queueDraw(); };
     /* the scroll trial: once the photograph is up, the opening plays as far as the wheel, a finger,
        or the keys (space, the arrows, page down) have scrolled, forward or back, about five windows'
        height for the whole of it (slowed at his word, 2026-10-03: the map came too fast), the way noomoagency.com's pages come with the scroll. Until it
@@ -2664,6 +2754,12 @@
     const slide = { on: false, live: false, p: 0, goal: 0, lock: 0, fast: false, touchY: null, moved: false };
     const startSlide = () => {
       slide.on = true;
+      // the books stand on their shelves under the name from the start, and fly as he scrolls
+      shelf.on = true; shelf.p = 0;
+      shelf.v = clamp(parseInt(ask.get('shelf'), 10) || 1, 1, 3);
+      shelf.titleY = state.H * (narrow.matches ? 0.22 : 0.27);
+      app.classList.add('is-shelf');
+      queueDraw();
       // (once the books have come in, it cannot be scrolled back before that point)
       const pull = (dy) => { if (!slide.live) return; slide.goal = clamp(slide.goal + dy / (state.H * 5), slide.lock, 1); slide.moved = true; };
       const stop = (e) => { e.preventDefault(); e.stopPropagation(); };
@@ -2699,10 +2795,12 @@
       if (!slide.on) return 1;
       if (over) slide.goal = 1;   // the opening has taken the clock back: the scroll is done
       slide.live = !!live;
+      shelf.titleY = state.H * (narrow.matches ? 0.22 : 0.27);
       slide.p += (slide.goal - slide.p) * (reduce.matches ? 1 : slide.fast ? 0.1 : 0.06);
       if (slide.goal >= 1 && slide.p > 0.998) slide.p = 1;
       if (slide.p < 0.0005 && slide.goal <= 0) slide.p = 0;
       hint.classList.toggle('is-on', slide.live && slide.p < 0.03 && !slide.moved);
+      if (shelf.on && shelf.p !== slide.p) { shelf.p = slide.p; queueDraw(); }
       if (slide.p >= 1) {
         // played out: the map takes its own input
         slide.on = false; slide.off();
@@ -2724,6 +2822,7 @@
         opening = WC.opening({
           canvas: oc, title: opener, flights, home: FROM, LON0, SY, corridor,
           slide: openingKind === 'scroll' ? slideFrame : null,
+          shelf: openingKind === 'scroll' ? { draw: drawShelf, titleY: () => shelf.titleY } : null,
           backdrop: ocean ? (g, el, until) => ocean.backdrop(g, el, until) : null,
           // the photograph stands until the painting beneath and its own copy are in
           ready: () => !!state.base && (!ocean || ocean.ready()),
@@ -2732,7 +2831,7 @@
             return { scale: (z.k * state.S0 * 180) / Math.PI, translate: [z.x + (z.k * state.W) / 2, z.y + (z.k * state.H) / 2] };
           },
           // as the name and the flights fade, the books and the margins come back
-          onClear: () => { slide.lock = slide.p; app.classList.remove('is-opening'); state.leadIn = performance.now(); queueDraw(); app.classList.add('is-arrived'); setTimeout(() => app.classList.remove('is-arrived'), 1300); if (!page && !flightsOpen) globe.start(); },
+          onClear: () => { slide.lock = slide.p; shelf.on = false; app.classList.remove('is-opening', 'is-shelf'); state.leadIn = performance.now(); queueDraw(); app.classList.add('is-arrived'); setTimeout(() => app.classList.remove('is-arrived'), 1300); if (!page && !flightsOpen) globe.start(); },
           onDone: () => { opener.className = 'sr'; },
         });
         WC.op = opening; // for inspection in the console

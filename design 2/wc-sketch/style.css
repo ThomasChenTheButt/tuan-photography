@@ -137,6 +137,17 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 /* once it paints, the canvas lays its own paper, so its drawing can dissolve into the map below */
 .opening.is-painting { background: none; }
 .opening.is-gone { opacity: 0; transition: opacity 450ms var(--soft); }
+/* the shelf opening (this experiment): the books stand over the opening's photograph on their
+   shelves, under the name, and fly to their places as the map comes; their names letter in as
+   they land (the script sets --la). Not to be handled until they have landed */
+/* (the map's layer gives up its own stacking while the shelf stands, so the books, inside it,
+   can lie over the opening's canvas; the painting and the pen stay beneath it) */
+.app.is-shelf .map { z-index: auto; }
+.app.is-shelf .pins, .app.is-opening.is-shelf .pins { opacity: 1; z-index: 6; transition: opacity 900ms var(--soft) 300ms; }
+.app.is-shelf .book { pointer-events: none; }
+/* how far each is turned (--bt) and tilted in the plane (--rot) on its way, set by the script */
+.app.is-shelf .pin__stage { --turn: var(--bt, 24deg); transform: translateX(-50%) rotate(var(--rot, 0deg)) scale(var(--s, 0.3)); }
+.app.is-shelf .pin:not(.is-quiet) .pin__label { opacity: var(--la, 1); transition: none; }
 /* the scroll trial: the one word at the foot of the photograph that says what to do, breathing
    until the hand moves */
 .scrollhint {
