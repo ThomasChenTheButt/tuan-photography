@@ -84,7 +84,8 @@ each with a `CROP` if it has edges to hide. Check: `python3 tools/check_site.py`
 - **Experiment `scroll` (localhost:8646):** the shelf opening, his idea: the guide books in design
   1's row under the name over the photograph (his pick of four shelves tried); one scroll sets the
   map developing and the books flying to their places, a second sets the flights flying, each
-  playing by itself. Keep or drop?
+  playing by itself. Also there: the desktop map's home view is the up-and-right limit (the plate
+  as tall as the window, pushed right), his call. Keep or drop?
   Keep means it replaces the timed opening on 8645.
 - **Sea photograph:** which photographs besides Aoraki, if any?
 - **Camera data for the 22 US photographs:** re-export from Lightroom with metadata, or drop the
