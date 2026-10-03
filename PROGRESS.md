@@ -75,11 +75,12 @@ each with a `CROP` if it has edges to hide. Check: `python3 tools/check_site.py`
 
 ## 等你決定 Waiting on you
 
-- **One experiment open** (branch local): `localhost:8647` **scope**, the opening's globe as a lit
-  Earth built from the site's own maps (day side, night with his cities lit, clouds, atmosphere),
-  starting as a small circle in the middle, coming toward the viewer, the map expanding out of it.
-  (`earth`, the same Earth in the ordinary opening, was dropped.) Keep or drop. Start it from the
-  Code tab's preview (exp-scope) or `python3 tools/serve.py 8647 "experiments/scope/design 2"`.
+- **One experiment open** (branch local): `localhost:8647` **scope** (his idea): the opening is the map
+  seen from far off through a telescope's round eyepiece, coming nearer, slowly then rushing, then
+  the glass opens and the map is simply there, flights drawing over it; no globe. Keep or drop.
+  Start it from the Code tab's preview (exp-scope) or `python3 tools/serve.py 8647 "experiments/scope/design 2"`.
+  (`earth`, a self-built lit Earth as the opening globe, was dropped the same day; its code is in
+  the `exp/scope` branch's history, commit c0f7052, if ever wanted.)
 - **The opening globe's look:** `?opening&globe=1`, `2` or `3` (wash, lit, desk globe). Say which,
   and `GLOBE_STYLE_DEFAULT` in `design 2/wc-sketch/app.js` takes it.
 - **Sea photograph:** which photographs besides Aoraki, if any?
