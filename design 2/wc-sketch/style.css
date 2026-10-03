@@ -166,9 +166,8 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 @media (max-width: 47.99rem) { .corridor__print { padding: 4px; } }
 .app.is-opening .pins, .app.is-opening .corner, .app.is-opening .tools, .app.is-opening .index, .app.is-opening .mast { opacity: 0; }
 .app.is-arrived .mast { transition: opacity 900ms var(--soft) 200ms; }
-/* the site's name over the opening: set above the globe, it glides to the middle as the globe
-   unrolls (the script moves it through --oy, --os and the rest; at rest it is the page's heading,
-   kept for screen readers only) */
+/* the site's name over the opening, in the middle of the window (the script moves it through
+   --oy, --os and the rest; at rest it is the page's heading, kept for screen readers only) */
 .opener {
   /* above the corridor's prints (z 11): the name is never covered on the way in (his call) */
   position: absolute; z-index: 12; left: 50%; top: 50%; width: min(86vw, 52rem);

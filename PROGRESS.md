@@ -21,11 +21,13 @@
   camera data (exported from Photoshop); the site shows them without it, nothing invented.
 - **Journeys** (`journeys` in `data/site.json`) come from his Drive trip documents plus his own
   corrections: 16 journeys, newest first, every leg's mode and places; Chinese city names.
-- **Opening:** the globe, drawn solid in one of three looks for him to choose (`?globe=1` wash,
-  `?globe=2` lit, `?globe=3` desk globe; `GLOBE_STYLE_DEFAULT` in `app.js`), turns under "Tuan, Through the Lens" / Tuan 的鏡頭之旅 (his
-  choice), unrolls into the map while the title glides to the centre, every flight draws across
-  the map, then all fades. Once a session. `?opening` replays it. The corridor of prints
-  (`?opening=corridor`) was the default for a day, then taken off at his word (a friend found it odd).
+- **Opening (no globe since 2026-10-03, his word):** the sea's photograph rises over the paper
+  with "Tuan, Through the Lens" / Tuan 的鏡頭之旅 in the middle, then the paper and the whole
+  photograph thin away and the map develops out of it, the sea keeping the photograph; every
+  flight draws across the map, then all fades. About 6s. Once a session; `?opening` replays it.
+  The corridor of prints (`?opening=corridor`) was the default for a day, then taken off at his
+  word (a friend found it odd). The turning globe that used to open it, with its three looks, went
+  the same day.
 - **The map stands taller (his call, 2026-10-03):** the plate is stretched upright 1.25× (`SY`
   in `app.js`) so at Whole map Greenland touches the top and Antarctica the foot on a desktop
   window. Every latitude-to-pixel step in `app.js`, `paint.js` and `globe.js` carries the factor.
@@ -33,8 +35,8 @@
   the "Map: Natural Earth" credit went at his word (wheel, double click, pinch and +/- keys zoom).
 - **Flights view:** a photograph behind the spread (the sea's; a journey's first cover while the
   hand is on it), the journeys on a translucent leaf of paper.
-- **Opening hold:** the globe keeps turning until the painting and the sea photograph are in, and
-  the backdrop rises from the moment it is decoded, so nothing pops in at the hand-over.
+- **Opening hold:** the photograph stands until the painting and its own copy are in, and it rises
+  from the moment it is decoded, so nothing pops in at the hand-over.
 - **Traffic:** a few of his flights are always in the air over the home map (up to six, out and
   home by turns), on their own canvas. Clicking a book turns the sea photograph into that
   place's cover, and it stays; hovering never changes it.
@@ -66,6 +68,10 @@
   map), Aoraki is cropped inside the car window, Antarctica sits on the bottom edge, and he made
   the corridor opening and the sea photograph the defaults; the trial dial came off. He asked to
   keep only localhost:8645 running.
+- Later: the map stretched taller, the tally, the ambient flights, the Flights view photograph,
+  three globe looks and three globe experiments (earth, scope, cssglobe, all dropped), and at the
+  end he had the opening's turning globe taken out altogether: the map now develops straight out
+  of the photograph.
 
 ## 接下來 Next up
 
@@ -75,8 +81,6 @@ each with a `CROP` if it has edges to hide. Check: `python3 tools/check_site.py`
 
 ## 等你決定 Waiting on you
 
-- **The opening globe's look:** `?opening&globe=1`, `2` or `3` (wash, lit, desk globe). Say which,
-  and `GLOBE_STYLE_DEFAULT` in `design 2/wc-sketch/app.js` takes it.
 - **Sea photograph:** which photographs besides Aoraki, if any?
 - **Camera data for the 22 US photographs:** re-export from Lightroom with metadata, or drop the
   raw files in, and I'll add it.

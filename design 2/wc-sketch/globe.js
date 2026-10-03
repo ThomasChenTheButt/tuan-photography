@@ -2,9 +2,9 @@
    Drawn the way the map is: paper, a cerulean band laid along the coasts, ochre and green washes
    a little off the pen line, the sixteen countries in the warm wash, a fine-liner outline, and
    the side away from the light shaded with hatching. Flights are pen lines with a vermilion head
-   and a fading tail. Three uses: the small globe in the corner of the map, the opening (a globe
-   that unrolls into the flat map) and the large globe of the Flights view, which turns by hand
-   and frames one journey at a time. */
+   and a fading tail. Two uses: the small globe in the corner of the map and the large globe of
+   the Flights view, which turns by hand and frames one journey at a time. The opening (the map
+   developing out of the photograph, then every flight drawn across it) lives here too. */
 (() => {
   'use strict';
   const WC = (window.WC = window.WC || {});
@@ -1869,29 +1869,31 @@
     stop() { this.running = false; cancelAnimationFrame(this.raf); }
   };
 
-  /* ------------------------------------------------------------ the opening: a globe that unrolls into the map */
+  /* ------------------------------------------------------------ the opening: the map develops out of the photograph */
 
   /*
-    One continuous piece of motion, about seven seconds:
-      the globe fades in and turns; the site's name settles above it, a moment later
-      the globe unrolls into the flat map, onto the exact place the map lies, and the name glides
-        down to the middle of the window on the same timing
+    One continuous piece of motion, about six seconds (the turning globe that used to open it was
+    taken out at his word, 2026-10-03):
+      the photograph comes up from nothing over the paper; the site's name settles in the middle
+        of the window a moment later
+      the paper and the whole photograph thin away and the map develops beneath, the sea keeping
+        the photograph, the land coming up in pen and wash where it lies
       as the map settles, every flight draws itself across it at once (the near ones land first),
-        each with a small plane at its head and a ring of the pen where it lands; the opening's own
-        drawing of the map dissolves into the real one underneath
+        each with a small plane at its head and a ring of the pen where it lands
       the name holds while they land, then the name and the flights fade together, leaving the
         map as it always rests
     Skipped (a click, a key, a scroll), everything resolves to the clean map in under half a second.
 
-    o: { canvas, title (the element holding the name), land, travel, flights (WC.routes), home [lng, lat],
-         LON0, target(): { scale, translate } of the flat map (d3 equirectangular), onDone() }
-    returns { skip(), done, elapsed }
+    o: { canvas, title (the element holding the name), flights (WC.routes), home [lng, lat],
+         LON0, SY, backdrop(ctx, el, until), ready(), target(): { scale, translate } of the flat map,
+         onClear(), onDone() }
+    returns { skip(), done, elapsed, end }
   */
-  const GLOBE = 2500, UNROLL = 1600, DISSOLVE = 900, CLEAR = 1200, SKIP = 450;
-  // the corridor trial (?opening=corridor): how long it runs in front, and how much of the globe's
-  // turning hold it takes back
+  const ARRIVE = 2500, REVEAL = 1400, CLEAR = 1200, SKIP = 450;
+  // the corridor trial (?opening=corridor): how long it runs in front, and how much of the
+  // photograph's time it takes back
   const CORRIDOR = 3300, CORRIDOR_TRIM = 700;
-  WC.OPENING = { GLOBE, UNROLL, FLY_AT: GLOBE + UNROLL * 0.78, CLEAR, CORRIDOR };
+  WC.OPENING = { ARRIVE, REVEAL, FLY_AT: ARRIVE + REVEAL * 0.5, CLEAR, CORRIDOR };
 
   /* ------------------------------------------------------------ the corridor (a trial, ?opening=corridor) */
 
@@ -2037,10 +2039,10 @@
     const ctx = c.getContext('2d');
     const title = o.title;
     const corr = o.corridor || null;
-    // with the corridor in front, the globe's turning hold gives back a second of its time
+    // with the corridor in front, the photograph's arrival gives back some of its time
     const PRE = corr ? corr.length : 0;
-    const GLOBE_END = PRE + (corr ? GLOBE - corr.trim : GLOBE);
-    const FLY_AT = GLOBE_END + UNROLL * 0.78;
+    const ARRIVE_END = PRE + (corr ? ARRIVE - corr.trim : ARRIVE);
+    const FLY_AT = ARRIVE_END + REVEAL * 0.5;
     const TSHIFT = corr ? 500 : 0;
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     let W = 0, H = 0, titleH = 0;
@@ -2051,28 +2053,14 @@
     };
     size();
     window.addEventListener('resize', size);
-    const lon0 = -84, lat0 = -20, SPEED = 0.008;
-    // the map's plate it unrolls into, stretched upright as the map is
+    // the map's plate, stretched upright as the map is
     const SY = o.SY || 1;
-    const plateRaw = WC.plateRaw(SY);
-    const mutate = d3.geoProjectionMutator((t) => (l, p) => {
-      const a = d3.geoOrthographicRaw(l, p), b = plateRaw(l, p);
-      return [(1 - t) * a[0] * mutate.k + t * b[0], (1 - t) * a[1] * mutate.k + t * b[1]];
-    });
-    mutate.k = 1;
-    const globeAt = () => {
-      const R = Math.min(W, H) * (W < 700 ? 0.36 : 0.28);
-      return { R, cx: W / 2, cy: H * 0.58 };
-    };
 
     /* the routes on the flat map: each sampled once along its course (the same bowed course the
        Flights globe flies), its longitude unwrapped so a flight over the Pacific runs on past the
        map's edge and comes back in at the other, rather than crossing the whole world */
     const home = o.home;
     const near = (a, b) => d3.geoDistance(a, b) < 0.012;
-    // every place he has flown to or from: the night side's city lights (look 2)
-    const lights = [];
-    for (const f of o.flights) for (const p of [f.from, f.to]) if (!lights.some((q) => near(q, p))) lights.push(p);
     const seen = new Set();
     const legs = [];
     for (const f of o.flights) {
@@ -2208,25 +2196,18 @@
       ctx.restore();
     }
 
-    // the name: above the globe, then gliding down to the middle as the globe unrolls
+    // the name: in the middle of the window, settling up a little as it comes
     function setTitle(el) {
       if (!title) return;
-      const g = globeAt();
-      const top = g.cy - g.R;
-      const h = titleH || 100;
-      // just above the globe, clear of the margins' lettering (lowered at his word, 2026-10-03)
-      const yc = clamp(top - 30 - h / 2, 64 + h / 2, top - 18 - h / 2);
-      const yTop = (Number.isFinite(yc) ? yc : top * 0.5) - H / 2;
       const inA = easeOut(clamp((el - 260 - TSHIFT) / 1100, 0, 1));
       const inB = easeOut(clamp((el - 520 - TSHIFT) / 1000, 0, 1));
-      const gl = easeInOut(clamp((el - GLOBE_END) / UNROLL, 0, 1));
       const out = easeInOut(clamp((el - CLEAR_AT) / CLEAR, 0, 1));
-      // down the corridor the name stands at the far end with the globe, both scaled about the
-      // middle of the window, and grows as the camera nears
+      // down the corridor the name stands at the far end, scaled about the middle of the window,
+      // and grows as the camera nears
       const far = corr && el < PRE ? corr.far(el) * corr.titleK(el) : 1;
       const st = title.style;
-      st.setProperty('--oy', `${(yTop * far * (1 - gl) + 14 * (1 - inA)).toFixed(2)}px`);
-      st.setProperty('--os', (far * (1 + 0.14 * gl)).toFixed(4));
+      st.setProperty('--oy', `${(14 * (1 - inA)).toFixed(2)}px`);
+      st.setProperty('--os', far.toFixed(4));
       st.setProperty('--oa', (inA * (1 - out)).toFixed(3));
       st.setProperty('--ot', (0.09 * (1 - inA)).toFixed(4));
       st.setProperty('--ob', (inB * (1 - out)).toFixed(3));
@@ -2234,85 +2215,36 @@
     }
 
     const start = performance.now();
-    let raf = 0, done = false, el = 0, painting = false, held = 0, real = 0;
+    let raf = 0, done = false, el = 0, painting = false, held = 0;
     function frame(now) {
       if (done) return;
-      // the globe keeps turning until the map beneath is painted and its photograph is in, so the
-      // unroll never lands on a half-made page (his note, 2026-10-03: things popping in). `real`
-      // keeps the globe turning smoothly through the hold; `el` is the opening's own clock
-      real = now - start;
-      el = real - held;
-      if (el >= GLOBE_END && o.ready && !o.ready() && held < 8000) { held += el - GLOBE_END; el = GLOBE_END; }
+      // the photograph stands until the map beneath is painted and its own copy is in, so the
+      // reveal never lands on a half-made page (his note, 2026-10-03: things popping in).
+      // `held` is the wait; `el` is the opening's own clock
+      el = now - start - held;
+      if (el >= ARRIVE_END && o.ready && !o.ready() && held < 8000) { held += el - ARRIVE_END; el = ARRIVE_END; }
       if (!painting) { painting = true; c.classList.add('is-painting'); }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, W, H);
-      const { R, cx, cy } = globeAt();
       const target = o.target();
       const S = target.scale;
       setTitle(el);
       if (corr) corr.frame(el);
-      if (el < GLOBE_END) {
-        // the globe, turning: down the corridor it is seen small at the far end, and grows as the
-        // camera nears; once the corridor has gone it turns where it always has
-        const far = corr && el < PRE ? corr.far(el) : 1;
-        const fadeIn = corr ? clamp((el - 650) / 600, 0, 1) : Math.min(1, el / 420);
-        const Rf = R * far, cyf = H / 2 + (cy - H / 2) * far;
+      if (el < ARRIVE_END) {
+        // the photograph comes up from nothing over the paper, behind the corridor if there is
+        // one, from the first frame to the moment the map starts to show (his call, 2026-10-03)
         ctx.fillStyle = PAPER; ctx.fillRect(0, 0, W, H);
-        // the backdrop photograph comes up from nothing behind the corridor and the globe, from
-        // the first frame to the moment the globe unrolls (his call, 2026-10-03)
-        if (o.backdrop) o.backdrop(ctx, el, GLOBE_END);
-        if (fadeIn > 0) {
-          const proj = d3.geoOrthographic().clipAngle(90).precision(0.5).scale(Rf * (0.94 + 0.06 * easeOut(fadeIn))).translate([cx, cyf]).rotate([lon0 - real * SPEED, lat0]);
-          ctx.globalAlpha = fadeIn;
-          castShadow(ctx, cx + Rf * 0.08, cyf + Rf * 1.12, Rf * 0.86, 1.3);
-          // a solid paper globe, as the small one bottom-left is (his call, 2026-10-03)
-          WC.paintGlobe(ctx, proj, { land: o.land, travel: o.travel, lw: 1.3, grain: 1, R: Rf * 0.8, solid: 1, style: o.style, lights });
-          ctx.globalAlpha = 1;
-        }
+        if (o.backdrop) o.backdrop(ctx, el, ARRIVE_END);
       } else {
-        // it unrolls: orthographic into the map's own equirectangular plate, onto the exact place
-        // it will lie; then that drawing dissolves into the real map underneath
-        const x = Math.min(1, (el - GLOBE_END) / UNROLL);
-        const t = easeInOut(x);
-        const mapA = 1 - easeInOut(clamp((el - GLOBE_END - UNROLL) / DISSOLVE, 0, 1));
+        // the paper and the whole photograph thin away, and the map develops beneath: the real
+        // one, its sea already holding the photograph at full strength, its land coming up in
+        // pen and wash where it lies
+        const mapA = 1 - easeInOut(clamp((el - ARRIVE_END) / REVEAL, 0, 1));
         if (mapA > 0.002) {
-          mutate.k = R / S;
-          const rot = [lon0 - (GLOBE_END + held) * SPEED, lat0];   // where the turning globe got to
-          const dl = ((-o.LON0 - rot[0]) % 360 + 540) % 360 - 180;
-          const proj = mutate(t).scale(S)
-            .translate([cx + (target.translate[0] - cx) * t, cy + (target.translate[1] - cy) * t])
-            .rotate([rot[0] + dl * t, rot[1] * (1 - t)])
-            .precision(0.5);
-          // clipped to a circle round the centre that widens to the whole sphere, and also cut
-          // along the far meridian, where the flat half of the drawing would otherwise jump a
-          // whole world's width
-          if (t < 0.001) proj.clipAngle(90);
-          else {
-            const circle = d3.geoClipCircle((90 + 89.9 * Math.min(1, t * 1.15)) * RAD);
-            proj.preclip((stream) => d3.geoClipAntimeridian(circle(stream)));
-          }
           ctx.save();
           ctx.globalAlpha = mapA;
           ctx.fillStyle = PAPER; ctx.fillRect(0, 0, W, H);
-          // the backdrop stays under the sheet, whose paper thins as it unrolls, so the sea of the
-          // drawn map shows the photograph just as the real map will
           if (o.backdrop) o.backdrop(ctx, el, 0);
-          if (t < 1) {
-            // the shadow lifts away as the globe opens
-            ctx.globalAlpha = mapA * (1 - t);
-            castShadow(ctx, cx + R * 0.08, cy + R * 1.12, R * 0.86, 1.3);
-            ctx.globalAlpha = mapA;
-          }
-          // (the sheet is clipped to a circle that opens out fast, not to the sphere's outline,
-          // which folds over itself once the far side starts to show)
-          WC.paintGlobe(ctx, proj, {
-            land: o.land, travel: o.travel, round: Math.pow(1 - t, 3), grat: 1 - t, edgeA: Math.pow(1 - t, 4),
-            lw: 1.3 - 0.4 * t, grain: 1, R: R * 0.8 * (1 - t) + 60 * t, r0: R, clipR: R * (1 + 24 * t),
-            // the disc's paper is gone within the first eighth of the unroll, before the sheet
-            // has grown much, so no white circle spreads over the photograph
-            paperA: o.backdrop ? Math.pow(1 - Math.min(1, t * 8), 2) : 1,
-            solid: Math.pow(1 - t, 2), style: o.style,   // the roundness flattens out with the sheet
-          });
           ctx.restore();
         }
         if (el >= FLY_AT) {
