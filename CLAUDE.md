@@ -1,12 +1,15 @@
 > **Experiment `scroll` (2026-10-03).** The opening after noomoagency.com (his find) and his own
-> idea the same day: the guide books stand in a row under "Tuan, Through the Lens", over the
-> sea's photograph, as design 1's row of books (his choice out of four shelves tried): the middle
-> book in front, the rest stepping back and veiled in paper on either side. Two scrolls, each
+> idea the same day: the guide books stand in rows on drawn shelves under "Tuan, Through the
+> Lens", over the sea's photograph (his choice out of four shelves tried: this, one long shelf, a
+> pile, and design 1's row). Two scrolls, each
 > setting off a piece that then plays by itself (his call): the first (wheel, finger, space, an
 > arrow, a click) starts the map developing out of the photograph and the books flying to their
-> places, from the front outward (2.8s); the second, once they have landed, sets the flights
+> places, one after another (2.8s); the second, once they have landed, sets the flights
 > flying as before. Default here (`OPENING_DEFAULT = 'scroll'`); `?opening=classic` plays the
-> timed opening of 8645. No skill. Every rule of this file holds.
+> timed opening of 8645. Also here: on a desktop the map's home view is where two fingers pushing
+> up and to the right leave it (the plate as tall as the window, pushed to its right-hand limit),
+> his call the same day, since that is where every visitor's scrolling ends up. No skill. Every
+> rule of this file holds.
 
 # tuan photography 陳亮元 — project instructions
 

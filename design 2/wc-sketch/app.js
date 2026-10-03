@@ -252,9 +252,8 @@
   const R0 = 8; // texture px per degree of the whole-world painting
   // the shelf opening (this experiment, his idea, 2026-10-03): the books stand on shelves under
   // the name, and fly to their places as the map comes with the scroll. p: how far they have gone
-  // The shelf is design 1's row of books (his choice, 2026-10-03, out of four tried: rows of
-  // shelves, one long shelf, a pile, and this): the middle book in front and the rest stepping
-  // back into the distance on either side, veiled in paper, leaving from the front outward
+  // The shelves are rows of books standing on drawn planks (his choice, 2026-10-03, out of four
+  // tried: this, one long shelf, a pile, and design 1's row), leaving one after another
   const shelf = { on: false, p: 0, titleY: 0, titleH: 0, cache: null };
   const state = {
     W: 1, H: 1, dpr: 1, S0: 1,
@@ -713,11 +712,19 @@
   }
   function homeTransform() {
     const small = narrow.matches;
-    // on a desktop the books sit lower in the window: Europe's cluster was crowding the top edge
-    // while the Southern Ocean lay empty below (his note, 2026-10-03)
-    const pad = small ? { l: 60, r: 60, t: 130, b: 190 } : { l: 70, r: 110, t: 175, b: 70 };
+    if (!small) {
+      // on a desktop the map opens where two fingers pushing up and to the right would leave it
+      // (his call, 2026-10-03: that is where every visitor's scrolling ends up anyway): the plate
+      // as tall as the window, Greenland at the top edge and Antarctica at the foot, and pushed
+      // to its right-hand limit, New Zealand at the right edge
+      const { W, H, S0 } = state;
+      const y0 = H / 2 - LAT_N * SY * S0, y1 = H / 2 - LAT_S * SY * S0;
+      const k = clamp(H / (y1 - y0), 1, 160);
+      return d3.zoomIdentity.translate(W - W * k, -y0 * k).scale(k);
+    }
+    const pad = { l: 60, r: 60, t: 130, b: 190 };
     // a phone opens on the crowded half, Asia and Oceania, where ten of the places are
-    const near = small ? books.filter((b) => { const c = countries[b.country]; return (c.continent === 'asia' && c.id !== 'dubai') || c.continent === 'oceania'; }) : books;
+    const near = books.filter((b) => { const c = countries[b.country]; return (c.continent === 'asia' && c.id !== 'dubai') || c.continent === 'oceania'; });
     return fitTransform(near.map(bookLL), pad);
   }
   function centerOn(ll, k, dur) {
@@ -794,7 +801,7 @@
       el.innerHTML =
         `<div class="pin__stage"><a class="book book--${b.tone}" href="#${b.view}" aria-label="${esc(T[lang].bookAria(L(b.title), bookStatus(b)))}" data-view="${b.view}"><span class="book__box">` +
         `<span class="book__spine"><b>${title}</b><i>${esc(t('series'))}</i></span>` +
-        `${face}<span class="book__band"><b>${title}</b><span>${esc(t(b.band))}</span></span><span class="book__veil"></span></span>` +
+        `${face}<span class="book__band"><b>${title}</b><span>${esc(t(b.band))}</span></span></span>` +
         `<span class="book__back"><i>${esc(t('series'))}</i></span><span class="book__edge"></span>` +
         `<span class="book__top"></span><span class="book__shadow"></span></span></a></div>` +
         `<div class="pin__label" aria-hidden="true"><b>${title}</b><i>${esc(b.place ? L(c.name) : L(c.note))}</i></div>`;
@@ -921,12 +928,8 @@
         const e = easeInOut(clamp((shelf.p - (sh.stagger * o.order) / Math.max(1, pinList.length - 1)) / (1 - sh.stagger), 0, 1));
         x = o.x + (q.x - o.x) * e;
         y = o.y + (q.y - o.y) * e - Math.sin(Math.PI * e) * sh.lift;
-        sc = sh.scale * o.f + (s - sh.scale * o.f) * e;
-        const st = q.el.style;
-        st.setProperty('--la', clamp((e - 0.8) / 0.2, 0, 1).toFixed(3));
-        // the books further back are veiled in paper and stand behind; the veil lifts as each flies
-        st.setProperty('--o', (1 - (1 - o.o) * (1 - e)).toFixed(3));
-        st.setProperty('--zi', String(o.zi));
+        sc = sh.scale + (s - sh.scale) * e;
+        q.el.style.setProperty('--la', clamp((e - 0.8) / 0.2, 0, 1).toFixed(3));
       }
       q.el.style.setProperty('--x', `${x.toFixed(1)}px`);
       q.el.style.setProperty('--y', `${y.toFixed(1)}px`);
@@ -934,34 +937,33 @@
     });
   }
 
-  // the shelf: design 1's row of books under the name, all turned the same way, the middle one
-  // in front, the rest stepped back 5rem a book into the distance (perspective 70rem, its origin
-  // at 45% of the book's height), so they shrink and draw in toward it, veiled in the paper the
-  // further back; and the plank the row stands on. It stands clear below the name (lowered at
-  // his word, 2026-10-03: the books covered the words)
+  // the shelves: rows of book slots under the name, as many rows as the window's width asks,
+  // each row centred, and the plank each row stands on. They stand clear below the name (lowered
+  // at his word, 2026-10-03: the books covered the words); bigger at his word the same day
   function shelfSlots() {
     const { W, H } = state;
     const small = narrow.matches;
     const n = pinList.length;
     const key = `${W}|${H}|${small}|${n}|${shelf.titleY.toFixed(0)}|${shelf.titleH}`;
     if (shelf.cache && shelf.cache.key === key) return shelf.cache;
-    const margin = small ? 16 : 60;
-    const scale = small ? 0.42 : 0.62;
+    const scale = small ? 0.34 : 0.5;
     const bw = 192 * scale, bh = 272 * scale;
-    const mid = (n - 1) / 2;
-    const step = Math.min(bw * 1.04, (W - 2 * margin - bw) / Math.max(1, n - 1));
-    const top = shelf.titleY + shelf.titleH / 2 + (small ? 36 : 56);
-    const base = top + bh, origin = base - bh * 0.55;
-    const slots = [];
-    let xa = Infinity, xb = -Infinity;
-    for (let i = 0; i < n; i++) {
-      const d = i - mid, far = Math.abs(d);
-      const f = 70 / (70 + 5 * far);
-      const x = W / 2 + d * step * f;
-      slots.push({ x, y: origin + (base - origin) * f, f, o: Math.max(0.3, 1 - far * 0.22), zi: 40 - Math.round(far * 2), order: Math.round(far * 2) + (d < 0 ? 1 : 0) });
-      xa = Math.min(xa, x - (bw * f) / 2); xb = Math.max(xb, x + (bw * f) / 2);
+    const gap = small ? 8 : 14, margin = small ? 16 : 60;
+    const perRow = Math.max(1, Math.floor((W - 2 * margin + gap) / (bw + gap)));
+    const rows = Math.ceil(n / perRow);
+    const per = Math.ceil(n / rows);
+    const top = shelf.titleY + shelf.titleH / 2 + (small ? 30 : 48);
+    const pitch = bh + (small ? 26 : 38);
+    const slots = [], planks = [];
+    for (let r = 0; r < rows; r++) {
+      const count = Math.min(per, n - r * per);
+      const rowW = count * bw + (count - 1) * gap;
+      const x0 = (W - rowW) / 2;
+      const y = top + r * pitch + bh;
+      for (let i = 0; i < count; i++) slots.push({ x: x0 + bw / 2 + i * (bw + gap), y, order: r * per + i });
+      planks.push({ x0: x0 - 14, x1: x0 + rowW + 14, y: y + 1 });
     }
-    shelf.cache = { key, slots, planks: [{ x0: xa - 14, x1: xb + 14, y: base + 1 }], scale, stagger: 0.35, lift: small ? 28 : 56 };
+    shelf.cache = { key, slots, planks, scale, stagger: 0.35, lift: small ? 28 : 56 };
     return shelf.cache;
   }
   // the planks, drawn on the opening's canvas in the pen and a wash: a line of ink the books
