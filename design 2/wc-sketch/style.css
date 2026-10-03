@@ -86,7 +86,7 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
   font-size: 0.8rem; letter-spacing: 0.26em; text-transform: none;
 }
 /* lettered straight onto the painting: a paper halo keeps it legible over any wash */
-.on-map, .mast, .lang__btn, .ig, .zoom__btn, .credit, .globe__cap, .key dd, .pin__label, .index__tab {
+.on-map, .mast, .lang__btn, .ig, .zoom__btn, .globe__cap, .key dd, .pin__label, .index__tab {
   -webkit-text-stroke: 3.5px var(--paper); paint-order: stroke fill;
 }
 
@@ -229,8 +229,6 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 .zoom { display: flex; gap: 0 0.9rem; }
 .zoom__btn { min-height: 2.75rem; padding: 0 0.2rem; color: var(--ink-2); }
 .zoom__btn:hover { color: var(--ink); }
-.zoom__btn:disabled { color: var(--ink-3); cursor: default; }
-.credit { font-size: 0.78rem; font-style: italic; color: var(--ink-2); }
 /* the dial for the strength of the photograph through the sea, bottom right (he keeps it, 2026-10-03) */
 .dial { display: inline-flex; align-items: center; gap: 0.55rem; min-height: 2.75rem; color: var(--ink-2); }
 .dial[hidden] { display: none; }
@@ -239,7 +237,6 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 .dial__range { width: 8.5rem; height: 1.5rem; margin: 0; background: transparent; accent-color: var(--ink); cursor: pointer; }
 .dial__range:focus-visible { outline: 1px solid var(--ink); outline-offset: 3px; }
 .dial__out { font-family: var(--sans); font-size: 0.78rem; font-variant-numeric: tabular-nums; min-width: 2.2rem; color: var(--ink); }
-:lang(zh-Hant) .credit { font-style: normal; }
 
 /* ---------------------------------------------------------- books standing on the map */
 
@@ -682,8 +679,6 @@ button.jplace:hover img, .jplace:focus-visible img { transform: translateY(-2px)
   .globe__canvas { width: 92px; height: 92px; }
   .globe__cap { margin-top: -0.35rem; font-size: 0.62rem; letter-spacing: 0.16em; }
   .key { display: none; }
-  .credit { display: none; }
-  #zoom-world { display: none; }
   .tally { padding: 0 0.75rem; background: radial-gradient(closest-side, var(--paper) 78%, oklch(98.4% 0.0075 95 / 0) 100%); }
   .tools { right: calc(var(--edge) - 0.55rem); bottom: calc(var(--edge) + 3rem); }
   .zoom { flex-direction: column; align-items: flex-end; gap: 0; }
@@ -746,7 +741,7 @@ button.jplace:hover img, .jplace:focus-visible img { transform: translateY(-2px)
 }
 
 @media (forced-colors: active) {
-  .on-map, .mast, .lang__btn, .ig, .zoom__btn, .credit, .globe__cap, .key dd, .pin__label, .index__tab { -webkit-text-stroke: 0; }
+  .on-map, .mast, .lang__btn, .ig, .zoom__btn, .globe__cap, .key dd, .pin__label, .index__tab { -webkit-text-stroke: 0; }
 }
 
 /* ---------------------------------------------------------- photographs on the map (trials: ?photos=sea | land | both) */

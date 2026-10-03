@@ -33,7 +33,7 @@
       ig: 'Instagram',
       mapLabel: 'Map of the places travelled',
       mapHint: 'Drag, or use the arrow keys, to move the map. Scroll, or press plus and minus, to zoom. Tab moves through the books.',
-      zoomGroup: 'Zoom', zoomIn: 'Zoom in', zoomOut: 'Zoom out', world: 'Whole map', credit: 'Map: Natural Earth', oceanDial: 'Photo',
+      zoomGroup: 'Zoom', world: 'Whole map', oceanDial: 'Photo',
       flights: 'Flights', globeLabel: 'Flights: open the globe of journeys',
       flightsTitle: 'Flights', flightsHow: 'Drag to turn the globe', speed: 'Speed', speedSlow: 'Slow',
       flightsLede: (n) => `${n} journeys. Choose one to follow its flights on the globe.`,
@@ -65,7 +65,7 @@
       ig: 'Instagram',
       mapLabel: '走過的地方地圖',
       mapHint: '拖曳或用方向鍵移動地圖；捲動，或按加號、減號縮放。Tab 鍵逐一走過每本書。',
-      zoomGroup: '縮放', zoomIn: '放大', zoomOut: '縮小', world: '整張地圖', credit: '地圖：Natural Earth', oceanDial: '照片',
+      zoomGroup: '縮放', world: '整張地圖', oceanDial: '照片',
       flights: '飛過的航線', globeLabel: '飛過的航線：打開旅程地球',
       flightsTitle: '飛過的航線', flightsHow: '拖曳轉動地球', speed: '速度', speedSlow: '慢慢看',
       flightsLede: (n) => `${n} 段旅程。選一段，在地球上看它的航線。`,
@@ -740,15 +740,12 @@
     return [r.left + q[0], r.top + q[1]];
   }
 
-  const zIn = $('#zoom-in'), zOut = $('#zoom-out'), zAll = $('#zoom-world');
+  // the only zoom word is Whole map (Zoom in / Zoom out and the map credit went on 2026-10-03,
+  // his call); the wheel, a double click, pinch and the + and - keys zoom
+  const zAll = $('#zoom-world');
   const zoomBy = (f) => sel.interrupt().transition().duration(reduce.matches ? 0 : 420).ease(d3.easeExpOut).call(zoom.scaleBy, f);
-  zIn.addEventListener('click', () => zoomBy(2));
-  zOut.addEventListener('click', () => zoomBy(0.5));
   zAll.addEventListener('click', () => moveTo(homeTransform()));
-  function updateZoomButtons() {
-    zIn.disabled = state.z.k >= 159.9;
-    zOut.disabled = state.z.k <= 1.001;
-  }
+  function updateZoomButtons() { /* nothing left to disable */ }
   mapEl.addEventListener('keydown', (e) => {
     if (e.target !== mapEl) return;
     const step = 90;
