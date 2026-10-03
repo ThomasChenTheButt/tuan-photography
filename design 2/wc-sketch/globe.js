@@ -94,7 +94,14 @@
     ctx.lineJoin = 'round'; ctx.lineCap = 'round';
     ctx.beginPath();
     if (lens) ctx.arc(cx, cy, r0, 0, Math.PI * 2); else if (o.clipR) ctx.arc(cx, cy, o.clipR, 0, Math.PI * 2); else path(SPHERE);
-    ctx.fillStyle = PAPER; ctx.fill();
+    // the paper of the sphere (or sheet); o.paperA lets it thin out so what lies beneath shows
+    // through the sea (the opening's backdrop photograph as the globe unrolls)
+    if (o.paperA !== 0) {
+      ctx.save();
+      if (o.paperA != null) ctx.globalAlpha *= o.paperA;
+      ctx.fillStyle = PAPER; ctx.fill();
+      ctx.restore();
+    }
     ctx.clip();
     let lp = null;
     if (o.land) {
@@ -1946,8 +1953,8 @@
       const g = globeAt();
       const top = g.cy - g.R;
       const h = titleH || 100;
-      // centred in the paper above the globe, clear of the margins' lettering
-      const yc = clamp(top * 0.5 + H * 0.02, 64 + h / 2, top - 18 - h / 2);
+      // just above the globe, clear of the margins' lettering (lowered at his word, 2026-10-03)
+      const yc = clamp(top - 30 - h / 2, 64 + h / 2, top - 18 - h / 2);
       const yTop = (Number.isFinite(yc) ? yc : top * 0.5) - H / 2;
       const inA = easeOut(clamp((el - 260 - TSHIFT) / 1100, 0, 1));
       const inB = easeOut(clamp((el - 520 - TSHIFT) / 1000, 0, 1));
@@ -1985,6 +1992,9 @@
         const fadeIn = corr ? clamp((el - 650) / 600, 0, 1) : Math.min(1, el / 420);
         const Rf = R * far, cyf = H / 2 + (cy - H / 2) * far;
         ctx.fillStyle = PAPER; ctx.fillRect(0, 0, W, H);
+        // the backdrop photograph comes up from nothing behind the corridor and the globe, from
+        // the first frame to the moment the globe unrolls (his call, 2026-10-03)
+        if (o.backdrop) o.backdrop(ctx, easeInOut(clamp(el / GLOBE_END, 0, 1)));
         if (fadeIn > 0) {
           const proj = d3.geoOrthographic().clipAngle(90).precision(0.5).scale(Rf * (0.94 + 0.06 * easeOut(fadeIn))).translate([cx, cyf]).rotate([lon0 - el * SPEED, lat0]);
           ctx.globalAlpha = fadeIn;
@@ -2017,6 +2027,9 @@
           ctx.save();
           ctx.globalAlpha = mapA;
           ctx.fillStyle = PAPER; ctx.fillRect(0, 0, W, H);
+          // the backdrop stays under the sheet, whose paper thins as it unrolls, so the sea of the
+          // drawn map shows the photograph just as the real map will
+          if (o.backdrop) o.backdrop(ctx, 1);
           if (t < 1) {
             // the shadow lifts away as the globe opens
             ctx.globalAlpha = mapA * (1 - t);
@@ -2028,6 +2041,7 @@
           WC.paintGlobe(ctx, proj, {
             land: o.land, travel: o.travel, round: Math.pow(1 - t, 3), grat: 1 - t, edgeA: Math.pow(1 - t, 4),
             lw: 1.3 - 0.4 * t, grain: 1, R: R * 0.8 * (1 - t) + 60 * t, r0: R, clipR: R * (1 + 24 * t),
+            paperA: o.backdrop ? Math.pow(1 - t, 2) : 1,
           });
           ctx.restore();
         }

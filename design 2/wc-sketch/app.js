@@ -2212,8 +2212,10 @@
         // the real photograph, laid over the sea as it is (no blend into the paper), at the strength.
         // It is not there while the opening plays, and once the map is in view it comes up slowly
         // from nothing over RISE (his call, 2026-10-03); reduced motion: at once
-        if (app.classList.contains('is-opening')) { oc.riseAt = 0; return; }
-        if (!oc.riseAt) oc.riseAt = now;
+        // (when the opening plays, it brings the photograph up itself as its backdrop, and the map
+        // beneath holds it at full strength for the dissolve: no second rise)
+        if (app.classList.contains('is-opening')) oc.opened = true;
+        if (!oc.riseAt) oc.riseAt = oc.opened ? now - RISE : now;
         const rise = reduce.matches ? 1 : easeInOut(clamp((now - oc.riseAt) / RISE, 0, 1));
         if (rise <= 0) { queueDraw(); return; }
         ctx.save();
@@ -2226,6 +2228,19 @@
         if (!id || !S.slides[id] || !oc.begun) return;
         oc.hover = id;
         toward(id, HOVER_FADE);
+      },
+      // the same photograph, whole, laid into another window-sized canvas (the opening's) at a
+      // share of the strength: the backdrop the corridor and the globe stand in front of
+      backdrop(g, a) {
+        if (P.width !== canvas.width || P.height !== canvas.height) { P.width = canvas.width; P.height = canvas.height; oc.preps.clear(); }
+        oc.opened = true;
+        const id = oc.cur || order[0];
+        const cc = id ? prep(id) : null;
+        if (!cc || a <= 0) return;
+        g.save();
+        g.globalAlpha *= strength * a;
+        g.drawImage(cc, 0, 0, state.W, state.H);
+        g.restore();
       },
       get strength() { return strength; },
       set strength(v) { strength = clamp(v, 0.05, 1); queueDraw(); },
@@ -2576,6 +2591,7 @@
         if (page || flightsOpen) { restOpening(); globe.start(); return; }
         opening = WC.opening({
           canvas: oc, title: opener, land: state.land110, travel: globe.o.travel, flights, home: FROM, LON0, SY, corridor,
+          backdrop: ocean ? (g, a) => ocean.backdrop(g, a) : null,
           target: () => {
             const z = state.z;
             return { scale: (z.k * state.S0 * 180) / Math.PI, translate: [z.x + (z.k * state.W) / 2, z.y + (z.k * state.H) / 2] };

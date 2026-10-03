@@ -34,7 +34,7 @@
 - **A tally by the zoom words:** "21 / 195 countries · 11% of the world", counted from the data
   (`WORLD_COUNTRIES = 195`, his figure, in `app.js`).
 - **The photograph through the sea (default since 2026-10-03):** Aoraki lies under the whole
-  window and shows wherever there is water, at strength 0.9 (rising from nothing over 6 s once the map is in view after the opening), the
+  window and shows wherever there is water, at strength 0.9 (coming up from nothing behind the corridor and the globe from the opening's first frame, full by the unroll; on a repeat visit without the opening, rising over 6 s), the
   real photo with no paper texture, as its own copy cut from his original to the view inside the car window
   (`design 1/images/web/new-zealand-aoraki-sea.jpg`, plus a 1280 copy; made by hand, not by the
   build). It fills above and below the map too, and the map sits on the window's bottom edge so
