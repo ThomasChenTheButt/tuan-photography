@@ -2695,8 +2695,9 @@
       };
     };
     // every frame of the opening: the clock eases toward where the hand has scrolled
-    const slideFrame = (live) => {
+    const slideFrame = (live, over) => {
       if (!slide.on) return 1;
+      if (over) slide.goal = 1;   // the opening has taken the clock back: the scroll is done
       slide.live = !!live;
       slide.p += (slide.goal - slide.p) * (reduce.matches ? 1 : slide.fast ? 0.1 : 0.06);
       if (slide.goal >= 1 && slide.p > 0.998) slide.p = 1;

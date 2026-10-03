@@ -2236,8 +2236,9 @@
         const live = el >= ARRIVE_END;
         pulled = o.slide(live);
         if (live) el = ARRIVE_END + pulled * REVEAL;
-        // the map all there: the clock is handed back to time, from this moment
-        if (live && pulled >= 1) { released = true; held = now - start - el; }
+        // the map nearly all there (the last tenth of its developing is barely to be seen): the
+        // clock is handed back to time from this moment, and finishes it
+        if (live && pulled >= 0.9) { released = true; held = now - start - el; o.slide(true, true); }
       }
       if (!painting) { painting = true; c.classList.add('is-painting'); }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
