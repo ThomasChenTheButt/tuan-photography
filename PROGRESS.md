@@ -81,6 +81,9 @@ each with a `CROP` if it has edges to hide. Check: `python3 tools/check_site.py`
 
 ## 等你決定 Waiting on you
 
+- **Experiment `scroll` (localhost:8646):** the opening after noomoagency.com, the map's sheet pulled
+  up over the photograph by scrolling instead of a timed animation. Keep or drop? Keep means it
+  replaces the timed opening on 8645.
 - **Sea photograph:** which photographs besides Aoraki, if any?
 - **Camera data for the 22 US photographs:** re-export from Lightroom with metadata, or drop the
   raw files in, and I'll add it.
