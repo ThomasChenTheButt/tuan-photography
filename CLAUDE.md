@@ -317,9 +317,9 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 - Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
   harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
 
-Open now: `scroll` (2026-10-03), the opening after noomoagency.com (his find): the photograph with
-the name over it, and the map's sheet pulled up over it by scrolling, the way the next page of that
-site rises over the first. On 8646 (`exp-scroll`). Keep or drop on his word.
+Open now: `scroll` (2026-10-03), the opening after noomoagency.com (his find): the same opening,
+but once the photograph is up it plays only as far as he scrolls, forward or back, the way that
+site's pages come with the scroll. On 8646 (`exp-scroll`). Keep or drop on his word.
 
 Dropped on 2026-10-03: `cssglobe`, the opening's globe after a React/Tailwind component he brought
 (the Earth map scrolling behind a round window, inset shadows), rebuilt in plain CSS/JS. He dropped
