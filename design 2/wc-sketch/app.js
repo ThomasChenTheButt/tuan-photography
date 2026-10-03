@@ -2161,6 +2161,7 @@
     // with a 1280 copy; his call: the mountain fills the window, no dark corner). Any photograph
     // not listed is used whole.
     const SEA_FILE = { aoraki: 'new-zealand-aoraki-sea.jpg' };
+    const SEA_ANCHOR = { aoraki: 0.28 };
     // the photograph covers the window, so it needs the full-size copy on any large or Retina
     // screen; the 1280 copy only on small phones
     const src = (id) => imgSrc(SEA_FILE[id] ? { file: SEA_FILE[id] } : S.slides[id], state.W * state.dpr > 1280 ? null : 1280);
@@ -2173,10 +2174,13 @@
       c = document.createElement('canvas');
       c.width = P.width; c.height = P.height;
       const g = c.getContext('2d');
-      // fitted to cover the window, centred
+      // fitted to cover the window, centred sideways; up and down it sits where SEA_ANCHOR says
+      // (0 keeps the top of the photograph, 1 the foot, 0.5 the middle): Aoraki a little lower,
+      // so the summit is not pressed against the top edge of a wide window (his call, 2026-10-03)
       const k = Math.max(c.width / e.bm.width, c.height / e.bm.height);
+      const ay = SEA_ANCHOR[id] == null ? 0.5 : SEA_ANCHOR[id];
       g.imageSmoothingQuality = 'high';
-      g.drawImage(e.bm, (c.width - e.bm.width * k) / 2, (c.height - e.bm.height * k) / 2, e.bm.width * k, e.bm.height * k);
+      g.drawImage(e.bm, (c.width - e.bm.width * k) / 2, (c.height - e.bm.height * k) * ay, e.bm.width * k, e.bm.height * k);
       for (const key of oc.preps.keys()) if (key !== oc.cur && key !== oc.next && oc.preps.size > 2) oc.preps.delete(key);
       oc.preps.set(id, c);
       return c;
