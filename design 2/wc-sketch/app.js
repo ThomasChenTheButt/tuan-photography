@@ -2092,9 +2092,13 @@
     const oc = { cur: null, next: null, fadeAt: 0, fadeDur: 0, started: false, i: 0, hover: null, timer: 0, begun: false, preps: new Map(), masks: new Map(), land50: null };
     const P = document.createElement('canvas');
     const pg = P.getContext('2d');
-    // the photograph covers the window and is drawn 1.22x larger, so it needs the full-size copy
-    // on any large or Retina screen; the 1280 copy only on small phones
-    const src = (id) => imgSrc(S.slides[id], state.W * state.dpr * 1.22 > 1280 ? null : 1280);
+    // the part of a photograph that is used, as fractions of its width and height: Aoraki is seen
+    // through a car window, so only the view inside the frame (his call: the mountain fills the
+    // window, no dark corner). Any photograph not listed is used whole.
+    const CROP = { aoraki: [0.07, 0.22, 0.8, 0.95] };
+    // the photograph covers the window, so it needs the full-size copy on any large or Retina
+    // screen; the 1280 copy only on small phones
+    const src = (id) => imgSrc(S.slides[id], state.W * state.dpr * 1.3 > 1280 ? null : 1280);
     // a photograph fitted to the window once, let down in colour, kept for as long as it is in play
     const prep = (id) => {
       let c = oc.preps.get(id);
@@ -2104,11 +2108,12 @@
       c = document.createElement('canvas');
       c.width = P.width; c.height = P.height;
       const g = c.getContext('2d');
-      // fitted to cover the window, drawn a little larger so a photograph's own dark edges (the
-      // car window round Aoraki) stay outside the frame
-      const k = Math.max(c.width / e.bm.width, c.height / e.bm.height) * 1.22;
+      // the used part of the photograph, fitted to cover the window, centred
+      const [cx0, cy0, cx1, cy1] = CROP[id] || [0, 0, 1, 1];
+      const sx = cx0 * e.bm.width, sy = cy0 * e.bm.height, sw = (cx1 - cx0) * e.bm.width, sh = (cy1 - cy0) * e.bm.height;
+      const k = Math.max(c.width / sw, c.height / sh);
       g.imageSmoothingQuality = 'high';
-      g.drawImage(e.bm, (c.width - e.bm.width * k) / 2, (c.height - e.bm.height * k) / 2, e.bm.width * k, e.bm.height * k);
+      g.drawImage(e.bm, sx, sy, sw, sh, (c.width - sw * k) / 2, (c.height - sh * k) / 2, sw * k, sh * k);
       for (const key of oc.preps.keys()) if (key !== oc.cur && key !== oc.next && oc.preps.size > 2) oc.preps.delete(key);
       oc.preps.set(id, c);
       return c;
@@ -2177,28 +2182,14 @@
         pg.globalCompositeOperation = 'source-over';
         pg.globalAlpha = 1;
         pg.clearRect(0, 0, P.width, P.height);
-        pg.save();
-        // only within the sheet's plate: the paper beyond the poles is not sea
-        pg.setTransform(dpr, 0, 0, dpr, 0, 0);
-        pg.beginPath(); pg.rect(X0 - 180 * p, Y0 - 90 * p, 360 * p, 180 * p); pg.clip();
-        pg.setTransform(1, 0, 0, 1, 0, 0);
+        // the whole window, plate or not: where the map's sheet ends, the photograph goes on
+        // (his call, 2026-10-03: no paper above or below the map, the mountain fills it)
         if (cc) pg.drawImage(cc, 0, 0);
         if (nc && a > 0) { pg.globalAlpha = a; pg.drawImage(nc, 0, 0); pg.globalAlpha = 1; }
-        pg.restore();
         pg.globalCompositeOperation = 'destination-out';
         pg.setTransform(dpr * p, 0, 0, dpr * p, dpr * X0, dpr * Y0);
         pg.fillStyle = '#000';
         pg.fill(maskPath(p), 'evenodd');
-        // and it dies away toward the poles, so the plate's edge never shows as a hard line
-        pg.setTransform(dpr, 0, 0, dpr, 0, 0);
-        const fadeDeg = 14;
-        for (const [y0, y1] of [[Y0 - 90 * p, Y0 - (90 - fadeDeg) * p], [Y0 + 90 * p, Y0 + (90 - fadeDeg) * p]]) {
-          if (Math.max(y0, y1) < 0 || Math.min(y0, y1) > H) continue;
-          const gr = pg.createLinearGradient(0, y0, 0, y1);
-          gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
-          pg.fillStyle = gr;
-          pg.fillRect(0, Math.min(y0, y1), W, Math.abs(y1 - y0));
-        }
         pg.setTransform(1, 0, 0, 1, 0, 0);
         pg.globalCompositeOperation = 'source-over';
         // the real photograph, laid over the sea as it is (no blend into the paper), at the strength
