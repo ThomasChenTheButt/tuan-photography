@@ -2103,11 +2103,11 @@
   // through every photograph (12s, 2.5s crossfade); a hand on a book shows its cover; reduced
   // motion: one photograph. ?o=0.35 sets the strength.
   function makeOcean() {
-    const HOLD = 12000, FADE = 2500, HOVER_FADE = 900;
+    const HOLD = 12000, FADE = 2500, HOVER_FADE = 900, RISE = 6000;
     let strength = clamp(parseFloat(ask.get('o')) || 0.9, 0.05, 1);   // 0.9: his call, 2026-10-03
     // for now one photograph only, Aoraki (his call, 2026-10-03); ?ocean=all brings back the cycle
     const order = ask.get('ocean') === 'all' ? dealPhotos() : ['aoraki'];
-    const oc = { cur: null, next: null, fadeAt: 0, fadeDur: 0, started: false, i: 0, hover: null, timer: 0, begun: false, preps: new Map(), masks: new Map(), land50: null };
+    const oc = { cur: null, next: null, fadeAt: 0, fadeDur: 0, started: false, i: 0, hover: null, timer: 0, begun: false, riseAt: 0, preps: new Map(), masks: new Map(), land50: null };
     const P = document.createElement('canvas');
     const pg = P.getContext('2d');
     // a photograph with its own copy for the sea: Aoraki is seen through a car window, so the sea
@@ -2209,12 +2209,18 @@
         pg.fill(maskPath(p), 'evenodd');
         pg.setTransform(1, 0, 0, 1, 0, 0);
         pg.globalCompositeOperation = 'source-over';
-        // the real photograph, laid over the sea as it is (no blend into the paper), at the strength
+        // the real photograph, laid over the sea as it is (no blend into the paper), at the strength.
+        // It is not there while the opening plays, and once the map is in view it comes up slowly
+        // from nothing over RISE (his call, 2026-10-03); reduced motion: at once
+        if (app.classList.contains('is-opening')) { oc.riseAt = 0; return; }
+        if (!oc.riseAt) oc.riseAt = now;
+        const rise = reduce.matches ? 1 : easeInOut(clamp((now - oc.riseAt) / RISE, 0, 1));
+        if (rise <= 0) { queueDraw(); return; }
         ctx.save();
-        ctx.globalAlpha = strength;
+        ctx.globalAlpha = strength * rise;
         ctx.drawImage(P, 0, 0, W, H);
         ctx.restore();
-        if (oc.next) queueDraw();
+        if (oc.next || rise < 1) queueDraw();
       },
       hover(id) {
         if (!id || !S.slides[id] || !oc.begun) return;
