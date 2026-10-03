@@ -109,11 +109,14 @@
   // photographs on the home map (his note: the map alone "doesn't scream photography"). Two
   // trials behind one switch so they can be compared: ?photos=sea lays one large print in the
   // empty ocean and cycles through every photograph; ?photos=land turns each travelled country's
-  // wash into its cover photograph; ?photos=both does both; ?photos=none neither.
+  // wash into its cover photograph; ?photos=ocean (his clarification) lays one photograph under
+  // the whole window and lets it show only through the sea; ?photos=both is ocean and land
+  // together; ?photos=none neither. ?photos=ocean&o=0.35 sets the ocean's strength (0.05 to 0.8).
   // MAP_PHOTOS_DEFAULT is what the page does with no switch in the address: his call
   const MAP_PHOTOS_DEFAULT = 'none';
-  const mapPhotos = ['sea', 'land', 'both', 'none'].includes(ask.get('photos')) ? ask.get('photos') : MAP_PHOTOS_DEFAULT;
-  const SEA_PRINT = mapPhotos === 'sea' || mapPhotos === 'both';
+  const mapPhotos = ['sea', 'land', 'ocean', 'both', 'none'].includes(ask.get('photos')) ? ask.get('photos') : MAP_PHOTOS_DEFAULT;
+  const SEA_PRINT = mapPhotos === 'sea';
+  const OCEAN_PHOTO = mapPhotos === 'ocean' || mapPhotos === 'both';
   const LAND_PHOTOS = mapPhotos === 'land' || mapPhotos === 'both';
   const t = (k) => (T[lang][k] !== undefined ? T[lang][k] : (S.i18n[lang][k] !== undefined ? S.i18n[lang][k] : k));
   const L = (o) => clean(o ? (typeof o === 'string' ? o : o[lang] !== undefined ? o[lang] : o.en) : '');
@@ -490,6 +493,7 @@
       }
       ctx.globalAlpha = 1;
     }
+    if (ocean) ocean.draw(now);
 
     ctx.save();
     ctx.beginPath(); ctx.rect(X0 - 180 * p, Y0 - 89.4 * p, 360 * p, 178.8 * p); ctx.clip();
@@ -958,7 +962,7 @@
     $$('.group.is-awake', indexBody).forEach((g) => { if (g.dataset.key !== key) g.classList.remove('is-awake'); });
     const g = key && indexBody.querySelector(`.group[data-key="${key}"]`);
     if (g) g.classList.add('is-awake');
-    if (seaPrint) seaPrint.hover(next.slide || (pin && coverFor(pin.book)));
+    mapPhotoHover(next.slide || (pin && coverFor(pin.book)));
     // a photograph picked in the index brings its place into view on the map
     if (next.from === 'index' && next.slide) {
       clearTimeout(easeTimer);
@@ -971,7 +975,7 @@
     pinList.forEach((q) => q.el.classList.remove('awake'));
     active = null;
     clearTimeout(easeTimer);
-    if (seaPrint) seaPrint.unhover();
+    mapPhotoHover(null);
   }
   function clearActiveSoon() { clearTimeout(clearTimer); clearTimer = setTimeout(clearActive, 160); }
   function penRing(d, ll) {
@@ -2054,18 +2058,10 @@
   // measured, not fixed: the emptiest stretch of the South Pacific or the South Atlantic (on a
   // phone, the Pacific below Asia) at this window, clear of land, books, names and the margins'
   // words. Reduced motion: one photograph, chosen once, and no crossfade.
-  function makeSeaPrint() {
-    const HOLD = 9000, FADE = 1600, HOVER_FADE = 700;
-    const el = document.createElement('div');
-    el.className = 'print';
-    el.hidden = true;
-    el.innerHTML = '<a class="print__frame" href="#"><img class="print__img" alt="" decoding="async"><img class="print__img" alt="" decoding="async"><span class="print__cap"><b></b><i></i></span></a>';
-    mapEl.insertBefore(el, mapEl.querySelector('.map__tooth'));
-    const frame = el.firstElementChild;
-    const imgs = Array.from(frame.querySelectorAll('img'));
-    const capB = frame.querySelector('b'), capI = frame.querySelector('i');
+  // the order the photographs cycle in: shuffled once a visit and dealt round the places, so one
+  // place never runs on
+  function dealPhotos() {
     const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-    // the order: shuffled once a visit and dealt round the places, so one place never runs on
     const byPlace = new Map();
     for (const id of indexOrder) {
       const b = bookOfSlide(id);
@@ -2076,6 +2072,169 @@
     const queues = shuffle([...byPlace.values()].map(shuffle));
     const order = [];
     while (queues.some((q) => q.length)) for (const q of queues) if (q.length) order.push(q.shift());
+    return order;
+  }
+
+  // trial 3 (?photos=ocean): one photograph under the whole window, fixed to the screen, seen
+  // only through the sea: the land stays opaque paper over it, the lakes count as water, and the
+  // map's own sea wash and coast pooling lie on it. It is multiplied into the sheet, faint and a
+  // little desaturated, so it reads as printed into the paper under the water. Every frame the
+  // photograph is laid on an offscreen canvas and the land punched out of it with the drawing's
+  // own land path at the current transform (even-odd, with the lakes added so they stay open);
+  // photographs are decoded off the main thread and fitted once each, never per frame. Cycles
+  // through every photograph (12s, 2.5s crossfade); a hand on a book shows its cover; reduced
+  // motion: one photograph. ?o=0.35 sets the strength.
+  function makeOcean() {
+    const HOLD = 12000, FADE = 2500, HOVER_FADE = 900;
+    const strength = clamp(parseFloat(ask.get('o')) || 0.23, 0.05, 0.8);
+    const order = dealPhotos();
+    const oc = { cur: null, next: null, fadeAt: 0, fadeDur: 0, started: false, i: 0, hover: null, timer: 0, begun: false, preps: new Map(), masks: new Map(), land50: null };
+    const P = document.createElement('canvas');
+    const pg = P.getContext('2d');
+    const src = (id) => imgSrc(S.slides[id], state.W * state.dpr > 900 ? 1280 : 640);
+    // a photograph fitted to the window once, let down in colour, kept for as long as it is in play
+    const prep = (id) => {
+      let c = oc.preps.get(id);
+      if (c) return c;
+      const e = WC.photoBitmap(src(id));
+      if (!e.bm) { if (!e.waited) { e.waited = true; e.p.then(() => queueDraw()); } return null; }
+      c = document.createElement('canvas');
+      c.width = P.width; c.height = P.height;
+      const g = c.getContext('2d');
+      const k = Math.max(c.width / e.bm.width, c.height / e.bm.height);
+      g.filter = 'saturate(0.72)';
+      g.imageSmoothingQuality = 'high';
+      g.drawImage(e.bm, (c.width - e.bm.width * k) / 2, (c.height - e.bm.height * k) / 2, e.bm.width * k, e.bm.height * k);
+      for (const key of oc.preps.keys()) if (key !== oc.cur && key !== oc.next && oc.preps.size > 2) oc.preps.delete(key);
+      oc.preps.set(id, c);
+      return c;
+    };
+    // the land to punch out: the fine drawing once close enough, as the coasts are; lakes open
+    const maskPath = (p) => {
+      const fine = p > 12 && state.land50;
+      const xl = state.lakesXPath && resOf(bandOf(p)) >= LAKES_R;
+      const key = `${fine ? 50 : 110}|${xl ? 'x' : ''}|${state.lakesPath ? 'l' : ''}`;
+      let path = oc.masks.get(key);
+      if (!path) {
+        if (fine && !oc.land50) oc.land50 = pathDeg(state.land50);
+        path = new Path2D();
+        path.addPath(fine ? oc.land50 : state.landFill110);
+        const lakes = fine ? state.lakesPath : state.lakesBigPath;
+        if (lakes) path.addPath(lakes);
+        if (xl) path.addPath(state.lakesXPath);
+        oc.masks.set(key, path);
+      }
+      return path;
+    };
+    function toward(id, dur) {
+      if (!id || !S.slides[id]) return;
+      if (oc.next) { oc.cur = oc.next; oc.next = null; }
+      if (id === oc.cur) { queueDraw(); return; }
+      oc.next = id; oc.fadeDur = reduce.matches ? 0 : dur; oc.started = false;
+      WC.photoBitmap(src(id));
+      queueDraw();
+    }
+    function schedule() {
+      clearTimeout(oc.timer);
+      if (reduce.matches || order.length < 2) return;
+      oc.timer = setTimeout(() => {
+        if (oc.hover || document.hidden || page || flightsOpen) { schedule(); return; }
+        oc.i = (oc.i + 1) % order.length;
+        toward(order[oc.i], FADE);
+        schedule();
+      }, HOLD);
+    }
+    document.addEventListener('visibilitychange', () => { if (!document.hidden && oc.begun) schedule(); });
+    return {
+      oc, strength,
+      // from draw(), after the painting and before the pen: the photograph through the sea
+      draw(now) {
+        if (!state.landFill110) return;
+        const { W, H, dpr, z } = state;
+        if (P.width !== canvas.width || P.height !== canvas.height) { P.width = canvas.width; P.height = canvas.height; oc.preps.clear(); }
+        if (!oc.begun) { oc.begun = true; if (order.length) { toward(order[0], 0); schedule(); } }
+        let a = 0, nc = null;
+        if (oc.next) {
+          nc = prep(oc.next);
+          if (nc) {
+            if (!oc.started) { oc.started = true; oc.fadeAt = now; }
+            a = oc.fadeDur ? clamp((now - oc.fadeAt) / oc.fadeDur, 0, 1) : 1;
+            if (a >= 1) {
+              oc.cur = oc.next; oc.next = null; nc = null; a = 0;
+              if (!reduce.matches && order.length > 1) WC.photoBitmap(src(order[(oc.i + 1) % order.length]));
+            }
+          }
+        }
+        const cc = oc.cur ? prep(oc.cur) : null;
+        if (!cc && !nc) return;
+        const p = pxPerDeg();
+        const X0 = z.x + (z.k * W) / 2, Y0 = z.y + (z.k * H) / 2;
+        pg.setTransform(1, 0, 0, 1, 0, 0);
+        pg.globalCompositeOperation = 'source-over';
+        pg.globalAlpha = 1;
+        pg.clearRect(0, 0, P.width, P.height);
+        pg.save();
+        // only within the sheet's plate: the paper beyond the poles is not sea
+        pg.setTransform(dpr, 0, 0, dpr, 0, 0);
+        pg.beginPath(); pg.rect(X0 - 180 * p, Y0 - 90 * p, 360 * p, 180 * p); pg.clip();
+        pg.setTransform(1, 0, 0, 1, 0, 0);
+        if (cc) pg.drawImage(cc, 0, 0);
+        if (nc && a > 0) { pg.globalAlpha = a; pg.drawImage(nc, 0, 0); pg.globalAlpha = 1; }
+        pg.restore();
+        pg.globalCompositeOperation = 'destination-out';
+        pg.setTransform(dpr * p, 0, 0, dpr * p, dpr * X0, dpr * Y0);
+        pg.fillStyle = '#000';
+        pg.fill(maskPath(p), 'evenodd');
+        // and it dies away toward the poles, so the plate's edge never shows as a hard line
+        pg.setTransform(dpr, 0, 0, dpr, 0, 0);
+        const fadeDeg = 14;
+        for (const [y0, y1] of [[Y0 - 90 * p, Y0 - (90 - fadeDeg) * p], [Y0 + 90 * p, Y0 + (90 - fadeDeg) * p]]) {
+          if (Math.max(y0, y1) < 0 || Math.min(y0, y1) > H) continue;
+          const gr = pg.createLinearGradient(0, y0, 0, y1);
+          gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)');
+          pg.fillStyle = gr;
+          pg.fillRect(0, Math.min(y0, y1), W, Math.abs(y1 - y0));
+        }
+        pg.setTransform(1, 0, 0, 1, 0, 0);
+        pg.globalCompositeOperation = 'source-over';
+        ctx.save();
+        ctx.globalCompositeOperation = 'multiply';
+        ctx.globalAlpha = strength;
+        ctx.drawImage(P, 0, 0, W, H);
+        ctx.restore();
+        if (oc.next) queueDraw();
+      },
+      hover(id) {
+        if (!id || !S.slides[id] || !oc.begun) return;
+        oc.hover = id;
+        toward(id, HOVER_FADE);
+      },
+      unhover() {
+        if (!oc.hover) return;
+        oc.hover = null;
+        toward(order[oc.i], HOVER_FADE);
+      },
+    };
+  }
+  const ocean = OCEAN_PHOTO ? makeOcean() : null;
+  WC.ocean = ocean; // for inspection in the console
+  // a hand on a book (or one of its photographs), or none: told to whichever trials are on
+  function mapPhotoHover(id) {
+    if (seaPrint) { if (id) seaPrint.hover(id); else seaPrint.unhover(); }
+    if (ocean) { if (id) ocean.hover(id); else ocean.unhover(); }
+  }
+
+  function makeSeaPrint() {
+    const HOLD = 9000, FADE = 1600, HOVER_FADE = 700;
+    const el = document.createElement('div');
+    el.className = 'print';
+    el.hidden = true;
+    el.innerHTML = '<a class="print__frame" href="#"><img class="print__img" alt="" decoding="async"><img class="print__img" alt="" decoding="async"><span class="print__cap"><b></b><i></i></span></a>';
+    mapEl.insertBefore(el, mapEl.querySelector('.map__tooth'));
+    const frame = el.firstElementChild;
+    const imgs = Array.from(frame.querySelectorAll('img'));
+    const capB = frame.querySelector('b'), capI = frame.querySelector('i');
+    const order = dealPhotos();
     const pr = { on: 0, i: 0, cur: null, want: null, hover: null, timer: 0, anchor: null, box: null, homeK: 1, placedFor: '', begun: false, capLang: '' };
 
     // where it lies: measured in screen space at the whole-map view, on a quarter-size mask of

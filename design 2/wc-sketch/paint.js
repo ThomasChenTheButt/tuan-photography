@@ -482,6 +482,7 @@
     }
     return e;
   };
+  WC.photoBitmap = photoBitmap;
 
   /*
     canvas: a finished painting; job: as for WC.paint (r, u0, v0, w, h); env: { LON0 };
