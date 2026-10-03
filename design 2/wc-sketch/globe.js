@@ -1999,7 +1999,9 @@
           const proj = d3.geoOrthographic().clipAngle(90).precision(0.5).scale(Rf * (0.94 + 0.06 * easeOut(fadeIn))).translate([cx, cyf]).rotate([lon0 - el * SPEED, lat0]);
           ctx.globalAlpha = fadeIn;
           castShadow(ctx, cx + Rf * 0.08, cyf + Rf * 1.12, Rf * 0.86, 1.3);
-          WC.paintGlobe(ctx, proj, { land: o.land, travel: o.travel, lw: 1.3, grain: 1, R: Rf * 0.8 });
+          // with the backdrop photograph behind, the globe's sea is clear glass over it: no paper
+          // disc in the middle of the window (his call, 2026-10-03)
+          WC.paintGlobe(ctx, proj, { land: o.land, travel: o.travel, lw: 1.3, grain: 1, R: Rf * 0.8, paperA: o.backdrop ? 0 : 1 });
           ctx.globalAlpha = 1;
         }
       } else {
@@ -2041,7 +2043,7 @@
           WC.paintGlobe(ctx, proj, {
             land: o.land, travel: o.travel, round: Math.pow(1 - t, 3), grat: 1 - t, edgeA: Math.pow(1 - t, 4),
             lw: 1.3 - 0.4 * t, grain: 1, R: R * 0.8 * (1 - t) + 60 * t, r0: R, clipR: R * (1 + 24 * t),
-            paperA: o.backdrop ? Math.pow(1 - t, 2) : 1,
+            paperA: o.backdrop ? 0 : 1,
           });
           ctx.restore();
         }
