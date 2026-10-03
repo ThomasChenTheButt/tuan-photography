@@ -2100,8 +2100,8 @@
   // photograph is laid on an offscreen canvas and the land punched out of it with the drawing's
   // own land path at the current transform (even-odd, with the lakes added so they stay open);
   // photographs are decoded off the main thread and fitted once each, never per frame. Cycles
-  // through every photograph (12s, 2.5s crossfade); a hand on a book shows its cover; reduced
-  // motion: one photograph. ?o=0.35 sets the strength.
+  // through every photograph (12s, 2.5s crossfade) only with ?ocean=all; a hand on a book does
+  // not change it (his call); reduced motion: one photograph. ?o=0.35 sets the strength.
   function makeOcean() {
     const HOLD = 12000, FADE = 2500, HOVER_FADE = 900, RISE = 6000;
     let strength = clamp(parseFloat(ask.get('o')) || 0.9, 0.05, 1);   // 0.9: his call, 2026-10-03
@@ -2270,7 +2270,8 @@
   // a hand on a book (or one of its photographs), or none: told to whichever trials are on
   function mapPhotoHover(id) {
     if (seaPrint) { if (id) seaPrint.hover(id); else seaPrint.unhover(); }
-    if (ocean) { if (id) ocean.hover(id); else ocean.unhover(); }
+    // (the photograph through the sea does not follow the hand: he will choose what it shows,
+    // 2026-10-03)
   }
 
   function makeSeaPrint() {
