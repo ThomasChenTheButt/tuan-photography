@@ -149,6 +149,30 @@
     if (o.under) o.under(ctx);
     const hatch = round * (o.hatch == null ? 1 : o.hatch);
     if (hatch > 0.02 && o.shade !== false) hatchShade(ctx, cx, cy, o.r0 || proj.scale(), hatch, lw);
+    // the sphere's roundness, for the opening's globe (his call, 2026-10-03: more solid, with an
+    // edge): a wash of shade deepening toward the limb away from the light (upper left), laid
+    // over the washes and under the pen, and a breath of light where the light falls
+    const solid = o.solid || 0;
+    if (solid > 0.01) {
+      const Rs = o.r0 || proj.scale();
+      ctx.save();
+      ctx.globalAlpha *= solid;
+      ctx.globalCompositeOperation = 'multiply';
+      const sh = ctx.createRadialGradient(cx - Rs * 0.32, cy - Rs * 0.34, Rs * 0.2, cx, cy, Rs * 1.02);
+      sh.addColorStop(0, 'rgba(255, 255, 255, 0)');
+      sh.addColorStop(0.55, 'rgba(120, 108, 96, 0.08)');
+      sh.addColorStop(0.86, 'rgba(96, 86, 76, 0.3)');
+      sh.addColorStop(1, 'rgba(70, 62, 56, 0.52)');
+      ctx.fillStyle = sh;
+      ctx.beginPath(); ctx.arc(cx, cy, Rs * 1.02, 0, Math.PI * 2); ctx.fill();
+      ctx.globalCompositeOperation = 'source-over';
+      const hi = ctx.createRadialGradient(cx - Rs * 0.42, cy - Rs * 0.44, 0, cx - Rs * 0.42, cy - Rs * 0.44, Rs * 0.55);
+      hi.addColorStop(0, 'rgba(255, 255, 255, 0.34)');
+      hi.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      ctx.fillStyle = hi;
+      ctx.beginPath(); ctx.arc(cx, cy, Rs, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+    }
     // a faint pencil graticule
     if (o.grat !== 0) {
       ctx.beginPath(); path(graticule);
@@ -168,8 +192,16 @@
     if (edgeA > 0.003) {
       ctx.save();
       ctx.globalAlpha *= edgeA;
+      if (solid > 0.01) {
+        // a solid globe's edge: a band of shade just inside the rim, and a heavier line
+        ctx.save();
+        ctx.beginPath(); ctx.arc(cx, cy, r0, 0, Math.PI * 2); ctx.clip();
+        ctx.beginPath(); ctx.arc(cx, cy, r0 - r0 * 0.03, 0, Math.PI * 2);
+        ctx.strokeStyle = ink(0.13 * solid); ctx.lineWidth = r0 * 0.06; ctx.stroke();
+        ctx.restore();
+      }
       ctx.beginPath(); ctx.arc(cx, cy, r0, 0, Math.PI * 2);
-      ctx.strokeStyle = ink(0.88); ctx.lineWidth = 1.1 * lw; ctx.stroke();
+      ctx.strokeStyle = ink(0.88 + 0.1 * solid); ctx.lineWidth = (1.1 + 0.7 * solid) * lw; ctx.stroke();
       ctx.beginPath(); ctx.arc(cx + 0.8 * lw, cy + 0.5 * lw, r0 + 0.6 * lw, -0.3, 1.9);
       ctx.strokeStyle = ink(0.4); ctx.lineWidth = 0.7 * lw; ctx.stroke();
       ctx.restore();
@@ -2148,7 +2180,7 @@
           ctx.globalAlpha = fadeIn;
           castShadow(ctx, cx + Rf * 0.08, cyf + Rf * 1.12, Rf * 0.86, 1.3);
           // a solid paper globe, as the small one bottom-left is (his call, 2026-10-03)
-          WC.paintGlobe(ctx, proj, { land: o.land, travel: o.travel, lw: 1.3, grain: 1, R: Rf * 0.8 });
+          WC.paintGlobe(ctx, proj, { land: o.land, travel: o.travel, lw: 1.3, grain: 1, R: Rf * 0.8, solid: 1 });
           ctx.globalAlpha = 1;
         }
       } else {
@@ -2193,6 +2225,7 @@
             // the disc's paper is gone within the first eighth of the unroll, before the sheet
             // has grown much, so no white circle spreads over the photograph
             paperA: o.backdrop ? Math.pow(1 - Math.min(1, t * 8), 2) : 1,
+            solid: Math.pow(1 - t, 2),   // the roundness flattens out with the sheet
           });
           ctx.restore();
         }

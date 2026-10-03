@@ -21,11 +21,10 @@
   camera data (exported from Photoshop); the site shows them without it, nothing invented.
 - **Journeys** (`journeys` in `data/site.json`) come from his Drive trip documents plus his own
   corrections: 16 journeys, newest first, every leg's mode and places; Chinese city names.
-- **Opening (default since 2026-10-03):** a 3 s glide through a corridor of 150 prints of his
-  photographs into the globe, which turns under "Tuan, Through the Lens" / Tuan 的鏡頭之旅 (his
+- **Opening:** the globe, drawn solid (shade toward the limb, a highlight, a heavier rim), turns under "Tuan, Through the Lens" / Tuan 的鏡頭之旅 (his
   choice), unrolls into the map while the title glides to the centre, every flight draws across
-  the map, then all fades. Once a session. `?opening=corridor` replays it; `?opening` plays the
-  globe-only version.
+  the map, then all fades. Once a session. `?opening` replays it. The corridor of prints
+  (`?opening=corridor`) was the default for a day, then taken off at his word (a friend found it odd).
 - **The map stands taller (his call, 2026-10-03):** the plate is stretched upright 1.25× (`SY`
   in `app.js`) so at Whole map Greenland touches the top and Antarctica the foot on a desktop
   window. Every latitude-to-pixel step in `app.js`, `paint.js` and `globe.js` carries the factor.

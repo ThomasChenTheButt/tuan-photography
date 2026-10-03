@@ -105,9 +105,10 @@
   // his choice (2026-10-02): "Tuan, Through the Lens" / Tuan 的鏡頭之旅; ?name=1 to 5 still shows the others
   const nameN = clamp(parseInt(ask.get('name'), 10) || 2, 1, 5) - 1;
   // which opening a first visit plays: 'classic' (the globe) or 'corridor' (a corridor of his
-  // prints first, then the globe). Corridor: his call, 2026-10-03, after comparing. In the
-  // address, ?opening plays the classic and ?opening=corridor the corridor, every time
-  const OPENING_DEFAULT = 'corridor';
+  // prints first, then the globe). Classic: his call, 2026-10-03, after a friend found the
+  // corridor odd (it was the default for a day). In the address, ?opening plays the classic and
+  // ?opening=corridor the corridor, every time
+  const OPENING_DEFAULT = 'classic';
   // photographs on the home map (his note: the map alone "doesn't scream photography"). Two
   // trials behind one switch so they can be compared: ?photos=sea lays one large print in the
   // empty ocean and cycles through every photograph; ?photos=land turns each travelled country's
