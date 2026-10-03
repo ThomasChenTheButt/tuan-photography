@@ -167,7 +167,8 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
    unrolls (the script moves it through --oy, --os and the rest; at rest it is the page's heading,
    kept for screen readers only) */
 .opener {
-  position: absolute; z-index: 6; left: 50%; top: 50%; width: min(86vw, 52rem);
+  /* above the corridor's prints (z 11): the name is never covered on the way in (his call) */
+  position: absolute; z-index: 12; left: 50%; top: 50%; width: min(86vw, 52rem);
   text-align: center; pointer-events: none;
   transform: translate(-50%, -50%) translateY(var(--oy, 0px)) scale(var(--os, 1));
   will-change: transform, opacity;
