@@ -2736,28 +2736,36 @@
        or the keys (space, the arrows, page down) have scrolled, forward or back, about five windows'
        height for the whole of it (slowed at his word, 2026-10-03: the map came too fast), the way noomoagency.com's pages come with the scroll. Until it
        has played out the map takes no input of its own. A click or Enter plays the rest */
-    const slide = { on: false, live: false, p: 0, goal: 0, lock: 0, fast: false, touchY: null, moved: false };
+    /* the scroll trial, as he wants it (2026-10-03): two scrolls, each setting off a piece of the
+       opening that then plays by itself. The first (the wheel, a finger, space, an arrow, a click)
+       starts the map developing out of the photograph and the books flying to their places
+       (STAGE, on time); the second, once they have landed, sets the flights flying. Until then the
+       map takes no input of its own */
+    const STAGE = 2800;
+    const slide = { on: false, live: false, p: 0, at: 0, go: false, touchY: null };
     const startSlide = () => {
       slide.on = true;
-      // the books stand on their shelves under the name from the start, and fly as he scrolls
+      // the books stand on their shelf under the name from the start
       shelf.on = true; shelf.p = 0;
       shelf.titleY = state.H * (narrow.matches ? 0.2 : 0.24); shelf.titleH = opener.offsetHeight;
       app.classList.add('is-shelf');
       queueDraw();
-      // (once the books have come in, it cannot be scrolled back before that point)
-      const pull = (dy) => { if (!slide.live) return; slide.goal = clamp(slide.goal + dy / (state.H * 5), slide.lock, 1); slide.moved = true; };
+      // a scroll (down) or a press: the first starts the books, the second the flights
+      const nudge = () => {
+        if (!slide.live) return;
+        if (!slide.at) slide.at = performance.now();
+        else if (slide.p >= 1) slide.go = true;
+      };
       const stop = (e) => { e.preventDefault(); e.stopPropagation(); };
-      const onWheel = (e) => { if (!slide.on) return; stop(e); pull(e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? state.H : 1)); };
+      const onWheel = (e) => { if (!slide.on) return; stop(e); if (e.deltaY > 0) nudge(); };
       const onTouchStart = (e) => { if (!slide.on) return; slide.touchY = e.touches[0].clientY; };
-      const onTouchMove = (e) => { if (!slide.on || slide.touchY == null) return; stop(e); const y = e.touches[0].clientY; pull((slide.touchY - y) * 1.6); slide.touchY = y; };
+      const onTouchMove = (e) => { if (!slide.on || slide.touchY == null) return; stop(e); if (slide.touchY - e.touches[0].clientY > 24) { nudge(); slide.touchY = null; } };
       const onTouchEnd = () => { slide.touchY = null; };
       const onKey = (e) => {
-        if (!slide.on || !slide.live) return;
-        if (e.key === ' ' || e.key === 'ArrowDown' || e.key === 'PageDown') { stop(e); slide.goal = clamp(slide.goal + 0.12, slide.lock, 1); slide.moved = true; }
-        else if (e.key === 'ArrowUp' || e.key === 'PageUp') { stop(e); slide.goal = clamp(slide.goal - 0.12, slide.lock, 1); }
-        else if (e.key === 'End' || e.key === 'Enter') { stop(e); slide.goal = 1; slide.fast = true; }
+        if (!slide.on) return;
+        if ([' ', 'ArrowDown', 'PageDown', 'Enter', 'End'].includes(e.key)) { stop(e); nudge(); }
       };
-      const onDown = (e) => { if (!slide.on || !slide.live || e.pointerType !== 'mouse') return; slide.goal = 1; slide.fast = true; };
+      const onDown = (e) => { if (!slide.on || e.pointerType !== 'mouse') return; nudge(); };
       const opts = { capture: true, passive: false };
       window.addEventListener('wheel', onWheel, opts);
       window.addEventListener('touchstart', onTouchStart, { capture: true, passive: true });
@@ -2774,23 +2782,23 @@
         window.removeEventListener('pointerdown', onDown, { capture: true });
       };
     };
-    // every frame of the opening: the clock eases toward where the hand has scrolled
-    const slideFrame = (live, over) => {
+    // every frame of the opening: how far the first piece has played (0 to 1)
+    const slideFrame = (live) => {
       if (!slide.on) return 1;
-      if (over) slide.goal = 1;   // the opening has taken the clock back: the scroll is done
       slide.live = !!live;
       shelf.titleY = state.H * (narrow.matches ? 0.2 : 0.24); shelf.titleH = opener.offsetHeight;
-      slide.p += (slide.goal - slide.p) * (reduce.matches ? 1 : slide.fast ? 0.1 : 0.06);
-      if (slide.goal >= 1 && slide.p > 0.998) slide.p = 1;
-      if (slide.p < 0.0005 && slide.goal <= 0) slide.p = 0;
-      hint.classList.toggle('is-on', slide.live && slide.p < 0.03 && !slide.moved);
+      if (slide.at) slide.p = reduce.matches ? 1 : easeInOut(clamp((performance.now() - slide.at) / STAGE, 0, 1));
+      // the word at the foot: before the first scroll, and again once the books have landed
+      hint.classList.toggle('is-on', slide.live && (!slide.at || (slide.p >= 1 && !slide.go)));
       if (shelf.on && shelf.p !== slide.p) { shelf.p = slide.p; queueDraw(); }
-      if (slide.p >= 1) {
-        // played out: the map takes its own input
-        slide.on = false; slide.off();
-        hint.classList.remove('is-on');
-      }
       return slide.p;
+    };
+    // the second scroll has come: the flights may fly, and the map takes its own input
+    const slideGo = () => {
+      if (!slide.go) return false;
+      slide.on = false; slide.off();
+      hint.classList.remove('is-on');
+      return true;
     };
     const loading = loadWorld();
     if (playOpening) {
@@ -2806,6 +2814,7 @@
         opening = WC.opening({
           canvas: oc, title: opener, flights, home: FROM, LON0, SY, corridor,
           slide: openingKind === 'scroll' ? slideFrame : null,
+          go: openingKind === 'scroll' ? slideGo : null,
           shelf: openingKind === 'scroll' ? { draw: drawShelf, titleY: () => shelf.titleY } : null,
           backdrop: ocean ? (g, el, until) => ocean.backdrop(g, el, until) : null,
           // the photograph stands until the painting beneath and its own copy are in
@@ -2815,7 +2824,7 @@
             return { scale: (z.k * state.S0 * 180) / Math.PI, translate: [z.x + (z.k * state.W) / 2, z.y + (z.k * state.H) / 2] };
           },
           // as the name and the flights fade, the books and the margins come back
-          onClear: () => { slide.lock = slide.p; shelf.on = false; app.classList.remove('is-opening', 'is-shelf'); state.leadIn = performance.now(); queueDraw(); app.classList.add('is-arrived'); setTimeout(() => app.classList.remove('is-arrived'), 1300); if (!page && !flightsOpen) globe.start(); },
+          onClear: () => { shelf.on = false; app.classList.remove('is-opening', 'is-shelf'); state.leadIn = performance.now(); queueDraw(); app.classList.add('is-arrived'); setTimeout(() => app.classList.remove('is-arrived'), 1300); if (!page && !flightsOpen) globe.start(); },
           onDone: () => { opener.className = 'sr'; },
         });
         WC.op = opening; // for inspection in the console

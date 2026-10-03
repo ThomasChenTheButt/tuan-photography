@@ -1887,11 +1887,11 @@
     o: { canvas, title (the element holding the name), flights (WC.routes), home [lng, lat],
          LON0, SY, backdrop(ctx, el, until), ready(), target(): { scale, translate } of the flat map,
          onClear(), onDone() }
-    o.slide(live): the scroll trial (after noomoagency.com, his find, 2026-10-03). Called every
-      frame, it returns how far he has scrolled (0 to 1). Once the photograph is up (live), the
-      scroll is the clock of the map's developing: as far as he has scrolled, forward or back, not
-      on time. Once the map is all there, the clock runs by itself again: the flights draw and the
-      name fades as below (his call: the flights fly on their own, not by the scroll).
+    o.slide(live), o.go(): the scroll trial (after noomoagency.com, his find, 2026-10-03). Called
+      every frame once the photograph is up (live), slide() returns how far the first piece has
+      played (0 to 1): the map developing and the books flying, set off by his first scroll and
+      playing by itself. At 1 the opening waits; go() says whether his second scroll has come,
+      and then the clock runs on: the flights draw and the name fades as below.
     returns { skip(), done, elapsed, end, sliding }
   */
   const ARRIVE = 2500, REVEAL = 1400, CLEAR = 1200, SKIP = 450;
@@ -2238,9 +2238,8 @@
         const live = el >= ARRIVE_END;
         pulled = o.slide(live);
         if (live) el = ARRIVE_END + pulled * REVEAL;
-        // the map nearly all there (the last tenth of its developing is barely to be seen): the
-        // clock is handed back to time from this moment, and finishes it
-        if (live && pulled >= 0.9) { released = true; held = now - start - el; o.slide(true, true); }
+        // the books landed and his second scroll come: the clock runs on from this moment
+        if (live && pulled >= 1 && (!o.go || o.go())) { released = true; held = now - start - el; }
       }
       if (!painting) { painting = true; c.classList.add('is-painting'); }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
