@@ -703,7 +703,9 @@
   }
   function homeTransform() {
     const small = narrow.matches;
-    const pad = small ? { l: 60, r: 60, t: 130, b: 190 } : { l: 70, r: 110, t: 100, b: 130 };
+    // on a desktop the books sit lower in the window: Europe's cluster was crowding the top edge
+    // while the Southern Ocean lay empty below (his note, 2026-10-03)
+    const pad = small ? { l: 60, r: 60, t: 130, b: 190 } : { l: 70, r: 110, t: 175, b: 70 };
     // a phone opens on the crowded half, Asia and Oceania, where ten of the places are
     const near = small ? books.filter((b) => { const c = countries[b.country]; return (c.continent === 'asia' && c.id !== 'dubai') || c.continent === 'oceania'; }) : books;
     return fitTransform(near.map(bookLL), pad);
