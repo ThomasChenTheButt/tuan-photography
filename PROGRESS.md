@@ -4,6 +4,9 @@
 
 ## 現在狀態 Where things stand
 
+- **Two sessions on 2026-10-03 evening (his arrangement):** one owns design 2 itself (8645, `main`);
+  the other owns the `scroll` experiment (8646, `exp/scroll`). Neither edits the other's files.
+
 - **Two sites, one set of facts.** `design 1/` is the current site ("The Printed Travel Journal",
   localhost:8642). `design 2/` is the redesign, **Pen and wash** (`design 2/wc-sketch/`,
   localhost:8645 opens it directly). Both are built from `data/site.json`, `content/` and the same
