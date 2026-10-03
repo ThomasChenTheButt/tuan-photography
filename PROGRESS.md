@@ -75,6 +75,11 @@ each with a `CROP` if it has edges to hide. Check: `python3 tools/check_site.py`
 
 ## 等你決定 Waiting on you
 
+- **Two experiments open** (branches local): `localhost:8646` **earth**, the opening's globe as a lit
+  Earth built from the site's own maps (day side, night with his cities lit, clouds, atmosphere);
+  `localhost:8647` **scope**, the same Earth starting as a small circle in the middle, coming toward
+  the viewer, the map expanding out of it. Keep one, both, or drop. Start them from the Code tab's
+  preview (exp-earth, exp-scope) or `python3 tools/serve.py 8646 "experiments/earth/design 2"`.
 - **The opening globe's look:** `?opening&globe=1`, `2` or `3` (wash, lit, desk globe). Say which,
   and `GLOBE_STYLE_DEFAULT` in `design 2/wc-sketch/app.js` takes it.
 - **Sea photograph:** which photographs besides Aoraki, if any?
