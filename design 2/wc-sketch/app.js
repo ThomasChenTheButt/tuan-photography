@@ -252,9 +252,11 @@
   const R0 = 8; // texture px per degree of the whole-world painting
   // the shelf opening (this experiment, his idea, 2026-10-03): the books stand on shelves under
   // the name, and fly to their places as the map comes with the scroll. p: how far they have gone
-  // v (?shelf=1|2|3, three for him to choose from): 1 rows of shelves, the books flying off one
+  // v (?shelf=1|2|3|4, for him to choose from): 1 rows of shelves, the books flying off one
   // after another; 2 one long shelf, all taking off together and turning as they go; 3 a pile
-  // of books lying under the name, dealt out from the top
+  // of books lying under the name, dealt out from the top; 4 the row of design 1 (his word:
+  // "that version is cool"), the middle book in front and the rest stepping back into the
+  // distance on either side, veiled in paper, leaving from the front outward
   const shelf = { on: false, p: 0, titleY: 0, cache: null, v: 1 };
   const state = {
     W: 1, H: 1, dpr: 1, S0: 1,
@@ -794,7 +796,7 @@
       el.innerHTML =
         `<div class="pin__stage"><a class="book book--${b.tone}" href="#${b.view}" aria-label="${esc(T[lang].bookAria(L(b.title), bookStatus(b)))}" data-view="${b.view}"><span class="book__box">` +
         `<span class="book__spine"><b>${title}</b><i>${esc(t('series'))}</i></span>` +
-        `${face}<span class="book__band"><b>${title}</b><span>${esc(t(b.band))}</span></span></span>` +
+        `${face}<span class="book__band"><b>${title}</b><span>${esc(t(b.band))}</span></span><span class="book__veil"></span></span>` +
         `<span class="book__back"><i>${esc(t('series'))}</i></span><span class="book__edge"></span>` +
         `<span class="book__top"></span><span class="book__shadow"></span></span></a></div>` +
         `<div class="pin__label" aria-hidden="true"><b>${title}</b><i>${esc(b.place ? L(c.name) : L(c.note))}</i></div>`;
@@ -921,7 +923,7 @@
         const e = easeInOut(clamp((shelf.p - (sh.stagger * o.order) / Math.max(1, pinList.length - 1)) / (1 - sh.stagger), 0, 1));
         x = o.x + (q.x - o.x) * e;
         y = o.y + (q.y - o.y) * e - Math.sin(Math.PI * e) * sh.lift;
-        sc = sh.scale + (s - sh.scale) * e;
+        sc = sh.scale * (o.f || 1) + (s - sh.scale * (o.f || 1)) * e;
         const st = q.el.style;
         st.setProperty('--la', clamp((e - 0.8) / 0.2, 0, 1).toFixed(3));
         // how the book is turned: on the long shelf it turns over as it flies; in the pile it
@@ -929,6 +931,10 @@
         const bt = shelf.v === 2 ? 24 + Math.sin(Math.PI * e) * 56 : shelf.v === 3 ? 24 * e : 24;
         st.setProperty('--bt', `${bt.toFixed(1)}deg`);
         st.setProperty('--rot', `${((o.rot || 0) * (1 - e)).toFixed(1)}deg`);
+        // in the row, the books further back are veiled in paper and stand behind; the veil
+        // lifts as each flies
+        st.setProperty('--o', (1 - (1 - (o.o == null ? 1 : o.o)) * (1 - e)).toFixed(3));
+        st.setProperty('--zi', String(o.zi || 1));
       }
       q.el.style.setProperty('--x', `${x.toFixed(1)}px`);
       q.el.style.setProperty('--y', `${y.toFixed(1)}px`);
@@ -949,18 +955,37 @@
     const top = shelf.titleY + (small ? 30 : 44);
     const slots = [], planks = [];
     let scale, stagger, lift;
-    if (v === 3) {
+    if (v === 4) {
+      // design 1's row: all turned the same way, the middle one in front, the rest stepped back
+      // 5rem a book into the distance (perspective 70rem, its origin at 45% of the book's
+      // height), so they shrink and draw in toward it; veiled in the paper the further back
+      scale = small ? 0.42 : 0.62;
+      const bw = 192 * scale, bh = 272 * scale;
+      const mid = (n - 1) / 2;
+      const step = Math.min(bw * 1.04, (W - 2 * margin - bw) / Math.max(1, n - 1));
+      const base = top + 30 + bh, origin = base - bh * 0.55;
+      let xa = Infinity, xb = -Infinity;
+      for (let i = 0; i < n; i++) {
+        const d = i - mid, far = Math.abs(d);
+        const f = 70 / (70 + 5 * far);
+        const x = W / 2 + d * step * f;
+        slots.push({ x, y: origin + (base - origin) * f, f, o: Math.max(0.3, 1 - far * 0.22), zi: 40 - Math.round(far * 2), order: Math.round(far * 2) + (d < 0 ? 1 : 0) });
+        xa = Math.min(xa, x - (bw * f) / 2); xb = Math.max(xb, x + (bw * f) / 2);
+      }
+      planks.push({ x0: xa - 14, x1: xb + 14, y: base + 1 });
+      stagger = 0.35; lift = small ? 28 : 56;
+    } else if (v === 3) {
       // the pile: lying flat, cover up, each a little askew, the last on top; dealt from the top
-      scale = small ? 0.3 : 0.42;
+      scale = small ? 0.4 : 0.58;
       const bw = 192 * scale, bh = 272 * scale;
       const seed = (i, k) => Math.sin(i * 12.9898 + k * 78.233) * 43758.5453 % 1;
       const y0 = top + 24 + bh;
       for (let i = 0; i < n; i++) slots.push({ x: W / 2 + (seed(i, 1) - 0.5) * (small ? 14 : 22), y: y0 - i * 1.6, rot: (seed(i, 2) - 0.5) * 16, order: n - 1 - i });
       stagger = 0.5; lift = small ? 20 : 40;
     } else {
-      // rows of shelves (1), or one long shelf the books are sized to fit (2)
-      scale = small ? 0.26 : 0.36;
-      if (v === 2) scale = Math.min(scale, (W - 2 * margin - (n - 1) * gap) / n / 192);
+      // rows of shelves (1), or one long shelf, the books overlapping as they must to fit (2);
+      // bigger at his word (2026-10-03: "the books aren't big enough")
+      scale = small ? 0.34 : 0.5;
       const bw = 192 * scale, bh = 272 * scale;
       const perRow = v === 2 ? n : Math.max(1, Math.floor((W - 2 * margin + gap) / (bw + gap)));
       const rows = Math.ceil(n / perRow);
@@ -968,10 +993,11 @@
       const pitch = bh + (small ? 26 : 38);
       for (let r = 0; r < rows; r++) {
         const count = Math.min(per, n - r * per);
-        const rowW = count * bw + (count - 1) * gap;
+        const step = v === 2 ? Math.min(bw + gap, (W - 2 * margin - bw) / Math.max(1, count - 1)) : bw + gap;
+        const rowW = bw + (count - 1) * step;
         const x0 = (W - rowW) / 2;
         const y = top + r * pitch + bh;
-        for (let i = 0; i < count; i++) slots.push({ x: x0 + bw / 2 + i * (bw + gap), y, order: r * per + i });
+        for (let i = 0; i < count; i++) slots.push({ x: x0 + bw / 2 + i * step, y, order: r * per + i, zi: v === 2 ? 2 + i : 1 });
         planks.push({ x0: x0 - 14, x1: x0 + rowW + 14, y: y + 1 });
       }
       stagger = v === 2 ? 0.12 : 0.35; lift = small ? 28 : 56;
@@ -2756,7 +2782,7 @@
       slide.on = true;
       // the books stand on their shelves under the name from the start, and fly as he scrolls
       shelf.on = true; shelf.p = 0;
-      shelf.v = clamp(parseInt(ask.get('shelf'), 10) || 1, 1, 3);
+      shelf.v = clamp(parseInt(ask.get('shelf'), 10) || 1, 1, 4);
       shelf.titleY = state.H * (narrow.matches ? 0.22 : 0.27);
       app.classList.add('is-shelf');
       queueDraw();

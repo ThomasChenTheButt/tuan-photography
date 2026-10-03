@@ -2,10 +2,12 @@
 > idea the same day: the guide books stand on a shelf under "Tuan, Through the Lens", over the
 > sea's photograph; as he scrolls (wheel, finger, keys; forward or back, about five windows'
 > height), the map develops out of the photograph and the books fly to their places on it; once
-> the map is all there the flights fly on their own as before. Three shelves to choose from,
-> `?opening&shelf=1|2|3`: 1 rows of shelves, the books leaving one after another; 2 one long shelf,
-> all leaving together and turning over as they fly; 3 a pile lying under the name, dealt from the
-> top. Default here (`OPENING_DEFAULT = 'scroll'`, `shelf.v`); `?opening=classic` plays the timed
+> the map is all there the flights fly on their own as before. Four shelves to choose from,
+> `?opening&shelf=1|2|3|4`: 1 rows of shelves, the books leaving one after another; 2 one long
+> shelf, all leaving together and turning over as they fly; 3 a pile lying under the name, dealt
+> from the top; 4 design 1's row (his word: "that version is cool"), the middle book in front,
+> the rest stepping back and veiled in paper on either side, leaving from the front outward.
+> The books were made bigger at his word. Default here (`OPENING_DEFAULT = 'scroll'`, `shelf.v`); `?opening=classic` plays the timed
 > opening of 8645. No skill. Every rule of this file holds.
 
 # tuan photography 陳亮元 — project instructions

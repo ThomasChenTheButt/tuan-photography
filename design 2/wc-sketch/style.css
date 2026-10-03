@@ -145,6 +145,10 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 .app.is-shelf .map { z-index: auto; }
 .app.is-shelf .pins, .app.is-opening.is-shelf .pins { opacity: 1; z-index: 6; transition: opacity 900ms var(--soft) 300ms; }
 .app.is-shelf .book { pointer-events: none; }
+.app.is-shelf .pin { z-index: var(--zi, 1); }
+/* the books further back in the row (shelf 4) are veiled in the page's paper, as design 1's are
+   (--o, set by the script; 1 on the map, so the veil is never seen there) */
+.book__veil { position: absolute; inset: 0; background: var(--bg); opacity: calc(1 - var(--o, 1)); transform: translateZ(1px); pointer-events: none; backface-visibility: hidden; }
 /* how far each is turned (--bt) and tilted in the plane (--rot) on its way, set by the script */
 .app.is-shelf .pin__stage { --turn: var(--bt, 24deg); transform: translateX(-50%) rotate(var(--rot, 0deg)) scale(var(--s, 0.3)); }
 .app.is-shelf .pin:not(.is-quiet) .pin__label { opacity: var(--la, 1); transition: none; }
