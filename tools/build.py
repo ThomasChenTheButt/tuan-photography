@@ -178,6 +178,8 @@ def opens(sid, root, en, zh):
 
 
 def camera(s):
+    if "focal" not in s:   # a photograph whose file lost its camera data shows none: nothing is invented
+        return ""
     parts = [s["focal"], s["aperture"], s["shutter"], "ISO " + s["iso"]]
     return '<span class="data">' + "".join(f"<span>{e(p)}</span>" for p in parts) + "</span>"
 
@@ -771,8 +773,8 @@ def build_skills():
 
 def build_about():
     en, zh = {}, {}
-    cams = sorted({s["camera"] for s in DATA["slides"]})
-    lenses = sorted({s["lens"] for s in DATA["slides"]})
+    cams = sorted({s["camera"] for s in DATA["slides"] if "camera" in s})
+    lenses = sorted({s["lens"] for s in DATA["slides"] if "lens" in s})
     en.update(abTitle="I plan trips like shoots — because they are.",
               abLede="Before every trip I disappear into research: light direction, seasons, opening hours, transport, and the food locals actually eat. Then I go, shoot the plan, and write down what was true and what wasn't.",
               abBody1="This site is that homework, published. Every guide tells you where the photo was taken, when to stand there, and what to do with the rest of your day. Some spots get exact pins; the fragile ones stay vague on purpose — you'll understand when you get there.",

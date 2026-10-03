@@ -2015,6 +2015,624 @@
         15.877,
         108.328
       ]
+    },
+    {
+      "id": "edge-night",
+      "file": "usa-edge-night.jpg",
+      "w": 2400,
+      "h": 1835,
+      "country": "usa",
+      "city": "new-york",
+      "ll": [
+        40.754,
+        -74.001
+      ],
+      "place": {
+        "en": "Manhattan from Edge",
+        "zh": "從 Edge 看曼哈頓"
+      },
+      "where": {
+        "en": "New York, United States",
+        "zh": "美國 紐約"
+      },
+      "alt": {
+        "en": "Midtown Manhattan lit at night, seen from the Edge observation deck",
+        "zh": "從 Edge 觀景台看夜裡亮起的曼哈頓中城"
+      },
+      "camera": "Canon EOS R6 Mark II",
+      "lens": "RF 70-200mm F2.8 L IS USM",
+      "focal": "124mm",
+      "aperture": "f/3.2",
+      "shutter": "1/2000s",
+      "iso": "250"
+    },
+    {
+      "id": "empire-state-sunset",
+      "file": "usa-empire-state-sunset.jpg",
+      "w": 2400,
+      "h": 1644,
+      "country": "usa",
+      "city": "new-york",
+      "ll": [
+        40.7484,
+        -73.9857
+      ],
+      "place": {
+        "en": "Empire State Building at sunset",
+        "zh": "日落時的帝國大廈"
+      },
+      "where": {
+        "en": "New York, United States",
+        "zh": "美國 紐約"
+      },
+      "alt": {
+        "en": "The Empire State Building against a sunset sky, seen from above",
+        "zh": "從高處看日落天空下的帝國大廈"
+      }
+    },
+    {
+      "id": "queensboro-train",
+      "file": "usa-queensboro-train.jpg",
+      "w": 1920,
+      "h": 2400,
+      "country": "usa",
+      "city": "new-york",
+      "ll": [
+        40.7508,
+        -73.9402
+      ],
+      "place": {
+        "en": "Queensboro Plaza",
+        "zh": "皇后區廣場站"
+      },
+      "where": {
+        "en": "New York, United States",
+        "zh": "美國 紐約"
+      },
+      "alt": {
+        "en": "A 7 train pulling into Queensboro Plaza with the Manhattan skyline behind",
+        "zh": "7 號線列車駛進皇后區廣場站，背後是曼哈頓天際線"
+      }
+    },
+    {
+      "id": "dumbo-bridge",
+      "file": "usa-dumbo-bridge.jpg",
+      "w": 1920,
+      "h": 2400,
+      "country": "usa",
+      "city": "new-york",
+      "ll": [
+        40.7033,
+        -73.9903
+      ],
+      "place": {
+        "en": "Brooklyn Bridge from Dumbo",
+        "zh": "從 Dumbo 看布魯克林大橋"
+      },
+      "where": {
+        "en": "New York, United States",
+        "zh": "美國 紐約"
+      },
+      "alt": {
+        "en": "The Brooklyn Bridge and One World Trade Center from Dumbo",
+        "zh": "從 Dumbo 看布魯克林大橋與世貿一號大樓"
+      }
+    },
+    {
+      "id": "lower-manhattan-reflection",
+      "file": "usa-lower-manhattan-reflection.jpg",
+      "w": 2400,
+      "h": 1644,
+      "country": "usa",
+      "city": "new-york",
+      "ll": [
+        40.7,
+        -74.015
+      ],
+      "place": {
+        "en": "Lower Manhattan reflected",
+        "zh": "倒映的曼哈頓下城"
+      },
+      "where": {
+        "en": "New York, United States",
+        "zh": "美國 紐約"
+      },
+      "alt": {
+        "en": "The Lower Manhattan skyline reflected in still water at night",
+        "zh": "夜裡曼哈頓下城的天際線倒映在平靜的水面上"
+      }
+    },
+    {
+      "id": "empire-state-spire",
+      "file": "usa-empire-state-spire.jpg",
+      "w": 1920,
+      "h": 2400,
+      "country": "usa",
+      "city": "new-york",
+      "ll": [
+        40.7484,
+        -73.9857
+      ],
+      "place": {
+        "en": "Empire State Building",
+        "zh": "帝國大廈"
+      },
+      "where": {
+        "en": "New York, United States",
+        "zh": "美國 紐約"
+      },
+      "alt": {
+        "en": "The spire of the Empire State Building against evening cloud",
+        "zh": "傍晚雲層下帝國大廈的尖頂"
+      }
+    },
+    {
+      "id": "vessel-wtc",
+      "file": "usa-vessel-wtc.jpg",
+      "w": 2400,
+      "h": 1600,
+      "country": "usa",
+      "city": "new-york",
+      "ll": [
+        40.7538,
+        -74.0022
+      ],
+      "place": {
+        "en": "Hudson Yards",
+        "zh": "哈德遜廣場"
+      },
+      "where": {
+        "en": "New York, United States",
+        "zh": "美國 紐約"
+      },
+      "alt": {
+        "en": "One World Trade Center seen past the Vessel at Hudson Yards",
+        "zh": "從哈德遜廣場的 Vessel 旁望向世貿一號大樓"
+      },
+      "camera": "Canon EOS R6 Mark II",
+      "lens": "RF 15-35mm F2.8 L IS USM",
+      "focal": "15mm",
+      "aperture": "f/3.2",
+      "shutter": "1/640s",
+      "iso": "100"
+    },
+    {
+      "id": "the-chair",
+      "file": "usa-the-chair.jpg",
+      "w": 1625,
+      "h": 2400,
+      "country": "usa",
+      "city": "new-york",
+      "ll": [
+        40.7023,
+        -73.9961
+      ],
+      "place": {
+        "en": "The Chair, Brooklyn",
+        "zh": "布魯克林的椅子"
+      },
+      "where": {
+        "en": "New York, United States",
+        "zh": "美國 紐約"
+      },
+      "alt": {
+        "en": "Lower Manhattan framed through the Chair sculpture in Brooklyn Bridge Park at night",
+        "zh": "夜裡從布魯克林大橋公園的椅子雕塑框住曼哈頓下城"
+      },
+      "camera": "Canon EOS R6 Mark II",
+      "lens": "RF 15-35mm F2.8 L IS USM",
+      "focal": "25mm",
+      "aperture": "f/14",
+      "shutter": "13s",
+      "iso": "400"
+    },
+    {
+      "id": "golden-gate-fog",
+      "file": "usa-golden-gate-fog.jpg",
+      "w": 2400,
+      "h": 1644,
+      "country": "usa",
+      "city": "san-francisco",
+      "ll": [
+        37.8199,
+        -122.4783
+      ],
+      "place": {
+        "en": "Golden Gate Bridge in fog",
+        "zh": "霧中的金門大橋"
+      },
+      "where": {
+        "en": "San Francisco, United States",
+        "zh": "美國 舊金山"
+      },
+      "alt": {
+        "en": "The Golden Gate Bridge with its towers lost in fog",
+        "zh": "塔頂沒入霧中的金門大橋"
+      }
+    },
+    {
+      "id": "golden-gate-headland",
+      "file": "usa-golden-gate-headland.jpg",
+      "w": 1920,
+      "h": 2400,
+      "country": "usa",
+      "city": "san-francisco",
+      "ll": [
+        37.8324,
+        -122.4795
+      ],
+      "place": {
+        "en": "Golden Gate from the headlands",
+        "zh": "從海岬看金門大橋"
+      },
+      "where": {
+        "en": "San Francisco, United States",
+        "zh": "美國 舊金山"
+      },
+      "alt": {
+        "en": "The Golden Gate Bridge seen from the Marin headlands",
+        "zh": "從馬林海岬看金門大橋"
+      }
+    },
+    {
+      "id": "coit-tower",
+      "file": "usa-coit-tower.jpg",
+      "w": 1920,
+      "h": 2400,
+      "country": "usa",
+      "city": "san-francisco",
+      "ll": [
+        37.8024,
+        -122.4058
+      ],
+      "place": {
+        "en": "Coit Tower",
+        "zh": "科伊特塔"
+      },
+      "where": {
+        "en": "San Francisco, United States",
+        "zh": "美國 舊金山"
+      },
+      "alt": {
+        "en": "Coit Tower against a blue sky",
+        "zh": "藍天下的科伊特塔"
+      }
+    },
+    {
+      "id": "painted-ladies",
+      "file": "usa-painted-ladies.jpg",
+      "w": 2400,
+      "h": 1644,
+      "country": "usa",
+      "city": "san-francisco",
+      "ll": [
+        37.7762,
+        -122.4328
+      ],
+      "place": {
+        "en": "The Painted Ladies",
+        "zh": "彩繪淑女"
+      },
+      "where": {
+        "en": "San Francisco, United States",
+        "zh": "美國 舊金山"
+      },
+      "alt": {
+        "en": "The Painted Ladies on Alamo Square with downtown behind",
+        "zh": "阿拉莫廣場的彩繪淑女，背後是市中心"
+      }
+    },
+    {
+      "id": "sister-cities-sign",
+      "file": "usa-sister-cities-sign.jpg",
+      "w": 1920,
+      "h": 2400,
+      "country": "usa",
+      "city": "san-francisco",
+      "ll": [
+        37.7936,
+        -122.4057
+      ],
+      "place": {
+        "en": "Sister Cities signpost",
+        "zh": "姊妹市路標"
+      },
+      "where": {
+        "en": "San Francisco, United States",
+        "zh": "美國 舊金山"
+      },
+      "alt": {
+        "en": "The Sister Cities signpost in San Francisco, Taipei among the arms",
+        "zh": "舊金山的姊妹市路標，其中一支指向台北"
+      }
+    },
+    {
+      "id": "bay-bridge-street",
+      "file": "usa-bay-bridge-street.jpg",
+      "w": 1920,
+      "h": 2400,
+      "country": "usa",
+      "city": "san-francisco",
+      "ll": [
+        37.7925,
+        -122.41
+      ],
+      "place": {
+        "en": "Down to the Bay Bridge",
+        "zh": "往海灣大橋的街"
+      },
+      "where": {
+        "en": "San Francisco, United States",
+        "zh": "美國 舊金山"
+      },
+      "alt": {
+        "en": "A steep San Francisco street running down toward the Bay Bridge",
+        "zh": "舊金山的陡坡街道一路往海灣大橋"
+      }
+    },
+    {
+      "id": "hill-houses",
+      "file": "usa-hill-houses.jpg",
+      "w": 2400,
+      "h": 1644,
+      "country": "usa",
+      "city": "san-francisco",
+      "ll": [
+        37.798,
+        -122.41
+      ],
+      "place": {
+        "en": "Houses on the hill",
+        "zh": "山坡上的房子"
+      },
+      "where": {
+        "en": "San Francisco, United States",
+        "zh": "美國 舊金山"
+      },
+      "alt": {
+        "en": "Rows of houses climbing a San Francisco hill",
+        "zh": "爬滿舊金山山坡的房子"
+      }
+    },
+    {
+      "id": "hollywood-sign",
+      "file": "usa-hollywood-sign.jpg",
+      "w": 2400,
+      "h": 1644,
+      "country": "usa",
+      "city": "los-angeles",
+      "ll": [
+        34.1341,
+        -118.3215
+      ],
+      "place": {
+        "en": "Hollywood Sign",
+        "zh": "好萊塢標誌"
+      },
+      "where": {
+        "en": "Los Angeles, United States",
+        "zh": "美國 洛杉磯"
+      },
+      "alt": {
+        "en": "The Hollywood Sign seen through palm trees",
+        "zh": "穿過棕櫚樹看好萊塢標誌"
+      }
+    },
+    {
+      "id": "griffith-observatory",
+      "file": "usa-griffith-observatory.jpg",
+      "w": 2400,
+      "h": 1644,
+      "country": "usa",
+      "city": "los-angeles",
+      "ll": [
+        34.1184,
+        -118.3004
+      ],
+      "place": {
+        "en": "Griffith Observatory",
+        "zh": "格里斐斯天文台"
+      },
+      "where": {
+        "en": "Los Angeles, United States",
+        "zh": "美國 洛杉磯"
+      },
+      "alt": {
+        "en": "Griffith Observatory with downtown Los Angeles in the haze behind",
+        "zh": "格里斐斯天文台，背後是霧氣裡的洛杉磯市中心"
+      }
+    },
+    {
+      "id": "route-66",
+      "file": "usa-route-66.jpg",
+      "w": 1920,
+      "h": 2400,
+      "country": "usa",
+      "city": "los-angeles",
+      "ll": [
+        34.0094,
+        -118.4973
+      ],
+      "place": {
+        "en": "End of Route 66",
+        "zh": "66 號公路的終點"
+      },
+      "where": {
+        "en": "Los Angeles, United States",
+        "zh": "美國 洛杉磯"
+      },
+      "alt": {
+        "en": "The End of the Trail sign for Route 66 on Santa Monica Pier",
+        "zh": "聖塔莫尼卡碼頭上 66 號公路終點的路牌"
+      }
+    },
+    {
+      "id": "angel-stadium",
+      "file": "usa-angel-stadium.jpg",
+      "w": 1920,
+      "h": 2400,
+      "country": "usa",
+      "city": "los-angeles",
+      "ll": [
+        33.8003,
+        -117.8827
+      ],
+      "place": {
+        "en": "Angel Stadium",
+        "zh": "天使球場"
+      },
+      "where": {
+        "en": "Los Angeles, United States",
+        "zh": "美國 洛杉磯"
+      },
+      "alt": {
+        "en": "A baseball game at Angel Stadium",
+        "zh": "天使球場的一場棒球賽"
+      }
+    },
+    {
+      "id": "capitol-night",
+      "file": "usa-capitol-night.jpg",
+      "w": 1920,
+      "h": 2400,
+      "country": "usa",
+      "city": "washington",
+      "ll": [
+        38.8899,
+        -77.0091
+      ],
+      "place": {
+        "en": "The Capitol at night",
+        "zh": "夜裡的國會大廈"
+      },
+      "where": {
+        "en": "Washington, D.C., United States",
+        "zh": "美國 華盛頓特區"
+      },
+      "alt": {
+        "en": "The United States Capitol dome lit at night",
+        "zh": "夜裡亮起的美國國會大廈圓頂"
+      }
+    },
+    {
+      "id": "capitol-dusk-reflection",
+      "file": "usa-capitol-dusk-reflection.jpg",
+      "w": 1920,
+      "h": 2400,
+      "country": "usa",
+      "city": "washington",
+      "ll": [
+        38.8899,
+        -77.012
+      ],
+      "place": {
+        "en": "The Capitol at dusk",
+        "zh": "黃昏的國會大廈"
+      },
+      "where": {
+        "en": "Washington, D.C., United States",
+        "zh": "美國 華盛頓特區"
+      },
+      "alt": {
+        "en": "The Capitol reflected in the pool at dusk",
+        "zh": "黃昏時倒映在水池裡的國會大廈"
+      }
+    },
+    {
+      "id": "capitol-front",
+      "file": "usa-capitol-front.jpg",
+      "w": 1920,
+      "h": 2400,
+      "country": "usa",
+      "city": "washington",
+      "ll": [
+        38.8899,
+        -77.0091
+      ],
+      "place": {
+        "en": "The Capitol",
+        "zh": "國會大廈"
+      },
+      "where": {
+        "en": "Washington, D.C., United States",
+        "zh": "美國 華盛頓特區"
+      },
+      "alt": {
+        "en": "The west front of the United States Capitol under a blue sky",
+        "zh": "藍天下美國國會大廈的西側正面"
+      }
+    },
+    {
+      "id": "washington-monument-pool",
+      "file": "usa-washington-monument-pool.jpg",
+      "w": 1920,
+      "h": 2400,
+      "country": "usa",
+      "city": "washington",
+      "ll": [
+        38.8895,
+        -77.0353
+      ],
+      "place": {
+        "en": "Washington Monument",
+        "zh": "華盛頓紀念碑"
+      },
+      "where": {
+        "en": "Washington, D.C., United States",
+        "zh": "美國 華盛頓特區"
+      },
+      "alt": {
+        "en": "The Washington Monument above the Reflecting Pool",
+        "zh": "倒影池上方的華盛頓紀念碑"
+      }
+    },
+    {
+      "id": "jefferson-memorial",
+      "file": "usa-jefferson-memorial.jpg",
+      "w": 2400,
+      "h": 1644,
+      "country": "usa",
+      "city": "washington",
+      "ll": [
+        38.8814,
+        -77.0365
+      ],
+      "place": {
+        "en": "Jefferson Memorial",
+        "zh": "傑佛遜紀念堂"
+      },
+      "where": {
+        "en": "Washington, D.C., United States",
+        "zh": "美國 華盛頓特區"
+      },
+      "alt": {
+        "en": "The Jefferson Memorial and the Tidal Basin from above",
+        "zh": "從高處看傑佛遜紀念堂與潮汐湖"
+      }
+    },
+    {
+      "id": "mall-from-above",
+      "file": "usa-mall-from-above.jpg",
+      "w": 2400,
+      "h": 1644,
+      "country": "usa",
+      "city": "washington",
+      "ll": [
+        38.8895,
+        -77.0353
+      ],
+      "place": {
+        "en": "The National Mall",
+        "zh": "國家廣場"
+      },
+      "where": {
+        "en": "Washington, D.C., United States",
+        "zh": "美國 華盛頓特區"
+      },
+      "alt": {
+        "en": "The National Mall from the top of the Washington Monument",
+        "zh": "從華盛頓紀念碑頂看國家廣場"
+      }
     }
   ],
   "guides": [
@@ -3415,6 +4033,7 @@
       "places": [
         "new-york",
         "boston",
+        "washington",
         "san-francisco",
         "los-angeles"
       ],
@@ -4386,7 +5005,9 @@
       "ll": [
         40.71,
         -74.0
-      ]
+      ],
+      "photo": "queensboro-train",
+      "cover": "edge-night"
     },
     {
       "country": "usa",
@@ -4402,6 +5023,20 @@
     },
     {
       "country": "usa",
+      "place": "washington",
+      "title": {
+        "en": "Washington, D.C.",
+        "zh": "華盛頓特區"
+      },
+      "ll": [
+        38.9072,
+        -77.0369
+      ],
+      "photo": "capitol-night",
+      "cover": "jefferson-memorial"
+    },
+    {
+      "country": "usa",
       "place": "san-francisco",
       "title": {
         "en": "San Francisco",
@@ -4410,7 +5045,9 @@
       "ll": [
         37.77,
         -122.42
-      ]
+      ],
+      "photo": "coit-tower",
+      "cover": "golden-gate-fog"
     },
     {
       "country": "usa",
@@ -4422,7 +5059,9 @@
       "ll": [
         34.05,
         -118.24
-      ]
+      ],
+      "photo": "route-66",
+      "cover": "hollywood-sign"
     }
   ]
 }
