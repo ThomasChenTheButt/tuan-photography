@@ -29,7 +29,7 @@
   - `?opening=corridor`: the opening begins with a 3 s glide through a corridor of 150 prints of
     his photographs (all 93, repeated), dense like his reference, into the globe.
   - `?photos=ocean`: one full-window photograph seen only through the sea (his idea). Real photo,
-    no paper texture over it, **strength 0.8 (his call)**, Aoraki only for now (`&ocean=all`
+    no paper texture over it, **strength 0.9 (his call)**, Aoraki only for now (`&ocean=all`
     cycles through all 93). A trial dial bottom right ("Photo", 5 to 100) sets the strength live
     and is remembered on the browser; it comes off once he settles. Loads the full-size copy on
     Retina screens.
@@ -47,7 +47,7 @@
   places kept as journeys only; upright photos on the books, wide ones on arrival; the Impeccable
   review and its fixes; the design system written.
 - Then 25 US photographs went in with a Washington D.C. book; the corridor opening and the three
-  map-photo trials were built; he liked the photograph through the sea at strength 0.8 and asked
+  map-photo trials were built; he liked the photograph through the sea at strength 0.9 and asked
   for it clean (no sketch texture) with Aoraki only for now.
 - He stopped to compact the chat and update the app.
 
