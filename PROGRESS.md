@@ -81,9 +81,11 @@ each with a `CROP` if it has edges to hide. Check: `python3 tools/check_site.py`
 
 ## 等你決定 Waiting on you
 
-- **Experiment `scroll` (localhost:8646):** the opening after noomoagency.com: the same animation,
-  but played by the scroll (forward or back) instead of by the clock. Keep or drop? Keep means it
-  replaces the timed opening on 8645.
+- **Experiment `scroll` (localhost:8646):** the shelf opening, his idea: the guide books on a shelf
+  under the name over the photograph; scrolling develops the map and the books fly to their places;
+  then the flights fly on their own. Three shelves: `?opening&shelf=1` rows, `=2` one long shelf
+  (all leaving together, turning over), `=3` a pile dealt from the top. Which one, and keep or drop?
+  Keep means it replaces the timed opening on 8645.
 - **Sea photograph:** which photographs besides Aoraki, if any?
 - **Camera data for the 22 US photographs:** re-export from Lightroom with metadata, or drop the
   raw files in, and I'll add it.
