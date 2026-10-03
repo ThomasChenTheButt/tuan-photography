@@ -137,13 +137,8 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 /* once it paints, the canvas lays its own paper, so its drawing can dissolve into the map below */
 .opening.is-painting { background: none; }
 .opening.is-gone { opacity: 0; transition: opacity 450ms var(--soft); }
-/* the scroll trial: the map's sheet lies below the window and is pulled up over the photograph
-   (the script sets --slide, the sheet's distance down); the opening's canvas lies under the map */
-.app.is-sliding .map { transform: translateY(var(--slide, 0px)); will-change: transform; }
-.opening.is-under { z-index: -1; }
-/* and the name lies on the photograph, under the sheet, so the sheet's edge covers it as it rises */
-.app.is-sliding .opener { z-index: -1; }
-/* the one word at the foot of the photograph that says what to do, breathing until the hand moves */
+/* the scroll trial: the one word at the foot of the photograph that says what to do, breathing
+   until the hand moves */
 .scrollhint {
   position: absolute; z-index: 12; left: 50%; bottom: 1.6rem; transform: translateX(-50%);
   font-family: var(--sans); font-weight: 500; font-size: 0.72rem; letter-spacing: 0.34em; text-transform: uppercase;

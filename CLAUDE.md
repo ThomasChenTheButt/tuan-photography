@@ -1,8 +1,9 @@
-> **Experiment `scroll` (2026-10-03).** The opening after noomoagency.com (his find): the sea's
-> photograph with the name over it, and the map's sheet pulled up over the photograph by scrolling
-> (wheel, finger, keys), the way the next page of that site rises over the first; once up, the
-> flights draw across and the books come in. Default here (`OPENING_DEFAULT = 'scroll'`;
-> `?opening=classic` plays the timed one). Served on 8646. No skill. Every rule of this file holds.
+> **Experiment `scroll` (2026-10-03).** The opening after noomoagency.com (his find): the same
+> opening as on 8645, but once the photograph is up it plays only as far as he scrolls (wheel,
+> finger, keys; forward or back, about two windows' height for the whole), the way that site's
+> pages come with the scroll. His words: "as I scroll it should turn out just like my anime".
+> Default here (`OPENING_DEFAULT = 'scroll'`; `?opening=classic` plays the timed one). Served on
+> 8646. No skill. Every rule of this file holds.
 
 # tuan photography 陳亮元 — project instructions
 
