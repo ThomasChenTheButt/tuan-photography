@@ -75,11 +75,6 @@ each with a `CROP` if it has edges to hide. Check: `python3 tools/check_site.py`
 
 ## 等你決定 Waiting on you
 
-- **One experiment open** (branch local): `localhost:8646` **cssglobe**, the opening's globe as the
-  CSS globe he brought (the map scrolling behind a round window, inset shadows for the roundness,
-  lit from the left), rebuilt in plain CSS/JS with a map painted from the site's own data. Keep or
-  drop. Start it from the Code tab's preview (exp-cssglobe) or
-  `python3 tools/serve.py 8646 "experiments/cssglobe/design 2"`.
 - **The opening globe's look:** `?opening&globe=1`, `2` or `3` (wash, lit, desk globe). Say which,
   and `GLOBE_STYLE_DEFAULT` in `design 2/wc-sketch/app.js` takes it.
 - **Sea photograph:** which photographs besides Aoraki, if any?
