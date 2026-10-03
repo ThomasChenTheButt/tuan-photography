@@ -81,11 +81,9 @@ each with a `CROP` if it has edges to hide. Check: `python3 tools/check_site.py`
 
 ## 等你決定 Waiting on you
 
-- **Experiment `scroll` (localhost:8646):** the shelf opening, his idea: the guide books on a shelf
-  under the name over the photograph; scrolling develops the map and the books fly to their places;
-  then the flights fly on their own. Four shelves: `?opening&shelf=1` rows, `=2` one long shelf
-  (all leaving together, turning over), `=3` a pile dealt from the top, `=4` design 1's row (the
-  middle book in front, the rest stepping back). Which one, and keep or drop?
+- **Experiment `scroll` (localhost:8646):** the shelf opening, his idea: the guide books in design
+  1's row under the name over the photograph (his pick of four shelves tried); scrolling develops
+  the map and the books fly to their places; then the flights fly on their own. Keep or drop?
   Keep means it replaces the timed opening on 8645.
 - **Sea photograph:** which photographs besides Aoraki, if any?
 - **Camera data for the 22 US photographs:** re-export from Lightroom with metadata, or drop the
