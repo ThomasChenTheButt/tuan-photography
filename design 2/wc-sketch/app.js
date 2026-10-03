@@ -1471,6 +1471,9 @@
     // rest of the place's photographs in their usual order; the page below keeps that order
     const all = photosOf(book), first = coverFor(book, opts.cover);
     gal.list = all.includes(first) ? [first, ...all.filter((id) => id !== first)] : all;
+    // the photograph through the sea becomes this place's cover, and stays so back on the map
+    // (his call, 2026-10-03: on a click, not on a hover)
+    if (ocean && first) ocean.show(first);
     gal.i = 0;
     if (gal.anim) { gal.anim.cancel(); gal.anim = null; }
     setDx(0);
@@ -1825,6 +1828,16 @@
   const globeBtn = $('#globe');
   const globeCanvas = $('#globe-canvas');
   const globe = new WC.Globe(globeCanvas, { land: null, travel: null, flights, reduce: () => reduce.matches });
+  // the traffic over the map (a few flights always in the air) runs and rests with the small globe
+  const traffic = WC.traffic({
+    canvas: $('#sky'), flights, LON0, SY, reduce: () => reduce.matches,
+    view: () => { const z = state.z; return { k: z.k * state.S0, tx: z.x + (z.k * state.W) / 2, ty: z.y + (z.k * state.H) / 2, W: state.W, H: state.H, dpr: state.dpr }; },
+  });
+  {
+    const gStart = globe.start.bind(globe), gStop = globe.stop.bind(globe);
+    globe.start = () => { gStart(); traffic.start(); };
+    globe.stop = () => { gStop(); traffic.stop(); };
+  }
   globeBtn.addEventListener('click', () => goFlights());
   function sizeGlobe() { globe.resize(narrow.matches ? 92 : 184); }
   let opening = null;
@@ -2228,6 +2241,14 @@
         if (!id || !S.slides[id] || !oc.begun) return;
         oc.hover = id;
         toward(id, HOVER_FADE);
+      },
+      // a chosen photograph: the sea takes it (crossfade) and keeps it
+      show(id) {
+        if (!id || !S.slides[id]) return;
+        oc.hover = null;
+        const at = order.indexOf(id);
+        if (at >= 0) oc.i = at;
+        toward(id, oc.begun ? FADE : 0);
       },
       // the same photograph, whole, laid into another window-sized canvas (the opening's) at a
       // share of the strength: the backdrop the corridor and the globe stand in front of

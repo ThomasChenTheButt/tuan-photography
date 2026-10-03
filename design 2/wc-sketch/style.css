@@ -115,6 +115,9 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
   mix-blend-mode: soft-light; opacity: 0.36;
 }
 .map__pen { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 2; }
+/* the traffic: a few of his flights always in the air, over the pen and under the books */
+.map__sky { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; transition: opacity 600ms var(--soft); }
+.app.is-opening .map__sky, .app.is-diving .map__sky, .app.is-soft .map__sky { opacity: 0; }
 .map__pen path { fill: none; stroke: var(--ink); stroke-linecap: round; stroke-linejoin: round; }
 .map__pen .ring { stroke-width: 1.5; vector-effect: non-scaling-stroke; }
 .map__pen g { opacity: var(--o, 1); }

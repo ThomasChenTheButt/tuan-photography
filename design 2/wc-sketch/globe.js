@@ -475,6 +475,149 @@
     ctx.restore();
   }
 
+  /* ------------------------------------------------------------ the traffic: a few flights always in the air */
+
+  /*
+    On the home map a handful of his flights are always under way (his request, 2026-10-03: the
+    page was otherwise too still): never all at once, up to four at a time, each on its own route
+    at its own pace, a new one leaving a moment after one lands, out and home by turns, no route
+    twice in a row. Drawn on its own canvas over the pen and under the books, in the opening's
+    hand: the fine ink line flown so far with a thread of wash beside it, warming to vermilion
+    behind the small airliner, and a ring of the pen where it lands; then the line fades. The
+    routes are the same bowed courses the globe and the opening fly.
+    o: { canvas, flights, LON0, SY, view() -> { k (px per degree), tx, ty, W, H, dpr }, reduce() }
+  */
+  WC.traffic = (o) => {
+    const c = o.canvas, ctx = c.getContext('2d');
+    const SY = o.SY || 1;
+    const AT_ONCE = 4, GAP = [900, 2600], LINGER = 1500;
+    const legs = [];
+    const seen = new Set();
+    for (const f of o.flights) {
+      if (f.mode !== 'flight') continue;
+      const key = [f.from, f.to].map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).sort().join('|');
+      if (seen.has(key)) continue;
+      seen.add(key);
+      for (const [a, b] of [[f.from, f.to], [f.to, f.from]]) {
+        const r = makeRoute(a, b, 'flight', legs.length + 41);
+        const n = 72, U = new Float32Array(n), V = new Float32Array(n);
+        let prev = 0;
+        for (let i = 0; i < n; i++) {
+          const q = course(r, i / (n - 1));
+          const lon = Math.atan2(q[1], q[0]) / RAD, lat = Math.asin(clamp(q[2], -1, 1)) / RAD;
+          let u = ((((lon - o.LON0) % 360) + 540) % 360) - 180;
+          if (i) { while (u - prev > 180) u -= 360; while (u - prev < -180) u += 360; }
+          U[i] = u; V[i] = lat * SY; prev = u;
+        }
+        const len = d3.geoDistance(a, b);
+        // about 6s for a short hop, 14s across the Pacific
+        legs.push({ U, V, n, key, to: b, dur: 5200 + Math.min(1, len / 2.1) * 8800, seed: legs.length + 3 });
+      }
+    }
+    const active = [];
+    let recent = [];
+    let raf = 0, running = false, nextAt = 0, pausedAt = 0;
+    const PX = new Float32Array(80), PY = new Float32Array(80);
+    // along the way at an even pace, easing out of the gate and into the landing
+    const pace = (x) => x - (Math.sin(2 * Math.PI * x) / (2 * Math.PI)) * 0.35;
+    function launch(now) {
+      const free = legs.filter((L) => !active.some((f) => f.L === L) && !recent.includes(L.key));
+      const pool = free.length ? free : legs.filter((L) => !active.some((f) => f.L === L));
+      if (!pool.length) return;
+      const L = pool[Math.floor(Math.random() * pool.length)];
+      active.push({ L, t0: now });
+      recent.push(L.key);
+      if (recent.length > Math.max(1, Math.floor(legs.length / 2) - AT_ONCE)) recent.shift();
+    }
+    function frame(now) {
+      if (!running) return;
+      raf = requestAnimationFrame(frame);
+      const v = o.view();
+      const cw = Math.round(v.W * v.dpr), ch = Math.round(v.H * v.dpr);
+      if (c.width !== cw || c.height !== ch) { c.width = cw; c.height = ch; }
+      ctx.setTransform(v.dpr, 0, 0, v.dpr, 0, 0);
+      ctx.clearRect(0, 0, v.W, v.H);
+      if (active.length < AT_ONCE && now >= nextAt) { launch(now); nextAt = now + GAP[0] + Math.random() * (GAP[1] - GAP[0]); }
+      const k = v.k;
+      const lw = v.W < 700 ? 0.95 : 1.15;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.save();
+      // the world's own width: nothing is drawn past its edges
+      ctx.beginPath(); ctx.rect(v.tx - 180 * k, v.ty - 90 * SY * k, 360 * k, 180 * SY * k); ctx.clip();
+      for (let fi = active.length - 1; fi >= 0; fi--) {
+        const f = active[fi];
+        const g = (now - f.t0) / f.L.dur;
+        const a = g <= 1 ? 1 : 1 - (now - f.t0 - f.L.dur) / LINGER;
+        if (a <= 0) { active.splice(fi, 1); continue; }
+        const head = pace(Math.min(1, g));
+        const L = f.L;
+        const lo = Math.min(L.U[0], L.U[L.n - 1]), hi = Math.max(L.U[0], L.U[L.n - 1]);
+        for (const shift of [-360, 0, 360]) {
+          if (hi + shift < -182 || lo + shift > 182) continue;
+          // the flown part, sampled to the head
+          const m = Math.max(2, Math.ceil(head * (L.n - 1)) + 1);
+          for (let i = 0; i < m; i++) {
+            let j = i;
+            if (i === m - 1) j = head * (L.n - 1);
+            const j0 = Math.min(L.n - 2, Math.floor(j)), fr = j - j0;
+            const U = L.U[j0] + (L.U[j0 + 1] - L.U[j0]) * fr, V = L.V[j0] + (L.V[j0 + 1] - L.V[j0]) * fr;
+            PX[i] = v.tx + (U + shift) * k; PY[i] = v.ty - V * k;
+          }
+          const stroke = () => { ctx.beginPath(); ctx.moveTo(PX[0], PY[0]); for (let i = 1; i < m; i++) ctx.lineTo(PX[i], PY[i]); };
+          ctx.save(); ctx.translate(1.1 * lw, 1.3 * lw);
+          stroke(); ctx.strokeStyle = WASH(0.2 * a); ctx.lineWidth = 3.2 * lw; ctx.stroke();
+          ctx.restore();
+          stroke(); ctx.strokeStyle = ink(0.62 * a); ctx.lineWidth = 0.95 * lw; ctx.stroke();
+          if (g < 1) {
+            // the last stretch warms to vermilion toward the plane
+            const tl = Math.max(1, Math.round(m * 0.3));
+            for (let i = Math.max(1, m - tl); i < m; i++) {
+              const q = 1 - (m - i) / tl;
+              ctx.beginPath(); ctx.moveTo(PX[i - 1], PY[i - 1]); ctx.lineTo(PX[i], PY[i]);
+              ctx.strokeStyle = `rgba(212, 82, 60, ${0.9 * q * a})`; ctx.lineWidth = (0.95 + 0.6 * q) * lw; ctx.stroke();
+            }
+            let j = m - 1, back = 0;
+            while (j > 0 && back < 5 * lw) { back += Math.hypot(PX[j] - PX[j - 1], PY[j] - PY[j - 1]); j--; }
+            const ang = Math.atan2(PY[m - 1] - PY[j], PX[m - 1] - PX[j]);
+            drawPlane(ctx, PX[m - 1], PY[m - 1], ang, 1.3 * lw, a);
+          } else {
+            // landed: a ring of the pen pops in where it came down, and fades with the line
+            const x = Math.min(1, (now - f.t0 - L.dur) / 460);
+            const sc = outBack(x);
+            const pts = ringOf(L.seed);
+            const r = 5 * lw * sc;
+            ctx.save();
+            ctx.translate(PX[m - 1], PY[m - 1]);
+            ctx.beginPath();
+            for (let i = 0; i < pts.length; i++) { const p = pts[i]; if (i) ctx.lineTo(p[0] * r, p[1] * r); else ctx.moveTo(p[0] * r, p[1] * r); }
+            ctx.strokeStyle = ink(0.84 * a); ctx.lineWidth = 1.1 * lw; ctx.stroke();
+            ctx.beginPath(); ctx.arc(0, 0, 1.6 * lw, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(212, 82, 60, ${0.85 * a})`; ctx.fill();
+            ctx.restore();
+          }
+        }
+      }
+      ctx.restore();
+    }
+    return {
+      start() {
+        if (running || o.reduce() || !legs.length) return;
+        running = true;
+        const now = performance.now();
+        // flights in the air when the page was left carry on from where they were
+        if (pausedAt) { const dt = now - pausedAt; for (const f of active) f.t0 += dt; nextAt += dt; pausedAt = 0; }
+        raf = requestAnimationFrame(frame);
+      },
+      stop() {
+        if (!running) return;
+        running = false;
+        cancelAnimationFrame(raf);
+        pausedAt = performance.now();
+      },
+      clear() { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, c.width, c.height); },
+    };
+  };
+
   /* ------------------------------------------------------------ the mountains, hatched in pen, close in */
 
   /*
