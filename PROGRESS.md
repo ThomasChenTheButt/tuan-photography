@@ -25,7 +25,8 @@
 - **Journeys** (`journeys` in `data/site.json`) come from his Drive trip documents plus his own
   corrections: 16 journeys, newest first, every leg's mode and places; Chinese city names.
 - **Opening:** the globe, drawn solid in one of three looks for him to choose (`?globe=1` wash,
-  `?globe=2` lit, `?globe=3` desk globe; `GLOBE_STYLE_DEFAULT` in `app.js`), turns under
+  `?globe=2` lit, `?globe=3` desk globe, `?globe=4` a ball covered in his photographs;
+  `GLOBE_STYLE_DEFAULT` in `app.js`), turns under
   "Tuan, Through the Lens" / Tuan 的鏡頭之旅 (his choice) while the sea's photograph rises behind
   it, unrolls into the map while the title glides to the centre, every flight draws across the
   map, then all fades. Once a session; `?opening` replays it. The other session took the globe
@@ -84,7 +85,7 @@ each with a `CROP` if it has edges to hide. Check: `python3 tools/check_site.py`
 
 ## 等你決定 Waiting on you
 
-- **The opening globe's look:** `?opening&globe=1`, `2` or `3` (wash, lit, desk globe). Say which,
+- **The opening globe's look:** `?opening&globe=1`, `2`, `3` or `4` (wash, lit, desk globe, photo ball). Say which,
   and `GLOBE_STYLE_DEFAULT` in `design 2/wc-sketch/app.js` takes it.
 - **Experiment `scroll` (localhost:8646):** the shelf opening, his idea: the guide books in design
   1's row under the name over the photograph (his pick of four shelves tried); one scroll sets the

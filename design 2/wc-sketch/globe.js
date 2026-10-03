@@ -2262,11 +2262,19 @@
         // the first frame to the moment the globe unrolls (his call, 2026-10-03)
         if (o.backdrop) o.backdrop(ctx, el, GLOBE_END);
         if (fadeIn > 0) {
-          const proj = d3.geoOrthographic().clipAngle(90).precision(0.5).scale(Rf * (0.94 + 0.06 * easeOut(fadeIn))).translate([cx, cyf]).rotate([lon0 - real * SPEED, lat0]);
+          const Rg = Rf * (0.94 + 0.06 * easeOut(fadeIn));
           ctx.globalAlpha = fadeIn;
           castShadow(ctx, cx + Rf * 0.08, cyf + Rf * 1.12, Rf * 0.86, 1.3);
-          // a solid paper globe, as the small one bottom-left is (his call, 2026-10-03)
-          WC.paintGlobe(ctx, proj, { land: o.land, travel: o.travel, lw: 1.3, grain: 1, R: Rf * 0.8, solid: 1, style: o.style, lights });
+          const B = o.ball ? o.ball() : null;
+          if (B) {
+            // look 4: the ball of his photographs, turning as the globe would (his idea, 2026-10-03)
+            const img = B.render(Rg * dpr, -(lon0 - real * SPEED), -lat0);
+            ctx.drawImage(img, cx - Rg * 1.15, cyf - Rg * 1.15, Rg * 2.3, Rg * 2.3);
+          } else {
+            const proj = d3.geoOrthographic().clipAngle(90).precision(0.5).scale(Rg).translate([cx, cyf]).rotate([lon0 - real * SPEED, lat0]);
+            // a solid paper globe, as the small one bottom-left is (his call, 2026-10-03)
+            WC.paintGlobe(ctx, proj, { land: o.land, travel: o.travel, lw: 1.3, grain: 1, R: Rf * 0.8, solid: 1, style: o.style, lights });
+          }
           ctx.globalAlpha = 1;
         }
       } else {
@@ -2314,6 +2322,15 @@
             solid: Math.pow(1 - t, 2), style: o.style,   // the roundness flattens out with the sheet
           });
           ctx.restore();
+          // the ball of photographs (look 4) gives way to the sheet over the first quarter of the unroll
+          const B = o.ball ? o.ball() : null;
+          if (B && t < 0.25) {
+            ctx.save();
+            ctx.globalAlpha = mapA * (1 - t / 0.25);
+            const img = B.render(R * dpr, -(lon0 - (GLOBE_END + held) * SPEED), -lat0);
+            ctx.drawImage(img, cx - R * 1.15, cy - R * 1.15, R * 2.3, R * 2.3);
+            ctx.restore();
+          }
         }
         if (el >= FLY_AT) {
           const fa = 1 - easeInOut(clamp((el - CLEAR_AT) / CLEAR, 0, 1));

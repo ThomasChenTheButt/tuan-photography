@@ -111,6 +111,7 @@
   const OPENING_DEFAULT = 'classic';
   // the opening globe's look: 1 wash, 2 lit, 3 desk globe (see WC.paintGlobe); his choice pending
   const GLOBE_STYLE_DEFAULT = 1;
+  const globeStyle = clamp(parseInt(ask.get('globe'), 10) || GLOBE_STYLE_DEFAULT, 1, 4);
   // photographs on the home map (his note: the map alone "doesn't scream photography"). Two
   // trials behind one switch so they can be compared: ?photos=sea lays one large print in the
   // empty ocean and cycles through every photograph; ?photos=land turns each travelled country's
@@ -2322,6 +2323,8 @@
       },
     };
   }
+  // the photo ball (opening look 4): its prints fetched as soon as the page starts
+  if (globeStyle === 4 && WC.photoBall) { try { state.ball = WC.photoBall({ slides: S.slides, src: (sl) => imgSrc(sl, 640) }); } catch (e) { console.warn('photo ball', e); } }
   const ocean = OCEAN_PHOTO ? makeOcean() : null;
   if (ocean) app.classList.add('has-ocean');
   // the dial, bottom right: slides the strength live and remembers it on this browser (he keeps it)
@@ -2666,9 +2669,11 @@
           canvas: oc, title: opener, land: state.land110, travel: globe.o.travel, flights, home: FROM, LON0, SY, corridor,
           backdrop: ocean ? (g, el, until) => ocean.backdrop(g, el, until) : null,
           // the globe's look, three to choose from (?globe=1|2|3; 1 until he chooses)
-          style: clamp(parseInt(ask.get('globe'), 10) || GLOBE_STYLE_DEFAULT, 1, 3),
+          style: globeStyle,
+          // look 4: a ball covered in his photographs (WebGL), built once; the globe holds until it is in
+          ball: () => (globeStyle === 4 && state.ball) ? state.ball : null,
           // the globe holds its turn until the painting beneath and the photograph are in
-          ready: () => !!state.base && (!ocean || ocean.ready()),
+          ready: () => !!state.base && (!ocean || ocean.ready()) && (globeStyle !== 4 || (state.ball && state.ball.done())),
           target: () => {
             const z = state.z;
             return { scale: (z.k * state.S0 * 180) / Math.PI, translate: [z.x + (z.k * state.W) / 2, z.y + (z.k * state.H) / 2] };
