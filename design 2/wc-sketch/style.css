@@ -141,7 +141,7 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
    rather than having them written across it. */
 .corridor { position: absolute; inset: 0; z-index: 11; overflow: hidden; pointer-events: none; perspective: calc(var(--cp, 900) * 1px); perspective-origin: 50% 50%; opacity: var(--ca, 1); }
 .corridor.is-gone { opacity: 0; transition: opacity 450ms var(--soft); }
-.corridor__far { position: absolute; inset: 0; background: radial-gradient(ellipse 40% 40% at 50% 50%, oklch(20% 0.012 50 / 0.07), transparent); opacity: var(--vg, 1); }
+.corridor__far { position: absolute; inset: 0; background: radial-gradient(ellipse 40% 40% at 50% 50%, oklch(20% 0.012 50 / 0.035), transparent); opacity: var(--vg, 1); }
 .corridor__scene { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; transform: translate3d(0, 0, calc(var(--cz, 0) * 1px)); will-change: transform; }
 .corridor__plane { position: absolute; left: 0; top: 0; transform-origin: 0 0; transform-style: preserve-3d; }
 .corridor__plane--left, .corridor__plane--right { width: calc(var(--cl) * 1px); height: calc(var(--ch) * 1px); }
@@ -150,15 +150,15 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 .corridor__plane--right { transform: translate3d(calc(var(--cw) * 0.5px), calc(var(--ch) * -0.5px), 0) rotateY(-90deg) translateX(calc(var(--cl) * -1px)); }
 .corridor__plane--floor { transform: translate3d(calc(var(--cw) * -0.5px), calc(var(--ch) * 0.5px), 0) rotateX(90deg) translateY(calc(var(--cl) * -1px)); }
 .corridor__plane--ceiling { transform: translate3d(calc(var(--cw) * -0.5px), calc(var(--ch) * -0.5px), 0) rotateX(-90deg); }
-.print {
+.corridor__print {
   position: absolute; left: 0; top: 0; width: calc(var(--pw) * 1px); height: calc(var(--ph) * 1px);
   padding: 6px; background: var(--print); box-shadow: var(--lift); backface-visibility: hidden;
   transform: translate3d(calc((var(--px) + var(--dp, 0) * var(--fx, 0)) * 1px), calc((var(--py) + var(--dp, 0) * var(--fy, 0)) * 1px), calc(var(--dp, 0) * -340px)) rotate(calc(var(--pr, 0) * 1deg));
   opacity: calc(1 - var(--dp, 0)); will-change: transform, opacity;
 }
-.print img { display: block; width: 100%; height: 100%; opacity: 0; }
-.print.is-loaded img { opacity: 1; transition: opacity 300ms var(--soft); }
-@media (max-width: 47.99rem) { .print { padding: 4px; } }
+.corridor__print img { display: block; width: 100%; height: 100%; opacity: 0; }
+.corridor__print.is-loaded img { opacity: 1; transition: opacity 300ms var(--soft); }
+@media (max-width: 47.99rem) { .corridor__print { padding: 4px; } }
 .app.is-opening .pins, .app.is-opening .corner, .app.is-opening .tools, .app.is-opening .index, .app.is-opening .mast { opacity: 0; }
 .app.is-arrived .mast { transition: opacity 900ms var(--soft) 200ms; }
 /* the site's name over the opening: set above the globe, it glides to the middle as the globe
@@ -733,4 +733,51 @@ button.jplace:hover img, .jplace:focus-visible img { transform: translateY(-2px)
 
 @media (forced-colors: active) {
   .on-map, .mast, .lang__btn, .ig, .zoom__btn, .credit, .globe__cap, .key dd, .pin__label, .index__tab { -webkit-text-stroke: 0; }
+}
+
+/* ---------------------------------------------------------- photographs on the map (trials: ?photos=sea | land | both) */
+
+/* trial 1: a print laid on the page in the empty sea. Pinned to the paper (--x, --y, --w, --h
+   come from the map each frame), a hair of tilt as a print lies when set down by hand, a thin
+   white margin of its own paper, the Lift shadow. The photograph is let down and multiplied so
+   it reads as printed on the sketchbook's paper. Two layers crossfade; the frame eases between
+   one photograph's shape and the next's. The caption is a pencil note under its bottom-left
+   corner, never on the photograph. */
+@property --fw { syntax: "<number>"; inherits: false; initial-value: 1; }
+@property --fh { syntax: "<number>"; inherits: false; initial-value: 1; }
+.print {
+  position: absolute; left: 0; top: 0; z-index: 1; width: 0; height: 0;
+  transform: translate3d(var(--x, 0px), var(--y, 0px), 0) rotate(-0.6deg);
+  opacity: var(--o, 1); pointer-events: none; transition: opacity 420ms var(--ease);
+}
+.print__frame {
+  --fw: 1; --fh: 1;
+  position: absolute; left: 0; top: 0; display: block;
+  width: calc(var(--w, 300px) * var(--fw)); height: calc(var(--h, 200px) * var(--fh));
+  transform: translate(-50%, -50%);
+  pointer-events: auto; cursor: pointer; text-decoration: none; color: var(--ink-2);
+  border: 4px solid var(--print); box-shadow: var(--lift);
+  transition: --fw var(--fade, 1600ms) var(--soft), --fh var(--fade, 1600ms) var(--soft);
+}
+.print__frame:focus-visible { outline: 2px solid var(--warm-deep); outline-offset: 4px; }
+.print__img {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  opacity: 0; mix-blend-mode: multiply; transition: opacity var(--fade, 1600ms) var(--soft);
+}
+.print__img.is-on { opacity: 0.66; }
+.print__cap {
+  position: absolute; left: -4px; top: 100%; margin-top: 8px; white-space: nowrap; line-height: 1.2;
+  font-family: var(--serif); font-size: 0.84rem; color: var(--ink-2);
+}
+.print__cap i { margin-left: 0.55em; font-family: var(--sans); font-style: normal; font-size: 0.64rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; }
+:lang(zh-Hant) .print__cap b { font-family: var(--serif-zh); font-weight: 500; letter-spacing: 0.08em; }
+:lang(zh-Hant) .print__cap i { font-size: 0.72rem; letter-spacing: 0.2em; text-transform: none; }
+/* it steps back with the books: while the opening plays, during the dive, and under the cover */
+.app.is-opening .print, .app.is-diving .print, .app.is-soft .print { opacity: 0; }
+.app.is-diving .print__frame, .app.is-soft .print__frame, .app.is-opening .print__frame { pointer-events: none; }
+.app.is-arrived .print { transition: opacity 900ms var(--soft) 200ms; }
+@media (max-width: 47.99rem) {
+  .print__frame { border-width: 3px; }
+  .print__cap { left: -3px; margin-top: 6px; font-size: 0.76rem; }
+  .print__cap i { font-size: 0.58rem; }
 }

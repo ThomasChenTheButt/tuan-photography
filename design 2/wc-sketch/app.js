@@ -106,6 +106,15 @@
   // of his prints first). His call, after comparing. In the address, ?opening plays the classic
   // and ?opening=corridor the trial, every time
   const OPENING_DEFAULT = 'classic';
+  // photographs on the home map (his note: the map alone "doesn't scream photography"). Two
+  // trials behind one switch so they can be compared: ?photos=sea lays one large print in the
+  // empty ocean and cycles through every photograph; ?photos=land turns each travelled country's
+  // wash into its cover photograph; ?photos=both does both; ?photos=none neither.
+  // MAP_PHOTOS_DEFAULT is what the page does with no switch in the address: his call
+  const MAP_PHOTOS_DEFAULT = 'none';
+  const mapPhotos = ['sea', 'land', 'both', 'none'].includes(ask.get('photos')) ? ask.get('photos') : MAP_PHOTOS_DEFAULT;
+  const SEA_PRINT = mapPhotos === 'sea' || mapPhotos === 'both';
+  const LAND_PHOTOS = mapPhotos === 'land' || mapPhotos === 'both';
   const t = (k) => (T[lang][k] !== undefined ? T[lang][k] : (S.i18n[lang][k] !== undefined ? S.i18n[lang][k] : k));
   const L = (o) => clean(o ? (typeof o === 'string' ? o : o[lang] !== undefined ? o[lang] : o.en) : '');
   const cityName = (c) => (typeof c === 'object' && c ? L(c) : clean(c || ''));
@@ -291,6 +300,7 @@
     const job = { r: R0, u0: -180, v0: -LAT_N, w: 360 * R0, h: (LAT_N - LAT_S) * R0 };
     try {
       const c = await WC.paint(job, paintEnv);
+      landPhotos(c, job);
       state.base = { canvas: c, ...job, b: 0, ready: performance.now() };
       app.classList.add('is-painted');
       queueDraw();
@@ -329,6 +339,7 @@
     if (r >= LAKES_R && !state.lakesX) moreLakes();
     WC.paint(job, paintEnv).then((c) => {
       if (state.job === job) state.job = null;
+      landPhotos(c, job);
       featherEdges(c);
       state.regions.push({ canvas: c, b, r, u0: job.u0, v0: job.v0, w: job.w, h: job.h, ready: performance.now(), used: performance.now() });
       // keep a few; drop the least recently used
@@ -567,6 +578,7 @@
       ctx.restore();
     }
     if (!diving) for (const b of pinList) taken.push(...b.boxes);
+    if (seaPrint) seaPrint.taken(taken);
 
     // lettering: the oceans in italic, then every other country by importance, never on each
     // other and never on his books or their names
@@ -611,6 +623,7 @@
       for (const id of state.labels.keys()) if (!placed.has(id)) state.labels.delete(id);
     }
 
+    if (seaPrint) seaPrint.frame();
     placePen();
     if (again) state.settle = Math.max(state.settle, 1);
     if (state.settle > 0) { state.settle -= 1; queueDraw(); }
@@ -945,6 +958,7 @@
     $$('.group.is-awake', indexBody).forEach((g) => { if (g.dataset.key !== key) g.classList.remove('is-awake'); });
     const g = key && indexBody.querySelector(`.group[data-key="${key}"]`);
     if (g) g.classList.add('is-awake');
+    if (seaPrint) seaPrint.hover(next.slide || (pin && coverFor(pin.book)));
     // a photograph picked in the index brings its place into view on the map
     if (next.from === 'index' && next.slide) {
       clearTimeout(easeTimer);
@@ -957,6 +971,7 @@
     pinList.forEach((q) => q.el.classList.remove('awake'));
     active = null;
     clearTimeout(easeTimer);
+    if (seaPrint) seaPrint.unhover();
   }
   function clearActiveSoon() { clearTimeout(clearTimer); clearTimer = setTimeout(clearActive, 160); }
   function penRing(d, ll) {
@@ -2007,6 +2022,252 @@
     if (!page) app.inert = false;
     if (!page && opts.focus !== false) globeBtn.focus({ preventScroll: true });
   }
+
+  /* ------------------------------------------------------------ photographs on the map: two trials */
+
+  // trial 2 (?photos=land): each travelled country wears its cover photograph inside its outline,
+  // painted into the offscreen textures (paint.js), so panning costs nothing more. The United
+  // States wears New York's, its first book's; a country with no cover keeps the plain wash
+  const landPhotoList = () => {
+    const out = [];
+    for (const c of S.countries) {
+      const f = state.feats[c.id];
+      const b = f && booksOf(c.id).find((q) => q.cover || q.photo);
+      const s = b && S.slides[b.cover || b.photo];
+      if (!s) continue;
+      out.push({ feature: f, src: (px) => imgSrc(s, px * 1.1 <= 640 ? 640 : px * 1.1 <= 1280 ? 1280 : undefined) });
+    }
+    return out;
+  };
+  function landPhotos(c, job) {
+    if (!LAND_PHOTOS || !state.feats) return;
+    // faint at the world view (0.24), rising to 0.4 by the country frame; lifted toward the paper so
+    // a night photograph tints its country rather than sinking it
+    const alpha = 0.24 + 0.16 * clamp((job.r - 11) / 21, 0, 1);
+    WC.paintPhotos(c, job, paintEnv, landPhotoList(), { alpha, inset: job.b ? 36 : 0, filter: 'brightness(1.3) contrast(0.85) saturate(1.15)', onEach: queueDraw });
+  }
+
+  // trial 1 (?photos=sea): one large print laid on the page in the empty ocean, cycling slowly
+  // through every photograph. Hovering a book shows that place's cover there instead; clicking
+  // the print dives into its place with it as the cover. It is pinned to the paper, so it pans
+  // and zooms with the map, and it steps aside (fades out) past a modest zoom. Its spot is
+  // measured, not fixed: the emptiest stretch of the South Pacific or the South Atlantic (on a
+  // phone, the Pacific below Asia) at this window, clear of land, books, names and the margins'
+  // words. Reduced motion: one photograph, chosen once, and no crossfade.
+  function makeSeaPrint() {
+    const HOLD = 9000, FADE = 1600, HOVER_FADE = 700;
+    const el = document.createElement('div');
+    el.className = 'print';
+    el.hidden = true;
+    el.innerHTML = '<a class="print__frame" href="#"><img class="print__img" alt="" decoding="async"><img class="print__img" alt="" decoding="async"><span class="print__cap"><b></b><i></i></span></a>';
+    mapEl.insertBefore(el, mapEl.querySelector('.map__tooth'));
+    const frame = el.firstElementChild;
+    const imgs = Array.from(frame.querySelectorAll('img'));
+    const capB = frame.querySelector('b'), capI = frame.querySelector('i');
+    const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+    // the order: shuffled once a visit and dealt round the places, so one place never runs on
+    const byPlace = new Map();
+    for (const id of indexOrder) {
+      const b = bookOfSlide(id);
+      const k = b ? b.key : S.slides[id].country;
+      if (!byPlace.has(k)) byPlace.set(k, []);
+      byPlace.get(k).push(id);
+    }
+    const queues = shuffle([...byPlace.values()].map(shuffle));
+    const order = [];
+    while (queues.some((q) => q.length)) for (const q of queues) if (q.length) order.push(q.shift());
+    const pr = { on: 0, i: 0, cur: null, want: null, hover: null, timer: 0, anchor: null, box: null, homeK: 1, placedFor: '', begun: false, capLang: '' };
+
+    // where it lies: measured in screen space at the whole-map view, on a quarter-size mask of
+    // everything in the way (the land, the books and their names with room to be pushed, the
+    // ocean names, the margins' words), with a summed-area table so every spot is one lookup
+    function place() {
+      const z = homeTransform();
+      const p = pxPerDeg(z);
+      const { W, H } = state;
+      const X0 = z.x + (z.k * W) / 2, Y0 = z.y + (z.k * H) / 2;
+      const Q = 4, w = Math.ceil(W / Q), h = Math.ceil(H / Q);
+      const c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      const g = c.getContext('2d', { willReadFrequently: true });
+      g.fillStyle = '#000';
+      g.setTransform(p / Q, 0, 0, p / Q, X0 / Q, Y0 / Q);
+      g.fill(state.landFill110);
+      g.setTransform(1, 0, 0, 1, 0, 0);
+      const rect = (x0, y0, x1, y1) => g.fillRect(x0 / Q, y0 / Q, (x1 - x0) / Q, (y1 - y0) / Q);
+      const small = narrow.matches;
+      const s = Math.min(small ? 0.32 : 0.46, (small ? 0.17 : 0.25) * Math.pow(Math.max(0.5, p / 5.4), 0.3));
+      const bw = 192 * s, bh = 272 * s, lh = small ? 15 : 18, room = small ? 14 : 22;
+      for (const q of pinList) {
+        const [ax, ay] = P(q.ll, z);
+        const hw = Math.max(bw, q.lw) / 2 + room;
+        rect(ax - hw, ay - bh - room, ax + hw, ay + 8 + lh + room);
+      }
+      // (the ocean names are not in the way: they yield to the print as they yield to a book)
+      const e = small ? 14 : 22;
+      rect(0, 0, 260, e + 40); rect(W - 340, 0, W, e + 44);
+      if (small) { rect(0, H - 150, 130, H); rect(W - 120, H - 130, W, H); rect(0, H - 48, W, H); }
+      else { rect(0, H - 240, 208, H); rect(208, H - 56, 330, H); rect(W - 440, H - 64, W, H); rect(W - 56, 0, W, H); }
+      const d = g.getImageData(0, 0, w, h).data;
+      const sat = new Int32Array((w + 1) * (h + 1));
+      for (let y = 1; y <= h; y++) {
+        let row = 0;
+        for (let x = 1; x <= w; x++) { row += d[((y - 1) * w + x - 1) * 4 + 3] > 0 ? 1 : 0; sat[y * (w + 1) + x] = sat[(y - 1) * (w + 1) + x] + row; }
+      }
+      const sum = (x0, y0, x1, y1) => {
+        x0 = clamp(Math.floor(x0 / Q), 0, w); y0 = clamp(Math.floor(y0 / Q), 0, h); x1 = clamp(Math.ceil(x1 / Q), 0, w); y1 = clamp(Math.ceil(y1 / Q), 0, h);
+        if (x1 <= x0 || y1 <= y0) return 1;
+        return sat[y1 * (w + 1) + x1] - sat[y0 * (w + 1) + x1] - sat[y1 * (w + 1) + x0] + sat[y0 * (w + 1) + x0];
+      };
+      // the sea to try: the Pacific between Hawaii and the Americas south of the equator, and the
+      // South Atlantic (a phone: the Pacific east of the Philippines, then beyond New Zealand)
+      const regions = small
+        ? [{ lat: [30, -24], lon: [118, 180] }, { lat: [-16, -54], lon: [-180, -108] }]
+        : [{ lat: [-3, -52], lon: [-172, -76] }, { lat: [-3, -50], lon: [-44, 12] }];
+      // the envelope every photograph is fitted into: as wide as asked (24 to 30% of the window),
+      // or narrower where the sea is, and lying, square or upright as the clear water allows; the
+      // largest that sits clear wins, a bigger print before a wider margin
+      const fracs = small ? [0.55, 0.48, 0.42, 0.36] : [0.3, 0.27, 0.24, 0.21, 0.18, 0.15];
+      const shapes = [];
+      for (const fr of fracs) for (const ratio of [0.68, 1, 1.3]) shapes.push({ pw: W * fr, ph: W * fr * ratio });
+      shapes.sort((a, b) => b.pw * b.ph - a.pw * a.ph);
+      const MARGINS = [80, 56, 40, 28, 16, 8, 6];
+      let best = null;
+      for (const { pw, ph } of shapes) {
+        for (const rg of regions) {
+          let top = -1;
+          const found = [];
+          for (let lat = rg.lat[0]; lat >= rg.lat[1]; lat -= 1) {
+            for (let lon = rg.lon[0]; lon <= rg.lon[1]; lon += 1) {
+              const [x, y] = P([lat, lon], z);
+              const x0 = x - pw / 2, y0 = y - ph / 2, x1 = x + pw / 2, y1 = y + ph / 2 + 24;
+              if (x0 < e + 6 || y0 < e + 6 || x1 > W - e - 6 || y1 > H - e - 6) continue;
+              let m = -1;
+              for (const mm of MARGINS) if (sum(x0 - mm, y0 - mm, x1 + mm, y1 + mm) === 0) { m = mm; break; }
+              if (m < 0) continue;
+              if (m > top) { top = m; found.length = 0; }
+              if (m === top) found.push([lat, lon, x, y]);
+            }
+          }
+          if (top < 0) continue;
+          // of the clearest spots, the one in the middle of them: the print sits in the middle of the empty sea
+          const cx = found.reduce((a, q) => a + q[2], 0) / found.length, cy = found.reduce((a, q) => a + q[3], 0) / found.length;
+          found.sort((a, b) => Math.hypot(a[2] - cx, a[3] - cy) - Math.hypot(b[2] - cx, b[3] - cy));
+          if (!best || top > best.m) best = { m: top, ll: [found[0][0], found[0][1]], pw, ph };
+        }
+        if (best) break;
+      }
+      pr.best = best; pr.mask = c;
+      if (!best) { pr.anchor = null; return; }
+      pr.anchor = best.ll;
+      pr.box = [best.pw / p, best.ph / p];
+      pr.homeK = z.k;
+    }
+
+    const sizeFor = () => ((pr.box ? pr.box[0] * pxPerDeg() : 400) * state.dpr > 700 ? 1280 : 640);
+    const fit = (s) => { const ar = s.w / s.h, br = pr.box[0] / pr.box[1]; return ar >= br ? [1, br / ar] : [ar / br, 1]; };
+    function caption(id) {
+      const s = S.slides[id], b = bookOfSlide(id);
+      capB.textContent = L(s.place);
+      capI.textContent = b ? L(countries[b.country].name) : '';
+      pr.capLang = lang;
+    }
+    function preload() {
+      if (reduce.matches || order.length < 2) return;
+      const im = new Image();
+      im.src = imgSrc(S.slides[order[(pr.i + 1) % order.length]], sizeFor());
+    }
+    function show(id, fade) {
+      const s = S.slides[id];
+      if (!s || !pr.box) return;
+      pr.want = id;
+      const nxt = imgs[1 - pr.on];
+      const src = imgSrc(s, sizeFor());
+      if (nxt.dataset.src !== src) { nxt.dataset.src = src; nxt.src = src; }
+      const done = () => {
+        if (pr.want !== id) return;
+        pr.on = 1 - pr.on; pr.cur = id;
+        frame.style.setProperty('--fade', `${reduce.matches ? 0 : fade}ms`);
+        const [fw, fh] = fit(s);
+        frame.style.setProperty('--fw', fw.toFixed(4));
+        frame.style.setProperty('--fh', fh.toFixed(4));
+        imgs[pr.on].classList.add('is-on');
+        imgs[1 - pr.on].classList.remove('is-on');
+        const b = bookOfSlide(id);
+        frame.setAttribute('href', b ? `#${b.view}` : '#');
+        if (fade > 0) setTimeout(() => { if (pr.cur === id) caption(id); }, fade / 2); else caption(id);
+        preload();
+      };
+      (nxt.decode ? nxt.decode() : Promise.resolve()).then(done, done);
+    }
+    function schedule() {
+      clearTimeout(pr.timer);
+      if (reduce.matches || order.length < 2) return;
+      pr.timer = setTimeout(() => {
+        // it waits while a hand is on a book, while it is out of sight, and while a page is open
+        if (pr.hover || el.hidden || document.hidden || page || flightsOpen) { schedule(); return; }
+        pr.i = (pr.i + 1) % order.length;
+        show(order[pr.i], FADE);
+        schedule();
+      }, HOLD);
+    }
+    function begin() {
+      pr.begun = true;
+      if (!order.length) return;
+      show(order[0], 0);
+      schedule();
+    }
+    frame.addEventListener('click', (e) => {
+      e.preventDefault();
+      const b = pr.cur && bookOfSlide(pr.cur);
+      if (b) go(b.view, pr.cur);
+    });
+    document.addEventListener('visibilitychange', () => { if (!document.hidden && pr.begun) schedule(); });
+
+    return {
+      pr,
+      // the room it takes on screen, kept clear of lettering (the ocean names step aside)
+      taken(list) {
+        if (el.hidden || !pr.anchor) return;
+        const p = pxPerDeg();
+        const [x, y] = P(pr.anchor);
+        const w = pr.box[0] * p, h = pr.box[1] * p;
+        list.push([x - w / 2 - 8, y - h / 2 - 8, x + w / 2 + 8, y + h / 2 + 30]);
+      },
+      // once a frame, from draw(): placed when the window or the language changes, moved with the
+      // map, and hidden past a modest zoom or when it has left the window
+      frame() {
+        const key = `${state.W}x${state.H}|${lang}|${narrow.matches}`;
+        if (pr.placedFor !== key && state.landFill110 && pinList.length) { pr.placedFor = key; place(); }
+        if (!pr.anchor) { el.hidden = true; return; }
+        const p = pxPerDeg();
+        const [x, y] = P(pr.anchor);
+        const w = pr.box[0] * p, h = pr.box[1] * p;
+        const zoomA = 1 - clamp((state.z.k / pr.homeK - 1.9) / 0.7, 0, 1);
+        if (zoomA <= 0 || x + w < -20 || x - w > state.W + 20 || y + h < -20 || y - h > state.H + 20) { el.hidden = true; return; }
+        if (el.hidden) { el.hidden = false; if (!pr.begun) begin(); }
+        if (pr.cur && pr.capLang !== lang) caption(pr.cur);
+        el.style.setProperty('--x', `${x.toFixed(1)}px`);
+        el.style.setProperty('--y', `${y.toFixed(1)}px`);
+        el.style.setProperty('--w', `${w.toFixed(1)}px`);
+        el.style.setProperty('--h', `${h.toFixed(1)}px`);
+        el.style.setProperty('--o', zoomA.toFixed(3));
+      },
+      // a hand on a book (or one of its photographs): that photograph takes the frame
+      hover(id) {
+        if (!id || !S.slides[id] || el.hidden || !pr.begun) return;
+        pr.hover = id;
+        if (pr.cur !== id) show(id, HOVER_FADE);
+      },
+      unhover() {
+        if (!pr.hover) return;
+        pr.hover = null;
+        if (pr.cur !== order[pr.i]) show(order[pr.i], HOVER_FADE);
+      },
+    };
+  }
+  const seaPrint = SEA_PRINT ? makeSeaPrint() : null;
+  WC.seaPrint = seaPrint; // for inspection in the console
 
   /* ------------------------------------------------------------ start */
 

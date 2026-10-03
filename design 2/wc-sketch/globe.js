@@ -1644,27 +1644,30 @@
     const root = o.root;
     const W = window.innerWidth, H = window.innerHeight;
     const phone = !!o.narrow;
-    const N = phone ? 16 : 32, PER = N / 4;
-    // the eye's distance from the page, the corridor's length, and how far its far end still is
-    // when the glide ends (so the last prints frame the globe before they fall away)
-    const P = phone ? 640 : 900, L = phone ? 2600 : 3600, ZF = phone ? 420 : 700;
+    // the eye's distance from the page, the corridor's length, where the camera starts (already
+    // some way in, so the far end is never a pinhole) and how far its far end still is when the
+    // glide ends (so the last prints frame the globe before they fall away)
+    const P = phone ? 640 : 900, L = phone ? 3000 : 4800, ZF = phone ? 420 : 700, CZ0 = phone ? 800 : 1000;
     const D = L - ZF;
-    const hw = W * 0.62, hh = H * 0.62;
+    const hw = W * 0.62, hh = H * (phone ? 0.5 : 0.62);
     const GLIDE = 3000, FALL_AT = 2800, FALL = CORRIDOR - FALL_AT;
     const A = 3.2;
     const glide = (el) => { const u = clamp(el / GLIDE, 0, 1); return (1 - Math.exp(-A * u)) / (1 - Math.exp(-A)); };
-    const cz = (el) => D * glide(el);
+    const cz = (el) => CZ0 + (D - CZ0) * glide(el);
     // how large the far end looks now, against how it looks when the glide ends
     const far = (el) => (P + ZF) / (P + L - cz(el));
 
-    // the prints: a spread across his countries, taken in turn
-    const byCountry = new Map();
-    for (const s of Object.values(o.slides)) { if (!byCountry.has(s.country)) byCountry.set(s.country, []); byCountry.get(s.country).push(s); }
-    const countries = [...byCountry.keys()].sort();
-    const picked = [];
-    for (let round = 0; picked.length < N && round < 12; round++) {
-      for (const c of countries) { const s = byCountry.get(c)[round]; if (s && picked.length < N) picked.push(s); }
-    }
+    // every photograph, in a fixed shuffle, taken round and round (so each repeats only once the
+    // whole set has hung). The floor and ceiling take landscapes only: seen at a grazing angle, a
+    // print's depth is squashed, and a landscape keeps its short side that way
+    const all = Object.values(o.slides).filter((s) => s.w && s.h);
+    let seed = 7;
+    const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    for (let i = all.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [all[i], all[j]] = [all[j], all[i]]; }
+    const lands = all.filter((s) => s.w >= s.h);
+    let ia = 0, il = 0;
+    const nextAny = () => all[ia++ % all.length];
+    const nextLand = () => lands[il++ % lands.length];
 
     root.innerHTML = '';
     const farEl = document.createElement('div'); farEl.className = 'corridor__far';
@@ -1673,52 +1676,70 @@
     root.append(farEl, scene);
     const rs = root.style;
     rs.setProperty('--cp', P); rs.setProperty('--cl', L); rs.setProperty('--cw', (2 * hw).toFixed(1)); rs.setProperty('--ch', (2 * hh).toFixed(1));
-    rs.setProperty('--cz', 0); rs.setProperty('--ca', 0); rs.setProperty('--dp', 0); rs.setProperty('--vg', 1);
+    rs.setProperty('--cz', CZ0); rs.setProperty('--ca', 0); rs.setProperty('--dp', 0); rs.setProperty('--vg', 1);
 
-    // print i hangs on plane i % 4 (left, right, floor, ceiling), in ring floor(i / 4) from the near
-    // end; the planes are staggered a little so the rings never line up
-    const MAT = phone ? 4 : 6;
-    const dLast = L - 70, d0 = phone ? 380 : 410;
-    const pitch = (dLast - d0) / (PER - 1);
-    const stagger = [0, 0.5, 0.25, 0.75];
-    const imgs = [];
-    // the floor and ceiling are seen at a grazing angle, which squashes a print's depth: they
-    // take landscapes only, whose short side runs that way; the walls take the rest
-    const used = new Set();
-    const take = (pred) => { const s = picked.find((q) => !used.has(q) && (!pred || pred(q))) || picked.find((q) => !used.has(q)); used.add(s); return s; };
-    for (let i = 0; i < picked.length; i++) {
-      const p = i % 4, k = Math.floor(i / 4);
-      const s = take(p >= 2 ? (q) => q.w >= q.h : null);
-      const d = dLast - (PER - 1 - k) * pitch - stagger[p] * (pitch / 4);
-      const long = (phone ? 185 : 250) + ((i * 37) % 4) * (phone ? 12 : 20);
-      const land = s.w >= s.h;
-      const ch = land ? (long * s.h) / s.w : long * 0.92, cw = land ? long : (long * 0.92 * s.w) / s.h;
-      const pw = cw + 2 * MAT, ph = ch + 2 * MAT;
-      const sw = (((i * 53) % 7) - 3) / 3;
-      const side = (k + (p === 3 ? 1 : 0)) % 2 ? -1 : 1;
-      let px, py, fx = 0, fy = 0;
-      if (p < 2) {
-        // on a wall: local x runs along the corridor, local y is the height
-        const vc = hh + side * 0.14 * hh + sw * 0.03 * hh;
-        px = (p === 0 ? d : L - d) - pw / 2; py = vc - ph / 2; fy = 70;
-      } else {
-        // on the floor or ceiling: local x runs across, local y along the corridor. The ceiling's
-        // prints keep to its edges, so none passes across the name standing at the far end
-        const uc = hw + side * (p === 3 ? 0.7 : 0.55) * hw + sw * 0.04 * hw;
-        px = uc - pw / 2; py = (p === 2 ? L - d : d) - ph / 2; fx = side * 70;
+    // the hang, like a pinned wall: down each wall, columns of prints sharing one width and stacked
+    // to fill the height; across the floor and ceiling, rows of prints sharing one height and laid
+    // to fill the width. Thin gutters between, a hair of jitter so no two columns line up
+    const MAT = phone ? 4 : 6, GUT = phone ? 14 : 22, EDGE = phone ? 24 : 36, SMAX = phone ? 1.25 : 1.18;
+    const dNear = CZ0 + 180, dFar = L - 70;
+    const items = [];
+    const wallR = phone ? 3 : 4, wallW = phone ? 280 : 340;
+    for (const p of [0, 1]) {
+      let d = dNear + (p ? 170 : 0);
+      for (;;) {
+        // at most two portraits in a column, or it would shrink to nothing
+        const col = []; let ports = 0;
+        for (let r = 0; r < wallR; r++) { let s = nextAny(); if (s.h > s.w) { if (ports >= 2) s = nextLand(); else ports++; } col.push(s); }
+        const avail = 2 * hh - 2 * EDGE - (wallR - 1) * GUT;
+        const sumR = col.reduce((a, s) => a + s.h / s.w, 0);
+        const w = Math.min(wallW * SMAX, 2 * MAT + (avail - wallR * 2 * MAT) / sumR);
+        if (d + w / 2 > dFar) break;
+        const hs = col.map((s) => ((w - 2 * MAT) * s.h) / s.w + 2 * MAT);
+        const gap = GUT + (avail - hs.reduce((a, b) => a + b, 0)) / (wallR - 1);
+        let y = EDGE + (rnd() - 0.5) * 16;
+        col.forEach((s, r) => { items.push({ p, d, c: y + hs[r] / 2, w, h: hs[r], s }); y += hs[r] + gap; });
+        d += w + GUT;
       }
+    }
+    const fcN = phone ? 1 : 3, fcH = phone ? 280 : 300;
+    for (const p of [2, 3]) {
+      let d = dNear + (p === 3 ? 150 : 60);
+      for (;;) {
+        const row = []; for (let r = 0; r < fcN; r++) row.push(nextLand());
+        const avail = 2 * hw - 2 * EDGE - (fcN - 1) * GUT;
+        const sumQ = row.reduce((a, s) => a + s.w / s.h, 0);
+        const h = Math.min(fcH * SMAX, 2 * MAT + (avail - fcN * 2 * MAT) / sumQ);
+        if (d + h / 2 > dFar) break;
+        const ws = row.map((s) => ((h - 2 * MAT) * s.w) / s.h + 2 * MAT);
+        const used = ws.reduce((a, b) => a + b, 0);
+        const gap = fcN > 1 ? GUT + (avail - used) / (fcN - 1) : 0;
+        let x = EDGE + (fcN > 1 ? 0 : (avail - used) / 2) + (rnd() - 0.5) * 16;
+        row.forEach((s, r) => { items.push({ p, d, c: x + ws[r] / 2, w: ws[r], h, s }); x += ws[r] + gap; });
+        d += h + GUT;
+      }
+    }
+
+    const imgs = [];
+    items.forEach((it, i) => {
+      const { p, d, c, w, h, s } = it;
+      // a wall's local x runs along the corridor and its local y is the height; the floor's and
+      // ceiling's local x runs across and local y along the corridor
+      const px = p === 0 ? d - w / 2 : p === 1 ? L - d - w / 2 : c - w / 2;
+      const py = p < 2 ? c - h / 2 : p === 2 ? L - d - h / 2 : d - h / 2;
+      const fx = p < 2 ? 0 : c < hw ? -70 : 70, fy = p < 2 ? 70 : 0;
       const el = document.createElement('div');
-      el.className = 'print';
+      el.className = 'corridor__print';
       const st = el.style;
       st.setProperty('--px', px.toFixed(1)); st.setProperty('--py', py.toFixed(1));
-      st.setProperty('--pw', pw.toFixed(1)); st.setProperty('--ph', ph.toFixed(1));
-      st.setProperty('--pr', (sw * 1.6).toFixed(2)); st.setProperty('--fx', fx); st.setProperty('--fy', fy);
+      st.setProperty('--pw', w.toFixed(1)); st.setProperty('--ph', h.toFixed(1));
+      st.setProperty('--pr', ((((i * 53) % 7) - 3) * 0.4).toFixed(2)); st.setProperty('--fx', fx); st.setProperty('--fy', fy);
       const im = new Image();
       im.decoding = 'async'; im.alt = ''; im.width = s.w; im.height = s.h; im.src = o.src(s);
       el.appendChild(im);
       planes[p].appendChild(el);
       imgs.push(im);
-    }
+    });
     root.hidden = false;
     // the prints are decoded before the opening starts, but it never waits past a moment and a half;
     // a print still on its way shows its mat
@@ -1730,6 +1751,9 @@
     const clear = () => { hide(); root.classList.remove('is-gone'); root.innerHTML = ''; };
     return {
       ready, far, length: CORRIDOR, trim: CORRIDOR_TRIM,
+      // on a phone the far end is narrower than the name would be: the name is held a fifth
+      // smaller down the corridor and grows to its size as the last prints fall away
+      titleK: (el) => (phone ? 0.8 + 0.2 * easeInOut(clamp((el - 2600) / 700, 0, 1)) : 1),
       frame(el) {
         if (over) return;
         rs.setProperty('--cz', cz(el).toFixed(2));
@@ -1928,7 +1952,7 @@
       const out = easeInOut(clamp((el - CLEAR_AT) / CLEAR, 0, 1));
       // down the corridor the name stands at the far end with the globe, both scaled about the
       // middle of the window, and grows as the camera nears
-      const far = corr && el < PRE ? corr.far(el) : 1;
+      const far = corr && el < PRE ? corr.far(el) * corr.titleK(el) : 1;
       const st = title.style;
       st.setProperty('--oy', `${(yTop * far * (1 - gl) + 14 * (1 - inA)).toFixed(2)}px`);
       st.setProperty('--os', (far * (1 + 0.14 * gl)).toFixed(4));

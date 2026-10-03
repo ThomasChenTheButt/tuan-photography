@@ -461,4 +461,83 @@
     job.ms = Math.round(performance.now() - t0);
     return out;
   };
+
+  /* ------------------------------------------------------------ the land as photographs (a trial: ?photos=land) */
+
+  // each travelled country's wash becomes its cover photograph, laid inside the country's outline
+  // and multiplied over the wash it already has, so the pen lines, hatching and lettering still
+  // win. Faint at the world view, a little stronger close in. The bitmaps are decoded off the
+  // main thread and kept by file: a painting gets its plain wash first and each photograph as it
+  // arrives, so no frame waits on a download.
+  const photoCache = new Map();
+  const photoBitmap = (src) => {
+    let e = photoCache.get(src);
+    if (!e) {
+      e = { bm: null, p: null };
+      const decode = window.createImageBitmap
+        ? fetch(src).then((r) => r.blob()).then((b) => createImageBitmap(b))
+        : new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = src; });
+      e.p = decode.then((bm) => { e.bm = bm; return bm; }).catch(() => null);
+      photoCache.set(src, e);
+    }
+    return e;
+  };
+
+  /*
+    canvas: a finished painting; job: as for WC.paint (r, u0, v0, w, h); env: { LON0 };
+    list: [{ feature: GeoJSON, src: (framePx) -> url }]; o: { alpha, inset, onEach }.
+    What is already decoded is drawn now; the rest is drawn as it arrives, with o.onEach called
+    each time. The photograph fills the frame of the country's main body (its larger polygons near
+    the largest, so an outlying island or the Aleutians never pull the frame out to sea), covering
+    it the way object-fit: cover does, and is clipped to the whole outline. `inset` keeps it off a
+    regional painting's feathered edge.
+  */
+  WC.paintPhotos = (canvas, job, env, list, o = {}) => {
+    const { r, u0, v0, w, h } = job;
+    const inset = o.inset || 0;
+    const alpha = o.alpha == null ? 0.25 : o.alpha;
+    const projection = () => d3.geoEquirectangular().rotate([-env.LON0, 0]).precision(0.5).scale((r * 180) / Math.PI).translate([-u0 * r, -v0 * r]);
+    const proj = projection();
+    const clipped = projection().clipExtent([[-20, -20], [w + 20, h + 20]]);
+    const g = canvas.getContext('2d');
+    const polyArea = (p) => d3.geoArea({ type: 'Polygon', coordinates: p });
+    const waits = [];
+    for (const it of list) {
+      const f = it.feature;
+      const polys = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
+      const areas = polys.map(polyArea);
+      const big = Math.max(...areas);
+      const c0 = d3.geoCentroid({ type: 'Polygon', coordinates: polys[areas.indexOf(big)] });
+      const main = polys.filter((p, i) => {
+        if (areas[i] < big * 0.12) return false;
+        const c = d3.geoCentroid({ type: 'Polygon', coordinates: p });
+        let dl = Math.abs(c[0] - c0[0]); if (dl > 180) dl = 360 - dl;
+        return dl < 25;
+      });
+      const bb = d3.geoPath(proj).bounds({ type: 'MultiPolygon', coordinates: main });
+      const x0 = bb[0][0], y0 = bb[0][1], bw = bb[1][0] - x0, bh = bb[1][1] - y0;
+      if (!(bw > 0 && bh > 0) || x0 > w - inset || y0 > h - inset || x0 + bw < inset || y0 + bh < inset) continue;
+      const draw = (bm) => {
+        if (!bm) return;
+        const s = Math.max(bw / bm.width, bh / bm.height);
+        const dw = bm.width * s, dh = bm.height * s;
+        const clip = new Path2D();
+        d3.geoPath(clipped, clip)(f);
+        g.save();
+        g.beginPath(); g.rect(inset, inset, w - inset * 2, h - inset * 2); g.clip();
+        g.clip(clip);
+        g.globalCompositeOperation = 'multiply';
+        g.globalAlpha = alpha;
+        g.imageSmoothingQuality = 'high';
+        // let down toward the paper, so a night photograph does not sink the country into shadow
+        g.filter = o.filter || 'none';
+        g.drawImage(bm, x0 + (bw - dw) / 2, y0 + (bh - dh) / 2, dw, dh);
+        g.restore();
+      };
+      const e = photoBitmap(it.src(bw));
+      if (e.bm) draw(e.bm);
+      else waits.push(e.p.then((bm) => { if (bm && !job.cancelled) { draw(bm); if (o.onEach) o.onEach(); } }));
+    }
+    return Promise.all(waits);
+  };
 })();
