@@ -1889,8 +1889,9 @@
          onClear(), onDone() }
     o.slide(live): the scroll trial (after noomoagency.com, his find, 2026-10-03). Called every
       frame, it returns how far he has scrolled (0 to 1). Once the photograph is up (live), the
-      scroll is the opening's clock: the map develops, the flights draw and the name fades exactly
-      as below, but as far as he has scrolled, forward or back, not on time.
+      scroll is the clock of the map's developing: as far as he has scrolled, forward or back, not
+      on time. Once the map is all there, the clock runs by itself again: the flights draw and the
+      name fades as below (his call: the flights fly on their own, not by the scroll).
     returns { skip(), done, elapsed, end, sliding }
   */
   const ARRIVE = 2500, REVEAL = 1400, CLEAR = 1200, SKIP = 450;
@@ -2047,7 +2048,8 @@
     const PRE = corr ? corr.length : 0;
     const scroll = !!o.slide;
     const ARRIVE_END = PRE + (corr ? ARRIVE - corr.trim : scroll ? 1500 : ARRIVE);
-    const FLY_AT = ARRIVE_END + REVEAL * 0.5;
+    // scrolled, the flights leave once the map is all there, not halfway through its developing
+    const FLY_AT = ARRIVE_END + (scroll ? REVEAL : REVEAL * 0.5);
     const TSHIFT = corr ? 500 : 0;
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     let W = 0, H = 0, titleH = 0;
@@ -2220,7 +2222,7 @@
     }
 
     const start = performance.now();
-    let raf = 0, done = false, el = 0, painting = false, held = 0, pulled = scroll ? 0 : 1;
+    let raf = 0, done = false, el = 0, painting = false, held = 0, pulled = scroll ? 0 : 1, released = !scroll;
     function frame(now) {
       if (done) return;
       // the photograph stands until the map beneath is painted and its own copy is in, so the
@@ -2230,10 +2232,12 @@
       el = now - start - held;
       const wait = o.ready && !o.ready() && held < 8000;
       if (el >= ARRIVE_END && wait) { held += el - ARRIVE_END; el = ARRIVE_END; }
-      if (scroll) {
+      if (scroll && !released) {
         const live = el >= ARRIVE_END;
         pulled = o.slide(live);
-        if (live) el = ARRIVE_END + pulled * (END - ARRIVE_END);
+        if (live) el = ARRIVE_END + pulled * REVEAL;
+        // the map all there: the clock is handed back to time, from this moment
+        if (live && pulled >= 1) { released = true; held = now - start - el; }
       }
       if (!painting) { painting = true; c.classList.add('is-painting'); }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
