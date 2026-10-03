@@ -643,6 +643,17 @@
 
   const zoom = d3.zoom()
     .scaleExtent([1, 160])
+    // d3's own constraint, except that a map shorter than the window sits on the window's
+    // bottom edge, not in the middle: Antarctica always covers the foot of the window and
+    // whatever room is left lies above (his call, 2026-10-03)
+    .constrain((t, extent, te) => {
+      const dx0 = t.invertX(extent[0][0]) - te[0][0], dx1 = t.invertX(extent[1][0]) - te[1][0];
+      const dy0 = t.invertY(extent[0][1]) - te[0][1], dy1 = t.invertY(extent[1][1]) - te[1][1];
+      return t.translate(
+        dx1 > dx0 ? (dx0 + dx1) / 2 : Math.min(0, dx0) || Math.max(0, dx1),
+        dy1 > dy0 ? dy1 : Math.min(0, dy0) || Math.max(0, dy1),
+      );
+    })
     .on('start', (e) => { if (e.sourceEvent && e.sourceEvent.type !== 'wheel') mapEl.classList.add('is-dragging'); })
     .on('zoom', (e) => {
       state.z = e.transform;
