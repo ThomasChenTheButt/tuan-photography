@@ -95,6 +95,12 @@ Arranged on 2026-09-28 at his request, so the top level reads at a glance. Keep 
   (`design 2/index.html` forwards there). The other 18 versions were removed on 2026-10-03 at his
   word; they are at the tag `design2-all-versions-2026-10-03`. `?opening` replays the opening.
   `start.command` starts both servers, 8642 and 8645.
+- **Inside `design 2/wc-sketch/`, the opening and the map are kept apart** (his call, 2026-10-04,
+  so he can collect opening candidates and choose later): `opening/` holds one file per candidate
+  (`globe.js`, `corridor.js`, `photoball.js`; the shelf from experiment `scroll` is next), chosen
+  from the address with `?opening=…`; `map/flights.js` is the map's own globes; `paint.js` the
+  shared brushes; `app.js` the page and the glue between them. A new opening is a new file in
+  `opening/`, never more code in `app.js`. The file table is in that folder's `DESIGN.md`.
 - **In Finder he sees only what he opens himself** (his request, 2026-09-29: the full list
   felt cluttered). Six things: `originals/`, `ideas/`, the three launchers, `我的筆記.txt`.
   Everything else is flagged hidden for Finder by `python3 tools/finder_view.py`. Nothing is

@@ -126,6 +126,18 @@ This file describes the build in `design 2/wc-sketch/` only. The root `DESIGN.md
 
 ## Overview
 
+### Files (arranged 2026-10-04, his call: the opening and the map kept apart)
+
+| File | What it is |
+|---|---|
+| `index.html`, `style.css` | the one page and its stylesheet |
+| `paint.js` | the shared brushes: paper, washes, pen, lettering, the plate projection |
+| `app.js` | the page: the map, the books, the pages, the Flights view, the words in both languages, and the glue that plays an opening then hands over to the map |
+| `map/flights.js` | the map's globes: the small one in the corner with its ambient flights, the large one of the Flights view; lends a few brushes to the opening as `WC.pen` |
+| `map/*.json` | the lakes |
+| `opening/` | one file per opening candidate, each loaded by the page and chosen from the address: `globe.js` (the globe that unrolls into the map, looks 1 to 4), `corridor.js` (the corridor of prints, `?opening=corridor`), `photoball.js` (look 4's ball of photographs). A new candidate is a new file here, speaking the same words to `app.js`: play, skip, hand over |
+
+
 **Creative North Star: "The Traveller's Sketchbook Map"**
 
 The whole site is one sheet of cold-press sketchbook paper with the world drawn on it the urban sketcher's way: fine-liner first (coasts whose weight swells and thins with the nib, borders as a lighter broken line, mountains hatched from real relief), then light washes laid a few pixels off the lines. The map is the home page. Visitors travel across it instead of scrolling. A place is chosen by its book, and the map dives into that place until the photograph takes the whole window. Under the photograph the place's page or guide rises like a page turned up over a cover.
