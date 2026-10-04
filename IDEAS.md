@@ -160,7 +160,8 @@
 - 日期: 2026-10-04
 - 重點: 140 多個設計與 3D 技能
 - 網址: https://github.com/MengTo/Skills
-- 狀態: 收集中
+- 狀態: 已安裝
+- 狀態說明: 2026-10-04 只裝了 optimize-web-animations，Mac 的 ~/.claude/skills/ 和 Claude 帳號兩邊都有。
 - 這是什麼: Meng To（Design+Code、Aura Build 作者）的技能庫，主要寫給 Codex。網頁風格、GSAP、Three.js 3D、遊戲、工作流程。
 - 適合用在: optimize-web-animations（設計二的地圖、地球、畫筆動畫跑久了會不會卡）、audit-reference-originality（逐項比對網站和參考網站有沒有太像）。其餘大多是黑底、雷射、玻璃等風格，和這個網站相反。
 - 喜歡它什麼: 待補
