@@ -1,4 +1,4 @@
-/* tuan photography 陳亮元 · design 2 · the opening, candidate: the globe.
+/* tuan photography 陳亮元 · design 2 · the opening: the globe (the one he kept, 2026-10-04).
    A painted globe turns under the name, in one of four looks (?globe=1|2|3|4; look 4 is the photo
    ball, opening/photoball.js), unrolls into the map's own plate, every flight draws across, and
    the drawing dissolves into the real map beneath. Loads after map/flights.js, whose brushes it
@@ -36,12 +36,8 @@
     const c = o.canvas;
     const ctx = c.getContext('2d');
     const title = o.title;
-    const corr = o.corridor || null;
-    // with the corridor in front, the globe's turning hold gives back a second of its time
-    const PRE = corr ? corr.length : 0;
-    const GLOBE_END = PRE + (corr ? GLOBE - corr.trim : GLOBE);
+    const GLOBE_END = GLOBE;
     const FLY_AT = GLOBE_END + UNROLL * 0.78;
-    const TSHIFT = corr ? 500 : 0;
     const dpr = Math.min(2, window.devicePixelRatio || 1);
     let W = 0, H = 0, titleH = 0;
     const size = () => {
@@ -83,16 +79,13 @@
       // just above the globe, clear of the margins' lettering (lowered at his word, 2026-10-03)
       const yc = clamp(top - 30 - h / 2, 64 + h / 2, top - 18 - h / 2);
       const yTop = (Number.isFinite(yc) ? yc : top * 0.5) - H / 2;
-      const inA = easeOut(clamp((el - 260 - TSHIFT) / 1100, 0, 1));
-      const inB = easeOut(clamp((el - 520 - TSHIFT) / 1000, 0, 1));
+      const inA = easeOut(clamp((el - 260) / 1100, 0, 1));
+      const inB = easeOut(clamp((el - 520) / 1000, 0, 1));
       const gl = easeInOut(clamp((el - GLOBE_END) / UNROLL, 0, 1));
       const out = easeInOut(clamp((el - CLEAR_AT) / CLEAR, 0, 1));
-      // down the corridor the name stands at the far end with the globe, both scaled about the
-      // middle of the window, and grows as the camera nears
-      const far = corr && el < PRE ? corr.far(el) * corr.titleK(el) : 1;
       const st = title.style;
-      st.setProperty('--oy', `${(yTop * far * (1 - gl) + 14 * (1 - inA)).toFixed(2)}px`);
-      st.setProperty('--os', (far * (1 + 0.14 * gl)).toFixed(4));
+      st.setProperty('--oy', `${(yTop * (1 - gl) + 14 * (1 - inA)).toFixed(2)}px`);
+      st.setProperty('--os', (1 + 0.14 * gl).toFixed(4));
       st.setProperty('--oa', (inA * (1 - out)).toFixed(3));
       st.setProperty('--ot', (0.09 * (1 - inA)).toFixed(4));
       st.setProperty('--ob', (inB * (1 - out)).toFixed(3));
@@ -116,15 +109,12 @@
       const target = o.target();
       const S = target.scale;
       setTitle(el);
-      if (corr) corr.frame(el);
       if (el < GLOBE_END) {
-        // the globe, turning: down the corridor it is seen small at the far end, and grows as the
-        // camera nears; once the corridor has gone it turns where it always has
-        const far = corr && el < PRE ? corr.far(el) : 1;
-        const fadeIn = corr ? clamp((el - 650) / 600, 0, 1) : Math.min(1, el / 420);
-        const Rf = R * far, cyf = H / 2 + (cy - H / 2) * far;
+        // the globe, turning
+        const fadeIn = Math.min(1, el / 420);
+        const Rf = R, cyf = cy;
         ctx.fillStyle = PAPER; ctx.fillRect(0, 0, W, H);
-        // the backdrop photograph comes up from nothing behind the corridor and the globe, from
+        // the backdrop photograph comes up from nothing behind the globe, from
         // the first frame to the moment the globe unrolls (his call, 2026-10-03)
         if (o.backdrop) o.backdrop(ctx, el, GLOBE_END);
         if (fadeIn > 0) {
@@ -214,12 +204,11 @@
       cancelAnimationFrame(raf);
       window.removeEventListener('resize', size);
       if (!cleared && o.onClear) { cleared = true; o.onClear(); }
-      const rest = () => { c.hidden = true; c.width = c.height = 1; if (corr) corr.clear(); if (o.onDone) o.onDone(); };
+      const rest = () => { c.hidden = true; c.width = c.height = 1; if (o.onDone) o.onDone(); };
       if (skipped) {
-        // resolve quickly: the drawing, the corridor and the name fade together onto the map
+        // resolve quickly: the drawing and the name fade together onto the map
         c.classList.add('is-gone');
         if (title) title.classList.add('is-gone');
-        if (corr) corr.gone();
         setTimeout(rest, SKIP);
       } else rest();
     }

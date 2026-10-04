@@ -52,7 +52,7 @@
   --edge: 22px;
   --index-w: 23rem;
   --lift: 0 1px 2px oklch(22% 0.025 55 / 0.1), 0 10px 28px -12px oklch(22% 0.025 55 / 0.32);
-  /* the mat of a print pinned on the paper (the corridor trial): a shade whiter than the sketchbook */
+  /* the mat of a print pinned on the paper: a shade whiter than the sketchbook */
   --print: oklch(99.3% 0.004 95);
 }
 
@@ -137,59 +137,12 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 /* once it paints, the canvas lays its own paper, so its drawing can dissolve into the map below */
 .opening.is-painting { background: none; }
 .opening.is-gone { opacity: 0; transition: opacity 450ms var(--soft); }
-/* the shelf opening (?opening=shelf, opening/shelf.js): the books stand over the opening's
-   photograph on their shelves, under the name, and fly to their places as the map comes; their
-   names letter in as they land (the script sets --la). Not to be handled until they have landed */
-/* (the map's layer gives up its own stacking while the shelf stands, so the books, inside it,
-   can lie over the opening's canvas; the painting and the pen stay beneath it) */
-.app.is-shelf .map { z-index: auto; }
-.app.is-shelf .pins, .app.is-opening.is-shelf .pins { opacity: 1; z-index: 6; transition: opacity 900ms var(--soft) 300ms; }
-.app.is-shelf .book { pointer-events: none; }
-.app.is-shelf .pin:not(.is-quiet) .pin__label { opacity: var(--la, 1); transition: none; }
-/* the one word at the foot of the photograph that says what to do, breathing until the hand moves */
-.scrollhint {
-  position: absolute; z-index: 12; left: 50%; bottom: 1.6rem; transform: translateX(-50%);
-  font-family: var(--sans); font-weight: 500; font-size: 0.72rem; letter-spacing: 0.34em; text-transform: uppercase;
-  color: var(--ink-2); text-shadow: 0 0 0.5em var(--paper), 0 0 1em var(--paper);
-  opacity: 0; pointer-events: none; transition: opacity 500ms var(--soft);
-}
-:lang(zh-Hant) .scrollhint { letter-spacing: 0.3em; }
-.scrollhint.is-on { opacity: 0.85; animation: scrollhint 2.6s ease-in-out 1.2s infinite; }
-@keyframes scrollhint { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 6px); } }
-/* the corridor (a trial, ?opening=corridor): before the globe, his prints pinned down a receding
-   corridor of paper, two walls, floor and ceiling, drawn in perspective over the opening's canvas.
-   The script moves the camera through --cz, the fall-away through --dp, the far vignette through
-   --vg and the fade-in through --ca; each print carries its place (--px, --py), size (--pw, --ph),
-   tilt (--pr) and where it falls to (--fx, --fy). Only transforms and opacity ever move. It lies
-   over the name and the margin words, so a print leaving past a corner covers them for a moment
-   rather than having them written across it. */
-.corridor { position: absolute; inset: 0; z-index: 11; overflow: hidden; pointer-events: none; perspective: calc(var(--cp, 900) * 1px); perspective-origin: 50% 50%; opacity: var(--ca, 1); }
-.corridor.is-gone { opacity: 0; transition: opacity 450ms var(--soft); }
-.corridor__far { position: absolute; inset: 0; background: radial-gradient(ellipse 40% 40% at 50% 50%, oklch(20% 0.012 50 / 0.035), transparent); opacity: var(--vg, 1); }
-.corridor__scene { position: absolute; left: 50%; top: 50%; width: 0; height: 0; transform-style: preserve-3d; transform: translate3d(0, 0, calc(var(--cz, 0) * 1px)); will-change: transform; }
-.corridor__plane { position: absolute; left: 0; top: 0; transform-origin: 0 0; transform-style: preserve-3d; }
-.corridor__plane--left, .corridor__plane--right { width: calc(var(--cl) * 1px); height: calc(var(--ch) * 1px); }
-.corridor__plane--floor, .corridor__plane--ceiling { width: calc(var(--cw) * 1px); height: calc(var(--cl) * 1px); }
-.corridor__plane--left { transform: translate3d(calc(var(--cw) * -0.5px), calc(var(--ch) * -0.5px), 0) rotateY(90deg); }
-.corridor__plane--right { transform: translate3d(calc(var(--cw) * 0.5px), calc(var(--ch) * -0.5px), 0) rotateY(-90deg) translateX(calc(var(--cl) * -1px)); }
-.corridor__plane--floor { transform: translate3d(calc(var(--cw) * -0.5px), calc(var(--ch) * 0.5px), 0) rotateX(90deg) translateY(calc(var(--cl) * -1px)); }
-.corridor__plane--ceiling { transform: translate3d(calc(var(--cw) * -0.5px), calc(var(--ch) * -0.5px), 0) rotateX(-90deg); }
-.corridor__print {
-  position: absolute; left: 0; top: 0; width: calc(var(--pw) * 1px); height: calc(var(--ph) * 1px);
-  padding: 6px; background: var(--print); box-shadow: var(--lift); backface-visibility: hidden;
-  transform: translate3d(calc((var(--px) + var(--dp, 0) * var(--fx, 0)) * 1px), calc((var(--py) + var(--dp, 0) * var(--fy, 0)) * 1px), calc(var(--dp, 0) * -340px)) rotate(calc(var(--pr, 0) * 1deg));
-  opacity: calc(1 - var(--dp, 0)); will-change: transform, opacity;
-}
-.corridor__print img { display: block; width: 100%; height: 100%; opacity: 0; }
-.corridor__print.is-loaded img { opacity: 1; transition: opacity 300ms var(--soft); }
-@media (max-width: 47.99rem) { .corridor__print { padding: 4px; } }
 .app.is-opening .pins, .app.is-opening .corner, .app.is-opening .tools, .app.is-opening .index, .app.is-opening .mast { opacity: 0; }
 .app.is-arrived .mast { transition: opacity 900ms var(--soft) 200ms; }
 /* the site's name over the opening: set above the globe, it glides to the middle as the globe
    unrolls (the script moves it through --oy, --os and the rest; at rest it is the page's heading,
    kept for screen readers only) */
 .opener {
-  /* above the corridor's prints (z 11): the name is never covered on the way in (his call) */
   position: absolute; z-index: 12; left: 50%; top: 50%; width: min(86vw, 52rem);
   text-align: center; pointer-events: none;
   transform: translate(-50%, -50%) translateY(var(--oy, 0px)) scale(var(--os, 1));

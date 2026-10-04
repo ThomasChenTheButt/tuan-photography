@@ -323,10 +323,15 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 - Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
   harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
 
-Open now: `scroll` (2026-10-03), the opening after noomoagency.com (his find) and his own idea:
-the guide books in design 1's row under the name, over the photograph (his pick of four shelves
-tried); one scroll sets the map developing and the books flying to their places, a second sets
-the flights flying, each playing by itself. On 8646 (`exp-scroll`). Keep or drop on his word.
+Open now: none.
+
+Dropped on 2026-10-04: `scroll` (started 2026-10-03), the opening after noomoagency.com (his find)
+and his own idea: the guide books in design 1's row under the name, over the photograph, flying to
+their places on the first scroll, the flights on the second. It was brought into design 2 as
+`opening/shelf.js` on 2026-10-04, tried beside the globe and the corridor, and the same day he
+kept only the globe: the shelf, the corridor and the experiment all went. The code is at the tags
+`before-drop-openings-2026-10-04` (design 2 with all three openings) and
+`exp-scroll-dropped-2026-10-04` (the experiment's branch).
 
 Dropped on 2026-10-03: `cssglobe`, the opening's globe after a React/Tailwind component he brought
 (the Earth map scrolling behind a round window, inset shadows), rebuilt in plain CSS/JS. He dropped

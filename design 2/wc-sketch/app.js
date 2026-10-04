@@ -106,15 +106,10 @@
   const ask = new URLSearchParams(location.search);
   // his choice (2026-10-02): "Tuan, Through the Lens" / Tuan 的鏡頭之旅; ?name=1 to 5 still shows the others
   const nameN = clamp(parseInt(ask.get('name'), 10) || 2, 1, 5) - 1;
-  // which opening a first visit plays, one file each in opening/: 'classic' (the globe that
-  // unrolls into the map), 'corridor' (a corridor of his prints first, then the globe) or 'shelf'
-  // (the books on shelves under the name, flying to their places as he scrolls; his idea). Classic
-  // until he chooses (the corridor was the default for a day on 2026-10-03, taken off after a
-  // friend found it odd). In the address, ?opening plays the classic, ?opening=corridor the
-  // corridor and ?opening=shelf the shelf, every time
-  const OPENING_DEFAULT = 'classic';
-  const OPENINGS = ['classic', 'corridor', 'shelf'];
-  // the opening globe's look: 1 wash, 2 lit, 3 desk globe (see WC.paintGlobe); his choice pending
+  // the opening a first visit plays: the globe that unrolls into the map (opening/globe.js), the
+  // one he kept on 2026-10-04 after the corridor and the shelf were dropped (both at the tag
+  // before-drop-openings-2026-10-04). ?opening in the address plays it every time
+  // the opening globe's look: 1 wash, 2 lit, 3 desk globe, 4 photo ball (see WC.paintGlobe); his choice pending
   const GLOBE_STYLE_DEFAULT = 1;
   const globeStyle = clamp(parseInt(ask.get('globe'), 10) || GLOBE_STYLE_DEFAULT, 1, 4);
   // photographs on the home map (his note: the map alone "doesn't scream photography"). Two
@@ -254,7 +249,6 @@
   const R0 = 8; // texture px per degree of the whole-world painting
   const state = {
     W: 1, H: 1, dpr: 1, S0: 1,
-    placer: null,   // an opening's say in where the books stand (opening/shelf.js), or nothing
     z: d3.zoomIdentity,
     w110: null, w50: null,
     land110: null, land50: null, travel: [], seams: null,
@@ -909,16 +903,9 @@
     pinList.forEach((q, i) => {
       // the leader meets the book at its foot, or under its name when the place lies below both
       q.ly = q.ay > q.y + 7 + lh && !q.el.classList.contains('is-quiet') ? q.y + 7 + lh + 1 : q.y;
-      let x = q.x, y = q.y, sc = s;
-      // while an opening has the books (the shelf), it says where each stands now
-      if (state.placer) {
-        const r = state.placer(i, q.x, q.y, s);
-        x = r.x; y = r.y; sc = r.s;
-        q.el.style.setProperty('--la', r.la.toFixed(3));
-      }
-      q.el.style.setProperty('--x', `${x.toFixed(1)}px`);
-      q.el.style.setProperty('--y', `${y.toFixed(1)}px`);
-      q.el.style.setProperty('--s', sc.toFixed(3));
+      q.el.style.setProperty('--x', `${q.x.toFixed(1)}px`);
+      q.el.style.setProperty('--y', `${q.y.toFixed(1)}px`);
+      q.el.style.setProperty('--s', s.toFixed(3));
     });
   }
 
@@ -2302,7 +2289,7 @@
         toward(id, oc.begun ? FADE : 0);
       },
       // the same photograph, whole, laid into another window-sized canvas (the opening's) at a
-      // share of the strength: the backdrop the corridor and the globe stand in front of
+      // share of the strength: the backdrop the globe stands in front of
       // el: the opening's clock; until: when it should be fully there (0: at once). It rises from
       // nothing from the moment the photograph is decoded, so a late arrival never pops in
       backdrop(g, el, until) {
@@ -2654,9 +2641,8 @@
     const want = parse(location.hash);
     let first = false;
     try { first = !sessionStorage.getItem('wc-opened'); sessionStorage.setItem('wc-opened', '1'); } catch (e) { first = false; }
-    // ?opening in the address plays it every time, for review; ?opening=corridor plays the corridor trial
+    // ?opening in the address plays it every time, for review
     if (ask.has('opening')) first = true;
-    const openingKind = ask.has('opening') ? (OPENINGS.includes(ask.get('opening')) ? ask.get('opening') : 'classic') : OPENING_DEFAULT;
     const playOpening = first && !reduce.matches && !want.page && !want.photo && !want.flights;
     const opener = $('#opener');
     const oc = $('#opening');
@@ -2666,19 +2652,16 @@
       oc.hidden = false;
       opener.className = 'opener';
     }
-    let corridor = null;
-    const restOpening = () => { app.classList.remove('is-opening'); oc.hidden = true; opener.className = 'sr'; if (corridor) corridor.clear(); queueDraw(); };
+    const restOpening = () => { app.classList.remove('is-opening'); oc.hidden = true; opener.className = 'sr'; queueDraw(); };
     const loading = loadWorld();
     if (playOpening) {
       // the name waits for its typeface (never more than a moment), so it never changes face mid-motion
       const faces = document.fonts && document.fonts.load
         ? Promise.race([Promise.all([document.fonts.load('400 48px "Alegreya"', T.en.names[nameN]), document.fonts.load('500 48px "Noto Serif TC"', T.zh.names[nameN] + '陳亮元'), document.fonts.load('500 12px "Alegreya Sans"')]), new Promise((r) => setTimeout(r, 1500))]).catch(() => {})
         : Promise.resolve();
-      // the corridor trial: its prints are fetched and decoded while the world loads
-      if (openingKind === 'corridor') corridor = WC.corridor({ root: $('#corridor'), slides: S.slides, narrow: narrow.matches, src: (s) => imgSrc(s, 640) });
-      Promise.all([world110, faces, corridor && corridor.ready]).then(() => {
+      Promise.all([world110, faces]).then(() => {
         if (page || flightsOpen) { restOpening(); globe.start(); return; }
-        // what every opening is given: the canvas, the name, the flights, the sea's photograph as
+        // what the opening is given: the canvas, the name, the flights, the sea's photograph as
         // a backdrop, the map's place on the screen, and the two moments it hands the page back
         const given = {
           canvas: oc, title: opener, flights, home: FROM, LON0, SY,
@@ -2691,16 +2674,9 @@
           onClear: () => { app.classList.remove('is-opening'); state.leadIn = performance.now(); queueDraw(); app.classList.add('is-arrived'); setTimeout(() => app.classList.remove('is-arrived'), 1300); if (!page && !flightsOpen) globe.start(); },
           onDone: () => { opener.className = 'sr'; },
         };
-        opening = openingKind === 'shelf' ? WC.openingShelf({
-          ...given, hint: $('#scrollhint'), app,
-          narrow: () => narrow.matches, reduce: () => reduce.matches,
-          // the shelf stands the books on it and flies them to their places: the page lends them
-          books: { n: () => pinList.length, place: (fn) => { state.placer = fn; }, redraw: queueDraw },
-          // the photograph stands until the painting beneath and its own copy are in
-          ready: () => !!state.base && (!ocean || ocean.ready()),
-        }) : WC.opening({
-          ...given, land: state.land110, travel: globe.o.travel, corridor,
-          // the globe's look, three to choose from (?globe=1|2|3; 1 until he chooses)
+        opening = WC.opening({
+          ...given, land: state.land110, travel: globe.o.travel,
+          // the globe's look, four to choose from (?globe=1|2|3|4; 1 until he chooses)
           style: globeStyle,
           // look 4: a ball covered in his photographs (WebGL), built once; the globe holds until it is in
           ball: () => (globeStyle === 4 && state.ball) ? state.ball : null,
@@ -2708,12 +2684,8 @@
           ready: () => !!state.base && (!ocean || ocean.ready()) && (globeStyle !== 4 || (state.ball && state.ball.done())),
         });
         WC.op = opening; // for inspection in the console
-        // skipped by any hand: the globe at once; the shelf only once the books have flown
-        const skip = (e) => {
-          if (!opening || opening.done) return;
-          if (opening.sliding) { window.addEventListener(e.type, skip, { once: true, passive: true }); return; }
-          opening.skip();
-        };
+        // skipped by any hand
+        const skip = () => { if (opening && !opening.done) opening.skip(); };
         ['pointerdown', 'wheel', 'keydown', 'touchmove'].forEach((ev) => window.addEventListener(ev, skip, { once: true, passive: true }));
       });
       loading.catch(() => restOpening());
