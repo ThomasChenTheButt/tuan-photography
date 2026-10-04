@@ -144,6 +144,27 @@
 - 這是什麼: 一個可以查詢的設計資料庫:風格、配色、字體搭配、各類產品的設計建議、UX 準則。
 - 喜歡它什麼: 待補
 
+### Claude Code Mods（hamzafer）
+- 類型: 設計 Skill
+- 日期: 2026-10-04
+- 重點: Claude Code 介面小外掛合集
+- 網址: https://github.com/hamzafer/claude-code-mods
+- 狀態: 收集中
+- 這是什麼: 16 個 mods（不是 skill），裝在 Claude Code 裡，在輸入框上方加一行資訊或加安全關卡。例如 blast-radius（刪資料夾、強制推送前先問你）、token-weather、where-am-i、next-steps，另有 usage-meter（你已經自己做了一個）。
+- 適合用在: blast-radius 最有用。其他多半要在終端機裡看圖，或要 Slack、Linear、Codex，用不到。
+- 限制: Desktop app 要 Claude Code 2.1.287 以上才畫得出來，你的 app 目前是 2.1.286。
+- 喜歡它什麼: 待補
+
+### MengTo Skills
+- 類型: 設計 Skill
+- 日期: 2026-10-04
+- 重點: 140 多個設計與 3D 技能
+- 網址: https://github.com/MengTo/Skills
+- 狀態: 收集中
+- 這是什麼: Meng To（Design+Code、Aura Build 作者）的技能庫，主要寫給 Codex。網頁風格、GSAP、Three.js 3D、遊戲、工作流程。
+- 適合用在: optimize-web-animations（設計二的地圖、地球、畫筆動畫跑久了會不會卡）、audit-reference-originality（逐項比對網站和參考網站有沒有太像）。其餘大多是黑底、雷射、玻璃等風格，和這個網站相反。
+- 喜歡它什麼: 待補
+
 ### 10K Websites
 - 類型: 設計 Skill
 - 日期: 2026-09-28
