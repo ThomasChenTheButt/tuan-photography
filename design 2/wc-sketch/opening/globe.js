@@ -12,7 +12,7 @@
   const ink = (a) => WC.ink(a);
   const PAPER = 'rgb(251, 250, 245)';
   const RAD = Math.PI / 180;
-  const { castShadow, makeRoute, course, drawPlane, ringOf, outBack, WASH } = WC.pen;
+  const { castShadow } = WC.pen;
 
   /*
     One continuous piece of motion, about seven seconds:
@@ -65,148 +65,14 @@
       return { R, cx: W / 2, cy: H * 0.58 };
     };
 
-    /* the routes on the flat map: each sampled once along its course (the same bowed course the
-       Flights globe flies), its longitude unwrapped so a flight over the Pacific runs on past the
-       map's edge and comes back in at the other, rather than crossing the whole world */
-    const home = o.home;
     const near = (a, b) => d3.geoDistance(a, b) < 0.012;
     // every place he has flown to or from: the night side's city lights (look 2)
     const lights = [];
     for (const f of o.flights) for (const p of [f.from, f.to]) if (!lights.some((q) => near(q, p))) lights.push(p);
-    const seen = new Set();
-    const legs = [];
-    for (const f of o.flights) {
-      // a flight out and its flight home draw the same line: drawn once
-      const k = [f.from, f.to].map((p) => `${p[0].toFixed(1)},${p[1].toFixed(1)}`).sort().join('|') + (f.mode === 'flight' ? 'f' : 'g');
-      if (seen.has(k)) continue;
-      seen.add(k);
-      const r = makeRoute(f.from, f.to, f.mode, legs.length + 5);
-      const fly = f.mode === 'flight';
-      const n = fly ? 72 : 16;
-      const U = new Float32Array(n), V = new Float32Array(n);
-      let prev = 0;
-      for (let i = 0; i < n; i++) {
-        const q = course(r, i / (n - 1));
-        const lon = Math.atan2(q[1], q[0]) / RAD, lat = Math.asin(clamp(q[2], -1, 1)) / RAD;
-        let u = ((((lon - o.LON0) % 360) + 540) % 360) - 180;
-        if (i) { while (u - prev > 180) u -= 360; while (u - prev < -180) u += 360; }
-        U[i] = u; V[i] = lat * SY; prev = u;   // V in the plate's stretched degrees
-      }
-      const len = d3.geoDistance(f.from, f.to);
-      legs.push({
-        r, fly, n, U, V, len,
-        dur: fly ? 650 + 1100 * Math.min(1, len / 1.75) : 600 + 900 * Math.min(1, len / 0.25),
-        at: FLY_AT + (fly ? 0 : 200),
-        to: f.to, home: near(f.to, home),
-        lift: fly ? 0.05 + 0.05 * Math.min(1, len / 1.5) : 0,
-      });
-    }
-    // each place landed at is ringed once, by the first flight to reach it; where he sets out
-    // from is never marked
-    const rings = [];
-    legs.filter((L) => L.fly && !L.home).sort((a, b) => a.dur - b.dur).forEach((L) => {
-      if (rings.some((q) => near(q.to, L.to))) return;
-      rings.push({ to: L.to, t: L.at + L.dur, seed: rings.length + 3 });
-    });
-    const LAND = Math.max(...legs.map((L) => L.at + L.dur), FLY_AT) + 380;
-    const CLEAR_AT = LAND + 120;
+    // the flights across the flat map, drawn once the sheet lies flat (map/flights.js)
+    const flat = WC.flatFlights({ flights: o.flights, home: o.home, LON0: o.LON0, SY, flyAt: FLY_AT });
+    const CLEAR_AT = flat.land + 120;
     const END = CLEAR_AT + CLEAR;
-    const PX = new Float32Array(80), PY = new Float32Array(80);
-
-    // a leg's points on the screen, offset by `shift` world-widths, up to `head` (0..1);
-    // lifted a little off the map in the middle, as a flight is
-    function place(L, head, shift, S, tx, ty, lw) {
-      const k = S * RAD;
-      const m = Math.max(2, Math.ceil(head * (L.n - 1)) + 1);
-      const x0 = tx + (L.U[0] + shift) * k, y0 = ty - L.V[0] * k;
-      const x1 = tx + (L.U[L.n - 1] + shift) * k, y1 = ty - L.V[L.n - 1] * k;
-      const ch = Math.hypot(x1 - x0, y1 - y0) || 1;
-      // the lift bows upward on the page
-      let nx = (y1 - y0) / ch, ny = -(x1 - x0) / ch;
-      if (ny > 0 || (ny === 0 && nx < 0)) { nx = -nx; ny = -ny; }
-      const amp = 0.55 * lw;
-      for (let i = 0; i < m; i++) {
-        let u = i / (L.n - 1);
-        let j = i;
-        if (i === m - 1) { u = head; j = head * (L.n - 1); }
-        const j0 = Math.min(L.n - 2, Math.floor(j)), fr = j - j0;
-        const U = L.U[j0] + (L.U[j0 + 1] - L.U[j0]) * fr, V = L.V[j0] + (L.V[j0 + 1] - L.V[j0]) * fr;
-        const h = L.lift * ch * Math.sin(Math.PI * u);
-        const env = Math.min(1, u * 7, (1 - u) * 7);
-        const w = (Math.sin(u * L.r.f1 + L.r.p1) * 0.62 + Math.sin(u * L.r.f2 + L.r.p2) * 0.38) * env * amp;
-        PX[i] = tx + (U + shift) * k + nx * (h + w);
-        PY[i] = ty - V * k + ny * (h + w);
-      }
-      return m;
-    }
-    function stroke(m, from = 0) {
-      ctx.beginPath();
-      ctx.moveTo(PX[from], PY[from]);
-      for (let i = from + 1; i < m; i++) ctx.lineTo(PX[i], PY[i]);
-    }
-
-    function drawFlights(el, S, tx, ty, a) {
-      const lw = W < 700 ? 0.95 : 1.15;
-      const k = S * RAD;
-      ctx.save();
-      // the world's own width: nothing is drawn past its edges
-      ctx.beginPath(); ctx.rect(tx - 180 * k, ty - 90 * SY * k, 360 * k, 180 * SY * k); ctx.clip();
-      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-      for (const L of legs) {
-        const g = (el - L.at) / L.dur;
-        if (g <= 0) continue;
-        const head = easeInOut(Math.min(1, g));
-        const lo = Math.min(L.U[0], L.U[L.n - 1]), hi = Math.max(L.U[0], L.U[L.n - 1]);
-        for (const shift of [-360, 0, 360]) {
-          if (hi + shift < -182 || lo + shift > 182) continue;
-          const m = place(L, head, shift, S, tx, ty, lw);
-          if (!L.fly) {
-            // a leg over land: a faint dotted pen line
-            stroke(m);
-            ctx.setLineDash([0.2, 3 * lw]);
-            ctx.strokeStyle = ink(0.42 * a); ctx.lineWidth = 1.4 * lw; ctx.stroke();
-            ctx.setLineDash([]);
-            continue;
-          }
-          // the wash first, a little off the pen line; then the pen
-          ctx.save(); ctx.translate(1.1 * lw, 1.3 * lw);
-          stroke(m); ctx.strokeStyle = WASH(0.22 * a); ctx.lineWidth = 3.2 * lw; ctx.stroke();
-          ctx.restore();
-          stroke(m); ctx.strokeStyle = ink(0.74 * a); ctx.lineWidth = 0.95 * lw; ctx.stroke();
-          // in flight: the last stretch warms to vermilion toward the plane
-          const live = clamp(1 - (g - 1) / 0.35, 0, 1);
-          if (live <= 0) continue;
-          const tl = Math.max(1, Math.round(m * 0.3));
-          for (let i = Math.max(1, m - tl); i < m; i++) {
-            const q = 1 - (m - i) / tl;
-            ctx.beginPath(); ctx.moveTo(PX[i - 1], PY[i - 1]); ctx.lineTo(PX[i], PY[i]);
-            ctx.strokeStyle = `rgba(212, 82, 60, ${0.9 * q * live * a})`; ctx.lineWidth = (0.95 + 0.6 * q) * lw; ctx.stroke();
-          }
-          let j = m - 1, back = 0;
-          while (j > 0 && back < 5 * lw) { back += Math.hypot(PX[j] - PX[j - 1], PY[j] - PY[j - 1]); j--; }
-          const ang = Math.atan2(PY[m - 1] - PY[j], PX[m - 1] - PX[j]);
-          drawPlane(ctx, PX[m - 1], PY[m - 1], ang, 1.3 * lw, live * a);
-        }
-      }
-      // the landings: a ring of the pen pops in where each place is reached
-      for (const q of rings) {
-        const x = (el - q.t) / 460;
-        if (x <= 0) continue;
-        const sc = outBack(clamp(x, 0, 1));
-        const pts = ringOf(q.seed);
-        const r = 5 * lw * sc;
-        let u = ((((q.to[0] - o.LON0) % 360) + 540) % 360) - 180;
-        ctx.save();
-        ctx.translate(tx + u * k, ty - q.to[1] * SY * k);
-        ctx.beginPath();
-        for (let i = 0; i < pts.length; i++) { const p = pts[i]; if (i) ctx.lineTo(p[0] * r, p[1] * r); else ctx.moveTo(p[0] * r, p[1] * r); }
-        ctx.strokeStyle = ink(0.84 * a * Math.min(1, x * 3)); ctx.lineWidth = 1.1 * lw; ctx.stroke();
-        ctx.beginPath(); ctx.arc(0, 0, 1.6 * lw, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(212, 82, 60, ${0.85 * a * Math.min(1, x * 2)})`; ctx.fill();
-        ctx.restore();
-      }
-      ctx.restore();
-    }
 
     // the name: above the globe, then gliding down to the middle as the globe unrolls
     function setTitle(el) {
@@ -334,7 +200,7 @@
         }
         if (el >= FLY_AT) {
           const fa = 1 - easeInOut(clamp((el - CLEAR_AT) / CLEAR, 0, 1));
-          if (fa > 0) drawFlights(el, S, target.translate[0], target.translate[1], fa);
+          if (fa > 0) flat.draw(ctx, el, S, target.translate[0], target.translate[1], fa, W);
         }
         if (o.onClear && !cleared && el >= CLEAR_AT + 300) { cleared = true; o.onClear(); }
         if (el >= END) { finish(false); return; }

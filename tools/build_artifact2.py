@@ -37,7 +37,7 @@ OUT = ROOT / ".claude" / "artifact-build-2"
 TITLE = "tuan photography 陳亮元"
 # the page's own scripts, in the order index.html loads them (the shared brushes, the map's globes,
 # then the opening candidates, then the page); app.js is rewritten, the rest copied as they are
-JS = ("paint.js", "map/flights.js", "opening/photoball.js", "opening/corridor.js", "opening/globe.js", "app.js")
+JS = ("paint.js", "map/flights.js", "opening/photoball.js", "opening/corridor.js", "opening/globe.js", "opening/shelf.js", "app.js")
 FILE_LIMIT, SIZE_LIMIT_MB = 255, 64
 
 

@@ -35,6 +35,7 @@
       mapHint: 'Drag, or use the arrow keys, to move the map. Scroll, or press plus and minus, to zoom. Tab moves through the books.',
       zoomGroup: 'Zoom', world: 'Whole map', oceanDial: 'Photo',
       flights: 'Flights', globeLabel: 'Flights: open the globe of journeys',
+      scrollHint: 'Scroll',
       flightsTitle: 'Flights', flightsHow: 'Drag to turn the globe', speed: 'Speed', speedSlow: 'Slow',
       flightsLede: (n) => `${n} journeys. Choose one to follow its flights on the globe.`,
       journeyAria: (d) => `Follow the journey of ${d}`,
@@ -67,6 +68,7 @@
       mapHint: '拖曳或用方向鍵移動地圖；捲動，或按加號、減號縮放。Tab 鍵逐一走過每本書。',
       zoomGroup: '縮放', world: '整張地圖', oceanDial: '照片',
       flights: '飛過的航線', globeLabel: '飛過的航線：打開旅程地球',
+      scrollHint: '往下捲',
       flightsTitle: '飛過的航線', flightsHow: '拖曳轉動地球', speed: '速度', speedSlow: '慢慢看',
       flightsLede: (n) => `${n} 段旅程。選一段，在地球上看它的航線。`,
       journeyAria: (d) => `看 ${d} 的旅程`,
@@ -104,11 +106,14 @@
   const ask = new URLSearchParams(location.search);
   // his choice (2026-10-02): "Tuan, Through the Lens" / Tuan 的鏡頭之旅; ?name=1 to 5 still shows the others
   const nameN = clamp(parseInt(ask.get('name'), 10) || 2, 1, 5) - 1;
-  // which opening a first visit plays: 'classic' (the globe) or 'corridor' (a corridor of his
-  // prints first, then the globe). Classic: his call, 2026-10-03, after a friend found the
-  // corridor odd (it was the default for a day). In the address, ?opening plays the classic and
-  // ?opening=corridor the corridor, every time
+  // which opening a first visit plays, one file each in opening/: 'classic' (the globe that
+  // unrolls into the map), 'corridor' (a corridor of his prints first, then the globe) or 'shelf'
+  // (the books on shelves under the name, flying to their places as he scrolls; his idea). Classic
+  // until he chooses (the corridor was the default for a day on 2026-10-03, taken off after a
+  // friend found it odd). In the address, ?opening plays the classic, ?opening=corridor the
+  // corridor and ?opening=shelf the shelf, every time
   const OPENING_DEFAULT = 'classic';
+  const OPENINGS = ['classic', 'corridor', 'shelf'];
   // the opening globe's look: 1 wash, 2 lit, 3 desk globe (see WC.paintGlobe); his choice pending
   const GLOBE_STYLE_DEFAULT = 1;
   const globeStyle = clamp(parseInt(ask.get('globe'), 10) || GLOBE_STYLE_DEFAULT, 1, 4);
@@ -249,6 +254,7 @@
   const R0 = 8; // texture px per degree of the whole-world painting
   const state = {
     W: 1, H: 1, dpr: 1, S0: 1,
+    placer: null,   // an opening's say in where the books stand (opening/shelf.js), or nothing
     z: d3.zoomIdentity,
     w110: null, w50: null,
     land110: null, land50: null, travel: [], seams: null,
@@ -900,13 +906,20 @@
       q.boxes = [[q.x - bw / 2 - m, q.y - bh - m, q.x + bw / 2 + m, q.y + m]];
       if (free) q.boxes.push([q.x - q.lw / 2 - m, q.y + 4, q.x + q.lw / 2 + m, q.y + 7 + lh + m]);
     }
-    for (const q of pinList) {
+    pinList.forEach((q, i) => {
       // the leader meets the book at its foot, or under its name when the place lies below both
       q.ly = q.ay > q.y + 7 + lh && !q.el.classList.contains('is-quiet') ? q.y + 7 + lh + 1 : q.y;
-      q.el.style.setProperty('--x', `${q.x.toFixed(1)}px`);
-      q.el.style.setProperty('--y', `${q.y.toFixed(1)}px`);
-      q.el.style.setProperty('--s', s.toFixed(3));
-    }
+      let x = q.x, y = q.y, sc = s;
+      // while an opening has the books (the shelf), it says where each stands now
+      if (state.placer) {
+        const r = state.placer(i, q.x, q.y, s);
+        x = r.x; y = r.y; sc = r.s;
+        q.el.style.setProperty('--la', r.la.toFixed(3));
+      }
+      q.el.style.setProperty('--x', `${x.toFixed(1)}px`);
+      q.el.style.setProperty('--y', `${y.toFixed(1)}px`);
+      q.el.style.setProperty('--s', sc.toFixed(3));
+    });
   }
 
   function bindPins() {
@@ -2643,7 +2656,7 @@
     try { first = !sessionStorage.getItem('wc-opened'); sessionStorage.setItem('wc-opened', '1'); } catch (e) { first = false; }
     // ?opening in the address plays it every time, for review; ?opening=corridor plays the corridor trial
     if (ask.has('opening')) first = true;
-    const openingKind = ask.has('opening') ? (ask.get('opening') === 'corridor' ? 'corridor' : 'classic') : OPENING_DEFAULT;
+    const openingKind = ask.has('opening') ? (OPENINGS.includes(ask.get('opening')) ? ask.get('opening') : 'classic') : OPENING_DEFAULT;
     const playOpening = first && !reduce.matches && !want.page && !want.photo && !want.flights;
     const opener = $('#opener');
     const oc = $('#opening');
@@ -2665,15 +2678,11 @@
       if (openingKind === 'corridor') corridor = WC.corridor({ root: $('#corridor'), slides: S.slides, narrow: narrow.matches, src: (s) => imgSrc(s, 640) });
       Promise.all([world110, faces, corridor && corridor.ready]).then(() => {
         if (page || flightsOpen) { restOpening(); globe.start(); return; }
-        opening = WC.opening({
-          canvas: oc, title: opener, land: state.land110, travel: globe.o.travel, flights, home: FROM, LON0, SY, corridor,
+        // what every opening is given: the canvas, the name, the flights, the sea's photograph as
+        // a backdrop, the map's place on the screen, and the two moments it hands the page back
+        const given = {
+          canvas: oc, title: opener, flights, home: FROM, LON0, SY,
           backdrop: ocean ? (g, el, until) => ocean.backdrop(g, el, until) : null,
-          // the globe's look, three to choose from (?globe=1|2|3; 1 until he chooses)
-          style: globeStyle,
-          // look 4: a ball covered in his photographs (WebGL), built once; the globe holds until it is in
-          ball: () => (globeStyle === 4 && state.ball) ? state.ball : null,
-          // the globe holds its turn until the painting beneath and the photograph are in
-          ready: () => !!state.base && (!ocean || ocean.ready()) && (globeStyle !== 4 || (state.ball && state.ball.done())),
           target: () => {
             const z = state.z;
             return { scale: (z.k * state.S0 * 180) / Math.PI, translate: [z.x + (z.k * state.W) / 2, z.y + (z.k * state.H) / 2] };
@@ -2681,9 +2690,30 @@
           // as the name and the flights fade, the books and the margins come back
           onClear: () => { app.classList.remove('is-opening'); state.leadIn = performance.now(); queueDraw(); app.classList.add('is-arrived'); setTimeout(() => app.classList.remove('is-arrived'), 1300); if (!page && !flightsOpen) globe.start(); },
           onDone: () => { opener.className = 'sr'; },
+        };
+        opening = openingKind === 'shelf' ? WC.openingShelf({
+          ...given, hint: $('#scrollhint'), app,
+          narrow: () => narrow.matches, reduce: () => reduce.matches,
+          // the shelf stands the books on it and flies them to their places: the page lends them
+          books: { n: () => pinList.length, place: (fn) => { state.placer = fn; }, redraw: queueDraw },
+          // the photograph stands until the painting beneath and its own copy are in
+          ready: () => !!state.base && (!ocean || ocean.ready()),
+        }) : WC.opening({
+          ...given, land: state.land110, travel: globe.o.travel, corridor,
+          // the globe's look, three to choose from (?globe=1|2|3; 1 until he chooses)
+          style: globeStyle,
+          // look 4: a ball covered in his photographs (WebGL), built once; the globe holds until it is in
+          ball: () => (globeStyle === 4 && state.ball) ? state.ball : null,
+          // the globe holds its turn until the painting beneath and the photograph are in
+          ready: () => !!state.base && (!ocean || ocean.ready()) && (globeStyle !== 4 || (state.ball && state.ball.done())),
         });
         WC.op = opening; // for inspection in the console
-        const skip = () => { if (opening && !opening.done) opening.skip(); };
+        // skipped by any hand: the globe at once; the shelf only once the books have flown
+        const skip = (e) => {
+          if (!opening || opening.done) return;
+          if (opening.sliding) { window.addEventListener(e.type, skip, { once: true, passive: true }); return; }
+          opening.skip();
+        };
         ['pointerdown', 'wheel', 'keydown', 'touchmove'].forEach((ev) => window.addEventListener(ev, skip, { once: true, passive: true }));
       });
       loading.catch(() => restOpening());

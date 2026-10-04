@@ -137,6 +137,25 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 /* once it paints, the canvas lays its own paper, so its drawing can dissolve into the map below */
 .opening.is-painting { background: none; }
 .opening.is-gone { opacity: 0; transition: opacity 450ms var(--soft); }
+/* the shelf opening (?opening=shelf, opening/shelf.js): the books stand over the opening's
+   photograph on their shelves, under the name, and fly to their places as the map comes; their
+   names letter in as they land (the script sets --la). Not to be handled until they have landed */
+/* (the map's layer gives up its own stacking while the shelf stands, so the books, inside it,
+   can lie over the opening's canvas; the painting and the pen stay beneath it) */
+.app.is-shelf .map { z-index: auto; }
+.app.is-shelf .pins, .app.is-opening.is-shelf .pins { opacity: 1; z-index: 6; transition: opacity 900ms var(--soft) 300ms; }
+.app.is-shelf .book { pointer-events: none; }
+.app.is-shelf .pin:not(.is-quiet) .pin__label { opacity: var(--la, 1); transition: none; }
+/* the one word at the foot of the photograph that says what to do, breathing until the hand moves */
+.scrollhint {
+  position: absolute; z-index: 12; left: 50%; bottom: 1.6rem; transform: translateX(-50%);
+  font-family: var(--sans); font-weight: 500; font-size: 0.72rem; letter-spacing: 0.34em; text-transform: uppercase;
+  color: var(--ink-2); text-shadow: 0 0 0.5em var(--paper), 0 0 1em var(--paper);
+  opacity: 0; pointer-events: none; transition: opacity 500ms var(--soft);
+}
+:lang(zh-Hant) .scrollhint { letter-spacing: 0.3em; }
+.scrollhint.is-on { opacity: 0.85; animation: scrollhint 2.6s ease-in-out 1.2s infinite; }
+@keyframes scrollhint { 0%, 100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 6px); } }
 /* the corridor (a trial, ?opening=corridor): before the globe, his prints pinned down a receding
    corridor of paper, two walls, floor and ceiling, drawn in perspective over the opening's canvas.
    The script moves the camera through --cz, the fall-away through --dp, the far vignette through
