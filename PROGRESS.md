@@ -67,8 +67,7 @@ first, they go on the experiment's branch.
 
 ## 等你決定 Waiting on you
 
-- **Experiment `scroll` (localhost:8646):** keep or drop? Keep means it replaces the timed opening
-  on 8645 and brings the new desktop home view with it.
+- **Experiment `taste2` (localhost:8646):** the Taste skill's five fixes on design 2: keep or drop?
 - **Sea photograph:** which photographs besides Aoraki, if any? (`?ocean=all` cycles all 93.)
 - **Camera data for the 22 US photographs:** re-export from Lightroom with metadata, or drop the
   raw files in, and I'll add it.

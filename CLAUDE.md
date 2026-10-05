@@ -323,7 +323,10 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 - Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
   harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
 
-Open now: none.
+Open now: `taste2` (2026-10-05), the Taste skill (`design-taste-frontend`) run audit-first on
+design 2 at his ask: five small fixes on a copy (the phone's bottom-right row, the word on the cover
+photograph, the place page's opening line, dates as months, the Speed label). On 8646 (`exp-taste2`).
+Keep or drop on his word.
 
 Dropped on 2026-10-04: `scroll` (started 2026-10-03), the opening after noomoagency.com (his find)
 and his own idea: the guide books in design 1's row under the name, over the photograph, flying to
