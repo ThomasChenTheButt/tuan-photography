@@ -79,10 +79,10 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 [hidden] { display: none !important; }
 
 /* the lettering of names and controls: spaced capitals, quiet */
-.caps, .word, .lang__btn, .zoom__btn, .index__tab, .index__title, .index__close, .group__name, .leaf__where b, .toc h2, .sheet thead th, .day__light, .ate, .quiet-line, .globe__cap, .cover__ctl, .cover__hint, .journey__date, .flights__how, .flights__when {
+.caps, .word, .lang__btn, .zoom__btn, .index__tab, .index__title, .index__close, .group__name, .leaf__where b, .toc h2, .sheet thead th, .day__light, .ate, .quiet-line, .globe__cap, .cover__ctl, .journey__date, .flights__how, .flights__when {
   font-size: 0.72rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; line-height: 1.3;
 }
-:lang(zh-Hant) :is(.caps, .word, .lang__btn, .zoom__btn, .index__tab, .index__title, .index__close, .group__name, .leaf__where b, .toc h2, .sheet thead th, .day__light, .ate, .quiet-line, .globe__cap, .cover__ctl, .cover__hint, .journey__date, .flights__how, .flights__when) {
+:lang(zh-Hant) :is(.caps, .word, .lang__btn, .zoom__btn, .index__tab, .index__title, .index__close, .group__name, .leaf__where b, .toc h2, .sheet thead th, .day__light, .ate, .quiet-line, .globe__cap, .cover__ctl, .journey__date, .flights__how, .flights__when) {
   font-size: 0.8rem; letter-spacing: 0.26em; text-transform: none;
 }
 /* lettered straight onto the painting: a paper halo keeps it legible over any wash */
@@ -374,7 +374,8 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 #leaf-title:focus { outline: none; }
 
 /* the cover: the photograph fills the window; nothing is written across it.
-   The note, the name and the coordinates come last, at the bottom edge, over a soft darkening */
+   The caption and the small words come last, at the bottom edge, over a soft darkening
+   (the "scroll for the photographs" hint went on 2026-10-05: one word fewer on the photograph) */
 .cover {
   position: sticky; top: 0; z-index: 0; height: 100vh; height: 100svh; min-height: 22rem; overflow: hidden;
   touch-action: pan-y; user-select: none; -webkit-user-select: none; cursor: grab;
@@ -388,7 +389,7 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 .leaf.is-dissolving .slide:not(.is-current) { visibility: hidden; }
 .leaf.is-dissolving .slide.is-current img { opacity: var(--fade, 0); filter: blur(var(--blur, 8px)); transform: scale(var(--sc, 1.04)); will-change: opacity, filter, transform; }
 .cover__shade { position: absolute; left: 0; right: 0; bottom: 0; height: 15rem; max-height: 45%; background: linear-gradient(to top, oklch(16% 0.012 50 / 0.7), oklch(16% 0.012 50 / 0.28) 50%, transparent); pointer-events: none; }
-.cover__back, .cover__foot, .cover__hint { color: var(--paper); text-shadow: var(--cap-shadow); }
+.cover__back, .cover__foot { color: var(--paper); text-shadow: var(--cap-shadow); }
 .cover__ctl { display: inline-flex; align-items: center; min-height: 2.75rem; padding: 0 0.2rem; color: var(--paper); text-decoration: none; transition: opacity 160ms ease-out, color 180ms; }
 .cover__ctl:hover { color: var(--warm-wash); }
 .cover :focus-visible { outline-color: var(--paper); }
@@ -406,17 +407,14 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 .cover__count { font-size: 0.85rem; letter-spacing: 0.08em; opacity: 0.85; font-variant-numeric: tabular-nums; }
 .cover__step { display: flex; gap: 1.1rem; }
 .leaf.is-single .cover__step, .leaf.is-single .cover__count { display: none; }
-.cover__hint { position: absolute; z-index: 2; left: 50%; bottom: clamp(0.6rem, 2vh, 1.1rem); transform: translateX(-50%); min-height: 2.75rem; padding: 0 0.6rem; font-size: 0.66rem; white-space: nowrap; opacity: 0.86; transition: opacity 600ms var(--soft); }
-.cover__shade, .cover__back, .cover__foot, .cover__hint { opacity: 0; transition: opacity 260ms ease-out; }
+.cover__shade, .cover__back, .cover__foot { opacity: 0; transition: opacity 260ms ease-out; }
 .leaf.is-captioned :is(.cover__shade, .cover__back, .cover__foot) { opacity: 1; transition: opacity 900ms var(--soft); }
-.leaf.is-captioned .cover__hint { opacity: 0.86; transition: opacity 900ms var(--soft) 600ms; }
 .leaf.is-captioned .cover__foot { transition-delay: 100ms; }
 .leaf.is-captioned .cover__back { transition-delay: 300ms; }
 /* after a still moment the words step back, all but the caption itself */
 .leaf.is-woken .cover__ctl { transition: opacity 160ms ease-out, color 180ms; }
 /* (they stay legible on their soft shadow: on a phone, Back is the only way out) */
 .leaf.is-still .cover__ctl { opacity: 0.62; transition: opacity 900ms var(--soft), color 180ms; }
-.leaf.is-still .cover__hint, .leaf.is-scrolled .cover__hint { opacity: 0; pointer-events: none; }
 
 /* ---------------------------------------------------------- pages: one voice for both kinds */
 
@@ -600,7 +598,7 @@ p, h1, h2, h3, figure, dl, dd, ul, ol { margin: 0; }
 /* the leg being travelled, under the globe, in the journey list's own hand */
 /* the replay's speed: three words under the globe, the one in use underlined in ink */
 .flights__speed { display: flex; justify-content: center; align-items: baseline; gap: 0.9rem; margin-top: 0.55rem; }
-.flights__speed-label { font-family: var(--sans); font-weight: 500; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-3); }
+.flights__speed-label { font-family: var(--sans); font-weight: 500; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; color: var(--ink-2); }
 :lang(zh-Hant) .flights__speed-label { font-size: 0.75rem; letter-spacing: 0.14em; }
 .speed__btn { font: 500 0.82rem/1 var(--sans); font-variant-numeric: tabular-nums; color: var(--ink-2); padding: 0.55rem 0.2rem; min-width: 2.75rem; min-height: 2.75rem; background: none; border: 0; cursor: pointer; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 0.35em; text-decoration-thickness: 1px; transition: color 200ms, text-decoration-color 200ms; }
 .speed__btn:hover { color: var(--ink); text-decoration-color: var(--ink-3); }
@@ -663,9 +661,12 @@ button.jplace:hover img, .jplace:focus-visible img { transform: translateY(-2px)
   .globe__canvas { width: 92px; height: 92px; }
   .globe__cap { margin-top: -0.35rem; font-size: 0.62rem; letter-spacing: 0.16em; }
   .key { display: none; }
-  .tally { padding: 0 0.75rem; background: radial-gradient(closest-side, var(--paper) 78%, oklch(98.4% 0.0075 95 / 0) 100%); }
-  .tools { right: calc(var(--edge) - 0.55rem); bottom: calc(var(--edge) + 3rem); }
-  .zoom { flex-direction: column; align-items: flex-end; gap: 0; }
+  /* the tally stays off a phone: it wrapped into five lines over New Zealand's book (2026-10-05).
+     The words and the dial keep to one row at the foot, the dial shortened to make room */
+  .tally { display: none; }
+  .tools { right: calc(var(--edge) - 0.55rem); bottom: calc(var(--edge) + 3rem); max-width: none; flex-wrap: nowrap; gap: 0 0.7rem; }
+  .zoom__btn { white-space: nowrap; }
+  .dial__range { width: 5.5rem; }
   /* the coast of Antarctica runs along the bottom of a phone: each word sits on a patch of
      paper cleared out of the drawing, its edge soft as an eraser leaves it */
   .zoom__btn { padding: 0 0.75rem; background: radial-gradient(closest-side, var(--paper) 78%, oklch(98.4% 0.0075 95 / 0) 100%); }
@@ -685,7 +686,6 @@ button.jplace:hover img, .jplace:focus-visible img { transform: translateY(-2px)
   .cover__foot { bottom: calc(2.4rem + env(safe-area-inset-bottom)); }
   .cover__cap { padding-bottom: 0; }
   .cover__step { margin-left: auto; }
-  .cover__hint { bottom: calc(0.1rem + env(safe-area-inset-bottom)); }
   .leaf__where { display: none; }
   .leaf__bar { justify-content: space-between; }
 

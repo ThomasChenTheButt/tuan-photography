@@ -47,7 +47,6 @@
       count: (n, p) => `${n} photographs from ${p} places`,
       tally: (n, all, pct) => `${n} / ${all} countries · ${pct}% of the world`,
       seePhotos: 'See the photographs',
-      hintGuide: 'Scroll for the guide', hintPhotos: 'Scroll for the photographs',
       coverLabel: (p) => `Photographs of ${p}`,
       prev: 'Previous', next: 'Next',
       camera: 'Camera', lens: 'Lens', settings: 'Settings',
@@ -80,7 +79,6 @@
       count: (n, p) => `${p} 個地方，${n} 張照片`,
       tally: (n, all, pct) => `${n} / ${all} 個國家，走過世界 ${pct}%`,
       seePhotos: '看照片',
-      hintGuide: '往下看攻略', hintPhotos: '往下看照片',
       coverLabel: (p) => `${p}的照片`,
       prev: '上一張', next: '下一張',
       camera: '相機', lens: '鏡頭', settings: '參數',
@@ -166,9 +164,17 @@
   };
   // when a book's place was travelled: a city's, the journeys that name it, oldest first
   // (New York: 2015, Summer 2025); a country's, the country's own dates
+  // a date kept as "2025.1" in the facts is spoken as a month on the page (January 2025 /
+  // 2025 年 1 月, as the journeys already are); any other form is left as written
+  const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+  const dateWord = (d) => {
+    const m = /^(\d{4})\.(\d{1,2})$/.exec(d || '');
+    if (!m) return d;
+    return lang === 'zh' ? `${m[1]} 年 ${+m[2]} 月` : `${MONTHS[+m[2] - 1]} ${m[1]}`;
+  };
   const bookDate = (b) => {
     const js = b.place ? (S.journeys || []).filter((j) => Array.isArray(j.places) && j.places.includes(b.place)).reverse() : [];
-    return js.length ? js.map((j) => L(j.date)).join(lang === 'zh' ? '、' : ', ') : L(countries[b.country].date);
+    return js.length ? js.map((j) => L(j.date)).join(lang === 'zh' ? '、' : ', ') : dateWord(L(countries[b.country].date));
   };
   const coords = ([lat, lng]) => `${Math.abs(lat).toFixed(3)}°${lat >= 0 ? 'N' : 'S'} · ${Math.abs(lng).toFixed(3)}°${lng >= 0 ? 'E' : 'W'}`;
   const nameParts = (b) => {
@@ -1161,7 +1167,6 @@
     if (!has) { cover.hidden = true; track.textContent = ''; gal.slots = []; return; }
     cover.hidden = false;
     cover.setAttribute('aria-label', T[lang].coverLabel(L(b.title)));
-    $('#cover-hint').textContent = isGuide(view) ? t('hintGuide') : t('hintPhotos');
     if (!gal.slots.length) {
       gal.slots = [-1, 0, 1].map((pos) => {
         const el = document.createElement('figure');
@@ -1230,11 +1235,6 @@
   }
   $('#cover-prev').addEventListener('click', () => galStep(-1));
   $('#cover-next').addEventListener('click', () => galStep(1));
-  $('#cover-hint').addEventListener('click', () => {
-    leafContent.scrollIntoView({ behavior: reduce.matches ? 'auto' : 'smooth', block: 'start' });
-    const first = $('#leaf-title', leafContent);
-    if (first) { first.setAttribute('tabindex', '-1'); first.focus({ preventScroll: true }); }
-  });
   // a finger or the mouse moves the photograph with it, and lets it settle on the nearest one
   let drag = null;
   cover.addEventListener('pointerdown', (e) => {
@@ -1342,7 +1342,7 @@
     leafContent.innerHTML = `<div class="wrap">
       <header class="place-top">
         <h1 class="page-title" id="leaf-title">${esc(title)}</h1>
-        <p class="meta place-status"><span class="quiet-line">${esc(t('bookNot'))}</span>${name !== title ? `<span>${esc(name)}</span>` : ''}${bookDate(b) ? `<span>${esc(bookDate(b))}</span>` : ''}${ids.length ? `<span>${esc(T[lang].nPhotos(ids.length))}</span>` : ''}</p>
+        <p class="meta place-status">${name !== title ? `<span>${esc(name)}</span>` : ''}${bookDate(b) ? `<span>${esc(bookDate(b))}</span>` : ''}${ids.length ? `<span>${esc(T[lang].nPhotos(ids.length))}</span>` : ''}</p>
         ${b.place ? '' : `<p class="page-lede">${esc(L(c.note))}</p>`}
       </header>${body}${pageEnd(ids.length > 0)}</div>`;
     $$('[data-ar]', leafContent).forEach((n) => n.style.setProperty('--ar', n.dataset.ar));
