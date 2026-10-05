@@ -123,17 +123,6 @@
 - 這是什麼: 一份設計規則手冊,目的是讓做出來的網頁不像 AI 套模板。
 - 喜歡它什麼: 待補
 
-### image-blaster（一張照片變成 3D 場景）
-- 類型: 設計 Skill
-- 日期: 2026-10-05
-- 重點: 一張照片生出可走進去的 3D 場景
-- 網址: https://github.com/neilsonnn/image-blaster
-- 狀態: 已存檔
-- 狀態說明: 整個專案存在 ~/.claude/skills-library/not-installed/image-blaster，沒裝進 Claude。它不是單一個 skill，是一包八個 skill 加上腳本和看圖的小網頁，要在它自己的資料夾裡跑，而且要 World Labs 和 FAL 的 API 金鑰（付費）。
-- 這是什麼: 給 Claude 用的一套 skill：丟一張照片進去，它會做出（一）這個地方的 3D 場景（Gaussian splat，可以把鏡頭移進去走），（二）照片裡每個可以搬動的東西的 3D 模型，（三）環境音和每個東西的音效。工作不是它自己做的，是把照片送到 World Labs（Marble）、FAL（Hunyuan 3D）、ElevenLabs 去生，一個場景大約幾美元。MIT 授權，7,400 顆星。
-- 喜歡它什麼: 待補（他說「cool, download it」）
-- Claude 備註: 腳本看過了，只連 fal.ai 和 worldlabs.ai，金鑰放在它自己的 .env（不上傳）。要注意：用它就是把你的照片送到那幾家服務。對網站來說，有意思的是第一項：庫克山或馬特洪峰的照片變成訪客可以飄進去的場景，但這很搶戲，和「設計不能蓋過照片」相反，要試也只在複本上試。
-
 ### Scroll-craft
 - 類型: 設計 Skill
 - 日期: 2026-09-28
@@ -250,3 +239,13 @@
 ## 三、已採用/已放棄 Used or dropped
 
 *(做了或決定不做的搬到這裡,留一句原因,之後才不會重複討論)*
+
+### image-blaster（一張照片變成 3D 場景）
+- 類型: 設計 Skill
+- 日期: 2026-10-05
+- 重點: 一張照片生出可走進去的 3D 場景
+- 網址: https://github.com/neilsonnn/image-blaster
+- 狀態: 已放棄
+- 狀態說明: 10/5 看過說明後他說「感覺我不太需要」，下載的那份已刪掉（要回來的話 git clone 一下就有）。它不是單一個 skill，是一包八個 skill 加上腳本和看圖的小網頁，要在它自己的資料夾裡跑，而且要 World Labs 和 FAL 的 API 金鑰（付費）。
+- 這是什麼: 給 Claude 用的一套 skill：丟一張照片進去，它會做出（一）這個地方的 3D 場景（Gaussian splat，可以把鏡頭移進去走），（二）照片裡每個可以搬動的東西的 3D 模型，（三）環境音和每個東西的音效。工作不是它自己做的，是把照片送到 World Labs（Marble）、FAL（Hunyuan 3D）、ElevenLabs 去生，一個場景大約幾美元。MIT 授權，7,400 顆星。
+- Claude 備註: 腳本看過了，只連 fal.ai 和 worldlabs.ai，金鑰放在它自己的 .env（不上傳）。要注意：用它就是把你的照片送到那幾家服務。對網站來說，有意思的是第一項：庫克山或馬特洪峰的照片變成訪客可以飄進去的場景，但這很搶戲，和「設計不能蓋過照片」相反，要試也只在複本上試。
