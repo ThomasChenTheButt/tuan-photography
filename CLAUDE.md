@@ -97,8 +97,8 @@ Arranged on 2026-09-28 at his request, so the top level reads at a glance. Keep 
   `start.command` starts both servers, 8642 and 8645.
 - **Inside `design 2/wc-sketch/`, the opening and the map are kept apart** (his call, 2026-10-04,
   so he can collect opening candidates and choose later): `opening/` holds one file per candidate
-  (`globe.js`, `corridor.js`, `photoball.js`; the shelf from experiment `scroll` is next), chosen
-  from the address with `?opening=…`; `map/flights.js` is the map's own globes; `paint.js` the
+  (`globe.js`, the globe that unrolls into the map, and `photoball.js`, its photo-ball look),
+  chosen from the address with `?opening=…`; `map/flights.js` is the map's own globes; `paint.js` the
   shared brushes; `app.js` the page and the glue between them. A new opening is a new file in
   `opening/`, never more code in `app.js`. The file table is in that folder's `DESIGN.md`.
 - **In Finder he sees only what he opens himself** (his request, 2026-09-29: the full list
@@ -182,44 +182,14 @@ what.
 - Only publish photos he confirms are his own — some "sample pic" links in his planning docs
   are other people's reference shots.
 
-<frontend_aesthetics>
-You tend to converge toward generic, "on distribution" outputs. In frontend design, this creates
-what users call the "AI slop" aesthetic. Avoid this: make creative, distinctive frontends that
-surprise and delight. Focus on:
+## What the design must never drift toward
 
-Typography: Choose fonts that are beautiful, unique, and interesting. Avoid generic fonts like
-Arial and Inter; opt instead for distinctive choices that elevate the frontend's aesthetics.
-
-Color & Theme: Commit to a cohesive aesthetic. Use CSS variables for consistency. Dominant colors
-with sharp accents outperform timid, evenly-distributed palettes. Draw from IDE themes and
-cultural aesthetics for inspiration.
-
-Motion: Use animations for effects and micro-interactions. Prioritize CSS-only solutions for HTML.
-Use Motion library for React when available. Focus on high-impact moments: one well-orchestrated
-page load with staggered reveals (animation-delay) creates more delight than scattered
-micro-interactions.
-
-Backgrounds: Create atmosphere and depth rather than defaulting to solid colors. Layer CSS
-gradients, use geometric patterns, or add contextual effects that match the overall aesthetic.
-
-Avoid generic AI-generated aesthetics:
-- Overused font families (Inter, Roboto, Arial, system fonts)
-- Clichéd color schemes (particularly purple gradients on white backgrounds)
-- Predictable layouts and component patterns
-- Cookie-cutter design that lacks context-specific character
-
-Use extremes in type: 100/200 weight against 800/900, not 400 against 600. Size jumps of 3x+,
-not 1.5x.
-
-Interpret creatively and make unexpected choices that feel genuinely designed for the context.
-Vary between light and dark themes, different fonts, different aesthetics. You still tend to
-converge on common choices (Space Grotesk, for example) across generations. Avoid this: it is
-critical that you think outside the box!
-</frontend_aesthetics>
-
-Note: the aesthetics block above is general guidance. Where it conflicts with **the brief**
-at the top of this file or with `DESIGN.md`, those win — the owner has already made those calls
-deliberately.
+The brief and the two `DESIGN.md` files decide every visual question (typeface, light only,
+flat paper, square corners, motion). When a new page or experiment is built, these are the
+defaults that creep in unnoticed and are not this site: Inter, Roboto, Space Grotesk or system
+fonts; purple or any gradient background; dark themes; pill buttons, rounded cards, drop
+shadows; numbered "01 / 02 / 03" section labels; italic accent words in headings; a hero with
+text over the photograph. Check a new build against this list before showing it to him.
 
 ## Session log — PROGRESS.md (READ FIRST, WRITE LAST)
 
@@ -328,54 +298,20 @@ design 2 at his ask: five small fixes on a copy (the phone's bottom-right row, t
 photograph, the place page's opening line, dates as months, the Speed label). On 8646 (`exp-taste2`).
 Keep or drop on his word.
 
-Dropped on 2026-10-04: `scroll` (started 2026-10-03), the opening after noomoagency.com (his find)
-and his own idea: the guide books in design 1's row under the name, over the photograph, flying to
-their places on the first scroll, the flights on the second. It was brought into design 2 as
-`opening/shelf.js` on 2026-10-04, tried beside the globe and the corridor, and the same day he
-kept only the globe: the shelf, the corridor and the experiment all went. The code is at the tags
-`before-drop-openings-2026-10-04` (design 2 with all three openings) and
-`exp-scroll-dropped-2026-10-04` (the experiment's branch).
+Decided experiments. Rejected ideas are not proposed again; the tags hold the code.
 
-Dropped on 2026-10-03: `cssglobe`, the opening's globe after a React/Tailwind component he brought
-(the Earth map scrolling behind a round window, inset shadows), rebuilt in plain CSS/JS. He dropped
-it the same day.
-
-Dropped on 2026-10-03: `earth` and `scope`. `earth` was the opening's globe as a lit Earth built on
-the graphics card from the site's own maps (nothing downloaded), after his phone's Earth; `scope`
-was the opening as the map seen from far off through a telescope's eyepiece, coming nearer, the
-glass opening into the map. He dropped both the same day. The code is in the reflog only.
-
-Dropped on 2026-10-01: `marked-photo`, a friend's idea from a Douyin photo post: a circled spot on the
-home windows (Big Ben's clock, the Matterhorn summit), a drawn line to a print of it up close, a few
-lines of words and coordinates. He dropped it the same day.
-
-Kept on 2026-10-01: `coverflow`, the guides as a fanned row of all sixteen countries' 3D books
-(replacing the five-book still shelf kept earlier the same day). The site just before it is at the
-tag `before-coverflow-2026-10-01`.
-
-Kept on 2026-10-01: `bookshelf`, the home page's guides as five books on a 3D shelf (Japan,
-Hong Kong, Barcelona, Dubai, London), covers made like printed guides. The site just before
-that merge is at the tag `before-bookshelf-2026-10-01`.
-
-Dropped on 2026-10-01: `taste-review`, the Taste skill's audit-first pass on the home page and
-the gallery opening. It removed the three doors and the intro's two buttons and the Gallery's
-"Portfolio" heading. He preferred the site as it was: the doors and the intro buttons stay.
-
-Kept on 2026-10-01: `impeccable-full`, the full Impeccable procedure (dual-agent critique, 23/32,
-its record in `.impeccable/critique/`), then the three P1 fixes he chose plus polish:
-Destinations as the continents travelled with true wording, the phone viewer (bar at the bottom,
-sized copies, swipe, Back closes it), keyboard and screen-reader access. The site just before that
-merge is at the tag `before-impeccable-full-2026-10-01`. A shortened single-context attempt on
-2026-09-30 (`skills-review`) was dropped at his request.
-
-Kept on 2026-09-30: `merge-old-layouts`, three things he liked on the site as it was before the
-redesign, rebuilt in the current look: the gallery's tight portfolio grid, destinations as seven
-continent squares, and the opening photograph staying in place while the page is drawn up over
-it. The site just before that merge is at the tag `before-merge-old-layouts-2026-09-30`.
-
-The first experiment, `impeccable` (a full rebuild made with the Impeccable
-and taste skills), was **kept** on 2026-09-28 and is now the site. Its three earlier looks are
-in the history at the tags `light-table-v1` and `exhibition-hang-v2`.
+| Experiment | Verdict | Date | Where the code is |
+|---|---|---|---|
+| `impeccable` (full rebuild, Impeccable + Taste skills) | kept, now the site | 2026-09-28 | earlier looks: `light-table-v1`, `exhibition-hang-v2` |
+| `merge-old-layouts` (portfolio grid, seven continent squares, opening photo staying put) | kept | 2026-09-30 | before: `before-merge-old-layouts-2026-09-30` |
+| `skills-review` (shortened Impeccable pass) | dropped | 2026-09-30 | none |
+| `impeccable-full` (dual-agent critique 23/32, three P1 fixes, phone viewer, keyboard and screen-reader access) | kept | 2026-10-01 | before: `before-impeccable-full-2026-10-01`; record in `.impeccable/critique/` |
+| `taste-review` (removed the three doors, the intro buttons, the "Portfolio" heading) | dropped: the doors and buttons stay | 2026-10-01 | none |
+| `bookshelf` (five 3D books on the home page) | kept, then replaced by coverflow | 2026-10-01 | before: `before-bookshelf-2026-10-01` |
+| `coverflow` (all sixteen books as a fanned row) | kept | 2026-10-01 | before: `before-coverflow-2026-10-01` |
+| `marked-photo` (a circled spot on the home photo, a line to a close print, coordinates) | dropped | 2026-10-01 | reflog only |
+| `earth`, `scope`, `cssglobe` (three globe openings for design 2) | dropped | 2026-10-03 | reflog only |
+| `scroll` (books on shelves flying to their places on scroll; became `opening/shelf.js`, tried beside the corridor) | dropped with the corridor; only the globe stays | 2026-10-04 | `before-drop-openings-2026-10-04`, `exp-scroll-dropped-2026-10-04` |
 
 **Weekly report 週報** (set up 2026-09-28). A scheduled task, `weekly-web-design-report`, runs
 every Monday about 9:00 and searches the web for the week's new AI web-design tools, skills,
