@@ -166,6 +166,17 @@ main { flex: 1; }
   .name span { font-size: 0.8rem; letter-spacing: 0.16em; }
 }
 
+/* ---------------- the openings page (experiment): one line per candidate ---------------- */
+
+.openings { list-style: none; margin: 0 auto var(--s-6); padding: 0; max-width: 46rem; border-top: 1px solid var(--line); }
+.openings li { border-bottom: 1px solid var(--line); }
+.openings a { display: grid; grid-template-columns: 9rem 1fr; gap: var(--s-2); padding: 1.2rem 0; text-decoration: none; color: inherit; }
+.openings a:hover b { color: var(--accent); }
+.openings b { font-family: var(--serif); font-weight: 400; font-size: 1.25rem; line-height: 1.3; }
+:lang(zh-Hant) .openings b { font-weight: 500; }
+.openings span { color: var(--text-2); font-size: var(--t-s); line-height: 1.5; }
+@media (max-width: 40rem) { .openings a { grid-template-columns: 1fr; gap: 0.3rem; } }
+
 /* ---------------- buttons: rectangles, capital labels ---------------- */
 
 .btn {
@@ -606,24 +617,28 @@ main { flex: 1; }
 
 /* ---------------- motion ----------------
    Three reasons only.
-   1. Arriving: the home page opens on one detail of the opening photograph,
-      the summit, and pulls back until the whole landscape is there; only
-      then do the top bar and the place line fade in. It plays once a visit
-      (html.opened on a return; ?opening replays it), and on every other
-      page the photograph simply settles. The words under a title come up
-      after their photograph.
+   1. Arriving: the opening photograph settles into place and the words
+      under a title come up after it. On the home page an opening can run
+      first (?opening=<name>, experiment `opening`).
    2. Leaving the opening photograph: it stays where it is, rising slowly,
       while the page is drawn up over it.
    3. Walking the wall: each photograph rises as it comes into view. */
 
 @media (prefers-reduced-motion: no-preference) {
   .cover { position: sticky; top: 0; z-index: 0; }
-  .cover.arrive img { transform-origin: 42% 40%; animation: pullback 3800ms var(--slow) both; }
-  .cover.arrive::before, .cover.arrive::after, .cover.arrive figcaption,
-  body:has(.cover.arrive) .top--over { animation: fade 1400ms var(--out) both; animation-delay: 3000ms; }
-  html.opened .cover.arrive img { transform-origin: 50% 50%; animation: settle 2200ms var(--out) both; }
-  html.opened .cover.arrive::before, html.opened .cover.arrive::after, html.opened .cover.arrive figcaption,
-  html.opened body:has(.cover.arrive) .top--over { animation: none; }
+  .cover.arrive img { animation: settle 2200ms var(--out) both; }
+
+  /* An opening (experiment `opening`, ?opening=<name>): while it runs the page holds still under
+     it, the photograph does not settle, and the words over the photograph wait; when it is done
+     they fade in. Each opening is one file in js/opening/. The pull-back is the one done in CSS. */
+  html.op:not(.op-done) { overflow: hidden; }
+  html.op .cover.arrive img { animation: none; }
+  html.op .cover::before, html.op .cover::after, html.op .cover figcaption, html.op .top--over { opacity: 0; }
+  html.op-done .cover::before, html.op-done .cover::after, html.op-done .cover figcaption, html.op-done .top--over { animation: fade 1400ms var(--out) both; }
+  html.op-pullback .cover.arrive img { transform-origin: 42% 40%; animation: pullback 3800ms var(--slow) both; }
+  .op-stage { position: fixed; inset: 0; z-index: 40; overflow: hidden; background: oklch(12% 0.01 60); }
+  .op-stage.paper { background: var(--bg); }
+  .op-stage.out { opacity: 0; transition: opacity 1100ms var(--out); pointer-events: none; }
   .arrive .piece a, .arrive.piece a { animation: uncover 1100ms var(--out) both; }
   .arrive .piece img, .arrive.piece img { animation: settle 1600ms var(--out) both; }
   .arrive .rise { animation: rise 900ms var(--out) both; animation-delay: calc(200ms + var(--i, 0) * 90ms); }
