@@ -52,9 +52,9 @@ rerun `python3 tools/finder_view.py` so the top level stays tidy.
 
 ## 等你決定 Waiting on you
 
-- **Experiment `opening` (localhost:8648):** sixteen candidate openings for the home page, listed on
-  `localhost:8648/openings.html` (six kept from 2026-10-07, ten added 2026-10-08: five from his ideas
-  list, five from award-site patterns). Pick one to tune. Session of its own.
+- **Experiment `opening` (localhost:8648):** six candidate openings for the home page, listed on
+  `localhost:8648/openings.html` (aperture, contact sheet, film strip, burst, letters, pull-back).
+  Fifteen others were tried and cut (branch history `2d0684e`, `6beb0a3`). Pick one to tune. Session of its own.
 
 - **Sea photograph:** which photographs besides Aoraki, if any? (`?ocean=all` cycles all 93.)
 - **Camera data for the 22 US photographs:** re-export from Lightroom with metadata, or drop the
