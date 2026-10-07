@@ -43,7 +43,7 @@ html[lang="zh"] .head h1 { font-family: "Noto Serif TC", var(--serif); font-weig
 }
 html[lang="zh"] .hint { letter-spacing: 0.12em; }
 
-.tools { position: fixed; right: var(--edge); top: var(--edge); z-index: 3; }
+.tools { position: fixed; right: var(--edge); bottom: var(--edge); z-index: 3; }
 .word {
   appearance: none; background: none; border: 0; padding: 0.6rem 0; margin: 0;
   font: inherit; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
@@ -121,6 +121,7 @@ html[lang="zh"] .label .place { font-family: "Noto Serif TC", var(--serif); font
   .head { max-width: 15rem; }
   .lead { display: none; }
   .stage { perspective: 1000px; perspective-origin: 60% 42%; }
+  .line { left: 46%; top: 44%; }
   .label { max-width: calc(100vw - var(--edge) * 2); }
 }
 @media (prefers-reduced-motion: reduce) {
