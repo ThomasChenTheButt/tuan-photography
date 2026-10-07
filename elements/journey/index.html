@@ -15,7 +15,14 @@
   <p class="hint" data-i18n="hint">Scroll or drag to travel. Click a book to open it.</p>
 </header>
 
+<div class="backdrop" id="backdrop" aria-hidden="true"><img alt=""><img alt=""></div>
+
 <nav class="tools">
+  <div class="bar">
+    <label for="veil" data-i18n="veil">Background</label>
+    <input type="range" id="veil" min="0" max="100" value="28">
+    <output for="veil" id="veil-out">28%</output>
+  </div>
   <button type="button" class="word" id="lang">中文</button>
 </nav>
 

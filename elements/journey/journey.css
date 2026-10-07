@@ -8,6 +8,8 @@
   --text: oklch(25% 0.012 60);
   --text-2: oklch(45% 0.017 62);
   --accent: oklch(46% 0.092 47);
+  --band: oklch(91.8% 0.013 80);
+  --paper: oklch(97.5% 0.008 85);
   --clay: oklch(53% 0.088 47);
   --olive: oklch(49% 0.052 95);
   --slate: oklch(41% 0.03 195);
@@ -52,6 +54,21 @@ html[lang="zh"] .hint { letter-spacing: 0.12em; }
 .word:hover, .word:focus-visible { color: var(--accent); outline: none; }
 html[lang="zh"] .word { letter-spacing: 0.12em; }
 
+/* ---- the backdrop: the front book's photograph fills the page behind the stack, at the strength
+   the bar sets, and crossfades to the next as the line moves ---- */
+.backdrop { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.backdrop img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.9s var(--out); }
+.backdrop img.on { opacity: var(--veil, 0.28); }
+
+/* the bar, bottom right: how strong the photograph behind shows */
+.bar { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.8rem; width: 15rem; margin-bottom: 0.4rem; }
+.bar label { font-size: 0.64rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-2); }
+.bar output { font-size: 0.8rem; color: var(--text-2); min-width: 2.4rem; text-align: right; font-variant-numeric: tabular-nums; }
+.bar input { -webkit-appearance: none; appearance: none; width: 100%; height: 1px; margin: 0; background: var(--line); outline: none; }
+.bar input::-webkit-slider-thumb { -webkit-appearance: none; width: 10px; height: 10px; background: var(--accent); border: 0; border-radius: 0; cursor: pointer; }
+.bar input::-moz-range-thumb { width: 10px; height: 10px; background: var(--accent); border: 0; border-radius: 0; cursor: pointer; }
+.tools { display: grid; justify-items: end; }
+
 /* ---- the stage: one perspective, one line of books ---- */
 .stage {
   position: fixed; inset: 0; z-index: 1;
@@ -63,56 +80,61 @@ html[lang="zh"] .word { letter-spacing: 0.12em; }
   position: absolute; left: 50%; top: 55%; width: 0; height: 0;
   transform-style: preserve-3d; will-change: transform;
 }
+/* ---- the book: design 1's guidebook, as it stands on the home page's shelf. A photograph on
+   the face with a paper band beneath it carrying the name and what the book holds; the spine in
+   the book's earth colour, with the name and the series written down it; page edges in paper.
+   --deep is its thickness. */
 .book {
   position: absolute; left: 0; top: 0;
   width: var(--w); height: var(--h);
   margin-left: calc(var(--w) / -2); margin-top: calc(var(--h) / -2);
   transform-style: preserve-3d; will-change: transform;
-  /* the fade is on the parts, never on the book: opacity on the book would flatten its faces */
-  --o: 1;
-  cursor: pointer;
+  --deep: calc(var(--w) * 0.2); --shade: oklch(20% 0.02 60); --o: 1;
+  color: var(--paper); cursor: pointer;
 }
-.book img {
-  display: block; width: 100%; height: 100%; object-fit: cover; position: relative; background: var(--card); opacity: var(--o);
-  pointer-events: none; -webkit-user-drag: none;
+.book__box { position: absolute; inset: 0; transform-style: preserve-3d; }
+.book__face, .book__spine, .book__edge, .book__top {
+  position: absolute; top: 0; left: 0; height: 100%; backface-visibility: hidden; outline: 1px solid transparent;
 }
-/* a plain cover for a book without a photograph yet */
-/* a plain cover for a book without a photograph yet: paper, with the name written down the right edge,
-   where a book behind another still shows */
-.book.blank .cover {
-  position: absolute; inset: 0; background: oklch(93% 0.012 82);
-  box-shadow: inset 0 0 0 1px var(--line); opacity: var(--o);
+.book__face {
+  display: grid; grid-template-rows: minmax(0, 1fr) auto; width: 100%; background: var(--band); overflow: hidden;
+  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--shade) 22%, transparent), inset 0 0 0 2px color-mix(in oklch, var(--paper) 55%, transparent), inset 4px 0 8px -4px color-mix(in oklch, var(--shade) 50%, transparent);
 }
-.book.blank .name {
-  position: absolute; top: 1.1rem; right: 1rem; writing-mode: vertical-rl;
-  font-family: var(--serif); font-weight: 400; color: var(--tone, var(--clay));
-  font-size: clamp(1.2rem, 2vw, 1.8rem); letter-spacing: 0.02em; opacity: var(--o);
+.book__face::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(100deg, color-mix(in oklch, var(--paper) 22%, transparent), transparent 38%); }
+.book__face img { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-drag: none; }
+.book__face--blank { align-content: end; background: repeating-linear-gradient(135deg, var(--band) 0 6px, var(--line) 6px 7px); }
+.book__band { display: grid; gap: 0.3rem; padding: 0.7rem 0.85rem 0.75rem; background: var(--paper); color: var(--text); border-top: 1px solid var(--line); }
+.book__band b { font-family: var(--serif); font-weight: 400; font-size: clamp(1rem, 0.6rem + 1.1vw, 1.5rem); line-height: 1.15; }
+html[lang="zh"] .book__band b { font-family: "Noto Serif TC", var(--serif); font-weight: 500; letter-spacing: 0.06em; }
+.book__band span { font-size: 0.66rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-2); }
+html[lang="zh"] .book__band span { font-size: 0.75rem; letter-spacing: 0.14em; }
+.book__spine {
+  display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: var(--deep); padding: 1.1rem 0;
+  writing-mode: vertical-rl; transform-origin: left center; transform: rotateY(-90deg) translateX(-100%);
+  background-color: var(--tone, var(--clay));
+  background-image: linear-gradient(to right, color-mix(in oklch, var(--shade) 30%, transparent), transparent 35%, transparent 70%, color-mix(in oklch, var(--shade) 22%, transparent));
 }
-html[lang="zh"] .book.blank .name { font-family: "Noto Serif TC", var(--serif); font-weight: 500; letter-spacing: 0.15em; }
-/* the book has a little thickness: the spine is its left face, in the book's own
-   earth colour; the pages are the bottom and right faces, in paper */
-.book { --t: 34px; }
-.face { position: absolute; pointer-events: none; opacity: var(--o); backface-visibility: hidden; }
-.spine { left: 0; top: 0; width: var(--t); height: 100%; background: var(--tone, var(--clay)); transform-origin: left center; transform: rotateY(90deg); }
-.pages-b { left: 0; bottom: 0; width: 100%; height: var(--t); background: repeating-linear-gradient(90deg, oklch(90% 0.01 82) 0 3px, oklch(84% 0.012 80) 3px 4px); transform-origin: center bottom; transform: rotateX(90deg); }
-.pages-t { left: 0; top: 0; width: 100%; height: var(--t); background: repeating-linear-gradient(90deg, oklch(93% 0.009 84) 0 3px, oklch(87% 0.012 80) 3px 4px); transform-origin: center top; transform: rotateX(-90deg); }
-.pages-r { right: 0; top: 0; width: var(--t); height: 100%; background: repeating-linear-gradient(0deg, oklch(92% 0.009 84) 0 3px, oklch(85% 0.012 80) 3px 4px); transform-origin: right center; transform: rotateY(-90deg); }
-/* the tag: a paper tab slipped in at the top of the book, with the time of the journey */
+.book__spine b { font-family: var(--serif); font-weight: 400; font-size: clamp(0.9rem, 0.5rem + 0.9vw, 1.25rem); line-height: 1; letter-spacing: 0.04em; white-space: nowrap; }
+html[lang="zh"] .book__spine b { font-family: "Noto Serif TC", var(--serif); text-orientation: upright; letter-spacing: 0.2em; font-weight: 500; }
+.book__spine i { font-style: normal; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; white-space: nowrap; }
+.book__edge { top: 3px; left: auto; right: 0; height: calc(100% - 6px); width: calc(var(--deep) - 3px); transform-origin: right center; transform: rotateY(90deg) translateX(100%); background: repeating-linear-gradient(to right, var(--paper) 0 2px, color-mix(in oklch, var(--line) 70%, var(--paper)) 2px 3px); box-shadow: inset 0 0 0.6rem color-mix(in oklch, var(--shade) 12%, transparent); }
+.book__top { left: 3px; width: calc(100% - 6px); height: calc(var(--deep) - 3px); transform-origin: top center; transform: rotateX(90deg) translateY(-100%); background: repeating-linear-gradient(to bottom, var(--paper) 0 2px, color-mix(in oklch, var(--line) 70%, var(--paper)) 2px 3px); }
+/* a book arriving from the distance, or passing the camera, is veiled in paper rather than faded:
+   opacity on a book would flatten its faces */
+.book__veil { position: absolute; inset: 0; background: var(--bg); opacity: calc(1 - var(--o)); transform: translateZ(1px); pointer-events: none; }
+
+/* the tag: a torn strip of ochre paper stuck over the top edge, with the time of the journey */
 .tag {
-  position: absolute; right: 12%; bottom: 100%; margin-bottom: -2px;
-  padding: 0.3rem 0.6rem 0.4rem; background: var(--card); box-shadow: inset 0 0 0 1px var(--line);
-  font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text);
-  white-space: nowrap; opacity: var(--o); transform: translateZ(1px);
+  position: absolute; left: 6%; top: -0.95rem; z-index: 2;
+  padding: 0.42rem 0.9rem 0.46rem; background: oklch(90% 0.065 85); color: oklch(32% 0.03 70);
+  font-size: 0.64rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap;
+  transform: translateZ(2px) rotate(-2.5deg);
+  clip-path: polygon(0% 18%, 3% 4%, 8% 12%, 13% 0%, 19% 9%, 26% 2%, 33% 11%, 40% 1%, 47% 8%, 54% 0%, 61% 10%, 68% 3%, 75% 9%, 82% 0%, 89% 10%, 95% 3%, 100% 14%, 98% 30%, 100% 48%, 97% 66%, 100% 84%, 95% 100%, 88% 92%, 81% 100%, 73% 90%, 66% 100%, 58% 92%, 51% 100%, 44% 91%, 37% 100%, 29% 92%, 21% 100%, 14% 90%, 7% 100%, 2% 88%, 0% 70%, 3% 50%, 0% 34%);
+  opacity: var(--o);
 }
-html[lang="zh"] .tag { letter-spacing: 0.1em; }
+html[lang="zh"] .tag { letter-spacing: 0.14em; }
 .tag:empty { display: none; }
 
-/* a slim hairline edge so a pale sky still ends where the book ends */
-.book::after {
-  content: ""; position: absolute; inset: 0; pointer-events: none;
-  box-shadow: inset 0 0 0 1px oklch(0% 0 0 / 0.06); opacity: var(--o);
-}
-.book.front { cursor: pointer; }
 .book.hidden { visibility: hidden; }
 
 /* ---- the wall label: a small card that follows the cursor and names the book under it ---- */
@@ -140,12 +162,14 @@ html[lang="zh"] .label .place { font-family: "Noto Serif TC", var(--serif); font
 /* no cursor: the label stays at the bottom left and always names the book at the front */
 @media (hover: none) {
   .label { left: var(--edge); bottom: var(--edge); top: auto; opacity: 1; transform: none !important;
-           padding: 0; background: none; box-shadow: none; max-width: calc(100vw - var(--edge) * 2 - 4rem); }
+           padding: 0; background: none; box-shadow: none; max-width: calc(100vw - var(--edge) * 2 - 8rem); }
   .label .open { pointer-events: auto; }
 }
 
 @media (max-width: 700px) {
   .head { max-width: 15rem; }
+  .bar { width: 7rem; grid-template-columns: 1fr auto; gap: 0.5rem; }
+  .bar label { display: none; }
   .lead { display: none; }
   .stage { perspective: 1000px; perspective-origin: 60% 42%; }
   .line { left: 40%; top: 46%; }

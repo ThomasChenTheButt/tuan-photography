@@ -30,12 +30,14 @@
           lead: 'Every place I have been, as a book on one long line. The newest is nearest; the line runs back into the years.',
           hint: 'Scroll or drag to travel. Click a book to open it.',
           home: 'Home', guide: 'Open the guide', photos: 'See the photographs', soon: 'Photographs to come',
+          bandGuide: "A photographer's guide", bandPhotos: 'Photographs', bandNone: 'No photographs yet', veil: 'Background',
           photo: (n) => n === 1 ? '1 photograph' : n + ' photographs',
           pos: (i, n) => i + ' of ' + n },
     zh: { title: '旅程', other: 'EN',
           lead: '去過的每個地方都是一本書，排成一條長長的線。最新的一本離你最近，往後就是一年一年的從前。',
           hint: '捲動或拖曳就能前進。點一本書把它打開。',
           home: '家', guide: '打開攻略', photos: '看照片', soon: '照片待補',
+          bandGuide: '攝影師的攻略', bandPhotos: '作品', bandNone: '還沒有照片', veil: '背景',
           photo: (n) => n + ' 張照片',
           pos: (i, n) => '第 ' + i + ' 本，共 ' + n + ' 本' },
   };
@@ -65,32 +67,37 @@
   books.sort((x, y) => x.key < y.key ? -1 : x.key > y.key ? 1 : 0);
   const n = books.length;
 
-  /* ---- the books on the stage: a cover, a tag with the time of the journey, and the four edges ---- */
+  /* ---- the books on the stage: design 1's guidebook, with a torn tag carrying the time of the journey ---- */
+  const series = 'tuan photography';
   books.forEach((bk, i) => {
     const el = document.createElement('figure');
     el.className = 'book';
     el.style.setProperty('--tone', 'var(--' + bk.tone + ')');
     el.dataset.i = i;
+    const box = document.createElement('span'); box.className = 'book__box';
+    const spine = document.createElement('span'); spine.className = 'book__spine';
+    spine.innerHTML = '<b></b><i></i>';
+    spine.lastChild.textContent = series;
+    bk.spineName = spine.firstChild;
+    const face = document.createElement('span'); face.className = 'book__face';
     if (bk.cover) {
       const img = document.createElement('img');
       img.src = '../images/web/' + (innerWidth > 700 ? '1280/' : '640/') + bk.cover.file;
       img.alt = bk.cover.alt ? bk.cover.alt.en : '';
       img.decoding = 'async';
-      el.appendChild(img);
+      face.appendChild(img);
     } else {
-      el.classList.add('blank');
-      const paper = document.createElement('div'); paper.className = 'cover'; el.appendChild(paper);
-      const s = document.createElement('span');
-      s.className = 'name';
-      s.textContent = bk.title.en;
-      s.dataset.i18nTitle = i;
-      el.appendChild(s);
+      face.classList.add('book__face--blank');
     }
-    const tag = document.createElement('span');
-    tag.className = 'tag';
-    bk.tag = tag;
-    el.appendChild(tag);
-    ['spine', 'pages-t', 'pages-b', 'pages-r'].forEach((f) => { const d = document.createElement('div'); d.className = 'face ' + f; el.appendChild(d); });
+    const band = document.createElement('span'); band.className = 'book__band';
+    band.innerHTML = '<b></b><span></span>';
+    bk.bandName = band.firstChild; bk.bandWhat = band.lastChild;
+    const tag = document.createElement('span'); tag.className = 'tag'; bk.tag = tag;
+    const veil = document.createElement('span'); veil.className = 'book__veil';
+    ['book__edge', 'book__top'].forEach((c) => { const d = document.createElement('span'); d.className = c; box.appendChild(d); });
+    box.append(spine, face, band, veil, tag);
+    face.appendChild(band);
+    el.appendChild(box);
     el.setAttribute('aria-label', bk.title.en);
     bk.el = el;
     line.appendChild(el);
@@ -98,7 +105,7 @@
 
   /* ---- the camera: where the line runs, and how close the books stand ---- */
   let W = 0, H = 0, sx = 0, sy = 0, sz = 0;
-  const AR = 3 / 4;                                 // a guidebook's cover
+  const AR = 12 / 17;                               // design 1's guidebook
   function layout() {
     W = innerWidth; H = innerHeight;
     const h = W > 700 ? Math.min(H * 0.6, W * 0.42) : Math.min(H * 0.5, W * 0.78 / AR);   // the front book's height; on a phone the width decides
@@ -133,12 +140,12 @@
       let o = 1;
       if (k < 0) o = Math.max(0, 1 + k / 0.85);      // sliding past the camera
       if (k > 9) o = Math.max(0, 1 - (k - 9) / 4);   // fading into the distance
-      bk.el.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,' + z.toFixed(1) + 'px) rotateY(-26deg) rotateZ(2.5deg)';
+      bk.el.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,' + z.toFixed(1) + 'px) rotateY(24deg)';
       bk.el.style.setProperty('--o', o.toFixed(3));
       bk.el.style.pointerEvents = k < -0.05 || o <= 0 ? 'none' : '';   // a book passing the camera takes no clicks
       bk.el.classList.toggle('front', wrap(Math.round(pos)) === i);
     }
-    line.style.transform = 'rotateY(' + (px * 3).toFixed(2) + 'deg) rotateX(' + (-12 - py * 2).toFixed(2) + 'deg)';   // seen a little from above, so the top edge shows
+    line.style.transform = 'rotateY(' + (px * 3).toFixed(2) + 'deg) rotateX(' + (-6 - py * 2).toFixed(2) + 'deg)';   // seen a little from above, so the top edge shows
   }
 
   /* ---- the label ---- */
@@ -248,13 +255,43 @@
     document.documentElement.setAttribute('lang', lang === 'zh' ? 'zh' : 'en');
     document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = i18n[lang][el.dataset.i18n]; });
     langBtn.textContent = i18n[lang].other;
-    books.forEach((bk) => { bk.tag.textContent = bk.date[lang]; });
-    document.querySelectorAll('[data-i18n-title]').forEach((el) => { el.textContent = books[+el.dataset.i18nTitle].title[lang]; });
+    books.forEach((bk) => {
+      bk.tag.textContent = bk.date[lang];
+      bk.spineName.textContent = bk.title[lang];
+      bk.bandName.textContent = bk.title[lang];
+      bk.bandWhat.textContent = i18n[lang][bk.guide ? 'bandGuide' : bk.own.length ? 'bandPhotos' : 'bandNone'];
+    });
     document.title = (lang === 'zh' ? '旅程' : 'Journey') + ' · a test';
     history.replaceState(null, '', lang === 'zh' ? '?zh' : location.pathname);
     updateLabel();
   }
   langBtn.addEventListener('click', () => { lang = lang === 'zh' ? 'en' : 'zh'; applyLang(); });
+
+  /* ---- the backdrop: the front book's photograph, crossfading as the front changes; the bar sets its strength ---- */
+  const backs = document.querySelectorAll('#backdrop img');
+  const veilIn = document.getElementById('veil'), veilOut = document.getElementById('veil-out');
+  let backOn = 0, backShown = -1;
+  function updateBackdrop() {
+    const i = wrap(Math.round(pos));
+    if (i === backShown) return;
+    const bk = books[i];
+    if (!bk.cover) return;                           // a book without a photograph keeps the last one behind it
+    backShown = i;
+    backOn = 1 - backOn;
+    const img = backs[backOn];
+    img.src = '../images/web/' + (innerWidth > 700 ? '1280/' : '640/') + bk.cover.file;
+    backs[backOn].classList.add('on');
+    backs[1 - backOn].classList.remove('on');
+  }
+  function setVeil() {
+    const v = +veilIn.value;
+    document.documentElement.style.setProperty('--veil', (v / 100).toFixed(2));
+    veilOut.textContent = v + '%';
+    try { localStorage.setItem('journey-veil', v); } catch (e) {}
+  }
+  try { const v = localStorage.getItem('journey-veil'); if (v !== null) veilIn.value = v; } catch (e) {}
+  veilIn.addEventListener('input', setVeil);
+  setVeil();
 
   /* ---- the frame ---- */
   const ease = reduce ? 1 : 0.09;
@@ -265,6 +302,7 @@
     py += (tpy - py) * (reduce ? 1 : 0.06);
     place();
     updateLabel();
+    updateBackdrop();
     moveLabel();
     requestAnimationFrame(frame);
   }
