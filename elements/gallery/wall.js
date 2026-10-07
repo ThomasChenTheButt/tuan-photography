@@ -362,7 +362,7 @@
     const s = SITE.slides[current];
     if (!s) return;
     const img = $v('viewer-img');
-    if (!img.src.endsWith('/' + s.file)) {
+    if (!img.srcset || !img.src.endsWith('/' + s.file)) {
       img.setAttribute('aria-busy', 'true');
       img.onload = () => img.removeAttribute('aria-busy');
       img.sizes = '(max-width: 56rem) 100vw, calc(100vw - 20rem)';
@@ -389,24 +389,53 @@
     $v('viewer-next').textContent = t('vNext');
     $v('viewer-count').textContent = `${ids.indexOf(current) + 1} / ${ids.length}`;
   }
+  // the print on the wall grows into the viewer, and shrinks back on close; the rest
+  // of the page crossfades underneath. Without view transitions, or under reduced
+  // motion, the viewer simply fades in (see wall.css).
+  const tileFor = (id) => allTiles.find((t) => t.id === id && !t.ghost) || allTiles.find((t) => t.id === id);
+  function morph(fromImg, toImg, change) {
+    if (!document.startViewTransition || reduce || !fromImg || !toImg) { change(); return; }
+    fromImg.style.viewTransitionName = 'print';
+    const vt = document.startViewTransition(() => {
+      fromImg.style.viewTransitionName = '';
+      change();
+      toImg.style.viewTransitionName = 'print';
+    });
+    // an aborted transition is fine: the change still happened, only the animation was skipped
+    vt.ready.catch(() => {}); vt.updateCallbackDone.catch(() => {});
+    vt.finished.catch(() => {}).finally(() => { toImg.style.viewTransitionName = ''; });
+  }
   function openViewer(id) {
     current = id;
     lift(null);
-    renderViewer();
-    if (!viewer.open) { viewer.showModal(); $v('viewer-close').focus({ preventScroll: true }); }
+    const tile = tileFor(id);
+    const big = $v('viewer-img');
+    // the viewer starts with the copy the wall already has, so the growing print is never blank
+    if (tile) { big.removeAttribute('srcset'); big.src = tile.img.currentSrc || tile.img.src; }
+    morph(tile && tile.img, big, () => {
+      viewer.classList.add('open');
+      if (!viewer.open) { viewer.showModal(); $v('viewer-close').focus({ preventScroll: true }); }
+    });
+    // the sharp copy follows once the print is in place
+    setTimeout(renderViewer, reduce ? 0 : 560);
+  }
+  function closeViewer() {
+    const tile = tileFor(current);
+    morph($v('viewer-img'), tile && tile.img, () => { viewer.classList.remove('open'); viewer.close(); });
   }
   function step(d) {
     current = ids[(ids.indexOf(current) + d + ids.length) % ids.length];
     renderViewer();
   }
-  $v('viewer-close').addEventListener('click', () => viewer.close());
+  $v('viewer-close').addEventListener('click', closeViewer);
+  viewer.addEventListener('cancel', (e) => { e.preventDefault(); closeViewer(); });   // Esc
   $v('viewer-prev').addEventListener('click', () => step(-1));
   $v('viewer-next').addEventListener('click', () => step(1));
   viewer.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowLeft') step(-1);
     if (e.key === 'ArrowRight') step(1);
   });
-  viewer.addEventListener('close', () => { mx = -1e4; my = -1e4; });
+  viewer.addEventListener('close', () => { mx = -1e4; my = -1e4; viewer.classList.remove('open'); });
 
   addEventListener('resize', layout);
   sizeK = parseFloat(sizeIn.value); sizeOut.value = '×' + sizeK.toFixed(1);
