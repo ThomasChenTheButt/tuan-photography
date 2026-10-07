@@ -294,7 +294,7 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 - Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
   harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
 
-Open now: none.
+Open now: `opening` (started 2026-10-07, port 8648): an opening animation for the home page of design 1, the pull-back from the summit of Aoraki. Its own session.
 
 Decided experiments. Rejected ideas are not proposed again; the tags hold the code.
 

@@ -52,6 +52,10 @@ rerun `python3 tools/finder_view.py` so the top level stays tidy.
 
 ## 等你決定 Waiting on you
 
+- **Experiment `opening` (localhost:8648):** the home page's opening, a slow pull-back from the summit
+  of Aoraki to the whole photograph, the words after. Compare with 8642 and say keep or drop.
+  `?opening` replays it.
+
 - **Sea photograph:** which photographs besides Aoraki, if any? (`?ocean=all` cycles all 93.)
 - **Camera data for the 22 US photographs:** re-export from Lightroom with metadata, or drop the
   raw files in, and I'll add it.
