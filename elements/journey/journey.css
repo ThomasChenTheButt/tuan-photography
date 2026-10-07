@@ -1,0 +1,128 @@
+/* Journey — the look. Design 1's tokens; the paper, the serif names, the small
+   spaced capitals. The books are flat prints standing in a row that recedes
+   up and to the right, like a hang seen from the end of the wall. */
+:root {
+  --bg: oklch(96.6% 0.011 82);
+  --card: oklch(98.8% 0.005 85);
+  --line: oklch(84.5% 0.015 78);
+  --text: oklch(25% 0.012 60);
+  --text-2: oklch(45% 0.017 62);
+  --accent: oklch(46% 0.092 47);
+  --clay: oklch(53% 0.088 47);
+  --olive: oklch(49% 0.052 95);
+  --slate: oklch(41% 0.03 195);
+  --serif: "Playfair Display", "Noto Serif TC", Georgia, serif;
+  --sans: "Geist", "Noto Sans TC", system-ui, sans-serif;
+  --edge: clamp(1.15rem, 4.5vw, 4rem);
+  --out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; overflow: hidden;
+  background: var(--bg); color: var(--text);
+  font-family: var(--sans); font-size: 1.0625rem; line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+html[lang="zh"] body { font-family: "Noto Sans TC", var(--sans); }
+
+/* ---- the words at the corners; the stage sits beneath them ---- */
+.head {
+  position: fixed; left: var(--edge); top: var(--edge); z-index: 3;
+  max-width: 24rem; pointer-events: none;
+}
+.head h1 {
+  margin: 0 0 0.9rem; font-family: var(--serif); font-weight: 400;
+  font-size: clamp(2.3rem, 1.45rem + 3.4vw, 4.25rem); line-height: 1; letter-spacing: -0.01em;
+}
+html[lang="zh"] .head h1 { font-family: "Noto Serif TC", var(--serif); font-weight: 500; }
+.lead { margin: 0 0 0.9rem; color: var(--text-2); font-size: 0.9375rem; max-width: 20rem; }
+.hint {
+  margin: 0; color: var(--text-2); font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+}
+html[lang="zh"] .hint { letter-spacing: 0.12em; }
+
+.tools { position: fixed; right: var(--edge); top: var(--edge); z-index: 3; }
+.word {
+  appearance: none; background: none; border: 0; padding: 0.6rem 0; margin: 0;
+  font: inherit; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+  color: var(--text); cursor: pointer; text-decoration: none;
+}
+.word:hover, .word:focus-visible { color: var(--accent); outline: none; }
+html[lang="zh"] .word { letter-spacing: 0.12em; }
+
+/* ---- the stage: one perspective, one line of books ---- */
+.stage {
+  position: fixed; inset: 0; z-index: 1;
+  perspective: 1500px; perspective-origin: 58% 46%;
+  touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none;
+}
+.stage.dragging { cursor: grabbing; }
+.line {
+  position: absolute; left: 50%; top: 50%; width: 0; height: 0;
+  transform-style: preserve-3d; will-change: transform;
+}
+.book {
+  position: absolute; left: 0; top: 0;
+  width: var(--w); height: var(--h);
+  margin-left: calc(var(--w) / -2); margin-top: calc(var(--h) / -2);
+  transform-style: preserve-3d; will-change: transform, opacity;
+  background: var(--card); backface-visibility: hidden;
+  cursor: pointer;
+}
+.book img {
+  display: block; width: 100%; height: 100%; object-fit: cover;
+  pointer-events: none; -webkit-user-drag: none;
+}
+/* a plain cover for a book without a photograph yet */
+.book.blank { display: grid; place-items: center; border: 1px solid var(--line); }
+.book.blank span {
+  font-family: var(--serif); font-weight: 400; color: var(--text-2);
+  font-size: clamp(1.4rem, 2.6vw, 2.4rem); text-align: center; padding: 1rem;
+}
+/* the spine: a flat band in the book's own earth colour, standing a little proud */
+.book::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 7px;
+  background: var(--tone, var(--clay));
+  transform: translateZ(1px);
+}
+/* a slim hairline edge so a pale sky still ends where the book ends */
+.book::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  box-shadow: inset 0 0 0 1px oklch(0% 0 0 / 0.06);
+}
+.book.front { cursor: pointer; }
+.book.hidden { visibility: hidden; }
+
+/* ---- the wall label: who is at the front, written once, bottom left ---- */
+.label {
+  position: fixed; left: var(--edge); bottom: var(--edge); z-index: 3;
+  display: grid; gap: 0.25rem; max-width: 24rem; pointer-events: none;
+}
+.label .date {
+  font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-2);
+}
+html[lang="zh"] .label .date { letter-spacing: 0.12em; }
+.label .place {
+  font-family: var(--serif); font-weight: 400; font-size: clamp(1.75rem, 1.3rem + 1.5vw, 2.4rem); line-height: 1.1;
+}
+html[lang="zh"] .label .place { font-family: "Noto Serif TC", var(--serif); font-weight: 500; }
+.label .note { color: var(--text-2); font-size: 0.9375rem; max-width: 20rem; }
+.label .note:empty { display: none; }
+.label .meta { color: var(--text-2); font-size: 0.8125rem; }
+.label .open { pointer-events: auto; color: var(--accent); margin-top: 0.35rem; width: max-content; }
+.label .open:empty { display: none; }
+
+.label, .label > * { transition: opacity 0.35s var(--out); }
+.label.swap > * { opacity: 0; transition-duration: 0.12s; }
+
+@media (max-width: 700px) {
+  .head { max-width: 15rem; }
+  .lead { display: none; }
+  .stage { perspective: 1000px; perspective-origin: 60% 42%; }
+  .label { max-width: calc(100vw - var(--edge) * 2); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .label, .label > * { transition: none; }
+}

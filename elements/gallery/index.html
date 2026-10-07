@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gallery wall · a test</title>
+<link rel="stylesheet" href="../css/fonts.css">
+<link rel="stylesheet" href="wall.css">
+</head>
+<body>
+
+<header class="head">
+  <h1><span data-i18n="title">Gallery</span></h1>
+  <p class="hint" data-i18n="hint">Move across the wall. Click a photograph to hold it; click again to let go.</p>
+</header>
+
+<nav class="tools">
+  <button type="button" class="word" id="lang">中文</button>
+</nav>
+
+<main class="wall" id="wall" aria-label="Photographs"></main>
+
+<figcaption class="caption" id="caption" aria-live="polite">
+  <b id="cap-place"></b>
+  <span id="cap-where"></span>
+</figcaption>
+
+<script src="../data.js"></script>
+<script src="wall.js"></script>
+</body>
+</html>
