@@ -128,3 +128,56 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .tile { will-change: auto; }
 }
+
+/* ---- the viewer: design 1's, on this wall's paper ---- */
+.viewer:focus { outline: 0; }
+.viewer { border: 0; padding: 0; margin: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; background: var(--bg); color: var(--text); overflow: auto; font-family: var(--sans); }
+.viewer::backdrop { background: var(--bg); }
+.viewer[open] {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, 23rem);
+  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-areas: "photo bar" "photo side";
+}
+.viewer__photo { grid-area: photo; display: grid; place-items: center; padding: clamp(1rem, 2.4vw, 2.25rem); min-height: 0; }
+.viewer__photo img { max-width: 100%; max-height: calc(100dvh - 2 * clamp(1rem, 2.4vw, 2.25rem)); width: auto; height: auto; transition: opacity 300ms ease; }
+.viewer__photo img[aria-busy="true"] { opacity: 0.35; }
+.viewer__bar { grid-area: bar; display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: clamp(1.1rem, 2.2vw, 2rem) clamp(1.1rem, 2.2vw, 2rem) 0 0; }
+.viewer__bar div { display: flex; align-items: center; gap: 1.2rem; }
+.viewer__count { font-size: 0.78rem; letter-spacing: 0.1em; color: var(--text-2); font-variant-numeric: tabular-nums; }
+.viewer__bar button { font-family: var(--sans); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-2); background: none; border: 0; padding: 0.5rem 0; cursor: pointer; }
+.viewer__bar button:hover { color: var(--accent); }
+.viewer__close { border: 1px solid var(--accent) !important; color: var(--accent) !important; padding: 0.55rem 0.7rem !important; }
+:lang(zh-Hant) .viewer__bar button { font-size: 0.875rem; letter-spacing: 0.14em; }
+.viewer__side { grid-area: side; display: flex; flex-direction: column; gap: 1.5rem; padding: 2.5rem clamp(1.1rem, 2.2vw, 2rem) clamp(1.1rem, 2.2vw, 2rem) 0; overflow: auto; }
+.viewer h2 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(1.75rem, 1.3rem + 1.5vw, 2.4rem); line-height: 1.14; letter-spacing: 0.005em; }
+:lang(zh-Hant) .viewer h2 { font-weight: 500; }
+.viewer__where { color: var(--text-2); margin: 0.4rem 0 0; font-size: 0.9375rem; }
+.viewer h3 { margin: 0; font-family: var(--sans); font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-2); }
+:lang(zh-Hant) .viewer h3 { letter-spacing: 0.12em; }
+.viewer dl { margin: 0.5rem 0 0; font-size: 0.9375rem; }
+.viewer dl div { display: grid; grid-template-columns: 7rem minmax(0, 1fr); gap: 0.75rem; padding-block: 0.55rem; }
+.viewer dl div + div { border-top: 1px solid var(--line); }
+.viewer dt { color: var(--text-2); }
+.viewer dd { margin: 0; font-variant-numeric: tabular-nums lining-nums; }
+.viewer__note { margin: 0; font-size: 0.9375rem; }
+.viewer__acts { display: flex; flex-direction: column; align-items: flex-start; gap: 0.9rem; margin-top: auto; padding-top: 1rem; }
+.viewer__acts a:not(.btn) { font-size: 0.9375rem; color: var(--accent); }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; white-space: nowrap; text-decoration: none;
+  font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--bg); background: var(--text); border: 1px solid var(--text); border-radius: 0; padding: 1rem 1.7rem; cursor: pointer;
+  transition: background-color 260ms ease, border-color 260ms ease, color 260ms ease;
+}
+.btn:hover { background: var(--accent); border-color: var(--accent); }
+@media (max-width: 56rem) {
+  .viewer[open] { display: block; }
+  .viewer__bar { position: fixed; bottom: 0; left: 0; right: 0; z-index: 1; background: var(--bg); border-top: 1px solid var(--line); padding: 0 1.2rem max(0px, env(safe-area-inset-bottom)); }
+  .viewer__bar button { min-height: 2.75rem; }
+  .viewer__photo { display: block; padding: 0; }
+  .viewer__photo img { display: block; margin-inline: auto; max-height: 78dvh; }
+  .viewer__side { padding: 1.4rem 1.2rem calc(3.75rem + env(safe-area-inset-bottom)); overflow: visible; }
+  .viewer__side > div:nth-child(2) { order: 2; }
+  .viewer__note { order: 3; }
+  .viewer__acts { order: 1; margin-top: 0; padding-top: 0; }
+}

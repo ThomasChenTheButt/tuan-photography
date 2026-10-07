@@ -16,8 +16,10 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const i18n = {
-    en: { title: 'Gallery', hint: 'Move across the wall. Click a photograph to hold it; click again to let go.', other: '中文', speed: 'Speed', tilt: 'Tilt', size: 'Size', gap: 'Gap', kicker: 'A photography wall', dark: 'Dark', light: 'Light' },
-    zh: { title: '作品集', hint: '滑過這面牆。點一張照片把它留住；再點一下放開。', other: 'EN', speed: '速度', tilt: '歪斜', size: '大小', gap: '間距', kicker: '一面照片牆', dark: '深色', light: '淺色' },
+    en: { title: 'Gallery', hint: 'Move across the wall. Click a photograph to open it.', other: '中文', speed: 'Speed', tilt: 'Tilt', size: 'Size', gap: 'Gap', kicker: 'A photography wall', dark: 'Dark', light: 'Light',
+          vMaking: 'How it was made', vCamera: 'Camera', vLens: 'Lens', vFocal: 'Focal length', vAperture: 'Aperture', vShutter: 'Shutter', vIso: 'ISO', vBest: 'Best time', vGuide: 'Read the guide', vNoGuide: 'The guide for this place is not written yet.', vMap: 'Open the map pin', vClose: 'Close', vPrev: 'Previous', vNext: 'Next' },
+    zh: { title: '作品集', hint: '滑過這面牆。點一張照片打開它。', other: 'EN', speed: '速度', tilt: '歪斜', size: '大小', gap: '間距', kicker: '一面照片牆', dark: '深色', light: '淺色',
+          vMaking: '這張怎麼拍', vCamera: '相機', vLens: '鏡頭', vFocal: '焦距', vAperture: '光圈', vShutter: '快門', vIso: 'ISO', vBest: '最佳時間', vGuide: '閱讀攻略', vNoGuide: '這個地方的攻略還沒寫。', vMap: '打開地圖座標', vClose: '關閉', vPrev: '上一張', vNext: '下一張' },
   };
 
   /* ---- the speed bar: a multiplier on every row's drift, 0 holds the wall still ---- */
@@ -293,13 +295,6 @@
     if (t) { t.el.classList.add('lift'); wantBig(t); }
     if (!held) setCaption(t);
   }
-  function hold(t) {
-    if (held) held.el.classList.remove('hold');
-    held = t;
-    if (t) { t.el.classList.add('hold'); wantBig(t); lift(null); }
-    setCaption(t || lifted);
-    document.body.classList.toggle('holding', !!t);
-  }
 
   wall.addEventListener('pointermove', (e) => {
     if (e.pointerType === 'touch') return;
@@ -311,10 +306,8 @@
   wall.addEventListener('click', (e) => {
     const el = e.target.closest('.tile');
     const t = el ? allTiles.find((t) => t.el === el) : null;
-    if (held) { hold(null); if (hasPointer) lift(nearest()); return; }
-    if (t) hold(t);
+    if (t) openViewer(t.id);
   });
-  addEventListener('keydown', (e) => { if (e.key === 'Escape' && held) hold(null); });
 
   /* ---- language ---- */
   function applyLang() {
@@ -324,8 +317,96 @@
     applyTheme();
     allTiles.forEach((t) => { t.img.alt = t.s.alt ? t.s.alt[lang] : ''; });
     if (held || lifted) setCaption(held || lifted);
+    if (viewer.open) renderViewer();
   }
   langBtn.addEventListener('click', () => { lang = lang === 'zh' ? 'en' : 'zh'; applyLang(); });
+
+
+  /* ---- the viewer: the photograph large on the left, how it was made on the right.
+     Design 1's viewer, on this wall's paper, so it follows Dark and Light. ---- */
+  const viewer = document.createElement('dialog');
+  viewer.className = 'viewer';
+  viewer.setAttribute('aria-labelledby', 'viewer-place');
+  viewer.tabIndex = -1;
+  viewer.innerHTML = `
+    <div class="viewer__bar">
+      <div>
+        <button id="viewer-prev" type="button"></button>
+        <button id="viewer-next" type="button"></button>
+        <span class="viewer__count" id="viewer-count"></span>
+      </div>
+      <button id="viewer-close" type="button" class="viewer__close"></button>
+    </div>
+    <div class="viewer__photo"><img id="viewer-img" alt=""></div>
+    <div class="viewer__side">
+      <div>
+        <h2 id="viewer-place" aria-live="polite"></h2>
+        <p class="viewer__where" id="viewer-where"></p>
+      </div>
+      <div>
+        <h3 id="viewer-making"></h3>
+        <dl id="viewer-data"></dl>
+      </div>
+      <p class="viewer__note" id="viewer-note"></p>
+      <div class="viewer__acts" id="viewer-acts"></div>
+    </div>`;
+  document.body.append(viewer);
+  const $v = (id) => viewer.querySelector('#' + id);
+  const t = (k) => i18n[lang][k];
+  const row = (label, value) => value ? `<div><dt>${label}</dt><dd>${value}</dd></div>` : '';
+  let current = null;
+  // the guides live on the real site; this test folder links across to it
+  const SITE_ROOT = 'http://localhost:8642/';
+
+  function renderViewer() {
+    const s = SITE.slides[current];
+    if (!s) return;
+    const img = $v('viewer-img');
+    if (!img.src.endsWith('/' + s.file)) {
+      img.setAttribute('aria-busy', 'true');
+      img.onload = () => img.removeAttribute('aria-busy');
+      img.sizes = '(max-width: 56rem) 100vw, calc(100vw - 20rem)';
+      img.srcset = `../images/web/640/${s.file} 640w, ../images/web/1280/${s.file} 1280w, ../images/web/${s.file} ${s.w}w`;
+      img.src = '../images/web/' + s.file;
+    }
+    img.width = s.w; img.height = s.h;
+    img.alt = s.alt ? s.alt[lang] : '';
+    $v('viewer-place').textContent = s.place ? s.place[lang] : '';
+    $v('viewer-where').textContent = s.where ? s.where[lang] : '';
+    $v('viewer-making').textContent = t('vMaking');
+    $v('viewer-data').innerHTML =
+      row(t('vBest'), s.best && s.best[lang]) + row(t('vFocal'), s.focal) + row(t('vAperture'), s.aperture) +
+      row(t('vShutter'), s.shutter) + row(t('vIso'), s.iso) + row(t('vLens'), s.lens) + row(t('vCamera'), s.camera);
+    const note = $v('viewer-note');
+    note.textContent = (s.note && s.note[lang]) || (s.guide ? '' : t('vNoGuide'));
+    note.hidden = !note.textContent;
+    const acts = [];
+    if (s.guide) acts.push(`<a class="btn" href="${SITE_ROOT}${s.guide}#s-${current}">${t('vGuide')}</a>`);
+    if (s.map) acts.push(`<a href="${s.map}" target="_blank" rel="noopener">${t('vMap')}</a>`);
+    $v('viewer-acts').innerHTML = acts.join('');
+    $v('viewer-close').textContent = t('vClose');
+    $v('viewer-prev').textContent = t('vPrev');
+    $v('viewer-next').textContent = t('vNext');
+    $v('viewer-count').textContent = `${ids.indexOf(current) + 1} / ${ids.length}`;
+  }
+  function openViewer(id) {
+    current = id;
+    lift(null);
+    renderViewer();
+    if (!viewer.open) { viewer.showModal(); $v('viewer-close').focus({ preventScroll: true }); }
+  }
+  function step(d) {
+    current = ids[(ids.indexOf(current) + d + ids.length) % ids.length];
+    renderViewer();
+  }
+  $v('viewer-close').addEventListener('click', () => viewer.close());
+  $v('viewer-prev').addEventListener('click', () => step(-1));
+  $v('viewer-next').addEventListener('click', () => step(1));
+  viewer.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') step(-1);
+    if (e.key === 'ArrowRight') step(1);
+  });
+  viewer.addEventListener('close', () => { mx = -1e4; my = -1e4; });
 
   addEventListener('resize', layout);
   sizeK = parseFloat(sizeIn.value); sizeOut.value = '×' + sizeK.toFixed(1);
