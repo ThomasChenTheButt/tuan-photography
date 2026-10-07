@@ -36,7 +36,7 @@
   /* ---- the tilt bar: how far a print may lean, in degrees either way ---- */
   const tiltIn = document.getElementById('tilt');
   const tiltOut = document.getElementById('tilt-out');
-  let tiltK = 2.5;
+  let tiltK = 1.5;
   function readTilt() {
     tiltK = parseFloat(tiltIn.value);
     tiltOut.value = tiltK.toFixed(1) + '°';
