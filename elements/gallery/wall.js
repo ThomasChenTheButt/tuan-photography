@@ -16,8 +16,8 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const i18n = {
-    en: { title: 'Gallery', hint: 'Move across the wall. Click a photograph to hold it; click again to let go.', other: '中文', speed: 'Speed', tilt: 'Tilt', size: 'Size', kicker: 'A photography wall', dark: 'Dark', light: 'Light' },
-    zh: { title: '作品集', hint: '滑過這面牆。點一張照片把它留住；再點一下放開。', other: 'EN', speed: '速度', tilt: '歪斜', size: '大小', kicker: '一面照片牆', dark: '深色', light: '淺色' },
+    en: { title: 'Gallery', hint: 'Move across the wall. Click a photograph to hold it; click again to let go.', other: '中文', speed: 'Speed', tilt: 'Tilt', size: 'Size', gap: 'Gap', kicker: 'A photography wall', dark: 'Dark', light: 'Light' },
+    zh: { title: '作品集', hint: '滑過這面牆。點一張照片把它留住；再點一下放開。', other: 'EN', speed: '速度', tilt: '歪斜', size: '大小', gap: '間距', kicker: '一面照片牆', dark: '深色', light: '淺色' },
   };
 
   /* ---- the speed bar: a multiplier on every row's drift, 0 holds the wall still ---- */
@@ -52,6 +52,16 @@
     if (rows.length) layout();
   }
   sizeIn.addEventListener('input', readSize);
+
+  /* ---- the gap bar: the space between prints, in pixels ---- */
+  const gapIn = document.getElementById('gap');
+  const gapOut = document.getElementById('gap-out');
+  function readGap() {
+    GAP = parseFloat(gapIn.value);
+    gapOut.value = GAP.toFixed(0) + 'px';
+    if (rows.length) layout();
+  }
+  gapIn.addEventListener('input', readGap);
   let lang = location.search.includes('zh') ? 'zh' : 'en';
 
   /* ---- the prints, in a fixed shuffle so countries mix but the wall is the same each visit ---- */
@@ -86,14 +96,17 @@
      so it can drift sideways without end. Odd rows drift left, even rows right. ---- */
   let W = 0, H = 0, cell = 0;
   const rows = [];            // { y, len, shift, speed, tiles }
-  const GAP = 10;
+  let GAP = 10;               // the space between prints, set by the gap bar
   function layout() {
     W = innerWidth; H = innerHeight;
     const n = tiles.length;
     // the wall runs past every edge: the first and last rows are cut by the window,
     // and each row is about 1.4 screens long so it can loop with no gap showing
     // the size bar scales the row height; bigger prints mean fewer rows, never an overlap
-    const pitch = H / Math.max(3, Math.sqrt(n * H * 0.76 / W)) * sizeK;
+    // the print height comes from the size bar alone; the gap is added on top of it,
+    // so widening the gap makes fewer rows, not smaller prints
+    const ph = H / Math.max(3, Math.sqrt(n * H * 0.76 / W)) * sizeK - 10;
+    const pitch = ph + GAP;
     const top = -pitch * 0.45;                // the top row begins above the window
     const total = Math.ceil((H - top) / pitch) + 1;   // enough rows to run off the bottom too
     cell = pitch;
@@ -103,7 +116,7 @@
     seed = 11;                                // the same slight tilts on every visit
     for (let r = 0; r < total; r++) {
       const own = tiles.slice(r * per, (r + 1) * per);
-      const h = pitch - GAP;
+      const h = ph;
       let len = own.reduce((a, t) => a + h * t.ar + GAP, 0);
       // a short row borrows prints from the next row until it is long enough to loop
       const list = own.slice();
@@ -316,6 +329,7 @@
 
   addEventListener('resize', layout);
   sizeK = parseFloat(sizeIn.value); sizeOut.value = '×' + sizeK.toFixed(1);
+  GAP = parseFloat(gapIn.value); gapOut.value = GAP.toFixed(0) + 'px';
   layout();
   applyLang();
   requestAnimationFrame(frame);
