@@ -33,18 +33,18 @@ html[lang="zh"] body { font-family: "Noto Sans TC", var(--sans); }
 
 /* ---- the words at the corners; the stage sits beneath them ---- */
 .head {
-  position: fixed; left: var(--edge); top: var(--edge); z-index: 3;
-  max-width: 24rem; pointer-events: none;
+  position: fixed; left: var(--edge); top: calc(var(--edge) * 0.7); z-index: 3;
+  max-width: 17rem; pointer-events: none;
 }
 .head .label { pointer-events: auto; }
 .head h1 {
-  margin: 0 0 0.9rem; font-family: var(--serif); font-weight: 400;
-  font-size: clamp(2.3rem, 1.45rem + 3.4vw, 4.25rem); line-height: 1; letter-spacing: -0.01em;
+  margin: 0 0 0.5rem; font-family: var(--serif); font-weight: 400;
+  font-size: clamp(1.5rem, 1.1rem + 1.2vw, 2.1rem); line-height: 1; letter-spacing: -0.01em;
 }
 html[lang="zh"] .head h1 { font-family: "Noto Serif TC", var(--serif); font-weight: 500; }
-.lead { margin: 0 0 0.9rem; color: var(--text-2); font-size: 0.9375rem; max-width: 20rem; }
+.lead { display: none; }
 .hint {
-  margin: 0; color: var(--text-2); font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase;
+  margin: 0; color: var(--text-2); font-size: 0.62rem; letter-spacing: 0.2em; text-transform: uppercase;
 }
 html[lang="zh"] .hint { letter-spacing: 0.12em; }
 
@@ -79,20 +79,22 @@ html[lang="zh"] .word { letter-spacing: 0.12em; }
   touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none;
 }
 .stage.dragging { cursor: grabbing; }
+/* the line is flat: each book is its own small 3D scene and the books are painted in order, nearest last,
+   so the browser never has to cut one book's faces against another's */
 .line {
-  position: absolute; left: 30%; top: 62%; width: 0; height: 0;
-  transform-style: preserve-3d; will-change: transform;
+  position: absolute; inset: 0;
+  perspective: 1400px; perspective-origin: 50% 50%; will-change: transform;
 }
 /* ---- the book: design 1's guidebook, as it stands on the home page's shelf. A photograph on
    the face with a paper band beneath it carrying the name and what the book holds; the spine in
    the book's earth colour, with the name and the series written down it; page edges in paper.
    --deep is its thickness. */
 .book {
-  position: absolute; left: 0; top: 0;
+  position: absolute; left: 24%; top: 74%;
   width: var(--w); height: var(--h);
   margin-left: calc(var(--w) / -2); margin-top: calc(var(--h) / -2);
   transform-style: preserve-3d; will-change: transform;
-  --deep: calc(var(--w) * 0.14); --shade: oklch(20% 0.02 60);
+  --deep: calc(var(--w) * 0.16); --in: calc(var(--h) * 0.012); --shade: oklch(20% 0.02 60);
   color: var(--paper); cursor: pointer;
 }
 .book__box { position: absolute; inset: 0; transform-style: preserve-3d; }
@@ -103,7 +105,7 @@ html[lang="zh"] .word { letter-spacing: 0.12em; }
   display: grid; grid-template-rows: minmax(0, 1fr) auto; width: 100%; background: var(--band); overflow: hidden;
   box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--shade) 22%, transparent), inset 0 0 0 2px color-mix(in oklch, var(--paper) 55%, transparent), inset 4px 0 8px -4px color-mix(in oklch, var(--shade) 50%, transparent);
 }
-.book__face::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(100deg, color-mix(in oklch, var(--paper) 22%, transparent), transparent 38%); }
+.book__face::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(100deg, color-mix(in oklch, var(--paper) 22%, transparent), transparent 38%), linear-gradient(to left, color-mix(in oklch, var(--shade) 28%, transparent), color-mix(in oklch, var(--shade) 6%, transparent) 2.5%, transparent 6%); }
 .book__face img { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-drag: none; }
 .book__face--blank { align-content: end; background: repeating-linear-gradient(135deg, var(--band) 0 6px, var(--line) 6px 7px); }
 .book__face--blank .book__band { align-self: end; }
@@ -121,32 +123,32 @@ html[lang="zh"] .book__band span { font-size: 0.75rem; letter-spacing: 0.14em; }
 .book__spine b { font-family: var(--serif); font-weight: 400; font-size: clamp(0.9rem, 0.5rem + 0.9vw, 1.25rem); line-height: 1; letter-spacing: 0.04em; white-space: nowrap; }
 html[lang="zh"] .book__spine b { font-family: "Noto Serif TC", var(--serif); text-orientation: upright; letter-spacing: 0.2em; font-weight: 500; }
 .book__spine i { font-style: normal; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; white-space: nowrap; }
-.book__edge { top: 3px; left: 0; height: calc(100% - 6px); width: calc(var(--deep) - 3px); transform-origin: left center; transform: rotateY(-90deg) translateX(-100%); background: repeating-linear-gradient(to right, var(--paper) 0 2px, color-mix(in oklch, var(--line) 70%, var(--paper)) 2px 3px); box-shadow: inset 0 0 0.6rem color-mix(in oklch, var(--shade) 12%, transparent); }
-.book__top { left: 3px; width: calc(100% - 6px); height: calc(var(--deep) - 3px); transform-origin: top center; transform: rotateX(90deg) translateY(-100%); background: repeating-linear-gradient(to bottom, var(--paper) 0 2px, color-mix(in oklch, var(--line) 70%, var(--paper)) 2px 3px); }
-.book__bottom { left: 3px; top: auto; bottom: 0; width: calc(100% - 6px); height: calc(var(--deep) - 3px); transform-origin: bottom center; transform: rotateX(-90deg) translateY(100%); background: repeating-linear-gradient(to bottom, var(--paper) 0 2px, color-mix(in oklch, var(--line) 70%, var(--paper)) 2px 3px); box-shadow: inset 0 0 0.6rem color-mix(in oklch, var(--shade) 18%, transparent); }
+.book__edge { top: var(--in); left: var(--in); height: calc(100% - var(--in) * 2); width: calc(var(--deep) - 3px); transform-origin: left center; transform: rotateY(-90deg) translateX(-100%); background: repeating-linear-gradient(to right, var(--paper) 0 2px, color-mix(in oklch, var(--line) 70%, var(--paper)) 2px 3px); box-shadow: inset 0 0 0.6rem color-mix(in oklch, var(--shade) 12%, transparent); }
+.book__top { left: var(--in); top: var(--in); width: calc(100% - var(--in) * 2); height: calc(var(--deep) - 3px); transform-origin: top center; transform: rotateX(90deg) translateY(-100%); background: repeating-linear-gradient(to bottom, var(--paper) 0 2px, color-mix(in oklch, var(--line) 70%, var(--paper)) 2px 3px); }
+.book__bottom { left: var(--in); top: auto; bottom: var(--in); width: calc(100% - var(--in) * 2); height: calc(var(--deep) - 3px); transform-origin: bottom center; transform: rotateX(-90deg) translateY(100%); background: repeating-linear-gradient(to bottom, var(--paper) 0 2px, color-mix(in oklch, var(--line) 70%, var(--paper)) 2px 3px); box-shadow: inset 0 0 0.6rem color-mix(in oklch, var(--shade) 18%, transparent); }
 
 
 .book.hidden { visibility: hidden; }
 
 /* ---- the label: under the title, naming the book under the cursor, or the one at the front ---- */
 .label {
-  display: grid; gap: 0.2rem; max-width: 20rem; margin-top: 2.2rem; padding-top: 1.2rem;
+  display: grid; gap: 0.15rem; max-width: 17rem; margin-top: 1.1rem; padding-top: 0.8rem;
   border-top: 1px solid var(--line);
   opacity: 0; transition: opacity 0.3s var(--out);
 }
 .label.on { opacity: 1; }
 .label .date {
-  font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-2);
+  font-size: 0.6rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-2);
 }
 html[lang="zh"] .label .date { letter-spacing: 0.12em; }
 .label .place {
-  font-family: var(--serif); font-weight: 400; font-size: 1.35rem; line-height: 1.15;
+  font-family: var(--serif); font-weight: 400; font-size: 1.15rem; line-height: 1.15;
 }
 html[lang="zh"] .label .place { font-family: "Noto Serif TC", var(--serif); font-weight: 500; }
-.label .note { color: var(--text-2); font-size: 0.875rem; }
+.label .note { color: var(--text-2); font-size: 0.78rem; }
 .label .note:empty { display: none; }
-.label .meta { color: var(--text-2); font-size: 0.78rem; margin-top: 0.15rem; }
-.label .open { color: var(--accent); margin-top: 0.3rem; width: max-content; }
+.label .meta { color: var(--text-2); font-size: 0.7rem; margin-top: 0.1rem; }
+.label .open { color: var(--accent); margin-top: 0.2rem; width: max-content; font-size: 0.62rem; padding: 0.3rem 0; }
 .label .open:empty { display: none; }
 
 @media (max-width: 700px) {
@@ -158,8 +160,14 @@ html[lang="zh"] .label .place { font-family: "Noto Serif TC", var(--serif); font
   .label .place { font-size: 1.15rem; }
   .label .note { display: none; }
   .stage { perspective: 1000px; perspective-origin: 50% 50%; }
-  .line { left: 34%; top: 66%; }
+  .book { left: 30%; top: 72%; }
 }
+/* ---- the opening: while the books are arriving, the words and the bar wait, then rise in ---- */
+.head, .tools { transition: opacity 1.1s var(--out), transform 1.1s var(--out); }
+body.opening .head, body.opening .tools { opacity: 0; transform: translateY(0.6rem); pointer-events: none; }
+body.opening .backdrop img.on { opacity: 0; }
+
 @media (prefers-reduced-motion: reduce) {
+  .head, .tools { transition: none; }
   .label, .label > * { transition: none; }
 }

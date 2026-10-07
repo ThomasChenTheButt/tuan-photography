@@ -105,12 +105,12 @@
   const TURN = -34, TILT = 4;                       // every book turned away to the left and seen a little from below, as in Morph
   function layout() {
     W = innerWidth; H = innerHeight;
-    const h = W > 700 ? Math.min(H * 0.78, W * 0.4) : Math.min(H * 0.55, W * 0.8 / AR);   // the front book's height: a third of the page or more
+    const h = W > 700 ? Math.min(H * 0.98, W * 0.5) : Math.min(H * 0.6, W * 0.9 / AR);   // the front book's height: most of the page, as in Morph
     const w = h * AR;
-    sx = w * 0.42;                                  // each step back: right,
-    sy = H * 0.1;                                   // up,
-    sz = Math.max(80, Math.min(140, W * 0.09));     // and away
-    lift = sz * 1.3;                                // how far the book in hand comes toward you: clear of the one in front of it
+    sx = w * 0.4;                                   // each step back: right,
+    sy = H * 0.15;                                  // up,
+    sz = Math.max(60, Math.min(110, W * 0.07));     // and away
+    lift = sz * 0.8;                                // how far in front of the front book the book in hand comes
     books.forEach((bk) => {
       bk.w = w; bk.h = h;
       bk.el.style.setProperty('--w', w + 'px');
@@ -134,11 +134,15 @@
       if (k > n - 1.6) k -= n;                       // the book just passed sits in front of the camera
       const up = hovered === i ? 1 : 0;
       bk.lift += (up - bk.lift) * (reduce ? 1 : 0.14);
-      if (k < -0.9 || k > 8) { bk.el.classList.add('hidden'); bk.lift = 0; continue; }
+      if (k < -0.9 || k > FAR) { bk.el.classList.add('hidden'); bk.lift = 0; continue; }
       bk.el.classList.remove('hidden');
-      const x = k * sx, y = -k * sy, z = -k * sz + bk.lift * lift;
+      const a = arrival(i, k);                       // the opening: each book still on its way down the line
+      const kk = k + a * ARRIVE;
+      const x = kk * sx, y = -kk * sy, z = -kk * sz + bk.lift * (k * sz + lift);   // in hand it comes nearer than every other book
       const ry = TURN * (1 - bk.lift), rx = TILT * (1 - bk.lift);   // in hand it turns to face you
+      bk.el.style.opacity = a > 0 ? (1 - a).toFixed(3) : '';
       bk.el.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,' + z.toFixed(1) + 'px) rotateY(' + ry.toFixed(2) + 'deg) rotateX(' + rx.toFixed(2) + 'deg)';
+      bk.el.style.zIndex = up ? 1000 : Math.round((n - k) * 10);          // painted nearest last; the book in hand over everything
       bk.el.style.pointerEvents = k < -0.05 ? 'none' : '';   // a book passing the camera takes no clicks
     }
     line.style.transform = 'rotateY(' + (px * 2).toFixed(2) + 'deg) rotateX(' + (-py * 1.5).toFixed(2) + 'deg)';
@@ -272,6 +276,26 @@
   veilIn.addEventListener('input', setVeil);
   setVeil();
 
+  /* ---- the opening: the books come down the line out of the distance, the oldest first, the newest
+     landing last at the front; then the words. `?opening` replays it. ---- */
+  const ARRIVE = 7;                                  // how many steps further back a book starts
+  const STEP = 140, LAST = 1500, HOLD = 120;         // ms between arrivals, each book's travel, the pause before the first
+  const FAR = 8;                                     // the farthest book in view; it arrives first
+  let t0 = 0, opening = !reduce;
+  const easeOut = (u) => 1 - Math.pow(1 - u, 4);
+  function arrival(i, k) {
+    if (!opening) return 0;
+    const order = Math.max(0, FAR - k);                // 0 = the farthest book in view, FAR = the front
+    const u = (performance.now() - t0 - HOLD - order * STEP) / LAST;
+    if (u >= 1) return 0;
+    if (u <= 0) return 1;
+    return 1 - easeOut(u);
+  }
+  function startOpening() {
+    t0 = performance.now();                          // the page opens with the class already on, so the words never flash
+    setTimeout(() => { opening = false; document.body.classList.remove('opening'); }, HOLD + FAR * STEP + LAST);
+  }
+
   /* ---- the frame ---- */
   const ease = reduce ? 1 : 0.09;
   function frame() {
@@ -288,6 +312,7 @@
   addEventListener('resize', () => { layout(); place(); });
   layout();
   applyLang();
+  if (opening) startOpening(); else document.body.classList.remove('opening');
   place();
   requestAnimationFrame(frame);
 })();
