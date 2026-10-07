@@ -1,30 +1,15 @@
-> **Experiment `opening`** (started 2026-10-07, branch `exp/opening`, localhost:8648). Six candidate
-> openings for the home page of design 1, chosen from the address: `index.html?opening=<name>`, listed
-> with a line each on `openings.html`. Without the name the page is itself. Each opening is one file in
-> `design 1/js/opening/`; `design 1/js/opening.js` is the runtime (the stage over the page, the photo
-> list, done()). Aperture, contact sheet, film strip and burst by hand, letters through the Impeccable skill's
-> animate playbook, plus the first CSS pull-back. Five more (darkroom, mosaic, prints, exposure,
-> negative) were cut on 2026-10-07 at his word; they are in this branch's history at `2d0684e`.
-> Ten more were tried on 2026-10-08 (reel, orbit, route, grow, book, stack, counter, slices,
-> ripple, flythrough) and all cut the same day at his word; they are at `6beb0a3`. Rules of the root file suspended here, on purpose: each opening injects its own
-> `<style>` block (one file per candidate beats eleven blocks in the stylesheet while he chooses);
-> the stage, film rebates, flash and light leaks use photographic colours outside the eleven tokens;
-> film sprocket holes have 2px corners; the prints carry a soft offset shadow. The brief holds:
-> nothing written across the photograph, light only, nothing under "reduce motion", and every
-> opening ends on the page's own cover. When one is kept, its CSS moves into the stylesheet and the
-> rest are removed.
-
-> **Round 3 (2026-10-08, his word): three more versions of each of the six survivors.** The
-> original of each stays as version 1; versions 2 to 4 are `?opening=<name>-2` etc., the same file
-> branching on `o.v`. Tick each family as it lands, commit after each:
-> - [x] aperture 2 stop by stop, 3 opens on the summit, 4 paper blades on paper
-> - [x] contact 2 on paper, 3 the camera dives into the sheet, 4 laid down strip by strip with a clay grease-pencil ring
-> - [x] filmstrip 2 vertical, 3 three strips at once, 4 on paper on a slant
-> - [x] burst 2 punch-in crops, 3 on a small screen then grows, 4 strobe between frames
-> - [x] letters 2 陳亮元, 3 each letter its own photograph, 4 letters arrive one by one
-> - [x] pullback 2 from the lake shore, 3 three hard framings, 4 pull back with a turn
-> - [x] list all 24 on openings.html, check desktop and phone, update TODO.md and PROGRESS.md on main, push main
-> Then stop and report to him.
+> **Experiment `opening-graph`** (started 2026-10-08, branch `exp/opening-graph` off `exp/opening`,
+> localhost:8649). The same runtime as experiment `opening` (`design 1/js/opening.js`, one file per
+> opening in `design 1/js/opening/`, `openings.html` listing them), but the openings here are made by
+> a graph of agents he designed: a source finder, four scouts, a variety check, a router with a shared
+> scorecard, ten builders, an automatic test, a manager review, then his approval. Working files for
+> the graph are in `.graph/` (scorecard, excluded designs, taste file, finds, sidecars). Rules of the
+> root file suspended here, on purpose, as in experiment `opening`: each opening injects its own
+> `<style>` block; the stage may use photographic colours outside the eleven tokens. The brief holds:
+> nothing written across the photograph, light only, nothing under "reduce motion", every opening ends
+> on the page's own cover. **The six openings inherited from `exp/opening` (aperture, contact,
+> filmstrip, burst, letters, pullback) are reference only and must not be edited, extended or
+> reused here.**
 
 # tuan photography 陳亮元 — project instructions
 
