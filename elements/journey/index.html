@@ -13,6 +13,13 @@
   <h1><span data-i18n="title">Journey</span></h1>
   <p class="lead" data-i18n="lead">Every place I have been, as a book on one long line. The newest is nearest; the line runs back into the years.</p>
   <p class="hint" data-i18n="hint">Scroll or drag to travel. Click a book to open it.</p>
+  <aside class="label" id="label" aria-live="polite">
+    <span class="date" id="lab-date"></span>
+    <b class="place" id="lab-place"></b>
+    <span class="note" id="lab-note"></span>
+    <span class="meta"><span id="lab-count"></span> · <span id="lab-pos"></span></span>
+    <a class="word open" id="lab-open" href="#"></a>
+  </aside>
 </header>
 
 <div class="backdrop" id="backdrop" aria-hidden="true"><img alt=""><img alt=""></div>
@@ -30,13 +37,6 @@
   <div class="line" id="line"></div>
 </main>
 
-<aside class="label" id="label" aria-live="polite">
-  <span class="date" id="lab-date"></span>
-  <b class="place" id="lab-place"></b>
-  <span class="note" id="lab-note"></span>
-  <span class="meta"><span id="lab-count"></span> · <span id="lab-pos"></span></span>
-  <a class="word open" id="lab-open" href="#"></a>
-</aside>
 
 <script src="../data.js"></script>
 <script src="journey.js"></script>

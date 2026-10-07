@@ -1,7 +1,8 @@
 /* Journey — the look. Design 1's tokens; the paper, the serif names, the small
-   spaced capitals. The books stand upright on one long shelf that runs across the
-   page, every one turned the same way so its page edges show, each a little in
-   front of the one to its left. The book under the cursor comes off the shelf. */
+   spaced capitals. The books stand on one line that climbs from the bottom left
+   to the top right, the front one large, each next one a step up, right and back,
+   all turned a little away. The book under the cursor turns to face you, and the
+   words at the top left name it. */
 :root {
   --bg: oklch(96.6% 0.011 82);
   --card: oklch(98.8% 0.005 85);
@@ -35,6 +36,7 @@ html[lang="zh"] body { font-family: "Noto Sans TC", var(--sans); }
   position: fixed; left: var(--edge); top: var(--edge); z-index: 3;
   max-width: 24rem; pointer-events: none;
 }
+.head .label { pointer-events: auto; }
 .head h1 {
   margin: 0 0 0.9rem; font-family: var(--serif); font-weight: 400;
   font-size: clamp(2.3rem, 1.45rem + 3.4vw, 4.25rem); line-height: 1; letter-spacing: -0.01em;
@@ -70,15 +72,15 @@ html[lang="zh"] .word { letter-spacing: 0.12em; }
 .bar input::-moz-range-thumb { width: 10px; height: 10px; background: var(--accent); border: 0; border-radius: 0; cursor: pointer; }
 .tools { display: grid; justify-items: end; }
 
-/* ---- the stage: one perspective, one shelf of books ---- */
+/* ---- the stage: one perspective, one line of books ---- */
 .stage {
   position: fixed; inset: 0; z-index: 1;
-  perspective: 1600px; perspective-origin: 50% 40%;
+  perspective: 1400px; perspective-origin: 50% 50%;
   touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none;
 }
 .stage.dragging { cursor: grabbing; }
 .line {
-  position: absolute; left: 50%; top: 60%; width: 0; height: 0;
+  position: absolute; left: 30%; top: 62%; width: 0; height: 0;
   transform-style: preserve-3d; will-change: transform;
 }
 /* ---- the book: design 1's guidebook, as it stands on the home page's shelf. A photograph on
@@ -90,11 +92,11 @@ html[lang="zh"] .word { letter-spacing: 0.12em; }
   width: var(--w); height: var(--h);
   margin-left: calc(var(--w) / -2); margin-top: calc(var(--h) / -2);
   transform-style: preserve-3d; will-change: transform;
-  --deep: calc(var(--w) * 0.2); --shade: oklch(20% 0.02 60);
+  --deep: calc(var(--w) * 0.14); --shade: oklch(20% 0.02 60);
   color: var(--paper); cursor: pointer;
 }
 .book__box { position: absolute; inset: 0; transform-style: preserve-3d; }
-.book__face, .book__spine, .book__edge, .book__top {
+.book__face, .book__spine, .book__edge, .book__top, .book__bottom {
   position: absolute; top: 0; left: 0; height: 100%; backface-visibility: hidden; outline: 1px solid transparent;
 }
 .book__face {
@@ -121,26 +123,16 @@ html[lang="zh"] .book__spine b { font-family: "Noto Serif TC", var(--serif); tex
 .book__spine i { font-style: normal; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; white-space: nowrap; }
 .book__edge { top: 3px; left: 0; height: calc(100% - 6px); width: calc(var(--deep) - 3px); transform-origin: left center; transform: rotateY(-90deg) translateX(-100%); background: repeating-linear-gradient(to right, var(--paper) 0 2px, color-mix(in oklch, var(--line) 70%, var(--paper)) 2px 3px); box-shadow: inset 0 0 0.6rem color-mix(in oklch, var(--shade) 12%, transparent); }
 .book__top { left: 3px; width: calc(100% - 6px); height: calc(var(--deep) - 3px); transform-origin: top center; transform: rotateX(90deg) translateY(-100%); background: repeating-linear-gradient(to bottom, var(--paper) 0 2px, color-mix(in oklch, var(--line) 70%, var(--paper)) 2px 3px); }
+.book__bottom { left: 3px; top: auto; bottom: 0; width: calc(100% - 6px); height: calc(var(--deep) - 3px); transform-origin: bottom center; transform: rotateX(-90deg) translateY(100%); background: repeating-linear-gradient(to bottom, var(--paper) 0 2px, color-mix(in oklch, var(--line) 70%, var(--paper)) 2px 3px); box-shadow: inset 0 0 0.6rem color-mix(in oklch, var(--shade) 18%, transparent); }
 
-/* the tag: a torn strip of ochre paper stuck over the top edge, with the time of the journey */
-.tag {
-  position: absolute; left: 6%; top: -0.95rem; z-index: 2;
-  padding: 0.42rem 0.9rem 0.46rem; background: oklch(90% 0.065 85); color: oklch(32% 0.03 70);
-  font-size: 0.64rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap;
-  transform: translateZ(2px) rotate(-2.5deg);
-  clip-path: polygon(0% 18%, 3% 4%, 8% 12%, 13% 0%, 19% 9%, 26% 2%, 33% 11%, 40% 1%, 47% 8%, 54% 0%, 61% 10%, 68% 3%, 75% 9%, 82% 0%, 89% 10%, 95% 3%, 100% 14%, 98% 30%, 100% 48%, 97% 66%, 100% 84%, 95% 100%, 88% 92%, 81% 100%, 73% 90%, 66% 100%, 58% 92%, 51% 100%, 44% 91%, 37% 100%, 29% 92%, 21% 100%, 14% 90%, 7% 100%, 2% 88%, 0% 70%, 3% 50%, 0% 34%);
-}
-html[lang="zh"] .tag { letter-spacing: 0.14em; }
-.tag:empty { display: none; }
 
 .book.hidden { visibility: hidden; }
 
-/* ---- the wall label: a small card that follows the cursor and names the book under it ---- */
+/* ---- the label: under the title, naming the book under the cursor, or the one at the front ---- */
 .label {
-  position: fixed; left: 0; top: 0; z-index: 3;
-  display: grid; gap: 0.15rem; max-width: 18rem; pointer-events: none;
-  padding: 0.7rem 0.9rem 0.8rem; background: var(--card); box-shadow: inset 0 0 0 1px var(--line);
-  opacity: 0; transition: opacity 0.25s var(--out); will-change: transform;
+  display: grid; gap: 0.2rem; max-width: 20rem; margin-top: 2.2rem; padding-top: 1.2rem;
+  border-top: 1px solid var(--line);
+  opacity: 0; transition: opacity 0.3s var(--out);
 }
 .label.on { opacity: 1; }
 .label .date {
@@ -157,20 +149,16 @@ html[lang="zh"] .label .place { font-family: "Noto Serif TC", var(--serif); font
 .label .open { color: var(--accent); margin-top: 0.3rem; width: max-content; }
 .label .open:empty { display: none; }
 
-/* no cursor: the label stays at the bottom left and always names the book at the front */
-@media (hover: none) {
-  .label { left: var(--edge); bottom: var(--edge); top: auto; opacity: 1; transform: none !important;
-           padding: 0; background: none; box-shadow: none; max-width: calc(100vw - var(--edge) * 2 - 8rem); }
-  .label .open { pointer-events: auto; }
-}
-
 @media (max-width: 700px) {
   .head { max-width: 15rem; }
   .bar { width: 7rem; grid-template-columns: 1fr auto; gap: 0.5rem; }
   .bar label { display: none; }
   .lead { display: none; }
-  .stage { perspective: 1100px; perspective-origin: 50% 40%; }
-  .line { top: 58%; }
+  .label { margin-top: 1.2rem; padding-top: 0.8rem; }
+  .label .place { font-size: 1.15rem; }
+  .label .note { display: none; }
+  .stage { perspective: 1000px; perspective-origin: 50% 50%; }
+  .line { left: 34%; top: 66%; }
 }
 @media (prefers-reduced-motion: reduce) {
   .label, .label > * { transition: none; }
