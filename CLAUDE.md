@@ -1,3 +1,14 @@
+> **Experiment `taste2` (2026-10-05, his ask: "run a taste skill on design 2").** The Taste skill
+> (`design-taste-frontend`), audit first, on design 2 ("Pen and wash") only. Mode: redesign, preserve.
+> Rules of that skill that his brief overrides and are suspended here: dark mode (light only), the
+> serif ban (Alegreya is the chosen face), eyebrow counting for the word-controls (spaced capitals are
+> this system's control voice). Five fixes from the audit, all on `design 2/wc-sketch/`: the phone's
+> bottom-right row no longer wraps over the books (tally off on phones, dial shortened); the
+> "Scroll for the photographs" word on the cover photograph removed; the place page no longer opens
+> with "Guide not written yet"; dates kept as "2025.1" are spoken as "January 2025 / 2025 年 1 月";
+> the Speed label in faded ink instead of pencil-pale. Preview on 8646 (`exp-taste2`). Keep or drop
+> on his word.
+
 # tuan photography 陳亮元 — project instructions
 
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
