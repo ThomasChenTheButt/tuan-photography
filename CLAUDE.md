@@ -17,9 +17,9 @@
 > **Round 3 (2026-10-08, his word): three more versions of each of the six survivors.** The
 > original of each stays as version 1; versions 2 to 4 are `?opening=<name>-2` etc., the same file
 > branching on `o.v`. Tick each family as it lands, commit after each:
-> - [ ] aperture 2 stop by stop, 3 opens on the summit, 4 paper blades on paper
-> - [ ] contact 2 on paper, 3 the camera dives into the sheet, 4 laid down strip by strip with a clay grease-pencil ring
-> - [ ] filmstrip 2 vertical, 3 three strips at once, 4 on paper on a slant
+> - [x] aperture 2 stop by stop, 3 opens on the summit, 4 paper blades on paper
+> - [x] contact 2 on paper, 3 the camera dives into the sheet, 4 laid down strip by strip with a clay grease-pencil ring
+> - [x] filmstrip 2 vertical, 3 three strips at once, 4 on paper on a slant
 > - [ ] burst 2 punch-in crops, 3 on a small screen then grows, 4 strobe between frames
 > - [ ] letters 2 陳亮元, 3 each letter its own photograph, 4 letters arrive one by one
 > - [ ] pullback 2 from the lake shore, 3 three hard framings, 4 pull back with a turn
