@@ -82,7 +82,28 @@ body {
 }
 :lang(zh) .caption span { letter-spacing: 0.08em; }
 
+/* ---- the speed bar, bottom right: a word, a line, a number ---- */
+.speed {
+  position: fixed; right: 2.2rem; bottom: 2rem; z-index: 5;
+  display: flex; align-items: center; gap: 0.8rem;
+  font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-2);
+}
+.speed output { min-width: 2.6em; letter-spacing: 0.06em; text-align: right; font-variant-numeric: tabular-nums; }
+.speed input {
+  -webkit-appearance: none; appearance: none;
+  width: 9rem; height: 1px; margin: 0; background: var(--line); cursor: pointer;
+}
+.speed input::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 9px; height: 9px; background: var(--accent); border: 0; border-radius: 0;
+}
+.speed input::-moz-range-thumb { width: 9px; height: 9px; background: var(--accent); border: 0; border-radius: 0; }
+.speed input::-moz-range-track { height: 1px; background: var(--line); }
+.speed input:focus-visible { outline: 1px solid var(--accent); outline-offset: 6px; }
+
 @media (max-width: 640px) {
+  .speed { right: 1.2rem; bottom: 1.2rem; }
+  .speed input { width: 5rem; }
   .head { left: 1.2rem; bottom: 1.2rem; max-width: 70vw; }
   .tools { right: 1.2rem; top: 1rem; }
 }

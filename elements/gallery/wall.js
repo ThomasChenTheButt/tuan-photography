@@ -16,9 +16,20 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const i18n = {
-    en: { title: 'Gallery', hint: 'Move across the wall. Click a photograph to hold it; click again to let go.', other: '中文' },
-    zh: { title: '作品集', hint: '滑過這面牆。點一張照片把它留住；再點一下放開。', other: 'EN' },
+    en: { title: 'Gallery', hint: 'Move across the wall. Click a photograph to hold it; click again to let go.', other: '中文', speed: 'Speed' },
+    zh: { title: '作品集', hint: '滑過這面牆。點一張照片把它留住；再點一下放開。', other: 'EN', speed: '速度' },
   };
+
+  /* ---- the speed bar: a multiplier on every row's drift, 0 holds the wall still ---- */
+  const speedIn = document.getElementById('speed');
+  const speedOut = document.getElementById('speed-out');
+  let speedK = 1;
+  function readSpeed() {
+    speedK = parseFloat(speedIn.value);
+    speedOut.value = '×' + speedK.toFixed(1);
+  }
+  speedIn.addEventListener('input', readSpeed);
+  readSpeed();
   let lang = location.search.includes('zh') ? 'zh' : 'en';
 
   /* ---- the prints, in a fixed shuffle so countries mix but the wall is the same each visit ---- */
@@ -105,7 +116,7 @@
   // where each print stands on its row right now, the row having drifted `shift`
   function advance(dt) {
     for (const row of rows) {
-      if (!reduce) row.shift += row.speed * dt / 1000;
+      if (!reduce) row.shift += row.speed * speedK * dt / 1000;
       for (const t of row.tiles) {
         const m = ((t.x0 + row.shift) % row.len + row.len) % row.len;
         t.bx = m - row.len * 0.2;
