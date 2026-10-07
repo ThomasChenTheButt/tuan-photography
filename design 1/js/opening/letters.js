@@ -50,6 +50,25 @@ window.Openings.letters = function (o) {
   svg.append(perLetter, full);
   stage.appendChild(svg);
 
+  // the thickest point of the name inside a region of the window: the line is drawn on a canvas
+  // exactly where the page draws it (same face, size, centre and baseline), and the inked pixel
+  // farthest from any edge wins, so the camera lands inside a stroke and never in a gap
+  function thickest(str, font, baseline, region) {
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const x = c.getContext('2d'); x.font = font; x.textAlign = 'center'; x.textBaseline = 'alphabetic'; x.fillStyle = '#000';
+    x.fillText(str, W / 2, baseline);
+    const d = x.getImageData(0, 0, W, H).data, ink = (i, j) => { i = Math.round(i); j = Math.round(j); return i >= 0 && j >= 0 && i < W && j < H && d[(j * W + i) * 4 + 3] > 128; };
+    let best = [region.x + region.width / 2, region.y + region.height / 2], br = -1;
+    for (let j = Math.floor(region.y); j < region.y + region.height; j += 2) for (let i = Math.floor(region.x); i < region.x + region.width; i += 2) {
+      if (!ink(i, j)) continue;
+      let r = 1;
+      const round = (rr) => { for (let a = 0; a < 16; a++) { const q = a * Math.PI / 8; if (!ink(i + Math.cos(q) * rr, j + Math.sin(q) * rr)) return false; } return true; };
+      while (r < 200 && round(r)) r++;   // the largest circle that fits inside the stroke
+      if (r > br) { br = r; best = [i, j]; }
+    }
+    return best;
+  }
+
   const fonts = document.fonts ? Promise.all([document.fonts.load('400 100px "Playfair Display"'), document.fonts.load('500 100px "Noto Serif TC"')]).catch(() => {}) : Promise.resolve();
   Promise.all([fonts, o.load(o.src(o.lead))]).then(() => {
     // size the name to the window
@@ -70,12 +89,13 @@ window.Openings.letters = function (o) {
     zh.setAttribute('y', y + zfs * 1.9);
     // the point we go through: the stem of the h in "photography", or the left stroke of 陳
     let fx, fy;
-    if (v === 2) { const ex = text.getExtentOfChar(0); fx = ex.x + ex.width * 0.115; fy = ex.y + ex.height * 0.55; }
+    if (v === 2) { [fx, fy] = thickest('陳亮元', '500 ' + fs + 'px "Noto Serif TC"', +line1.getAttribute('y'), text.getExtentOfChar(0)); }
     else {
       const idx = (narrow ? 'photography' : 'tuan photography').indexOf('h') + (narrow ? 4 : 0);
       const ex = text.getExtentOfChar(idx); fx = ex.x + ex.width * 0.17; fy = ex.y + ex.height * 0.52;
     }
-    const Smax = Math.hypot(W, H) / (fs * (v === 2 ? 0.035 : 0.045));
+    // browsers stop drawing text past about thirty thousand pixels, so the zoom stops short of that
+    const Smax = Math.min(Math.hypot(W, H) / (fs * (v === 2 ? 0.035 : 0.045)), 24000 / fs);
 
     // versions 3 and 4: each letter its own clip and its own layer
     const layers = [];
@@ -133,7 +153,9 @@ window.Openings.letters = function (o) {
       const e = o.easeInOut(o.clamp((u - A) / (B - A)));
       const s = Math.pow(Smax, e);
       text.setAttribute('transform', `translate(${fx} ${fy}) scale(${s}) translate(${-fx} ${-fy})`);
-      full.style.opacity = o.easeOut(o.clamp((u - B) / (1 - B))).toFixed(3);
+      // the photograph itself comes in while the stroke is already filling the window, before the
+      // browser's text grows past what it will draw
+      full.style.opacity = Math.max(o.easeInOut(o.clamp((e - 0.62) / 0.22)), o.easeOut(o.clamp((u - B) / (1 - B)))).toFixed(3);
       if (u < 1) requestAnimationFrame(frame); else o.done(stage, 100);
     }
     requestAnimationFrame(frame);
