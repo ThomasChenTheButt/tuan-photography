@@ -840,9 +840,6 @@ def build_guide(name, title_en, title_zh, desc):
 
 OPENINGS = [
     # name, English name, 中文, what it does (en), 什麼效果 (zh)
-    ("darkroom", "Darkroom", "暗房",
-     "Black. Under a red safelight the print comes up in the tray: grain first, then shapes, then colour.",
-     "一片黑。紅色安全燈下，相紙在顯影盤裡慢慢浮現：先是顆粒，再是輪廓，最後是顏色。"),
     ("aperture", "Aperture", "光圈",
      "A shutter blink, then the iris blades turn open from the centre while the focus pulls sharp.",
      "快門一眨，光圈葉片從中央旋開，同時焦點從模糊拉到清晰。"),
@@ -855,21 +852,12 @@ OPENINGS = [
     ("burst", "Burst", "連拍",
      "Hard cuts between full-window photographs, faster and faster, like a burst, until it holds on the one.",
      "滿版照片硬切，越來越快，像連拍，最後定格在那一張。"),
-    ("mosaic", "Mosaic", "拼貼",
-     "One photograph fills the window. It pulls back and is one tile among all your photographs, which together form the opening one.",
-     "一張照片填滿視窗。拉遠，它只是其中一格；你所有的照片一起拼成了開場那張。"),
     ("letters", "Letters", "字母",
      "Your name on paper, the photograph showing only through the letters. The letters grow until one stroke is the whole window.",
      "紙上寫著你的名字，照片只從字母裡透出來。字母放大，直到一筆畫就是整個視窗。"),
     ("print", "Prints", "相紙",
      "Prints are dealt onto the paper one after another. The last lands straight and grows to fill the window.",
      "相紙一張張放到紙上。最後一張放正，長大到填滿視窗。"),
-    ("exposure", "Exposure", "曝光",
-     "White, blown out. The exposure comes down stop by stop and light leaks drift across until the photograph is right.",
-     "一片過曝的白。曝光一格一格降下來，漏光飄過，直到照片剛剛好。"),
-    ("negative", "Negative", "負片",
-     "The frame as a colour negative in its film rebate. A flash, and it turns positive and fills the window.",
-     "一格帶著片邊的彩色負片。閃一下，翻成正片，填滿視窗。"),
     ("pullback", "Pull back", "拉遠",
      "The first try: the page arrives on the summit and pulls back until the whole photograph is there.",
      "第一版：頁面停在山頂，慢慢拉遠到整張照片。"),
@@ -888,8 +876,8 @@ def write_photos():
 
 def build_openings():
     en, zh = {}, {}
-    en.update(opTitle="Openings", opSub="Eleven ways the home page could begin. Open one; it plays once and the page is itself again. Add ?opening=name to the home page's address to see any of them.")
-    zh.update(opTitle="開場", opSub="首頁可以怎麼開始的十一種方式。點一個，播一次，頁面就回到原樣。在首頁網址後加 ?opening=名稱 也看得到。")
+    en.update(opTitle="Openings", opSub="Six ways the home page could begin. Open one; it plays once and the page is itself again. Add ?opening=name to the home page's address to see any of them.")
+    zh.update(opTitle="開場", opSub="首頁可以怎麼開始的六種方式。點一個，播一次，頁面就回到原樣。在首頁網址後加 ?opening=名稱 也看得到。")
     items = []
     for name, ten, tzh, den, dzh in OPENINGS:
         en[f"on_{name}"], zh[f"on_{name}"] = ten, tzh

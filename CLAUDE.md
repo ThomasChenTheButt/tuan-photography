@@ -1,10 +1,10 @@
-> **Experiment `opening`** (started 2026-10-07, branch `exp/opening`, localhost:8648). Eleven candidate
+> **Experiment `opening`** (started 2026-10-07, branch `exp/opening`, localhost:8648). Six candidate
 > openings for the home page of design 1, chosen from the address: `index.html?opening=<name>`, listed
 > with a line each on `openings.html`. Without the name the page is itself. Each opening is one file in
 > `design 1/js/opening/`; `design 1/js/opening.js` is the runtime (the stage over the page, the photo
-> list, done()). Five by hand (darkroom, aperture, contact, filmstrip, burst), five through the
-> Impeccable skill's animate playbook (mosaic, letters, prints, exposure, negative), plus the first
-> CSS pull-back. Rules of the root file suspended here, on purpose: each opening injects its own
+> list, done()). Aperture, contact sheet, film strip and burst by hand, letters through the Impeccable skill's
+> animate playbook, plus the first CSS pull-back. Five more (darkroom, mosaic, prints, exposure,
+> negative) were cut on 2026-10-07 at his word; they are in this branch's history at `2d0684e`. Rules of the root file suspended here, on purpose: each opening injects its own
 > `<style>` block (one file per candidate beats eleven blocks in the stylesheet while he chooses);
 > the stage, film rebates, flash and light leaks use photographic colours outside the eleven tokens;
 > film sprocket holes have 2px corners; the prints carry a soft offset shadow. The brief holds:
