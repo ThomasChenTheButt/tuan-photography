@@ -16,8 +16,8 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const i18n = {
-    en: { title: 'Gallery', hint: 'Move across the wall. Click a photograph to hold it; click again to let go.', other: '中文', speed: 'Speed', tilt: 'Tilt', kicker: 'A photography wall', dark: 'Dark', light: 'Light' },
-    zh: { title: '作品集', hint: '滑過這面牆。點一張照片把它留住；再點一下放開。', other: 'EN', speed: '速度', tilt: '歪斜', kicker: '一面照片牆', dark: '深色', light: '淺色' },
+    en: { title: 'Gallery', hint: 'Move across the wall. Click a photograph to hold it; click again to let go.', other: '中文', speed: 'Speed', tilt: 'Tilt', size: 'Size', kicker: 'A photography wall', dark: 'Dark', light: 'Light' },
+    zh: { title: '作品集', hint: '滑過這面牆。點一張照片把它留住；再點一下放開。', other: 'EN', speed: '速度', tilt: '歪斜', size: '大小', kicker: '一面照片牆', dark: '深色', light: '淺色' },
   };
 
   /* ---- the speed bar: a multiplier on every row's drift, 0 holds the wall still ---- */
@@ -41,6 +41,17 @@
   }
   tiltIn.addEventListener('input', readTilt);
   readTilt();
+
+  /* ---- the size bar: how tall the prints are. The wall re-lays itself in fewer or more rows ---- */
+  const sizeIn = document.getElementById('size');
+  const sizeOut = document.getElementById('size-out');
+  let sizeK = 1;
+  function readSize() {
+    sizeK = parseFloat(sizeIn.value);
+    sizeOut.value = '×' + sizeK.toFixed(1);
+    if (rows.length) layout();
+  }
+  sizeIn.addEventListener('input', readSize);
   let lang = location.search.includes('zh') ? 'zh' : 'en';
 
   /* ---- the prints, in a fixed shuffle so countries mix but the wall is the same each visit ---- */
@@ -81,16 +92,17 @@
     const n = tiles.length;
     // the wall runs past every edge: the first and last rows are cut by the window,
     // and each row is about 1.4 screens long so it can loop with no gap showing
-    const count = Math.max(3, Math.round(Math.sqrt(n * H * 0.76 / W)));
-    const pitch = H / count;
+    // the size bar scales the row height; bigger prints mean fewer rows, never an overlap
+    const pitch = H / Math.max(3, Math.sqrt(n * H * 0.76 / W)) * sizeK;
     const top = -pitch * 0.45;                // the top row begins above the window
     const total = Math.ceil((H - top) / pitch) + 1;   // enough rows to run off the bottom too
     cell = pitch;
+    const shifts = rows.map((r) => r.shift);  // keep each row where it had drifted to
     rows.length = 0;
-    const per = Math.ceil(n / count);
+    const per = Math.ceil(n / total);
     seed = 11;                                // the same slight tilts on every visit
     for (let r = 0; r < total; r++) {
-      const own = tiles.slice(r * per, (r + 1) * per);   // the extra rows own nothing and borrow all
+      const own = tiles.slice(r * per, (r + 1) * per);
       const h = pitch - GAP;
       let len = own.reduce((a, t) => a + h * t.ar + GAP, 0);
       // a short row borrows prints from the next row until it is long enough to loop
@@ -101,7 +113,7 @@
         list.push(Object.assign({}, t, { ghost: true, el: null }));
         len += h * t.ar + GAP;
       }
-      const row = { y: top + r * pitch + pitch / 2, len, shift: 0,
+      const row = { y: top + r * pitch + pitch / 2, len, shift: shifts[r] || 0,
                     speed: (r % 2 ? 1 : -1) * (9 + (r * 7) % 5), tiles: list };
       let x = 0;
       for (const t of list) {
@@ -122,6 +134,9 @@
     // drop ghost elements left over from a previous layout
     wall.querySelectorAll('.tile').forEach((el) => { if (!allTiles.some((t) => t.el === el)) el.remove(); });
     allTiles.forEach((t) => { if (t.ghost && !t.el.parentNode) wall.appendChild(t.el); });
+    // a borrowed print that was up and is gone from the new wall is let go
+    if (held && !allTiles.includes(held)) hold(null);
+    if (lifted && !allTiles.includes(lifted)) lift(null);
     advance(0);
   }
   let allTiles = tiles;
@@ -300,6 +315,7 @@
   langBtn.addEventListener('click', () => { lang = lang === 'zh' ? 'en' : 'zh'; applyLang(); });
 
   addEventListener('resize', layout);
+  sizeK = parseFloat(sizeIn.value); sizeOut.value = '×' + sizeK.toFixed(1);
   layout();
   applyLang();
   requestAnimationFrame(frame);
