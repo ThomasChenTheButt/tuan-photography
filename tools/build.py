@@ -855,36 +855,6 @@ OPENINGS = [
     ("letters", "Letters", "字母",
      "Your name on paper, the photograph showing only through the letters. The letters grow until one stroke is the whole window.",
      "紙上寫著你的名字，照片只從字母裡透出來。字母放大，直到一筆畫就是整個視窗。"),
-    ("reel", "Reel", "短片",
-     "Your own footage: four Barcelona clips cut hard, one after another, then the still.",
-     "你自己拍的影片：四段巴塞隆納的鏡頭硬切接連播放，最後停在那張照片。"),
-    ("orbit", "Orbit", "軌道",
-     "The earth from space, turning from Taiwan toward New Zealand, falling until the land is the photograph.",
-     "從太空看地球，從台灣轉向紐西蘭，一路降落，直到陸地變成那張照片。"),
-    ("route", "Route", "路線",
-     "A pen line draws every journey you have made across a paper map, a small print at each place, then the map dives into the last one.",
-     "一條筆線在紙地圖上畫出你走過的每一趟路，每到一處落下一張小照片，最後地圖衝進那一處。"),
-    ("grow", "Scroll to open", "捲動打開",
-     "Nothing plays by itself. A small print on the paper; your scroll opens it until it is the window.",
-     "什麼都不會自己播。紙上一張小照片，你往下捲，它才慢慢打開到填滿視窗。"),
-    ("book", "Book", "書",
-     "A closed guidebook on the paper. The cover swings open; the first plate is the photograph, and you move into it.",
-     "紙上一本闔著的攻略書。封面翻開，第一頁的圖版就是那張照片，鏡頭走進去。"),
-    ("stack", "Stack", "疊影",
-     "Photographs pop up at the centre one after another, each landing on the last, until the final one spreads to the edges.",
-     "照片一張接一張在中央冒出來、疊在上一張上，最後一張攤開到四邊。"),
-    ("counter", "Counter", "計數",
-     "The award-site classic: a number counts to one hundred on paper, then the photograph wipes up from below.",
-     "得獎網站的經典：紙上一個數字數到一百，照片從下方往上掀開。"),
-    ("slices", "Slices", "切片",
-     "The photograph in tall slices that rise one after another and close into one frame.",
-     "照片切成一條條直片，一片片升起，合成一張。"),
-    ("ripple", "Ripple", "水紋",
-     "Heat haze over the frame, the photograph bending like air over hot ground, settling to still and sharp.",
-     "畫面像熱空氣在抖，照片扭曲晃動，慢慢靜下來變清晰。"),
-    ("flythrough", "Fly through", "穿越",
-     "A camera flies through one photograph into the next, each nested inside the last, and arrives at the opening one.",
-     "鏡頭從一張照片穿進下一張，一層套一層，最後抵達開場那張。"),
     ("pullback", "Pull back", "拉遠",
      "The first try: the page arrives on the summit and pulls back until the whole photograph is there.",
      "第一版：頁面停在山頂，慢慢拉遠到整張照片。"),
@@ -910,8 +880,8 @@ def write_photos():
 
 def build_openings():
     en, zh = {}, {}
-    en.update(opTitle="Openings", opSub="Sixteen ways the home page could begin. Open one; it plays once and the page is itself again. Add ?opening=name to the home page's address to see any of them.")
-    zh.update(opTitle="開場", opSub="首頁可以怎麼開始的十六種方式。點一個，播一次，頁面就回到原樣。在首頁網址後加 ?opening=名稱 也看得到。")
+    en.update(opTitle="Openings", opSub="Six ways the home page could begin. Open one; it plays once and the page is itself again. Add ?opening=name to the home page's address to see any of them.")
+    zh.update(opTitle="開場", opSub="首頁可以怎麼開始的六種方式。點一個，播一次，頁面就回到原樣。在首頁網址後加 ?opening=名稱 也看得到。")
     items = []
     for name, ten, tzh, den, dzh in OPENINGS:
         en[f"on_{name}"], zh[f"on_{name}"] = ten, tzh
