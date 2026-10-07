@@ -82,6 +82,7 @@
       el.appendChild(s);
       bk.ar = 3 / 2;
     }
+    ['spine', 'pages-t', 'pages-b', 'pages-r'].forEach((f) => { const d = document.createElement('div'); d.className = 'face ' + f; el.appendChild(d); });
     el.setAttribute('aria-label', bk.b.title.en);
     bk.el = el;
     line.appendChild(el);
@@ -118,17 +119,18 @@
       const bk = books[i];
       let k = wrap(pos - i);                         // 0 at the front, growing with distance, round the loop
       if (k > n - 1.6) k -= n;                       // the book just passed sits in front of the camera
-      if (k < -1.1 || k > 13) { bk.el.classList.add('hidden'); continue; }
+      if (k < -0.9 || k > 13) { bk.el.classList.add('hidden'); continue; }
       bk.el.classList.remove('hidden');
       const x = k * sx, y = -k * sy, z = -k * sz;
       let o = 1;
       if (k < 0) o = Math.max(0, 1 + k / 0.85);      // sliding past the camera
       if (k > 9) o = Math.max(0, 1 - (k - 9) / 4);   // fading into the distance
-      bk.el.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,' + z.toFixed(1) + 'px) rotateY(-22deg) rotateZ(2.5deg)';
-      bk.el.style.opacity = o.toFixed(3);
+      bk.el.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,' + z.toFixed(1) + 'px) rotateY(-26deg) rotateZ(2.5deg)';
+      bk.el.style.setProperty('--o', o.toFixed(3));
+      bk.el.style.pointerEvents = k < -0.05 || o <= 0 ? 'none' : '';   // a book passing the camera takes no clicks
       bk.el.classList.toggle('front', wrap(Math.round(pos)) === i);
     }
-    line.style.transform = 'rotateY(' + (px * 3).toFixed(2) + 'deg) rotateX(' + (-py * 2).toFixed(2) + 'deg)';
+    line.style.transform = 'rotateY(' + (px * 3).toFixed(2) + 'deg) rotateX(' + (-12 - py * 2).toFixed(2) + 'deg)';   // seen a little from above, so the top edge shows
   }
 
   /* ---- the label ---- */
@@ -143,13 +145,25 @@
     else if (bk.own.length) { labOpen.textContent = t.photos; labOpen.href = SITE1 + 'countries/' + bk.b.country + '.html'; }
     else { labOpen.textContent = ''; labOpen.removeAttribute('href'); }
   }
+  const hasHover = matchMedia('(hover: hover)').matches;
+  let lx = 0, ly = 0;                                // where the label is, eased toward the cursor
   function updateLabel() {
-    const i = hovered !== null ? hovered : wrap(Math.round(pos));
-    if (i === shown && lang === shownLang) return;
+    // with a cursor the label names the book under it and hides over bare paper;
+    // without one it names the book at the front
+    const i = hasHover ? hovered : wrap(Math.round(pos));
+    label.classList.toggle('on', i !== null);
+    if (i === null || (i === shown && lang === shownLang)) return;
     shown = i; shownLang = lang;
-    if (reduce) { describe(i); return; }
-    label.classList.add('swap');
-    setTimeout(() => { describe(i); label.classList.remove('swap'); }, 130);
+    describe(i);
+  }
+  function moveLabel() {
+    if (!hasHover) return;
+    lx += (lastX + 18 - lx) * (reduce ? 1 : 0.22);
+    ly += (lastY + 20 - ly) * (reduce ? 1 : 0.22);
+    // keep it on the screen
+    const r = label.getBoundingClientRect();
+    const x = Math.min(lx, W - r.width - 8), y = Math.min(ly, H - r.height - 8);
+    label.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
   }
   function linkFor(i) { const bk = books[i]; return bk.b.guide ? SITE1 + 'posts/' + bk.b.guide + '.html' : bk.own.length ? SITE1 + 'countries/' + bk.b.country + '.html' : null; }
 
@@ -176,7 +190,12 @@
   stage.addEventListener('pointermove', (e) => {
     if (e.pointerType === 'mouse') { tpx = e.clientX / W * 2 - 1; tpy = e.clientY / H * 2 - 1; }
     if (Math.abs(e.clientX - lastX) + Math.abs(e.clientY - lastY) > 4) { lastX = e.clientX; lastY = e.clientY; if (!drag) armed = true; }
-    if (!drag) return;
+    if (!drag) {
+      if (!armed) return;
+      const book = e.target.closest ? e.target.closest('.book') : null;
+      hovered = book ? +book.dataset.i : null;
+      return;
+    }
     const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
     drag.moved = Math.max(drag.moved, Math.abs(dx) + Math.abs(dy));
     if (drag.moved > 6) stage.classList.add('dragging');
@@ -201,17 +220,8 @@
   }
   stage.addEventListener('pointerup', endDrag);
   stage.addEventListener('pointercancel', () => { drag = null; stage.classList.remove('dragging'); });
-  stage.addEventListener('pointerleave', () => { tpx = 0; tpy = 0; });
+  stage.addEventListener('pointerleave', () => { tpx = 0; tpy = 0; hovered = null; });
 
-  stage.addEventListener('pointerover', (e) => {
-    if (drag || !armed) return;
-    const book = e.target.closest ? e.target.closest('.book') : null;
-    hovered = book ? +book.dataset.i : null;
-  });
-  stage.addEventListener('pointerout', (e) => {
-    const book = e.target.closest ? e.target.closest('.book') : null;
-    if (book && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('.book'))) hovered = null;
-  });
 
   addEventListener('keydown', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
@@ -245,6 +255,7 @@
     py += (tpy - py) * (reduce ? 1 : 0.06);
     place();
     updateLabel();
+    moveLabel();
     requestAnimationFrame(frame);
   }
 

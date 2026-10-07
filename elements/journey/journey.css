@@ -67,62 +67,72 @@ html[lang="zh"] .word { letter-spacing: 0.12em; }
   position: absolute; left: 0; top: 0;
   width: var(--w); height: var(--h);
   margin-left: calc(var(--w) / -2); margin-top: calc(var(--h) / -2);
-  transform-style: preserve-3d; will-change: transform, opacity;
-  background: var(--card); backface-visibility: hidden;
+  transform-style: preserve-3d; will-change: transform;
+  /* the fade is on the parts, never on the book: opacity on the book would flatten its faces */
+  --o: 1;
   cursor: pointer;
 }
 .book img {
-  display: block; width: 100%; height: 100%; object-fit: cover;
+  display: block; width: 100%; height: 100%; object-fit: cover; position: relative; background: var(--card); opacity: var(--o);
   pointer-events: none; -webkit-user-drag: none;
 }
 /* a plain cover for a book without a photograph yet */
-.book.blank { display: grid; place-items: center; border: 1px solid var(--line); }
+.book.blank { display: grid; place-items: center; }
+.book.blank span { background: var(--card); width: 100%; height: 100%; display: grid; place-items: center; opacity: var(--o); box-shadow: inset 0 0 0 1px var(--line); }
 .book.blank span {
   font-family: var(--serif); font-weight: 400; color: var(--text-2);
   font-size: clamp(1.4rem, 2.6vw, 2.4rem); text-align: center; padding: 1rem;
 }
-/* the spine: a flat band in the book's own earth colour, standing a little proud */
-.book::before {
-  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 7px;
-  background: var(--tone, var(--clay));
-  transform: translateZ(1px);
-}
+/* the book has a little thickness: the spine is its left face, in the book's own
+   earth colour; the pages are the bottom and right faces, in paper */
+.book { --t: 26px; }
+.face { position: absolute; pointer-events: none; opacity: var(--o); backface-visibility: hidden; }
+.spine { left: 0; top: 0; width: var(--t); height: 100%; background: var(--tone, var(--clay)); transform-origin: left center; transform: rotateY(90deg); }
+.pages-b { left: 0; bottom: 0; width: 100%; height: var(--t); background: oklch(86% 0.012 80); transform-origin: center bottom; transform: rotateX(90deg); }
+.pages-t { left: 0; top: 0; width: 100%; height: var(--t); background: oklch(90% 0.012 82); transform-origin: center top; transform: rotateX(-90deg); }
+.pages-r { right: 0; top: 0; width: var(--t); height: 100%; background: oklch(88% 0.012 80); transform-origin: right center; transform: rotateY(-90deg); }
 /* a slim hairline edge so a pale sky still ends where the book ends */
 .book::after {
   content: ""; position: absolute; inset: 0; pointer-events: none;
-  box-shadow: inset 0 0 0 1px oklch(0% 0 0 / 0.06);
+  box-shadow: inset 0 0 0 1px oklch(0% 0 0 / 0.06); opacity: var(--o);
 }
 .book.front { cursor: pointer; }
 .book.hidden { visibility: hidden; }
 
-/* ---- the wall label: who is at the front, written once, bottom left ---- */
+/* ---- the wall label: a small card that follows the cursor and names the book under it ---- */
 .label {
-  position: fixed; left: var(--edge); bottom: var(--edge); z-index: 3;
-  display: grid; gap: 0.25rem; max-width: 24rem; pointer-events: none;
+  position: fixed; left: 0; top: 0; z-index: 3;
+  display: grid; gap: 0.15rem; max-width: 18rem; pointer-events: none;
+  padding: 0.7rem 0.9rem 0.8rem; background: var(--card); box-shadow: inset 0 0 0 1px var(--line);
+  opacity: 0; transition: opacity 0.25s var(--out); will-change: transform;
 }
+.label.on { opacity: 1; }
 .label .date {
-  font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-2);
+  font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--text-2);
 }
 html[lang="zh"] .label .date { letter-spacing: 0.12em; }
 .label .place {
-  font-family: var(--serif); font-weight: 400; font-size: clamp(1.75rem, 1.3rem + 1.5vw, 2.4rem); line-height: 1.1;
+  font-family: var(--serif); font-weight: 400; font-size: 1.35rem; line-height: 1.15;
 }
 html[lang="zh"] .label .place { font-family: "Noto Serif TC", var(--serif); font-weight: 500; }
-.label .note { color: var(--text-2); font-size: 0.9375rem; max-width: 20rem; }
+.label .note { color: var(--text-2); font-size: 0.875rem; }
 .label .note:empty { display: none; }
-.label .meta { color: var(--text-2); font-size: 0.8125rem; }
-.label .open { pointer-events: auto; color: var(--accent); margin-top: 0.35rem; width: max-content; }
+.label .meta { color: var(--text-2); font-size: 0.78rem; margin-top: 0.15rem; }
+.label .open { color: var(--accent); margin-top: 0.3rem; width: max-content; }
 .label .open:empty { display: none; }
 
-.label, .label > * { transition: opacity 0.35s var(--out); }
-.label.swap > * { opacity: 0; transition-duration: 0.12s; }
+/* no cursor: the label stays at the bottom left and always names the book at the front */
+@media (hover: none) {
+  .label { left: var(--edge); bottom: var(--edge); top: auto; opacity: 1; transform: none !important;
+           padding: 0; background: none; box-shadow: none; max-width: calc(100vw - var(--edge) * 2 - 4rem); }
+  .label .open { pointer-events: auto; }
+}
 
 @media (max-width: 700px) {
   .head { max-width: 15rem; }
   .lead { display: none; }
   .stage { perspective: 1000px; perspective-origin: 60% 42%; }
   .line { left: 46%; top: 44%; }
-  .label { max-width: calc(100vw - var(--edge) * 2); }
 }
 @media (prefers-reduced-motion: reduce) {
   .label, .label > * { transition: none; }
