@@ -60,7 +60,7 @@ html[lang="zh"] .word { letter-spacing: 0.12em; }
 }
 .stage.dragging { cursor: grabbing; }
 .line {
-  position: absolute; left: 50%; top: 50%; width: 0; height: 0;
+  position: absolute; left: 50%; top: 55%; width: 0; height: 0;
   transform-style: preserve-3d; will-change: transform;
 }
 .book {
@@ -77,20 +77,36 @@ html[lang="zh"] .word { letter-spacing: 0.12em; }
   pointer-events: none; -webkit-user-drag: none;
 }
 /* a plain cover for a book without a photograph yet */
-.book.blank { display: grid; place-items: center; }
-.book.blank span { background: var(--card); width: 100%; height: 100%; display: grid; place-items: center; opacity: var(--o); box-shadow: inset 0 0 0 1px var(--line); }
-.book.blank span {
-  font-family: var(--serif); font-weight: 400; color: var(--text-2);
-  font-size: clamp(1.4rem, 2.6vw, 2.4rem); text-align: center; padding: 1rem;
+/* a plain cover for a book without a photograph yet: paper, with the name written down the right edge,
+   where a book behind another still shows */
+.book.blank .cover {
+  position: absolute; inset: 0; background: oklch(93% 0.012 82);
+  box-shadow: inset 0 0 0 1px var(--line); opacity: var(--o);
 }
+.book.blank .name {
+  position: absolute; top: 1.1rem; right: 1rem; writing-mode: vertical-rl;
+  font-family: var(--serif); font-weight: 400; color: var(--tone, var(--clay));
+  font-size: clamp(1.2rem, 2vw, 1.8rem); letter-spacing: 0.02em; opacity: var(--o);
+}
+html[lang="zh"] .book.blank .name { font-family: "Noto Serif TC", var(--serif); font-weight: 500; letter-spacing: 0.15em; }
 /* the book has a little thickness: the spine is its left face, in the book's own
    earth colour; the pages are the bottom and right faces, in paper */
-.book { --t: 26px; }
+.book { --t: 34px; }
 .face { position: absolute; pointer-events: none; opacity: var(--o); backface-visibility: hidden; }
 .spine { left: 0; top: 0; width: var(--t); height: 100%; background: var(--tone, var(--clay)); transform-origin: left center; transform: rotateY(90deg); }
-.pages-b { left: 0; bottom: 0; width: 100%; height: var(--t); background: oklch(86% 0.012 80); transform-origin: center bottom; transform: rotateX(90deg); }
-.pages-t { left: 0; top: 0; width: 100%; height: var(--t); background: oklch(90% 0.012 82); transform-origin: center top; transform: rotateX(-90deg); }
-.pages-r { right: 0; top: 0; width: var(--t); height: 100%; background: oklch(88% 0.012 80); transform-origin: right center; transform: rotateY(-90deg); }
+.pages-b { left: 0; bottom: 0; width: 100%; height: var(--t); background: repeating-linear-gradient(90deg, oklch(90% 0.01 82) 0 3px, oklch(84% 0.012 80) 3px 4px); transform-origin: center bottom; transform: rotateX(90deg); }
+.pages-t { left: 0; top: 0; width: 100%; height: var(--t); background: repeating-linear-gradient(90deg, oklch(93% 0.009 84) 0 3px, oklch(87% 0.012 80) 3px 4px); transform-origin: center top; transform: rotateX(-90deg); }
+.pages-r { right: 0; top: 0; width: var(--t); height: 100%; background: repeating-linear-gradient(0deg, oklch(92% 0.009 84) 0 3px, oklch(85% 0.012 80) 3px 4px); transform-origin: right center; transform: rotateY(-90deg); }
+/* the tag: a paper tab slipped in at the top of the book, with the time of the journey */
+.tag {
+  position: absolute; right: 12%; bottom: 100%; margin-bottom: -2px;
+  padding: 0.3rem 0.6rem 0.4rem; background: var(--card); box-shadow: inset 0 0 0 1px var(--line);
+  font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text);
+  white-space: nowrap; opacity: var(--o); transform: translateZ(1px);
+}
+html[lang="zh"] .tag { letter-spacing: 0.1em; }
+.tag:empty { display: none; }
+
 /* a slim hairline edge so a pale sky still ends where the book ends */
 .book::after {
   content: ""; position: absolute; inset: 0; pointer-events: none;
@@ -132,7 +148,7 @@ html[lang="zh"] .label .place { font-family: "Noto Serif TC", var(--serif); font
   .head { max-width: 15rem; }
   .lead { display: none; }
   .stage { perspective: 1000px; perspective-origin: 60% 42%; }
-  .line { left: 46%; top: 44%; }
+  .line { left: 40%; top: 46%; }
 }
 @media (prefers-reduced-motion: reduce) {
   .label, .label > * { transition: none; }

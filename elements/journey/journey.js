@@ -41,32 +41,35 @@
   };
   let lang = location.search.includes('zh') ? 'zh' : 'en';
 
-  /* ---- the order: each book at the journey that took him there, oldest first; Taiwan is home and starts the line ---- */
+  /* ---- one book per country, at the journey that took him there, oldest first; Taiwan is home and starts the line ---- */
   const journeys = SITE.journeys.slice().sort((a, b) => a.id < b.id ? -1 : 1);   // ids begin with the year
-  const books = SITE.books.map((b) => {
-    const trips = journeys.filter((j) => j.countries.includes(b.country));
+  const tones = ['clay', 'olive', 'slate'];
+  const books = SITE.countries.map((c, idx) => {
+    const trips = journeys.filter((j) => j.countries.includes(c.id));
     const trip = trips[trips.length - 1] || null;                                  // the latest visit
-    const date = trip ? trip.date : (b.country === 'taiwan' ? { en: i18n.en.home, zh: i18n.zh.home } : { en: '', zh: '' });
-    const country = SITE.countries.find((c) => c.id === b.country) || null;
-    const own = Object.keys(SITE.slides).filter((id) => {
-      const s = SITE.slides[id];
-      return s.country === b.country && (b.place ? s.city === b.place : true);
-    });
-    const coverId = b.cover || b.photo || own[0] || null;
+    const home = c.id === 'taiwan';
+    const date = trip ? trip.date : (home ? { en: i18n.en.home, zh: i18n.zh.home } : { en: '', zh: '' });
+    const shelf = SITE.books.filter((b) => b.country === c.id);
+    const book = shelf.find((b) => !b.place) || shelf[0] || null;                  // the country's own book, else its first city
+    const guide = (shelf.find((b) => b.guide) || {}).guide || null;
+    const own = c.photos || [];
+    const coverId = (book && (book.cover || book.photo)) || own[0] || null;
     const cover = coverId ? SITE.slides[coverId] : null;
     // the key puts the book at its journey, and within a journey in the order the route visited the countries
-    const leg = trip ? String(trip.countries.indexOf(b.country)).padStart(2, '0') : '00';
-    return { b, trip, date, country, own, cover,
-             key: (trip ? trip.id : (b.country === 'taiwan' ? '0000' : '9999')) + '-' + leg };
+    const leg = trip ? String(trip.countries.indexOf(c.id)).padStart(2, '0') : '00';
+    return { c, trip, date, own, cover, guide, title: c.name,
+             tone: (book && book.tone) || tones[idx % 3],
+             visits: trips.length,
+             key: (trip ? trip.id : (home ? '0000' : '9999')) + '-' + leg };
   });
   books.sort((x, y) => x.key < y.key ? -1 : x.key > y.key ? 1 : 0);
   const n = books.length;
 
-  /* ---- the books on the stage ---- */
+  /* ---- the books on the stage: a cover, a tag with the time of the journey, and the four edges ---- */
   books.forEach((bk, i) => {
     const el = document.createElement('figure');
     el.className = 'book';
-    el.style.setProperty('--tone', 'var(--' + (bk.b.tone || 'clay') + ')');
+    el.style.setProperty('--tone', 'var(--' + bk.tone + ')');
     el.dataset.i = i;
     if (bk.cover) {
       const img = document.createElement('img');
@@ -74,34 +77,39 @@
       img.alt = bk.cover.alt ? bk.cover.alt.en : '';
       img.decoding = 'async';
       el.appendChild(img);
-      bk.ar = bk.cover.w / bk.cover.h;
     } else {
       el.classList.add('blank');
+      const paper = document.createElement('div'); paper.className = 'cover'; el.appendChild(paper);
       const s = document.createElement('span');
-      s.textContent = bk.b.title.en;
+      s.className = 'name';
+      s.textContent = bk.title.en;
+      s.dataset.i18nTitle = i;
       el.appendChild(s);
-      bk.ar = 3 / 2;
     }
+    const tag = document.createElement('span');
+    tag.className = 'tag';
+    bk.tag = tag;
+    el.appendChild(tag);
     ['spine', 'pages-t', 'pages-b', 'pages-r'].forEach((f) => { const d = document.createElement('div'); d.className = 'face ' + f; el.appendChild(d); });
-    el.setAttribute('aria-label', bk.b.title.en);
+    el.setAttribute('aria-label', bk.title.en);
     bk.el = el;
     line.appendChild(el);
   });
 
-  /* ---- the camera: where the line runs, and how far apart the books stand ---- */
-  let W = 0, H = 0, sx = 0, sy = 0, sz = 0, baseH = 0;
+  /* ---- the camera: where the line runs, and how close the books stand ---- */
+  let W = 0, H = 0, sx = 0, sy = 0, sz = 0;
+  const AR = 3 / 4;                                 // a guidebook's cover
   function layout() {
     W = innerWidth; H = innerHeight;
-    baseH = W > 700 ? Math.min(H * 0.46, W * 0.36) : W * 0.5;   // the front book's height; on a phone the width decides
-    sx = W * 0.15;                                  // each step back: right,
-    sy = H * 0.125;                                 // up,
-    sz = Math.max(120, Math.min(220, W * 0.12));    // and away
+    const h = W > 700 ? Math.min(H * 0.6, W * 0.42) : Math.min(H * 0.5, W * 0.78 / AR);   // the front book's height; on a phone the width decides
+    const w = h * AR;
+    sx = w * 0.3;                                   // each step back: right,
+    sy = H * 0.04;                                  // up,
+    sz = Math.max(70, Math.min(120, W * 0.07));     // and away, close enough to read as a stack
     books.forEach((bk) => {
-      const h = bk.ar >= 1 ? baseH : baseH * 0.92;
-      const w = Math.min(h * bk.ar, W * 0.56);
-      bk.w = w; bk.h = bk.ar >= 1 ? h : w / bk.ar;
-      bk.el.style.setProperty('--w', bk.w + 'px');
-      bk.el.style.setProperty('--h', bk.h + 'px');
+      bk.w = w; bk.h = h;
+      bk.el.style.setProperty('--w', w + 'px');
+      bk.el.style.setProperty('--h', h + 'px');
     });
   }
 
@@ -136,13 +144,13 @@
   /* ---- the label ---- */
   function describe(i) {
     const bk = books[i], t = i18n[lang];
-    labDate.textContent = bk.date[lang] || '';
-    labPlace.textContent = bk.b.title[lang];
-    labNote.textContent = (!bk.b.place && bk.country && bk.country.note) ? bk.country.note[lang] : '';
+    labDate.textContent = bk.visits > 1 ? (bk.c.date ? bk.c.date[lang] : bk.date[lang]) : (bk.date[lang] || '');
+    labPlace.textContent = bk.title[lang];
+    labNote.textContent = bk.c.note ? bk.c.note[lang] : '';
     labCount.textContent = bk.own.length ? t.photo(bk.own.length) : t.soon;
     labPos.textContent = t.pos(n - i, n);
-    if (bk.b.guide) { labOpen.textContent = t.guide; labOpen.href = SITE1 + 'posts/' + bk.b.guide + '.html'; }
-    else if (bk.own.length) { labOpen.textContent = t.photos; labOpen.href = SITE1 + 'countries/' + bk.b.country + '.html'; }
+    if (bk.guide) { labOpen.textContent = t.guide; labOpen.href = SITE1 + 'posts/' + bk.guide + '.html'; }
+    else if (bk.own.length) { labOpen.textContent = t.photos; labOpen.href = SITE1 + 'countries/' + bk.c.id + '.html'; }
     else { labOpen.textContent = ''; labOpen.removeAttribute('href'); }
   }
   const hasHover = matchMedia('(hover: hover)').matches;
@@ -165,7 +173,7 @@
     const x = Math.min(lx, W - r.width - 8), y = Math.min(ly, H - r.height - 8);
     label.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px)';
   }
-  function linkFor(i) { const bk = books[i]; return bk.b.guide ? SITE1 + 'posts/' + bk.b.guide + '.html' : bk.own.length ? SITE1 + 'countries/' + bk.b.country + '.html' : null; }
+  function linkFor(i) { const bk = books[i]; return bk.guide ? SITE1 + 'posts/' + bk.guide + '.html' : bk.own.length ? SITE1 + 'countries/' + bk.c.id + '.html' : null; }
 
   /* ---- scroll, drag, keys ---- */
   let settle = 0;
@@ -240,6 +248,8 @@
     document.documentElement.setAttribute('lang', lang === 'zh' ? 'zh' : 'en');
     document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = i18n[lang][el.dataset.i18n]; });
     langBtn.textContent = i18n[lang].other;
+    books.forEach((bk) => { bk.tag.textContent = bk.date[lang]; });
+    document.querySelectorAll('[data-i18n-title]').forEach((el) => { el.textContent = books[+el.dataset.i18nTitle].title[lang]; });
     document.title = (lang === 'zh' ? '旅程' : 'Journey') + ' · a test';
     history.replaceState(null, '', lang === 'zh' ? '?zh' : location.pathname);
     updateLabel();
