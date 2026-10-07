@@ -90,11 +90,11 @@ html[lang="zh"] .word { letter-spacing: 0.12em; }
    the book's earth colour, with the name and the series written down it; page edges in paper.
    --deep is its thickness. */
 .book {
-  position: absolute; left: 24%; top: 74%;
+  position: absolute; left: 50%; top: 52%;
   width: var(--w); height: var(--h);
   margin-left: calc(var(--w) / -2); margin-top: calc(var(--h) / -2);
   transform-style: preserve-3d; will-change: transform;
-  --deep: calc(var(--w) * 0.16); --in: calc(var(--h) * 0.012); --shade: oklch(20% 0.02 60);
+  --deep: calc(var(--w) * 0.07); --in: calc(var(--h) * 0.012); --shade: oklch(20% 0.02 60);
   color: var(--paper); cursor: pointer;
 }
 .book__box { position: absolute; inset: 0; transform-style: preserve-3d; }
@@ -105,7 +105,7 @@ html[lang="zh"] .word { letter-spacing: 0.12em; }
   display: grid; grid-template-rows: minmax(0, 1fr) auto; width: 100%; background: var(--band); overflow: hidden;
   box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--shade) 22%, transparent), inset 0 0 0 2px color-mix(in oklch, var(--paper) 55%, transparent), inset 4px 0 8px -4px color-mix(in oklch, var(--shade) 50%, transparent);
 }
-.book__face::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(100deg, color-mix(in oklch, var(--paper) 22%, transparent), transparent 38%), linear-gradient(to left, color-mix(in oklch, var(--shade) 28%, transparent), color-mix(in oklch, var(--shade) 6%, transparent) 2.5%, transparent 6%); }
+.book__face::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(100deg, color-mix(in oklch, var(--paper) 22%, transparent), transparent 38%), linear-gradient(to right, color-mix(in oklch, var(--shade) 28%, transparent), color-mix(in oklch, var(--shade) 6%, transparent) 2.5%, transparent 6%); }
 .book__face img { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-drag: none; }
 .book__face--blank { align-content: end; background: repeating-linear-gradient(135deg, var(--band) 0 6px, var(--line) 6px 7px); }
 .book__face--blank .book__band { align-self: end; }
@@ -116,14 +116,14 @@ html[lang="zh"] .book__band b { font-family: "Noto Serif TC", var(--serif); font
 html[lang="zh"] .book__band span { font-size: 0.75rem; letter-spacing: 0.14em; }
 .book__spine {
   display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: var(--deep); padding: 1.1rem 0;
-  left: auto; right: 0; writing-mode: vertical-rl; transform-origin: right center; transform: rotateY(90deg) translateX(100%);
+  writing-mode: vertical-rl; transform-origin: left center; transform: rotateY(-90deg) translateX(-100%);
   background-color: var(--tone, var(--clay));
   background-image: linear-gradient(to right, color-mix(in oklch, var(--shade) 30%, transparent), transparent 35%, transparent 70%, color-mix(in oklch, var(--shade) 22%, transparent));
 }
 .book__spine b { font-family: var(--serif); font-weight: 400; font-size: clamp(0.9rem, 0.5rem + 0.9vw, 1.25rem); line-height: 1; letter-spacing: 0.04em; white-space: nowrap; }
 html[lang="zh"] .book__spine b { font-family: "Noto Serif TC", var(--serif); text-orientation: upright; letter-spacing: 0.2em; font-weight: 500; }
 .book__spine i { font-style: normal; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; white-space: nowrap; }
-.book__edge { top: var(--in); left: var(--in); height: calc(100% - var(--in) * 2); width: calc(var(--deep) - 3px); transform-origin: left center; transform: rotateY(-90deg) translateX(-100%); background: repeating-linear-gradient(to right, var(--paper) 0 2px, color-mix(in oklch, var(--line) 70%, var(--paper)) 2px 3px); box-shadow: inset 0 0 0.6rem color-mix(in oklch, var(--shade) 12%, transparent); }
+.book__edge { top: var(--in); left: auto; right: var(--in); height: calc(100% - var(--in) * 2); width: calc(var(--deep) - 3px); transform-origin: right center; transform: rotateY(90deg) translateX(100%); background: repeating-linear-gradient(to right, var(--paper) 0 2px, color-mix(in oklch, var(--line) 70%, var(--paper)) 2px 3px); box-shadow: inset 0 0 0.6rem color-mix(in oklch, var(--shade) 12%, transparent); }
 .book__top { left: var(--in); top: var(--in); width: calc(100% - var(--in) * 2); height: calc(var(--deep) - 3px); transform-origin: top center; transform: rotateX(90deg) translateY(-100%); background: repeating-linear-gradient(to bottom, var(--paper) 0 2px, color-mix(in oklch, var(--line) 70%, var(--paper)) 2px 3px); }
 .book__bottom { left: var(--in); top: auto; bottom: var(--in); width: calc(100% - var(--in) * 2); height: calc(var(--deep) - 3px); transform-origin: bottom center; transform: rotateX(-90deg) translateY(100%); background: repeating-linear-gradient(to bottom, var(--paper) 0 2px, color-mix(in oklch, var(--line) 70%, var(--paper)) 2px 3px); box-shadow: inset 0 0 0.6rem color-mix(in oklch, var(--shade) 18%, transparent); }
 
@@ -160,7 +160,7 @@ html[lang="zh"] .label .place { font-family: "Noto Serif TC", var(--serif); font
   .label .place { font-size: 1.15rem; }
   .label .note { display: none; }
   .stage { perspective: 1000px; perspective-origin: 50% 50%; }
-  .book { left: 30%; top: 72%; }
+  .book { left: 50%; top: 56%; }
 }
 /* ---- the opening: while the books are arriving, the words and the bar wait, then rise in ---- */
 .head, .tools { transition: opacity 1.1s var(--out), transform 1.1s var(--out); }

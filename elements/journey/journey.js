@@ -101,16 +101,16 @@
 
   /* ---- the camera: where the line runs, how large the front book stands ---- */
   let W = 0, H = 0, sx = 0, sy = 0, sz = 0, lift = 0;
-  const AR = 12 / 17;                               // design 1's guidebook
-  const TURN = -34, TILT = 4;                       // every book turned away to the left and seen a little from below, as in Morph
+  const AR = 4 / 3;                                 // a landscape album, the shape of the photographs
+  const TURN = -30, TILT = 10;                      // every book turned away to the left and seen from below, as in Morph
   function layout() {
     W = innerWidth; H = innerHeight;
-    const h = W > 700 ? Math.min(H * 0.98, W * 0.5) : Math.min(H * 0.6, W * 0.9 / AR);   // the front book's height: most of the page, as in Morph
-    const w = h * AR;
-    sx = w * 0.4;                                   // each step back: right,
-    sy = H * 0.15;                                  // up,
-    sz = Math.max(60, Math.min(110, W * 0.07));     // and away
-    lift = sz * 0.8;                                // how far in front of the front book the book in hand comes
+    const w = W > 700 ? Math.min(W * 0.5, H * 0.8 * AR) : W * 0.86;   // the book at the middle: half the page wide
+    const h = w / AR;
+    sx = W > 700 ? W * 0.14 : W * 0.22;             // each step back: right,
+    sy = H * 0.12;                                  // up,
+    sz = Math.max(50, Math.min(90, W * 0.055));     // and away
+    lift = sz * 1.2;                                // how far the book in hand comes toward you
     books.forEach((bk) => {
       bk.w = w; bk.h = h;
       bk.el.style.setProperty('--w', w + 'px');
@@ -119,7 +119,7 @@
   }
 
   /* ---- the position on the line, eased; the cursor's small push on the whole line ---- */
-  let pos = n - 1, target = n - 1;                   // index of the book at the front
+  let pos = n - 3, target = n - 3;                   // index of the book at the middle; the two newest stand nearer, bottom left
   let px = 0, py = 0, tpx = 0, tpy = 0;              // parallax
   let hovered = null, shown = -1, shownLang = '';
   let armed = false, lastX = -1, lastY = -1;         // hover counts only once the cursor has moved after a move of the line
@@ -131,10 +131,10 @@
     for (let i = 0; i < n; i++) {
       const bk = books[i];
       let k = wrap(pos - i);                         // 0 at the front, growing with distance, round the loop
-      if (k > n - 1.6) k -= n;                       // the book just passed sits in front of the camera
+      if (k > n - 3) k -= n;                         // the two books just passed stand nearer than the middle
       const up = hovered === i ? 1 : 0;
       bk.lift += (up - bk.lift) * (reduce ? 1 : 0.14);
-      if (k < -0.9 || k > FAR) { bk.el.classList.add('hidden'); bk.lift = 0; continue; }
+      if (k < -2.6 || k > FAR) { bk.el.classList.add('hidden'); bk.lift = 0; continue; }   // two books nearer than the middle still show, sliding off bottom-left
       bk.el.classList.remove('hidden');
       const a = arrival(i, k);                       // the opening: each book still on its way down the line
       const kk = k + a * ARRIVE;
@@ -143,7 +143,6 @@
       bk.el.style.opacity = a > 0 ? (1 - a).toFixed(3) : '';
       bk.el.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,' + z.toFixed(1) + 'px) rotateY(' + ry.toFixed(2) + 'deg) rotateX(' + rx.toFixed(2) + 'deg)';
       bk.el.style.zIndex = up ? 1000 : Math.round((n - k) * 10);          // painted nearest last; the book in hand over everything
-      bk.el.style.pointerEvents = k < -0.05 ? 'none' : '';   // a book passing the camera takes no clicks
     }
     line.style.transform = 'rotateY(' + (px * 2).toFixed(2) + 'deg) rotateX(' + (-py * 1.5).toFixed(2) + 'deg)';
   }
@@ -196,7 +195,13 @@
     if (!drag) {
       if (!armed) return;
       const book = e.target.closest ? e.target.closest('.book') : null;
-      hovered = book ? +book.dataset.i : null;
+      const i = book ? +book.dataset.i : null;
+      if (i !== null && i !== hovered) {              // the book under the cursor glides to the middle, the shorter way round
+        const r = Math.round(target);
+        let k = wrap(r - i); if (k > n / 2) k -= n;
+        target = r - k;
+      }
+      hovered = i;
       return;
     }
     const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
@@ -214,8 +219,8 @@
     const i = was.book;
     const href = linkFor(i);
     if (href) { location.href = href; return; }
-    const fwd = wrap(target - i);                    // nothing to open: bring it to the front instead
-    target = fwd <= n / 2 ? target - fwd : target + (n - fwd);
+    const r = Math.round(target); let k = wrap(r - i); if (k > n / 2) k -= n;
+    target = r - k;                                  // nothing to open: bring it to the middle instead
   }
   stage.addEventListener('pointerup', endDrag);
   stage.addEventListener('pointercancel', () => { drag = null; stage.classList.remove('dragging'); });
