@@ -16,8 +16,8 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const i18n = {
-    en: { title: 'Gallery', hint: 'Move across the wall. Click a photograph to hold it; click again to let go.', other: '中文', speed: 'Speed' },
-    zh: { title: '作品集', hint: '滑過這面牆。點一張照片把它留住；再點一下放開。', other: 'EN', speed: '速度' },
+    en: { title: 'Gallery', hint: 'Move across the wall. Click a photograph to hold it; click again to let go.', other: '中文', speed: 'Speed', tilt: 'Tilt' },
+    zh: { title: '作品集', hint: '滑過這面牆。點一張照片把它留住；再點一下放開。', other: 'EN', speed: '速度', tilt: '歪斜' },
   };
 
   /* ---- the speed bar: a multiplier on every row's drift, 0 holds the wall still ---- */
@@ -30,6 +30,17 @@
   }
   speedIn.addEventListener('input', readSpeed);
   readSpeed();
+
+  /* ---- the tilt bar: how far a print may lean, in degrees either way ---- */
+  const tiltIn = document.getElementById('tilt');
+  const tiltOut = document.getElementById('tilt-out');
+  let tiltK = 2.5;
+  function readTilt() {
+    tiltK = parseFloat(tiltIn.value);
+    tiltOut.value = tiltK.toFixed(1) + '°';
+  }
+  tiltIn.addEventListener('input', readTilt);
+  readTilt();
   let lang = location.search.includes('zh') ? 'zh' : 'en';
 
   /* ---- the prints, in a fixed shuffle so countries mix but the wall is the same each visit ---- */
@@ -102,7 +113,7 @@
         }
         t.row = row; t.x0 = x + w / 2;
         t.bw = w; t.bh = h; t.by = row.y;
-        t.rot = (rand() - 0.5) * 5;           // a slight tilt, up to 2.5° either way, as if pinned by hand
+        t.tilt = (rand() - 0.5) * 2;          // -1..1, scaled by the tilt bar into degrees each frame
         x += w + GAP;
       }
       rows.push(row);
@@ -184,7 +195,7 @@
     }
 
     for (const t of allTiles) {
-      let x = t.bx, y = t.by, w = t.bw, h = t.bh, r = t.rot;
+      let x = t.bx, y = t.by, w = t.bw, h = t.bh, r = t.tilt * tiltK;
       // a print that has looped from one end of its row to the other jumps, off screen, not slides
       if (Math.abs(t.bx - t.x) > W * 0.5 && t !== held) t.x = t.bx;
       if (t === held) {
