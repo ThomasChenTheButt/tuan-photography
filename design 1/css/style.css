@@ -51,6 +51,7 @@
   --edge: clamp(1.15rem, 4.5vw, 4rem);
   --wide: 88rem;
   --out: cubic-bezier(0.16, 1, 0.3, 1);
+  --slow: cubic-bezier(0.5, 0.02, 0.18, 1);   /* the pull-back: even, long, settling at the end */
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -605,15 +606,24 @@ main { flex: 1; }
 
 /* ---------------- motion ----------------
    Three reasons only.
-   1. Arriving: the opening photograph settles into place and the words
-      under a title come up after it.
+   1. Arriving: the home page opens on one detail of the opening photograph,
+      the summit, and pulls back until the whole landscape is there; only
+      then do the top bar and the place line fade in. It plays once a visit
+      (html.opened on a return; ?opening replays it), and on every other
+      page the photograph simply settles. The words under a title come up
+      after their photograph.
    2. Leaving the opening photograph: it stays where it is, rising slowly,
       while the page is drawn up over it.
    3. Walking the wall: each photograph rises as it comes into view. */
 
 @media (prefers-reduced-motion: no-preference) {
   .cover { position: sticky; top: 0; z-index: 0; }
-  .cover.arrive img { animation: settle 2200ms var(--out) both; }
+  .cover.arrive img { transform-origin: 42% 40%; animation: pullback 3800ms var(--slow) both; }
+  .cover.arrive::before, .cover.arrive::after, .cover.arrive figcaption,
+  body:has(.cover.arrive) .top--over { animation: fade 1400ms var(--out) both; animation-delay: 3000ms; }
+  html.opened .cover.arrive img { transform-origin: 50% 50%; animation: settle 2200ms var(--out) both; }
+  html.opened .cover.arrive::before, html.opened .cover.arrive::after, html.opened .cover.arrive figcaption,
+  html.opened body:has(.cover.arrive) .top--over { animation: none; }
   .arrive .piece a, .arrive.piece a { animation: uncover 1100ms var(--out) both; }
   .arrive .piece img, .arrive.piece img { animation: settle 1600ms var(--out) both; }
   .arrive .rise { animation: rise 900ms var(--out) both; animation-delay: calc(200ms + var(--i, 0) * 90ms); }
@@ -634,6 +644,8 @@ main { flex: 1; }
 @keyframes uncover { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0); } }
 @keyframes drift { to { transform: translateY(-32vh); } }
 @keyframes settle { from { transform: scale(1.06); } to { transform: scale(1); } }
+@keyframes pullback { from { transform: scale(2.4); } to { transform: scale(1); } }
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes rise { from { opacity: 0; transform: translateY(1.5rem); } to { opacity: 1; transform: none; } }
 
 @media (prefers-reduced-motion: reduce) {

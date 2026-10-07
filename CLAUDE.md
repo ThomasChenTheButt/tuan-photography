@@ -1,3 +1,10 @@
+> **Experiment `opening`** (started 2026-10-07, branch `exp/opening`, localhost:8648). Trying an
+> opening animation for the whole site, on the home page of design 1: the page arrives on a detail
+> of the opening photograph and pulls back until the whole landscape is there, then the top bar and
+> the place line fade in. Skills: Impeccable (animate), then optimize-web-animations. Rules of this
+> file suspended here: none. The brief holds: nothing written across the photograph, light only,
+> all motion inside "reduce motion", nothing loops.
+
 # tuan photography 陳亮元 — project instructions
 
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.

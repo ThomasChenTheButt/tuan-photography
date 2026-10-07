@@ -275,7 +275,12 @@ def window(sid, root, en, zh):
 
 # ------------------------------------------------------------------ page frame
 
-def head(title, desc, root):
+def head(title, desc, root, over=False):
+    # the home page's opening plays once per visit; ?opening replays it. The flag is read before
+    # the first paint so a return to the home page never flashes the zoomed photograph.
+    once = ("""  <script>(function(){try{var h=document.documentElement,again=/[?&]opening/.test(location.search);"""
+            """if(sessionStorage.getItem('pt-opened')&&!again)h.classList.add('opened');sessionStorage.setItem('pt-opened','1')}catch(e){}})()</script>
+""" if over else "")
     return f"""<!DOCTYPE html>
 <html lang="en" data-root="{root}">
 <head>
@@ -292,7 +297,7 @@ def head(title, desc, root):
   <link rel="manifest" href="{root}site.webmanifest">
   <link rel="stylesheet" href="{root}css/fonts.css?v={STAMP}">
   <link rel="stylesheet" href="{root}css/style.css?v={STAMP}">
-</head>
+{once}</head>
 <body>
 """
 
@@ -375,7 +380,7 @@ def write(path, title, zh_title, desc, current, body, en, zh, over=False):
     body = re.sub(r'aria-label="[^"]*" data-i18n-aria="([^"]+)"',
                   lambda m: f'aria-label="{e(en[m.group(1)])}" data-i18n-aria="{m.group(1)}"', body)
     used = list(dict.fromkeys(re.findall(r'data-slide="([^"]+)"', body)))
-    out = head(title, desc, root) + header(root, current, over) + '<main id="main" tabindex="-1">\n' + body + "\n</main>\n" \
+    out = head(title, desc, root, over) + header(root, current, over) + '<main id="main" tabindex="-1">\n' + body + "\n</main>\n" \
         + footer(root, used, en, zh)
     (OUT / path).write_text(out, encoding="utf-8")
     print("  wrote", path)
