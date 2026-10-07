@@ -1,6 +1,7 @@
 /* Journey — the look. Design 1's tokens; the paper, the serif names, the small
-   spaced capitals. The books are flat prints standing in a row that recedes
-   up and to the right, like a hang seen from the end of the wall. */
+   spaced capitals. The books stand upright on one long shelf that runs across the
+   page, every one turned the same way so its page edges show, each a little in
+   front of the one to its left. The book under the cursor comes off the shelf. */
 :root {
   --bg: oklch(96.6% 0.011 82);
   --card: oklch(98.8% 0.005 85);
@@ -69,15 +70,15 @@ html[lang="zh"] .word { letter-spacing: 0.12em; }
 .bar input::-moz-range-thumb { width: 10px; height: 10px; background: var(--accent); border: 0; border-radius: 0; cursor: pointer; }
 .tools { display: grid; justify-items: end; }
 
-/* ---- the stage: one perspective, one line of books ---- */
+/* ---- the stage: one perspective, one shelf of books ---- */
 .stage {
   position: fixed; inset: 0; z-index: 1;
-  perspective: 1500px; perspective-origin: 58% 46%;
+  perspective: 1600px; perspective-origin: 50% 40%;
   touch-action: none; cursor: grab; user-select: none; -webkit-user-select: none;
 }
 .stage.dragging { cursor: grabbing; }
 .line {
-  position: absolute; left: 50%; top: 55%; width: 0; height: 0;
+  position: absolute; left: 50%; top: 60%; width: 0; height: 0;
   transform-style: preserve-3d; will-change: transform;
 }
 /* ---- the book: design 1's guidebook, as it stands on the home page's shelf. A photograph on
@@ -89,7 +90,7 @@ html[lang="zh"] .word { letter-spacing: 0.12em; }
   width: var(--w); height: var(--h);
   margin-left: calc(var(--w) / -2); margin-top: calc(var(--h) / -2);
   transform-style: preserve-3d; will-change: transform;
-  --deep: calc(var(--w) * 0.2); --shade: oklch(20% 0.02 60); --o: 1;
+  --deep: calc(var(--w) * 0.2); --shade: oklch(20% 0.02 60);
   color: var(--paper); cursor: pointer;
 }
 .book__box { position: absolute; inset: 0; transform-style: preserve-3d; }
@@ -103,6 +104,7 @@ html[lang="zh"] .word { letter-spacing: 0.12em; }
 .book__face::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(100deg, color-mix(in oklch, var(--paper) 22%, transparent), transparent 38%); }
 .book__face img { display: block; width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-drag: none; }
 .book__face--blank { align-content: end; background: repeating-linear-gradient(135deg, var(--band) 0 6px, var(--line) 6px 7px); }
+.book__face--blank .book__band { align-self: end; }
 .book__band { display: grid; gap: 0.3rem; padding: 0.7rem 0.85rem 0.75rem; background: var(--paper); color: var(--text); border-top: 1px solid var(--line); }
 .book__band b { font-family: var(--serif); font-weight: 400; font-size: clamp(1rem, 0.6rem + 1.1vw, 1.5rem); line-height: 1.15; }
 html[lang="zh"] .book__band b { font-family: "Noto Serif TC", var(--serif); font-weight: 500; letter-spacing: 0.06em; }
@@ -110,18 +112,15 @@ html[lang="zh"] .book__band b { font-family: "Noto Serif TC", var(--serif); font
 html[lang="zh"] .book__band span { font-size: 0.75rem; letter-spacing: 0.14em; }
 .book__spine {
   display: flex; justify-content: space-between; align-items: center; gap: 1rem; width: var(--deep); padding: 1.1rem 0;
-  writing-mode: vertical-rl; transform-origin: left center; transform: rotateY(-90deg) translateX(-100%);
+  left: auto; right: 0; writing-mode: vertical-rl; transform-origin: right center; transform: rotateY(90deg) translateX(100%);
   background-color: var(--tone, var(--clay));
   background-image: linear-gradient(to right, color-mix(in oklch, var(--shade) 30%, transparent), transparent 35%, transparent 70%, color-mix(in oklch, var(--shade) 22%, transparent));
 }
 .book__spine b { font-family: var(--serif); font-weight: 400; font-size: clamp(0.9rem, 0.5rem + 0.9vw, 1.25rem); line-height: 1; letter-spacing: 0.04em; white-space: nowrap; }
 html[lang="zh"] .book__spine b { font-family: "Noto Serif TC", var(--serif); text-orientation: upright; letter-spacing: 0.2em; font-weight: 500; }
 .book__spine i { font-style: normal; font-size: 0.6rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.8; white-space: nowrap; }
-.book__edge { top: 3px; left: auto; right: 0; height: calc(100% - 6px); width: calc(var(--deep) - 3px); transform-origin: right center; transform: rotateY(90deg) translateX(100%); background: repeating-linear-gradient(to right, var(--paper) 0 2px, color-mix(in oklch, var(--line) 70%, var(--paper)) 2px 3px); box-shadow: inset 0 0 0.6rem color-mix(in oklch, var(--shade) 12%, transparent); }
+.book__edge { top: 3px; left: 0; height: calc(100% - 6px); width: calc(var(--deep) - 3px); transform-origin: left center; transform: rotateY(-90deg) translateX(-100%); background: repeating-linear-gradient(to right, var(--paper) 0 2px, color-mix(in oklch, var(--line) 70%, var(--paper)) 2px 3px); box-shadow: inset 0 0 0.6rem color-mix(in oklch, var(--shade) 12%, transparent); }
 .book__top { left: 3px; width: calc(100% - 6px); height: calc(var(--deep) - 3px); transform-origin: top center; transform: rotateX(90deg) translateY(-100%); background: repeating-linear-gradient(to bottom, var(--paper) 0 2px, color-mix(in oklch, var(--line) 70%, var(--paper)) 2px 3px); }
-/* a book arriving from the distance, or passing the camera, is veiled in paper rather than faded:
-   opacity on a book would flatten its faces */
-.book__veil { position: absolute; inset: 0; background: var(--bg); opacity: calc(1 - var(--o)); transform: translateZ(1px); pointer-events: none; }
 
 /* the tag: a torn strip of ochre paper stuck over the top edge, with the time of the journey */
 .tag {
@@ -130,7 +129,6 @@ html[lang="zh"] .book__spine b { font-family: "Noto Serif TC", var(--serif); tex
   font-size: 0.64rem; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; white-space: nowrap;
   transform: translateZ(2px) rotate(-2.5deg);
   clip-path: polygon(0% 18%, 3% 4%, 8% 12%, 13% 0%, 19% 9%, 26% 2%, 33% 11%, 40% 1%, 47% 8%, 54% 0%, 61% 10%, 68% 3%, 75% 9%, 82% 0%, 89% 10%, 95% 3%, 100% 14%, 98% 30%, 100% 48%, 97% 66%, 100% 84%, 95% 100%, 88% 92%, 81% 100%, 73% 90%, 66% 100%, 58% 92%, 51% 100%, 44% 91%, 37% 100%, 29% 92%, 21% 100%, 14% 90%, 7% 100%, 2% 88%, 0% 70%, 3% 50%, 0% 34%);
-  opacity: var(--o);
 }
 html[lang="zh"] .tag { letter-spacing: 0.14em; }
 .tag:empty { display: none; }
@@ -171,8 +169,8 @@ html[lang="zh"] .label .place { font-family: "Noto Serif TC", var(--serif); font
   .bar { width: 7rem; grid-template-columns: 1fr auto; gap: 0.5rem; }
   .bar label { display: none; }
   .lead { display: none; }
-  .stage { perspective: 1000px; perspective-origin: 60% 42%; }
-  .line { left: 40%; top: 46%; }
+  .stage { perspective: 1100px; perspective-origin: 50% 40%; }
+  .line { top: 58%; }
 }
 @media (prefers-reduced-motion: reduce) {
   .label, .label > * { transition: none; }

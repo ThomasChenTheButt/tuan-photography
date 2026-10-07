@@ -1,13 +1,11 @@
 /* Journey — the behaviour.
-   His twenty books stand on one line that recedes up and to the right,
-   oldest journey farthest away, the newest at the front. Scrolling or
-   dragging pulls the line toward you: the front book slides off past the
-   camera, bottom-left, and the next one takes its place. The line loops:
-   past Taiwan, the newest book comes round again, so it never ends. The label at the
-   bottom left names whichever book is at the front, or the one under the
-   cursor. A click on a book farther back brings it to the front; a click
-   on the front book opens it. Only the books move; nothing is written on
-   a cover. */
+   One book per country stands upright on a shelf that runs across the page,
+   oldest at the left, the newest at the right, each a little in front of the
+   one before it, all turned the same way so the page edges show. Scrolling or
+   dragging slides the shelf along; it loops, so past the newest book the
+   oldest comes round again. The book under the cursor comes off the shelf
+   toward you and the label names it; a click opens it. On a phone the label
+   names the book at the middle. Nothing is written on a cover. */
 (function () {
   'use strict';
 
@@ -27,15 +25,15 @@
 
   const i18n = {
     en: { title: 'Journey', other: '中文',
-          lead: 'Every place I have been, as a book on one long line. The newest is nearest; the line runs back into the years.',
-          hint: 'Scroll or drag to travel. Click a book to open it.',
+          lead: 'Every place I have been, as a book on one long shelf. The oldest stands at the left, the newest at the right.',
+          hint: 'Scroll or drag along the shelf. Click a book to open it.',
           home: 'Home', guide: 'Open the guide', photos: 'See the photographs', soon: 'Photographs to come',
           bandGuide: "A photographer's guide", bandPhotos: 'Photographs', bandNone: 'No photographs yet', veil: 'Background',
           photo: (n) => n === 1 ? '1 photograph' : n + ' photographs',
           pos: (i, n) => i + ' of ' + n },
     zh: { title: '旅程', other: 'EN',
-          lead: '去過的每個地方都是一本書，排成一條長長的線。最新的一本離你最近，往後就是一年一年的從前。',
-          hint: '捲動或拖曳就能前進。點一本書把它打開。',
+          lead: '去過的每個地方都是一本書，排在一條長長的書架上。最早的在左邊，最新的在右邊。',
+          hint: '捲動或拖曳就能沿著書架走。點一本書把它打開。',
           home: '家', guide: '打開攻略', photos: '看照片', soon: '照片待補',
           bandGuide: '攝影師的攻略', bandPhotos: '作品', bandNone: '還沒有照片', veil: '背景',
           photo: (n) => n + ' 張照片',
@@ -93,26 +91,26 @@
     band.innerHTML = '<b></b><span></span>';
     bk.bandName = band.firstChild; bk.bandWhat = band.lastChild;
     const tag = document.createElement('span'); tag.className = 'tag'; bk.tag = tag;
-    const veil = document.createElement('span'); veil.className = 'book__veil';
     ['book__edge', 'book__top'].forEach((c) => { const d = document.createElement('span'); d.className = c; box.appendChild(d); });
-    box.append(spine, face, band, veil, tag);
+    box.append(spine, face, band, tag);
     face.appendChild(band);
     el.appendChild(box);
     el.setAttribute('aria-label', bk.title.en);
-    bk.el = el;
+    bk.el = el; bk.lift = 0;
     line.appendChild(el);
   });
 
-  /* ---- the camera: where the line runs, and how close the books stand ---- */
-  let W = 0, H = 0, sx = 0, sy = 0, sz = 0;
+  /* ---- the shelf: how tall the books stand, how close together ---- */
+  let W = 0, H = 0, step = 0, lift = 0, reach = 0;
   const AR = 12 / 17;                               // design 1's guidebook
+  const TURN = 34;                                  // degrees every book is turned, left edge toward you
   function layout() {
     W = innerWidth; H = innerHeight;
-    const h = W > 700 ? Math.min(H * 0.6, W * 0.42) : Math.min(H * 0.5, W * 0.78 / AR);   // the front book's height; on a phone the width decides
+    const h = W > 700 ? Math.min(H * 0.56, W * 0.3) : Math.min(H * 0.42, W * 0.62 / AR);   // a book's height; on a phone the width decides
     const w = h * AR;
-    sx = w * 0.3;                                   // each step back: right,
-    sy = H * 0.04;                                  // up,
-    sz = Math.max(70, Math.min(120, W * 0.07));     // and away, close enough to read as a stack
+    step = w * 0.55;                                // the next book stands half a width or so to the right, in front
+    lift = Math.max(60, Math.min(130, w * 0.3));    // how far a book comes off the shelf under the cursor
+    reach = W / step / 2 + 2;                       // how many books either side of the middle are drawn
     books.forEach((bk) => {
       bk.w = w; bk.h = h;
       bk.el.style.setProperty('--w', w + 'px');
@@ -120,8 +118,8 @@
     });
   }
 
-  /* ---- the position on the line, eased; the cursor's small push on the whole line ---- */
-  let pos = n - 1, target = n - 1;                   // index of the book at the front
+  /* ---- the position along the shelf, eased; the cursor's small push on the whole shelf ---- */
+  let pos = n - 1, target = n - 1;                   // index of the book at the middle
   let px = 0, py = 0, tpx = 0, tpy = 0;              // parallax
   let hovered = null, shown = -1, shownLang = '';
   let armed = false, lastX = -1, lastY = -1;         // hover counts only once the cursor has moved after a move of the line
@@ -129,23 +127,20 @@
   function clampTarget() { /* the line loops, so nothing to clamp */ }
   const wrap = (i) => ((i % n) + n) % n;         // a book's index on the loop
 
+  const half = n / 2;
   function place() {
     for (let i = 0; i < n; i++) {
       const bk = books[i];
-      let k = wrap(pos - i);                         // 0 at the front, growing with distance, round the loop
-      if (k > n - 1.6) k -= n;                       // the book just passed sits in front of the camera
-      if (k < -0.9 || k > 13) { bk.el.classList.add('hidden'); continue; }
+      const k = wrap(i - pos + half) - half;         // 0 at the middle, left negative, right positive, round the loop
+      const up = hovered === i ? 1 : 0;
+      bk.lift += (up - bk.lift) * (reduce ? 1 : 0.16);
+      if (Math.abs(k) > reach) { bk.el.classList.add('hidden'); bk.lift = 0; continue; }
       bk.el.classList.remove('hidden');
-      const x = k * sx, y = -k * sy, z = -k * sz;
-      let o = 1;
-      if (k < 0) o = Math.max(0, 1 + k / 0.85);      // sliding past the camera
-      if (k > 9) o = Math.max(0, 1 - (k - 9) / 4);   // fading into the distance
-      bk.el.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,' + z.toFixed(1) + 'px) rotateY(24deg)';
-      bk.el.style.setProperty('--o', o.toFixed(3));
-      bk.el.style.pointerEvents = k < -0.05 || o <= 0 ? 'none' : '';   // a book passing the camera takes no clicks
-      bk.el.classList.toggle('front', wrap(Math.round(pos)) === i);
+      const x = k * step, y = -bk.lift * bk.h * 0.04, z = bk.lift * lift;
+      bk.el.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,' + z.toFixed(1) + 'px) rotateY(' + TURN + 'deg)';
+      bk.el.style.zIndex = up ? 2 : 1;
     }
-    line.style.transform = 'rotateY(' + (px * 3).toFixed(2) + 'deg) rotateX(' + (-6 - py * 2).toFixed(2) + 'deg)';   // seen a little from above, so the top edge shows
+    line.style.transform = 'rotateX(' + (-5 - py * 1.5).toFixed(2) + 'deg) rotateY(' + (px * 2).toFixed(2) + 'deg)';   // seen a little from above, so the top edges show
   }
 
   /* ---- the label ---- */
@@ -155,7 +150,7 @@
     labPlace.textContent = bk.title[lang];
     labNote.textContent = bk.c.note ? bk.c.note[lang] : '';
     labCount.textContent = bk.own.length ? t.photo(bk.own.length) : t.soon;
-    labPos.textContent = t.pos(n - i, n);
+    labPos.textContent = t.pos(i + 1, n);
     if (bk.guide) { labOpen.textContent = t.guide; labOpen.href = SITE1 + 'posts/' + bk.guide + '.html'; }
     else if (bk.own.length) { labOpen.textContent = t.photos; labOpen.href = SITE1 + 'countries/' + bk.c.id + '.html'; }
     else { labOpen.textContent = ''; labOpen.removeAttribute('href'); }
@@ -186,8 +181,9 @@
   let settle = 0;
   stage.addEventListener('wheel', (e) => {
     e.preventDefault();
-    const d = e.deltaMode === 1 ? e.deltaY * 18 : e.deltaMode === 2 ? e.deltaY * H : e.deltaY;
-    target -= d / 240;
+    const raw = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;   // a trackpad's sideways swipe, or the wheel
+    const d = e.deltaMode === 1 ? raw * 18 : e.deltaMode === 2 ? raw * H : raw;
+    target += d / (step * 1.4);
     hovered = null; armed = false;
     clampTarget();
     clearTimeout(settle);
@@ -214,7 +210,7 @@
     const dx = e.clientX - drag.x, dy = e.clientY - drag.y;
     drag.moved = Math.max(drag.moved, Math.abs(dx) + Math.abs(dy));
     if (drag.moved > 6) stage.classList.add('dragging');
-    target = drag.start - (dy - dx) / (W * 0.32);   // pull down-left along the line: the past comes to you
+    target = drag.start - dx / step;                // pull the shelf along
     clampTarget();
   });
   function endDrag(e) {
@@ -224,14 +220,9 @@
     if (was.moved > 6) { target = Math.round(target); clampTarget(); return; }   // settle on a book
     if (was.book === null) return;
     const i = was.book;
-    if (wrap(Math.round(target)) === i && Math.abs(pos - target) < 0.2) {
-      const href = linkFor(i);
-      if (href) location.href = href;
-    } else {
-      // bring it forward along the shorter way round
-      const fwd = wrap(target - i);                  // how far back it stands
-      target = fwd <= n / 2 ? target - fwd : target + (n - fwd);
-    }
+    const href = linkFor(i);
+    if (href) { location.href = href; return; }
+    target = Math.round(target) + (wrap(i - pos + half) - half);   // nothing to open: bring it to the middle instead
   }
   stage.addEventListener('pointerup', endDrag);
   stage.addEventListener('pointercancel', () => { drag = null; stage.classList.remove('dragging'); });
@@ -240,10 +231,10 @@
 
   addEventListener('keydown', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-    if (e.key === 'ArrowDown' || e.key === 'ArrowLeft' || e.key === 'PageDown') { target = Math.round(target) - 1; }
-    else if (e.key === 'ArrowUp' || e.key === 'ArrowRight' || e.key === 'PageUp') { target = Math.round(target) + 1; }
-    else if (e.key === 'Home') target = Math.round(target) - wrap(Math.round(target) - (n - 1));
-    else if (e.key === 'End') target = Math.round(target) - wrap(Math.round(target));
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') { target = Math.round(target) - 1; }
+    else if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown') { target = Math.round(target) + 1; }
+    else if (e.key === 'Home') target = Math.round(target) - wrap(Math.round(target));
+    else if (e.key === 'End') target = Math.round(target) + wrap(n - 1 - Math.round(target));
     else if (e.key === 'Enter') { const href = linkFor(wrap(Math.round(pos))); if (href) location.href = href; return; }
     else return;
     e.preventDefault(); hovered = null; armed = false; clampTarget();
@@ -272,7 +263,7 @@
   const veilIn = document.getElementById('veil'), veilOut = document.getElementById('veil-out');
   let backOn = 0, backShown = -1;
   function updateBackdrop() {
-    const i = wrap(Math.round(pos));
+    const i = hovered !== null ? hovered : wrap(Math.round(pos));   // the book in hand, else the one at the middle
     if (i === backShown) return;
     const bk = books[i];
     if (!bk.cover) return;                           // a book without a photograph keeps the last one behind it
@@ -309,6 +300,7 @@
 
   addEventListener('resize', () => { layout(); place(); });
   layout();
+  pos = target = n - 1 - Math.max(0, Math.floor(W / step / 2) - 1);   // open with the newest book near the right edge, the years running back to the left
   applyLang();
   place();
   requestAnimationFrame(frame);
