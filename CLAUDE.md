@@ -1,9 +1,16 @@
-> **Experiment `opening`** (started 2026-10-07, branch `exp/opening`, localhost:8648). Trying an
-> opening animation for the whole site, on the home page of design 1: the page arrives on a detail
-> of the opening photograph and pulls back until the whole landscape is there, then the top bar and
-> the place line fade in. Skills: Impeccable (animate), then optimize-web-animations. Rules of this
-> file suspended here: none. The brief holds: nothing written across the photograph, light only,
-> all motion inside "reduce motion", nothing loops.
+> **Experiment `opening`** (started 2026-10-07, branch `exp/opening`, localhost:8648). Eleven candidate
+> openings for the home page of design 1, chosen from the address: `index.html?opening=<name>`, listed
+> with a line each on `openings.html`. Without the name the page is itself. Each opening is one file in
+> `design 1/js/opening/`; `design 1/js/opening.js` is the runtime (the stage over the page, the photo
+> list, done()). Five by hand (darkroom, aperture, contact, filmstrip, burst), five through the
+> Impeccable skill's animate playbook (mosaic, letters, prints, exposure, negative), plus the first
+> CSS pull-back. Rules of the root file suspended here, on purpose: each opening injects its own
+> `<style>` block (one file per candidate beats eleven blocks in the stylesheet while he chooses);
+> the stage, film rebates, flash and light leaks use photographic colours outside the eleven tokens;
+> film sprocket holes have 2px corners; the prints carry a soft offset shadow. The brief holds:
+> nothing written across the photograph, light only, nothing under "reduce motion", and every
+> opening ends on the page's own cover. When one is kept, its CSS moves into the stylesheet and the
+> rest are removed.
 
 # tuan photography 陳亮元 — project instructions
 
