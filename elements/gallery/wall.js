@@ -77,6 +77,7 @@
     cell = pitch;
     rows.length = 0;
     const per = Math.ceil(n / count);
+    seed = 11;                                // the same slight tilts on every visit
     for (let r = 0; r < count; r++) {
       const own = tiles.slice(r * per, (r + 1) * per);
       const h = pitch - GAP;
@@ -100,7 +101,8 @@
           t.x = t.y = t.w = t.h = t.r = 0;
         }
         t.row = row; t.x0 = x + w / 2;
-        t.bw = w; t.bh = h; t.rot = 0; t.by = row.y;
+        t.bw = w; t.bh = h; t.by = row.y;
+        t.rot = (rand() - 0.5) * 5;           // a slight tilt, up to 2.5° either way, as if pinned by hand
         x += w + GAP;
       }
       rows.push(row);
