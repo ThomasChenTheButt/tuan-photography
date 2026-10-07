@@ -1,6 +1,6 @@
 # tuan photography 陳亮元 — Project Memo 專案備忘錄
 
-*Last updated: 2026-10-06 — handoff note. Read this first, then check the files to confirm.*
+*Last updated: 2026-10-07 — handoff note. Read this first, then check the files to confirm.*
 
 ## 現在狀態 Where things stand
 
@@ -20,22 +20,24 @@
   edge; the photograph through the sea (Aoraki, strength 0.9, the dial bottom right); a tally
   "21 / 195 countries · 11% of the world"; up to six of his flights always in the air; a photograph
   behind the Flights view. Clicking a book turns the sea photograph into that place's cover.
+- **The Taste skill's five fixes are in design 2** (kept 2026-10-07): the phone's bottom-right row
+  no longer wraps over the books, no word on the cover photograph, the place page no longer opens
+  with "Guide not written yet", dates spoken as months, the Speed label in faded ink.
 - **The opening on 8645:** the globe (`design 2/wc-sketch/opening/globe.js`, four looks via
   `?globe=1|2|3|4`, look 4 the photo ball in `photoball.js`). The corridor of prints and the shelf
   of books were dropped on 2026-10-04 at his word; they are at the tag
   `before-drop-openings-2026-10-04`. `?opening` replays the opening.
-- **Experiment `taste2` (localhost:8646, worktree `experiments/taste2`, branch `exp/taste2`):**
-  the Taste skill's five small fixes on a copy of design 2 (the phone's bottom-right row, the word
-  on the cover photograph, the place page's opening line, dates as months, the Speed label). Open
-  since 2026-10-05, waiting for his keep or drop. Not merged into 8645.
 
 ## 上次做到哪 Where we left off
 
-2026-10-05 and 2026-10-06, short sessions, no change to either site.
+2026-10-07: he kept experiment `taste2`. It is merged into `main` (design 2 on 8645 now has the
+five fixes); the worktree, branch, server 8646 and the `exp-taste2` launch entry are gone. No
+experiment is open.
+
+Before that, 2026-10-05 and 2026-10-06, short sessions, no change to either site.
 
 - The ideas list kept up: Impeccable updated to 4.5.0 on the Mac and in the account, Motion and
   Awwwards added, image-blaster marked dropped.
-- Experiment `taste2` opened at his ask (2026-10-05).
 - 2026-10-06: a prompt audit of `CLAUDE.md` and this note. `CLAUDE.md` lost its generic
   "frontend aesthetics" block (replaced by a short list of defaults this site must not drift
   toward) and its ten paragraphs of experiment history (now one table); a stale line about the
@@ -44,15 +46,12 @@
 
 ## 接下來 Next up
 
-**His verdict on `taste2`.** Open `localhost:8646` (preview `exp-taste2`, or
-`python3 tools/serve.py 8646 "experiments/taste2/design 2"`) beside 8645 and compare. Keep: merge
-`exp/taste2` into `main`, check 8645, remove the worktree and branch, run
-`python3 tools/check_site.py`. Drop: `git worktree remove experiments/taste2` and
-`git branch -D exp/taste2`.
+**The uncommitted pair.** Decide what `cutout.swift` (top level) and the 25 added lines in
+`data/sizes.json` are for: keep (commit, and `cutout.swift` moves to `tools/`), or remove. Then
+rerun `python3 tools/finder_view.py` so the top level stays tidy.
 
 ## 等你決定 Waiting on you
 
-- **Experiment `taste2` (localhost:8646):** the Taste skill's five fixes on design 2: keep or drop?
 - **Sea photograph:** which photographs besides Aoraki, if any? (`?ocean=all` cycles all 93.)
 - **Camera data for the 22 US photographs:** re-export from Lightroom with metadata, or drop the
   raw files in, and I'll add it.
@@ -69,5 +68,4 @@
 
 Say **"continue the travel website"**. Double-click **`start.command`** to open both sites
 (8642 design 1, 8645 design 2), or run `python3 tools/serve.py 8645 "design 2"` from the project
-folder. Experiment `taste2` is on 8646 (see Next up). He works on 8645 and 8646; design 1 is still
-there and still builds.
+folder. He works on 8645; design 1 is still there and still builds. No experiment is open.

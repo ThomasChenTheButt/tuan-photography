@@ -1,14 +1,3 @@
-> **Experiment `taste2` (2026-10-05, his ask: "run a taste skill on design 2").** The Taste skill
-> (`design-taste-frontend`), audit first, on design 2 ("Pen and wash") only. Mode: redesign, preserve.
-> Rules of that skill that his brief overrides and are suspended here: dark mode (light only), the
-> serif ban (Alegreya is the chosen face), eyebrow counting for the word-controls (spaced capitals are
-> this system's control voice). Five fixes from the audit, all on `design 2/wc-sketch/`: the phone's
-> bottom-right row no longer wraps over the books (tally off on phones, dial shortened); the
-> "Scroll for the photographs" word on the cover photograph removed; the place page no longer opens
-> with "Guide not written yet"; dates kept as "2025.1" are spoken as "January 2025 / 2025 年 1 月";
-> the Speed label in faded ink instead of pencil-pale. Preview on 8646 (`exp-taste2`). Keep or drop
-> on his word.
-
 # tuan photography 陳亮元 — project instructions
 
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
@@ -304,10 +293,7 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 - Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
   harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
 
-Open now: `taste2` (2026-10-05), the Taste skill (`design-taste-frontend`) run audit-first on
-design 2 at his ask: five small fixes on a copy (the phone's bottom-right row, the word on the cover
-photograph, the place page's opening line, dates as months, the Speed label). On 8646 (`exp-taste2`).
-Keep or drop on his word.
+Open now: none.
 
 Decided experiments. Rejected ideas are not proposed again; the tags hold the code.
 
@@ -323,6 +309,7 @@ Decided experiments. Rejected ideas are not proposed again; the tags hold the co
 | `marked-photo` (a circled spot on the home photo, a line to a close print, coordinates) | dropped | 2026-10-01 | reflog only |
 | `earth`, `scope`, `cssglobe` (three globe openings for design 2) | dropped | 2026-10-03 | reflog only |
 | `scroll` (books on shelves flying to their places on scroll; became `opening/shelf.js`, tried beside the corridor) | dropped with the corridor; only the globe stays | 2026-10-04 | `before-drop-openings-2026-10-04`, `exp-scroll-dropped-2026-10-04` |
+| `taste2` (Taste skill audit-first on design 2: phone bottom-right row, the word on the cover photo, the place page opening line, dates as months, the Speed label) | kept | 2026-10-07 | merged into `main` |
 
 **Weekly report 週報** (set up 2026-09-28). A scheduled task, `weekly-web-design-report`, runs
 every Monday about 9:00 and searches the web for the week's new AI web-design tools, skills,
