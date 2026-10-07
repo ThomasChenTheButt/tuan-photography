@@ -6,8 +6,10 @@
    Under "reduce motion" no opening runs. */
 (function () {
   'use strict';
-  const name = new URLSearchParams(location.search).get('opening');
-  if (!name || !/^[a-z]+$/.test(name)) return;
+  const asked = new URLSearchParams(location.search).get('opening');
+  const m = asked && asked.match(/^([a-z]+)(?:-([2-9]))?$/);   // aperture, aperture-2, aperture-3 ...
+  if (!m) return;
+  const name = m[1], version = m[2] ? +m[2] : 1;
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   const cover = document.querySelector('.cover');
   const img = cover && cover.querySelector('img');
@@ -15,7 +17,7 @@
 
   const html = document.documentElement;
   const root = html.dataset.root || '';
-  html.classList.add('op', 'op-' + name);
+  html.classList.add('op', 'op-' + name, 'op-' + name + '-' + version);
   window.scrollTo(0, 0);
 
   const all = window.ALL_PHOTOS;
@@ -23,7 +25,7 @@
   const others = all.filter((p) => p !== lead);
 
   const o = {
-    name, root, cover, img, lead, all, others,
+    name, v: version, root, cover, img, lead, all, others,
     src: (p, size) => root + 'images/web/' + (size ? size + '/' : '') + p.file,
     style(css) { const st = document.createElement('style'); st.textContent = css; document.head.appendChild(st); return st; },
     stage(cls) {
@@ -70,7 +72,7 @@
   window.OPENING = o;
   window.Openings = window.Openings || {};
 
-  if (name === 'pullback') { o.done(null, 3000); return; }   // the one done in the stylesheet
+  if (name === 'pullback' && version === 1) { o.done(null, 3000); return; }   // the first is done in the stylesheet
 
   const s = document.createElement('script');
   s.src = root + 'js/opening/' + name + '.js';

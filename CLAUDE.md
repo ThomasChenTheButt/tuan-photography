@@ -14,18 +14,17 @@
 > opening ends on the page's own cover. When one is kept, its CSS moves into the stylesheet and the
 > rest are removed.
 
-> **Round 3 plan (2026-10-08, he said "just do it" and will auto-continue after the session limit).**
-> Survivors share one thread: the camera and the film themselves, quick and decisive, dark stage.
-> Cut ones were slow, soft, or not about photographing (maps, books, video, award-site tricks).
-> Round 3 = five new openings grown from the survivors, then a polish pass on all of them.
-> Status per item, update as each lands (commit after each):
-> - [ ] viewfinder: through the camera, out of focus; AF brackets hunt and lock on the summit, focus snaps, mirror blackout, the frame. Marks only, no numbers or words.
-> - [ ] loupe: the contact sheet, a loupe drifts over it, a clay grease-pencil ring circles one frame, that frame grows.
-> - [ ] shutter: burst, but every cut is a shutter closing and opening (aperture blades), quickening.
-> - [ ] advance: film advanced frame by frame with the lever's stop-and-go rhythm, landing on the frame.
-> - [ ] name: letters, but 陳亮元 in large serif, the photograph through the strokes, into one stroke.
-> - [ ] polish: phone width and desktop for all eleven; fix what breaks; update TODO.md and PROGRESS.md on main; push main.
-> Then stop and report to him. Do not add more rounds without his word.
+> **Round 3 (2026-10-08, his word): three more versions of each of the six survivors.** The
+> original of each stays as version 1; versions 2 to 4 are `?opening=<name>-2` etc., the same file
+> branching on `o.v`. Tick each family as it lands, commit after each:
+> - [ ] aperture 2 stop by stop, 3 opens on the summit, 4 paper blades on paper
+> - [ ] contact 2 on paper, 3 the camera dives into the sheet, 4 laid down strip by strip with a clay grease-pencil ring
+> - [ ] filmstrip 2 vertical, 3 three strips at once, 4 on paper on a slant
+> - [ ] burst 2 punch-in crops, 3 on a small screen then grows, 4 strobe between frames
+> - [ ] letters 2 陳亮元, 3 each letter its own photograph, 4 letters arrive one by one
+> - [ ] pullback 2 from the lake shore, 3 three hard framings, 4 pull back with a turn
+> - [ ] list all 24 on openings.html, check desktop and phone, update TODO.md and PROGRESS.md on main, push main
+> Then stop and report to him.
 
 # tuan photography 陳亮元 — project instructions
 
