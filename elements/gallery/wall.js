@@ -16,8 +16,8 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const i18n = {
-    en: { title: 'Gallery', hint: 'Move across the wall. Click a photograph to hold it; click again to let go.', other: '中文', speed: 'Speed', tilt: 'Tilt' },
-    zh: { title: '作品集', hint: '滑過這面牆。點一張照片把它留住；再點一下放開。', other: 'EN', speed: '速度', tilt: '歪斜' },
+    en: { title: 'Gallery', hint: 'Move across the wall. Click a photograph to hold it; click again to let go.', other: '中文', speed: 'Speed', tilt: 'Tilt', kicker: 'A photography wall', dark: 'Dark', light: 'Light' },
+    zh: { title: '作品集', hint: '滑過這面牆。點一張照片把它留住；再點一下放開。', other: 'EN', speed: '速度', tilt: '歪斜', kicker: '一面照片牆', dark: '深色', light: '淺色' },
   };
 
   /* ---- the speed bar: a multiplier on every row's drift, 0 holds the wall still ---- */
@@ -67,7 +67,7 @@
     const img = el.firstChild;
     return { id, s, el, img, ar: s.w / s.h, big: false,
              bx: 0, by: 0, bw: 0, bh: 0, rot: 0,          // base: where the print lives on the wall
-             x: 0, y: 0, w: 0, h: 0, r: 0,                // current, eased each frame
+             x: 0, y: 0, w: 0, h: 0, r: 0, op: 1,         // current, eased each frame
              tx: 0, ty: 0, tw: 0, th: 0, tr: 0 };         // target this frame
   });
 
@@ -79,18 +79,18 @@
   function layout() {
     W = innerWidth; H = innerHeight;
     const n = tiles.length;
-    // the wall keeps off the top edge and leaves the bottom-left corner to the title
-    const padTop = Math.max(40, H * 0.07), padBottom = Math.max(130, H * 0.2);
-    const ah = H - padTop - padBottom;
-    // each row should be about 1.4 screens long: enough to loop with no gap showing
-    const count = Math.max(3, Math.round(Math.sqrt(n * ah * 0.76 / W)));
-    const pitch = ah / count;
+    // the wall runs past every edge: the first and last rows are cut by the window,
+    // and each row is about 1.4 screens long so it can loop with no gap showing
+    const count = Math.max(3, Math.round(Math.sqrt(n * H * 0.76 / W)));
+    const pitch = H / count;
+    const top = -pitch * 0.45;                // the top row begins above the window
+    const total = Math.ceil((H - top) / pitch) + 1;   // enough rows to run off the bottom too
     cell = pitch;
     rows.length = 0;
     const per = Math.ceil(n / count);
     seed = 11;                                // the same slight tilts on every visit
-    for (let r = 0; r < count; r++) {
-      const own = tiles.slice(r * per, (r + 1) * per);
+    for (let r = 0; r < total; r++) {
+      const own = tiles.slice(r * per, (r + 1) * per);   // the extra rows own nothing and borrow all
       const h = pitch - GAP;
       let len = own.reduce((a, t) => a + h * t.ar + GAP, 0);
       // a short row borrows prints from the next row until it is long enough to loop
@@ -101,7 +101,7 @@
         list.push(Object.assign({}, t, { ghost: true, el: null }));
         len += h * t.ar + GAP;
       }
-      const row = { y: padTop + r * pitch + pitch / 2, len, shift: 0,
+      const row = { y: top + r * pitch + pitch / 2, len, shift: 0,
                     speed: (r % 2 ? 1 : -1) * (9 + (r * 7) % 5), tiles: list };
       let x = 0;
       for (const t of list) {
@@ -109,7 +109,7 @@
         if (t.ghost) {                       // a borrowed print gets its own element
           t.el = t.el || makeEl(t.s);
           t.img = t.el.firstChild;
-          t.x = t.y = t.w = t.h = t.r = 0;
+          t.x = t.y = t.w = t.h = t.r = 0; t.op = 1;
         }
         t.row = row; t.x0 = x + w / 2;
         t.bw = w; t.bh = h; t.by = row.y;
@@ -137,6 +137,20 @@
       }
     }
   }
+
+  /* ---- the places where words sit over the wall ---- */
+  const quietZones = [document.querySelector('.head'), document.querySelector('.tools'), document.querySelector('.bars')];
+
+  /* ---- light or dark paper ---- */
+  const themeBtn = document.getElementById('theme');
+  let theme = 'light';
+  try { theme = localStorage.getItem('wall-theme') || theme; } catch (e) {}
+  function applyTheme() {
+    document.documentElement.dataset.theme = theme;
+    themeBtn.textContent = i18n[lang][theme === 'dark' ? 'light' : 'dark'];
+    try { localStorage.setItem('wall-theme', theme); } catch (e) {}
+  }
+  themeBtn.addEventListener('click', () => { theme = theme === 'dark' ? 'light' : 'dark'; applyTheme(); });
 
   /* ---- the cursor, the lifted print, the held print ---- */
   let mx = -1e4, my = -1e4, hasPointer = false;
@@ -177,6 +191,9 @@
     const dt = Math.min(250, now - last); last = now;
     const ease = reduce ? 1 : 1 - Math.exp(-dt / 95);
     advance(dt);
+    // the words float over the wall; the prints beneath them go faint so the words read
+    const quiet = quietZones.map((el) => el.getBoundingClientRect());
+    const faint = 0.22;
     const short = Math.min(W, H);
     // the held print sits in the middle, as large as the screen allows with its name beneath
     const holdEdge = Math.min(W * 0.78, H * 0.66);
@@ -217,7 +234,16 @@
       t.x += (t.tx - t.x) * ease; t.y += (t.ty - t.y) * ease;
       t.w += (t.tw - t.w) * ease; t.h += (t.th - t.h) * ease;
       t.r += (t.tr - t.r) * ease;
+      let op = 1;
+      if (t !== held && t !== lifted) {
+        for (const q of quiet) {
+          if (t.x + t.w / 2 > q.left - 16 && t.x - t.w / 2 < q.right + 16 &&
+              t.y + t.h / 2 > q.top - 16 && t.y - t.h / 2 < q.bottom + 16) { op = faint; break; }
+        }
+      }
+      t.op += (op - t.op) * ease;
       const st = t.el.style;
+      st.setProperty('--op', t.op.toFixed(3));
       st.setProperty('--x', (t.x - t.w / 2).toFixed(1) + 'px');
       st.setProperty('--y', (t.y - t.h / 2).toFixed(1) + 'px');
       st.setProperty('--w', t.w.toFixed(1) + 'px');
@@ -267,6 +293,7 @@
     document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : 'en';
     document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = i18n[lang][el.dataset.i18n]; });
     langBtn.textContent = i18n[lang].other;
+    applyTheme();
     allTiles.forEach((t) => { t.img.alt = t.s.alt ? t.s.alt[lang] : ''; });
     if (held || lifted) setCaption(held || lifted);
   }
