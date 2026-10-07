@@ -27,8 +27,7 @@
   const rand = () => { seed = (seed * 48271) % 2147483647; return seed / 2147483647; };
   for (let i = ids.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [ids[i], ids[j]] = [ids[j], ids[i]]; }
 
-  const tiles = ids.map((id) => {
-    const s = SITE.slides[id];
+  function makeEl(s) {
     const el = document.createElement('figure');
     el.className = 'tile';
     const img = document.createElement('img');
@@ -37,42 +36,82 @@
     img.loading = 'eager';
     img.decoding = 'async';
     el.appendChild(img);
+    return el;
+  }
+  const tiles = ids.map((id) => {
+    const s = SITE.slides[id];
+    const el = makeEl(s);
     wall.appendChild(el);
+    const img = el.firstChild;
     return { id, s, el, img, ar: s.w / s.h, big: false,
              bx: 0, by: 0, bw: 0, bh: 0, rot: 0,          // base: where the print lives on the wall
              x: 0, y: 0, w: 0, h: 0, r: 0,                // current, eased each frame
              tx: 0, ty: 0, tw: 0, th: 0, tr: 0 };         // target this frame
   });
 
-  /* ---- layout: a loose grid that fills the screen, with a little scatter ---- */
+  /* ---- layout: rows of prints, close together, each row a loop longer than the screen
+     so it can drift sideways without end. Odd rows drift left, even rows right. ---- */
   let W = 0, H = 0, cell = 0;
+  const rows = [];            // { y, len, shift, speed, tiles }
+  const GAP = 10;
   function layout() {
     W = innerWidth; H = innerHeight;
     const n = tiles.length;
-    // the wall keeps off the edges, and leaves the bottom-left corner to the title
-    const padX = Math.max(28, W * 0.05), padTop = Math.max(40, H * 0.07);
-    const padBottom = Math.max(130, H * 0.2);
-    const aw = W - padX * 2, ah = H - padTop - padBottom;
-    const cols = Math.max(4, Math.round(Math.sqrt(n * aw / ah)));
-    const rows = Math.ceil(n / cols);
-    const cw = aw / cols, ch = ah / rows;
-    cell = Math.min(cw, ch);
-    seed = 11;
-    tiles.forEach((t, i) => {
-      const c = i % cols, r = Math.floor(i / cols);
-      // the last row is centred so the wall does not end ragged on the left
-      const inLast = r === rows - 1, lastCount = n - (rows - 1) * cols;
-      const offset = inLast ? (cols - lastCount) * cw / 2 : 0;
-      const fit = cell * (W < 640 ? 0.84 : 0.74);
-      const w = t.ar >= 1 ? fit : fit * t.ar;
-      const h = t.ar >= 1 ? fit / t.ar : fit;
-      t.bw = w; t.bh = h;
-      t.bx = padX + offset + c * cw + cw / 2 + (rand() - 0.5) * cw * 0.22;
-      t.by = padTop + r * ch + ch / 2 + (rand() - 0.5) * ch * 0.22;
-      t.bx = Math.min(Math.max(t.bx, w / 2 + 8), W - w / 2 - 8);
-      t.rot = (rand() - 0.5) * 4;
-      if (!t.x && !t.y) { t.x = t.bx; t.y = t.by; t.w = w; t.h = h; t.r = t.rot; }
-    });
+    // the wall keeps off the top edge and leaves the bottom-left corner to the title
+    const padTop = Math.max(40, H * 0.07), padBottom = Math.max(130, H * 0.2);
+    const ah = H - padTop - padBottom;
+    // each row should be about 1.4 screens long: enough to loop with no gap showing
+    const count = Math.max(3, Math.round(Math.sqrt(n * ah * 0.76 / W)));
+    const pitch = ah / count;
+    cell = pitch;
+    rows.length = 0;
+    const per = Math.ceil(n / count);
+    for (let r = 0; r < count; r++) {
+      const own = tiles.slice(r * per, (r + 1) * per);
+      const h = pitch - GAP;
+      let len = own.reduce((a, t) => a + h * t.ar + GAP, 0);
+      // a short row borrows prints from the next row until it is long enough to loop
+      const list = own.slice();
+      let k = 0;
+      while (len < W * 1.35 && n > 0) {
+        const t = tiles[((r + 1) * per + k++) % n];
+        list.push(Object.assign({}, t, { ghost: true, el: null }));
+        len += h * t.ar + GAP;
+      }
+      const row = { y: padTop + r * pitch + pitch / 2, len, shift: 0,
+                    speed: (r % 2 ? 1 : -1) * (9 + (r * 7) % 5), tiles: list };
+      let x = 0;
+      for (const t of list) {
+        const w = h * t.ar;
+        if (t.ghost) {                       // a borrowed print gets its own element
+          t.el = t.el || makeEl(t.s);
+          t.img = t.el.firstChild;
+          t.x = t.y = t.w = t.h = t.r = 0;
+        }
+        t.row = row; t.x0 = x + w / 2;
+        t.bw = w; t.bh = h; t.rot = 0; t.by = row.y;
+        x += w + GAP;
+      }
+      rows.push(row);
+    }
+    allTiles = rows.flatMap((r) => r.tiles);
+    // drop ghost elements left over from a previous layout
+    wall.querySelectorAll('.tile').forEach((el) => { if (!allTiles.some((t) => t.el === el)) el.remove(); });
+    allTiles.forEach((t) => { if (t.ghost && !t.el.parentNode) wall.appendChild(t.el); });
+    advance(0);
+  }
+  let allTiles = tiles;
+
+  // where each print stands on its row right now, the row having drifted `shift`
+  function advance(dt) {
+    for (const row of rows) {
+      if (!reduce) row.shift += row.speed * dt / 1000;
+      for (const t of row.tiles) {
+        const m = ((t.x0 + row.shift) % row.len + row.len) % row.len;
+        t.bx = m - row.len * 0.2;
+        if (!t.x && !t.y) { t.x = t.bx; t.y = t.by; t.w = t.bw; t.h = t.bh; }
+      }
+    }
   }
 
   /* ---- the cursor, the lifted print, the held print ---- */
@@ -81,7 +120,7 @@
 
   function nearest() {
     let best = null, bd = Infinity;
-    for (const t of tiles) {
+    for (const t of allTiles) {
       const dx = t.bx - mx, dy = t.by - my, d = dx * dx + dy * dy;
       if (d < bd) { bd = d; best = t; }
     }
@@ -113,6 +152,7 @@
   function frame(now) {
     const dt = Math.min(250, now - last); last = now;
     const ease = reduce ? 1 : 1 - Math.exp(-dt / 95);
+    advance(dt);
     const short = Math.min(W, H);
     // the held print sits in the middle, as large as the screen allows with its name beneath
     const holdEdge = Math.min(W * 0.78, H * 0.66);
@@ -130,8 +170,10 @@
       outer = radius * (held ? 1.3 : 1.5);
     }
 
-    for (const t of tiles) {
+    for (const t of allTiles) {
       let x = t.bx, y = t.by, w = t.bw, h = t.bh, r = t.rot;
+      // a print that has looped from one end of its row to the other jumps, off screen, not slides
+      if (Math.abs(t.bx - t.x) > W * 0.5 && t !== held) t.x = t.bx;
       if (t === held) {
         [w, h] = sizeFor(t, holdEdge); x = hx; y = hy; r = 0;
       } else if (t === lifted) {
@@ -190,7 +232,7 @@
 
   wall.addEventListener('click', (e) => {
     const el = e.target.closest('.tile');
-    const t = el ? tiles.find((t) => t.el === el) : null;
+    const t = el ? allTiles.find((t) => t.el === el) : null;
     if (held) { hold(null); if (hasPointer) lift(nearest()); return; }
     if (t) hold(t);
   });
@@ -201,7 +243,7 @@
     document.documentElement.lang = lang === 'zh' ? 'zh-Hant' : 'en';
     document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = i18n[lang][el.dataset.i18n]; });
     langBtn.textContent = i18n[lang].other;
-    tiles.forEach((t) => { t.img.alt = t.s.alt ? t.s.alt[lang] : ''; });
+    allTiles.forEach((t) => { t.img.alt = t.s.alt ? t.s.alt[lang] : ''; });
     if (held || lifted) setCaption(held || lifted);
   }
   langBtn.addEventListener('click', () => { lang = lang === 'zh' ? 'en' : 'zh'; applyLang(); });
