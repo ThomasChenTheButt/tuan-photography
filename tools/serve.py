@@ -9,6 +9,7 @@
 
     python3 tools/serve.py                          design 1/ on port 8642
     python3 tools/serve.py 8643 experiments/<name>/design 1   an experiment, beside it
+    python3 tools/serve.py auto elements            "auto": the port the app hands over in PORT (8647 if none)
 """
 import functools
 import http.server
@@ -31,7 +32,9 @@ class NoCacheHandler(http.server.SimpleHTTPRequestHandler):
 
 
 def main():
-    port = int(sys.argv[1]) if len(sys.argv) > 1 else 8642
+    port = sys.argv[1] if len(sys.argv) > 1 else '8642'
+    # "auto": the Claude app assigns a free port through PORT, so two chats can both preview the same folder
+    port = int(os.environ.get('PORT', 8647)) if port == 'auto' else int(port)
     os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))   # 專案資料夾
     # 第二個參數：要預覽的資料夾（從專案資料夾算起），給 experiments/ 裡的試作版用
     os.chdir(sys.argv[2] if len(sys.argv) > 2 else "design 1")
