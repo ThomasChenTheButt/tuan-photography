@@ -302,7 +302,7 @@ def header(root, current, over=False):
         f'        <li><a href="{root}{href}" data-i18n="{key}"'
         + (' aria-current="page"' if current == nid else "") + f">{label}</a></li>"
         for nid, key, label, href in NAV)
-    cls = "wrap top top--over" if over else "wrap top"
+    cls = {False: "wrap top", True: "wrap top top--over", "ink": "wrap top top--over top--ink"}[over]
     return f"""<a class="skip btn" href="#main" data-i18n="skip">Skip to the content</a>
 <header class="{cls}">
   <a class="name" href="{root}index.html">tuan photography <span>陳亮元</span></a>
@@ -319,7 +319,9 @@ def header(root, current, over=False):
 """
 
 
-def footer(root, used, en, zh):
+def footer(root, used, en, zh, foot=True, scripts=()):
+    """The footer block, then the page's data and scripts. foot=False leaves the block out (the
+    photo wall fills the window); scripts are the page's own, loaded after main.js."""
     links = "\n".join(f'        <li><a href="{root}{href}" data-i18n="{key}">{label}</a></li>'
                       for _, key, label, href in NAV)
     data = []
@@ -333,7 +335,7 @@ def footer(root, used, en, zh):
         data.append(s)
     blob = json.dumps(data, ensure_ascii=False).replace("</", "<\\/")
     page = json.dumps({"en": en, "zh": zh}, ensure_ascii=False, indent=1).replace("</", "<\\/")
-    return f"""
+    block = f"""
 <footer class="foot">
   <div class="wrap">
     <a class="foot__handle" href="{IG['url']}" target="_blank" rel="noopener">@{IG['handle']}</a>
@@ -346,18 +348,20 @@ def footer(root, used, en, zh):
     </div>
   </div>
 </footer>
-
+""" if foot else "\n"
+    own = "".join(f'\n<script src="{root}js/{name}?v={STAMP}"></script>' for name in scripts)
+    return block + f"""
 <script type="application/json" id="slides-data">{blob}</script>
 <script>
 window.pageI18n = {page};
 </script>
-<script src="{root}js/main.js?v={STAMP}"></script>
+<script src="{root}js/main.js?v={STAMP}"></script>{own}
 </body>
 </html>
 """
 
 
-def write(path, title, zh_title, desc, current, body, en, zh, over=False):
+def write(path, title, zh_title, desc, current, body, en, zh, over=False, foot=True, scripts=()):
     root = "../" * (len(Path(path).parts) - 1)
     en["docTitle"], zh["docTitle"] = title, zh_title
     for k in list(en):
@@ -376,7 +380,7 @@ def write(path, title, zh_title, desc, current, body, en, zh, over=False):
                   lambda m: f'aria-label="{e(en[m.group(1)])}" data-i18n-aria="{m.group(1)}"', body)
     used = list(dict.fromkeys(re.findall(r'data-slide="([^"]+)"', body)))
     out = head(title, desc, root) + header(root, current, over) + '<main id="main" tabindex="-1">\n' + body + "\n</main>\n" \
-        + footer(root, used, en, zh)
+        + footer(root, used, en, zh, foot, scripts)
     (OUT / path).write_text(out, encoding="utf-8")
     print("  wrote", path)
 
@@ -532,45 +536,53 @@ def build_home():
 
 
 def build_gallery():
-    """The portfolio first, a dozen in a tight grid; then every country with photographs, each
-    its own wall of rows, in the site's order; then the names of the places not photographed yet."""
+    """The photo wall: every photograph on the site as a small print on one screen, in close
+    rows that drift sideways; the cursor parts the wall, a click opens the viewer. Four bars
+    bottom right (size, gap, tilt, speed) and a Dark/Light word top right. Tried first as
+    elements/gallery/ and merged on 2026-10-07 at the owner's word. The behaviour is js/wall.js."""
     en, zh = {}, {}
     root = ""
-    en.update(pTitle="Gallery", pSub="Open any photograph to see how it was made.",
-              folioTitle="Portfolio", restTitle="Not photographed for the site yet")
-    zh.update(pTitle="作品集", pSub="點開任何一張，看它是怎麼拍的。",
-              folioTitle="精選作品", restTitle="還沒有放上照片的地方")
+    en.update(pTitle="Gallery", pSub="Move across the wall. Click a photograph to open it.",
+              wallKicker="A photography wall", wallSize="Size", wallGap="Gap", wallTilt="Tilt",
+              wallSpeed="Speed", wallDark="Dark", wallLight="Light", wallLabel="Photographs")
+    zh.update(pTitle="作品集", pSub="滑過這面牆。點一張照片打開它。",
+              wallKicker="一面照片牆", wallSize="大小", wallGap="間距", wallTilt="歪斜",
+              wallSpeed="速度", wallDark="深色", wallLight="淺色", wallLabel="照片")
     lead = DATA["lead"]
     ids = [lead] + [s["id"] for s in DATA["slides"] if s["id"] != lead]
-    shown = [c for c in DATA["countries"] if any(s["country"] == c["id"] for s in DATA["slides"])]
-    rest = [c for c in DATA["countries"] if c not in shown]
-    parts = [page_top("pTitle", "Gallery", "pSub", en["pSub"]), f"""  <section class="part" aria-labelledby="folio-h">
-    <div class="part__head"><h2 id="folio-h" data-i18n="folioTitle">Portfolio</h2></div>
-    {grid(ids[:12], root, en, zh)}
-  </section>"""]
-    for c in shown:
-        cid = c["id"]
-        own = [s["id"] for s in DATA["slides"] if s["country"] == cid]
-        en[f"cn_{cid}"], zh[f"cn_{cid}"] = c["en"], c["zh"]
-        en[f"cc_{cid}"] = "1 photograph" if len(own) == 1 else f"{len(own)} photographs"
-        zh[f"cc_{cid}"] = f"{len(own)} 張照片"
-        parts.append(f"""  <section class="part" aria-labelledby="c-{cid}">
-    <div class="part__head"><h2 id="c-{cid}"><a href="countries/{cid}.html" data-i18n="cn_{cid}">{e(c['en'])}</a></h2><p class="num" data-i18n="cc_{cid}">{e(en[f'cc_{cid}'])}</p></div>
-    {wall(own, root, en, zh, anchors=True)}
-  </section>""")
-    names = []
-    for c in rest:
-        cid = c["id"]
-        en[f"cn_{cid}"], zh[f"cn_{cid}"] = c["en"], c["zh"]
-        names.append(f'<a href="countries/{cid}.html" data-i18n="cn_{cid}">{e(c["en"])}</a>')
-    parts.append(f"""  <section class="part bleed" aria-labelledby="rest-h">
-    <div class="part__head"><h2 id="rest-h" data-i18n="restTitle">Not photographed for the site yet</h2></div>
-    <div class="names">{''.join(names)}</div>
-  </section>
-</div>""")
+    tiles = []
+    for sid in ids:
+        s = SLIDES[sid]
+        strings(s, en, zh)
+        tiles.append(f'<figure class="print"><a {opens(sid, root, en, zh)}>'
+                     f'<img src="images/web/640/{s["file"]}" width="{s["w"]}" height="{s["h"]}" '
+                     f'alt="{e(s["alt"]["en"])}" data-i18n-alt="sa_{sid}" decoding="async"></a></figure>')
+    def bar(key, label, attrs, shown):
+        return (f'    <label class="bar" for="wall-{key}"><span data-i18n="wall{key.capitalize()}">{label}</span>'
+                f'<input type="range" id="wall-{key}" {attrs}><output id="wall-{key}-out" for="wall-{key}">{shown}</output></label>')
+    body = f"""<section class="pwall" aria-label="Photographs" data-i18n-aria="wallLabel">
+  <div class="pwall__tiles">
+    {"".join(tiles)}
+  </div>
+  <header class="pwall__head">
+    <p class="pwall__kicker caps" data-i18n="wallKicker">A photography wall</p>
+    <h1 data-i18n="pTitle">Gallery</h1>
+    <p class="pwall__hint" data-i18n="pSub">Move across the wall. Click a photograph to open it.</p>
+  </header>
+  <div class="pwall__tools">
+    <button type="button" class="caps" id="wall-theme" data-i18n="wallDark">Dark</button>
+  </div>
+  <div class="pwall__bars">
+{bar("size", "Size", 'min="0.6" max="2.4" step="0.1" value="1.2"', "×1.2")}
+{bar("gap", "Gap", 'min="0" max="60" step="1" value="12"', "12px")}
+{bar("tilt", "Tilt", 'min="0" max="8" step="0.5" value="1.5"', "1.5°")}
+{bar("speed", "Speed", 'min="0" max="3" step="0.1" value="0.8"', "×0.8")}
+  </div>
+  <figcaption class="pwall__cap" aria-live="polite"><b></b><span></span></figcaption>
+</section>"""
     write("gallery.html", f"Gallery - {SITE}", f"作品集 - {SITE}",
-          "Landscape photographs by 陳亮元 Thomas Chen: the portfolio, then every country. Each one shows how it was made.",
-          "gallery", "\n".join(parts), en, zh)
+          "Every landscape photograph by 陳亮元 Thomas Chen on one wall. Open any one to see how it was made.",
+          "gallery", body, en, zh, over="ink", foot=False, scripts=("wall.js",))
 
 
 def build_destinations():

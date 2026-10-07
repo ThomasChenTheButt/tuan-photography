@@ -35,7 +35,7 @@ updating in the same commit. The short version:
 
 | Thing | Rule |
 |---|---|
-| Ground | warm paper and a stone band alternate by section. **Light only**, no dark theme |
+| Ground | warm paper and a stone band alternate by section. **Light only**, no dark theme, except the Gallery page's own Dark word (his call, 2026-10-07) |
 | Colour | eleven tokens in `design 1/css/style.css` `:root`. Never hard-code a colour |
 | Earth colours | clay, olive, slate: whole flat blocks only (the three doors, the footer) |
 | Links | deep clay is the only colour that means "this can be followed" |
@@ -44,7 +44,7 @@ updating in the same commit. The short version:
 | Labels, menu, buttons | Geist in small spaced capitals. No mono face |
 | Corners | square, everywhere |
 | Controls | words, never icons or arrows |
-| Photographs | bare, untrimmed in rows, names beneath and never on top. The gallery's portfolio grid and the continent squares are trimmed to even openings (his call, 2026-09-30) |
+| Photographs | bare, untrimmed in rows, names beneath and never on top. The continent squares are trimmed to even openings (his call, 2026-09-30). The Gallery page is the photo wall: every photograph as a small drifting print, the title and four bars floating over faint prints (his call, 2026-10-07) |
 | Punctuation | no long dashes; at most one middle dot in a line; 中文 uses full-width marks |
 
 ### Rules
@@ -69,7 +69,7 @@ Arranged on 2026-09-28 at his request, so the top level reads at a glance. Keep 
 | `design 1/` | visitors' | **the current website (was `site/`) and nothing else.** Served on 8642 |
 | `design 2/` | visitors' | **the complete redesign**, built beside it. Served on 8645 |
 | `data/`, `content/`, `tools/` | Claude's | what the pages are built from, and the scripts |
-| `elements/` | visitors' (tests) | **single elements tried on their own**, apart from both designs, to be merged later if kept (his plan, 2026-10-07). Served on 8647 (`elements` in launch.json). Links to design 1's photos, fonts and css and to design 2's `data.js`, so nothing is copied. First one: `gallery/`, the photo wall |
+| `elements/` | visitors' (tests) | **single elements tried on their own**, apart from both designs, to be merged later if kept (his plan, 2026-10-07). Served on 8647 (`elements` in launch.json). Links to design 1's photos, fonts and css and to design 2's `data.js`, so nothing is copied. `gallery/` (the photo wall) was merged into design 1's Gallery page on 2026-10-07 and is kept as its test bed; `design 1/js/wall.js` is the live copy |
 | `CLAUDE.md`, `DESIGN.md`, `PRODUCT.md`, `PROGRESS.md` | Claude's | notes. They stay at the top: tools look for them there |
 
 - **Two designs, one set of facts** (his call, 2026-10-01). `site/` was renamed `design 1/`

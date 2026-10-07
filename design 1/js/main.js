@@ -99,6 +99,7 @@ function setLang(next) {
   document.getElementById('lang-zh')?.setAttribute('aria-pressed', String(lang === 'zh'));
   try { localStorage.setItem('tlap-lang', lang); } catch (e) { /* private mode */ }
   if (viewer?.open) renderViewer();
+  document.dispatchEvent(new Event('langchange'));   // for a page's own script (wall.js)
 }
 
 document.getElementById('lang-en')?.addEventListener('click', () => setLang('en'));

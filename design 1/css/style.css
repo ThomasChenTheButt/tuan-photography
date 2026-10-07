@@ -641,3 +641,87 @@ main { flex: 1; }
   ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
   html { scroll-behavior: auto; }
 }
+
+/* ---------------- the photo wall (gallery.html) ----------------
+   Every photograph as a small print on one screen, in close rows that drift
+   sideways. The owner's call on 2026-10-07, merged from elements/gallery/:
+   the words float over the wall (the prints beneath them go faint), and this
+   one page has a Dark word. Both are exceptions recorded in DESIGN.md.
+   The script sets --x --y --w --h --r --op on each print. */
+
+:root[data-theme="dark"] {
+  --bg: oklch(13% 0.006 60);
+  --band: oklch(17% 0.007 60);
+  --card: oklch(16% 0.006 60);
+  --line: oklch(28% 0.008 60);
+  --text: oklch(94% 0.008 85);
+  --text-2: oklch(68% 0.012 70);
+  --accent: oklch(74% 0.08 55);
+  --paper: oklch(13% 0.006 60);
+  color-scheme: dark;
+}
+html:has(.pwall), html:has(.pwall) body { height: 100%; overflow: hidden; }
+.top--ink { color: var(--text); }
+.top--ink .name span { color: var(--text-2); opacity: 1; }
+.top--ink .lang button { color: var(--text-2); opacity: 1; }
+.top--ink .lang button[aria-pressed="true"] { color: inherit; }
+
+.pwall { position: fixed; inset: 0; }
+.pwall__tiles { position: absolute; inset: 0; }
+.pwall .print {
+  position: absolute; left: 0; top: 0; margin: 0;
+  width: var(--w); height: var(--h);
+  transform: translate(var(--x), var(--y)) rotate(var(--r));
+  opacity: var(--op, 1);
+  will-change: transform;
+  background: var(--line);
+  box-shadow: 0 0 0 0.5px var(--line);        /* a hairline, so a pale sky keeps an edge on the paper */
+}
+.pwall .print a { display: block; width: 100%; height: 100%; }
+.pwall .print img { display: block; width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; }
+.pwall .print.lift { z-index: 3; }
+
+/* the words, bottom left, over the wall */
+.pwall__head { position: absolute; left: var(--edge); bottom: var(--s-4); z-index: 5; max-width: min(22rem, 48vw); pointer-events: none; }
+.pwall__kicker { display: flex; align-items: center; gap: 0.8rem; margin: 0 0 0.9rem; color: var(--text-2); }
+.pwall__kicker::before { content: ""; width: 2rem; height: 1px; background: var(--text-2); }
+.pwall__head h1 { font-size: var(--t-2xl); line-height: 1; }
+.pwall__hint { margin-top: 0.5rem; font-size: var(--t-xs); color: var(--text-2); }
+
+/* the Dark word, under the top bar at the right */
+.pwall__tools { position: absolute; right: var(--edge); top: 5.5rem; z-index: 5; }
+.pwall__tools button { color: var(--accent); background: none; border: 0; padding: 0.4rem 0; cursor: pointer; }
+
+/* the bars, bottom right: each a word, a line, a number */
+.pwall__bars { position: absolute; right: var(--edge); bottom: var(--s-4); z-index: 5; display: grid; gap: 0.7rem; justify-items: end; }
+.bar { display: grid; grid-template-columns: 3.4em 9rem 3em; align-items: center; gap: 0.8rem; font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-2); }
+:lang(zh-Hant) .bar { letter-spacing: 0.14em; font-size: 0.8rem; }
+.bar output { letter-spacing: 0.06em; text-align: right; font-variant-numeric: tabular-nums; }
+.bar input { -webkit-appearance: none; appearance: none; width: 100%; height: 1px; margin: 0; background: var(--line); cursor: pointer; }
+.bar input::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 9px; height: 9px; background: var(--accent); border: 0; border-radius: 0; }
+.bar input::-moz-range-thumb { width: 9px; height: 9px; background: var(--accent); border: 0; border-radius: 0; }
+.bar input::-moz-range-track { height: 1px; background: var(--line); }
+.bar input:focus-visible { outline: 1px solid var(--accent); outline-offset: 6px; }
+
+/* the name beneath the lifted print, never on it */
+.pwall__cap { position: absolute; left: var(--cx); top: var(--cy); z-index: 6; margin: 0; transform: translateX(-50%); text-align: center; pointer-events: none; opacity: 0; transition: opacity 240ms var(--out); }
+.pwall__cap.show { opacity: 1; }
+.pwall__cap b { display: block; font-family: var(--serif); font-weight: 400; font-size: 1.15rem; line-height: 1.25; white-space: nowrap; }
+:lang(zh-Hant) .pwall__cap b { font-weight: 500; }
+.pwall__cap span { display: block; margin-top: 0.3rem; font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: var(--text-2); white-space: nowrap; }
+
+/* the clicked print grows from the wall into the viewer, and back */
+::view-transition-group(picked) { animation-duration: 560ms; animation-timing-function: var(--out); }
+::view-transition-image-pair(picked) { isolation: isolate; }
+::view-transition-old(picked), ::view-transition-new(picked) { animation: none; mix-blend-mode: normal; height: 100%; object-fit: contain; }
+
+@media (max-width: 56rem) {
+  .pwall__head { max-width: 60vw; bottom: var(--s-3); }
+  .pwall__tools { top: 4.5rem; }
+  .pwall__bars { bottom: auto; top: 7.5rem; }   /* on a phone the bars sit under the Dark word, clear of the title */
+  .bar { grid-template-columns: 3em 5rem 2.6em; }
+  .top--over:has(.menu.open) ~ .pwall { display: none; }   /* the phone menu takes the screen */
+}
+@media (prefers-reduced-motion: reduce) {
+  .pwall .print { will-change: auto; }
+}

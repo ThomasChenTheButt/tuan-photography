@@ -201,7 +201,7 @@ This file was written on 2026-09-28 from the built site (`design 1/css/style.css
 
 The site is a travel journal set like a printed magazine. It opens with one photograph that fills the whole window, with no headline, no sentence and no button on it. After that, everything is quiet: place names and headings in a serif, centred; reading text in a plain sans; the menu and the buttons in small spaced capitals; all of it on warm paper. The owner chose this direction on 2026-09-28, naming Along Dusty Roads and The Common Wanderer as the template, a warm light ground, and the whole site.
 
-The site is light only. The stylesheet declares `color-scheme: light` and there is no dark theme in this build. Visitors whose devices are set to dark still see the warm paper site.
+The site is light only, with one exception the owner made on 2026-10-07: the Gallery page carries a Dark word, and that page alone can turn its paper near-black (the eleven tokens are redefined under `[data-theme="dark"]`, which only `js/wall.js` sets). The stylesheet declares `color-scheme: light`; visitors whose devices are set to dark still see the warm paper site everywhere else.
 
 Colour is used in two ways. The ground alternates between warm paper and a slightly darker stone band, section by section. Three earth colours (clay, olive and slate) appear as flat blocks: the spines of the books on the home page's shelf, and the footer. Links and hover states are a deep clay. There are no icons: every control is a word.
 
@@ -209,7 +209,7 @@ Photographs are shown bare. In a row they keep their own shape and are never tri
 
 **Key Characteristics:**
 - One opening photograph fills the window; nothing is written across it.
-- Warm paper and a stone band alternate by section. Light only.
+- Warm paper and a stone band alternate by section. Light only, except the Gallery's own Dark word.
 - Serif for names and headings, centred. Plain sans for reading. Small spaced capitals for the menu, buttons and labels.
 - Clay, olive and slate as flat blocks: the book spines and the footer.
 - Every corner is square. Buttons are rectangles with capital labels.
@@ -242,7 +242,7 @@ A warm, low-colour palette: paper, stone and ink that all lean toward brown, one
 Measured contrast, worked out from the built tokens. Warm Ink on Warm Paper is about 14.5:1, on Stone 12.6:1, on Card Paper 15.5:1. Second Ink is about 6.8:1 on Warm Paper, 5.9:1 on Stone and 7.2:1 on Card Paper. Deep Clay is about 6.7:1 on Warm Paper and 5.8:1 on Stone. Paper White is about 5.1:1 on Clay, 5.8:1 on Olive, 8.1:1 on Slate and 14.9:1 on Warm Ink. The small print in the footer is about 5.9:1 on Slate. Hairline measures 1.3:1 to 1.5:1 against its ground and is decoration only; nothing depends on it to be understood.
 
 ### Named Rules
-**The Light Only Rule.** The site has one theme, light, on warm paper. There is no dark theme and no theme switch. A dark version would be a new decision for the owner, not an extension of this system.
+**The Light Only Rule.** The site has one theme, light, on warm paper. The one exception is the Gallery page's Dark word (the owner's call, 2026-10-07), which the browser remembers for that page only. It is not a licence to add a theme switch anywhere else.
 
 **The Paper And Stone Rule.** Sections alternate between Warm Paper and Stone. A change of ground is how one section is told from the next; there are no boxes drawn around sections and no rules between them.
 
@@ -337,13 +337,14 @@ Motion has three reasons only, in the stylesheet's own words: arriving, leaving 
 - **Walking the wall:** photographs in a wall or in the portfolio grid, features and tiles rise gently as they enter the window.
 - **Taking a book:** under the pointer a book comes forward, lifts 1rem and turns to face the visitor (0.6 seconds), and its name appears beneath it. On a touch screen the first tap does this and the second opens the guide. This is tied to scrolling itself and only happens in browsers that support it; in others they are simply there.
 - **Under the pointer:** a photograph enlarges very slightly inside its own frame (2%, over 0.9 seconds); a button changes fill; links change colour. Pressing a button moves it down 1px.
-- **Opening a photograph:** the photograph travels from its place in the row to its place in the viewer (0.46 seconds). Stepping to the next photograph dims the one on screen to 35% until the next file has arrived.
+- **Opening a photograph:** the photograph travels from its place in the row to its place in the viewer (0.46 seconds; from the photo wall, 0.56 seconds and back again on close). Stepping to the next photograph dims the one on screen to 35% until the next file has arrived.
+- **The photo wall:** the one place on the site that moves on its own. Its rows drift sideways without end and the wall parts around the cursor; the owner chose this on 2026-10-07 after Motion's "Moments". It stops under "reduce motion" and the Speed bar can hold it still.
 - **Reduce motion:** when the visitor's device asks for reduced motion, none of the above happens. Arriving and rising are not loaded at all, every transition is switched off, and the viewer opens at once.
 
 ### Named Rules
 **The Flat Rule.** No shadows. Separation is made with a change of ground first, space second, and a 1px hairline third.
 
-**The Three Reasons Rule.** Something moves only when the visitor arrives, when the page is drawn up over the opening photograph, or when a photograph comes into view, plus the small answers to the pointer. Nothing loops, nothing moves on its own, and all of it stops under "reduce motion".
+**The Three Reasons Rule.** Something moves only when the visitor arrives, when the page is drawn up over the opening photograph, or when a photograph comes into view, plus the small answers to the pointer. Nothing loops and nothing moves on its own, with one exception the owner made on 2026-10-07: the photo wall's drift. All of it stops under "reduce motion".
 
 ## Shapes
 
@@ -395,8 +396,11 @@ A guide shown large: its photograph beside its plain name at Display size, one l
 ### Wall of rows
 Rows of photographs with captions, as described under Layout. In a row every caption is set the same way: the name, then the place under it. Used on the home page (where a guide's lead photograph is left to the shelf and not repeated), the gallery (one wall per country) and country pages.
 
-### Portfolio grid
-The first thing in the gallery: every photograph on the site in a tight grid, four across, 0.5rem apart. Each opening is 3 by 2 and the photograph is fitted to it, so upright photographs are trimmed here. There are no captions in the grid; opening a photograph shows it whole with its name and how it was made. The owner asked for this layout on 2026-09-30; it is carried over from the site as it was before the redesign. The opening photograph comes first, then the rest in the order of `data/site.json`.
+### Photo wall (the Gallery page)
+Since 2026-10-07 the Gallery page is one screen: every photograph on the site as a small print, in close rows that run past every edge of the window and drift sideways without end, one row to the left, the next to the right, each at its own slow pace (about 9 to 13px a second at the default speed). Prints keep their own shape and sit 12px apart with a hairline edge, each leaning up to 1.5° either way, the same lean on every visit. The cursor parts the wall as it moves and the print nearest it rises toward it, a third of the screen across, its name and place beneath it, never on it. A click opens it in the viewer, the print growing from the wall into place and shrinking back on close. Bottom left, over the wall, a small capital line ("A photography wall"), the title and one sentence; the prints beneath any words go faint (22%) so the words read, and come back as the rows drift on. Bottom right, four bars, each a word, a hairline and a number: Size (×0.6 to ×2.4, starts ×1.2; bigger prints re-lay the wall in fewer rows, never overlapping), Gap (0 to 60px, starts 12), Tilt (0° to 8°, starts 1.5°), Speed (×0 to ×3, starts ×0.8). Under the top bar at the right, a Dark word. The defaults came from a taste pass on 2026-10-07 over eight frames. The top bar sits over the wall in ink (`.top--ink`); there is no footer on this page. Under "reduce motion" the rows stand still and nothing parts. Tried first as `elements/gallery/` and merged at the owner's word. The script sets `--x --y --w --h --r --op` on each print.
+
+### Portfolio grid (retired 2026-10-07)
+Until the photo wall, the first thing in the gallery was every photograph in a tight grid, four across, each fitted to a 3 by 2 opening. The classes (`.grid`) remain in the stylesheet for the country pages' use.
 
 ### Continents (destinations)
 Destinations shows the continents travelled as tiles, four to a row: a square opening, the continent's name centred beneath as a heading in the serif, and a count in small capitals ("5 countries"), worked out by the build. The photograph is the one named for the continent in `data/site.json` (`"photo"`), or the first from any of its countries. A continent with countries but no photograph yet keeps its place as a plain Stone square that says so ("No photographs yet"): no stand-in image. The continents not travelled are not tiles and not links: they are names on a Stone band under "Not travelled yet". The page sentence states the counts the build knows ("16 countries, by continent. One guide so far: Barcelona."). The seven-square grid with taglines was replaced on 2026-10-01 after the critique found five blank squares and copy about places not visited.
@@ -454,17 +458,17 @@ A page with no work says so in one centred sentence in Second Ink, at most 46 ch
 
 ### Don't:
 - **Don't** write a headline, a sentence, a button or a panel across the opening photograph. The owner asked for this on his original site because the words blocked the image.
-- **Don't** set names, labels or badges on top of any photograph.
+- **Don't** set names, labels or badges on top of any photograph. (The photo wall's title and bars float over faint prints, the owner's call of 2026-10-07; the prints beneath them fade to 22%, and no word is set on a single photograph.)
 - **Don't** trim a photograph in a row to make a grid even. The portfolio grid and the square openings are the only even grids.
 - **Don't** frame, round, border or shadow a photograph.
-- **Don't** add a dark theme or a theme switch.
+- **Don't** add a dark theme or a theme switch, beyond the Gallery page's own Dark word (2026-10-07).
 - **Don't** add icons, arrows or pictograms to controls.
 - **Don't** round anything, including buttons.
 - **Don't** add shadows, or gradients other than the two on the opening photograph.
 - **Don't** use clay, olive or slate for reading text or as tints.
 - **Don't** put a small capital line above a heading as decoration. The only line that sits above a title is the breadcrumb, and it is made of real links.
 - **Don't** add a third typeface, or bold the serif in English.
-- **Don't** add motion that loops or plays on its own.
+- **Don't** add motion that loops or plays on its own, beyond the photo wall's drift (2026-10-07).
 - **Don't** use long dashes, or more than one middle dot in a line.
 - **Don't** fill an empty place with a stand-in image, an invented guide, invented camera data, or a claim the site cannot yet support.
 
@@ -490,5 +494,5 @@ These are recorded as open. None of them is a settled part of the system.
 - **Rising on scroll, and the slow rise of the opening photograph.** Both depend on a browser feature that not every browser has. Where it is missing, photographs are simply in place, and the opening photograph stays still while the page is drawn over it.
 - **The browser's bar colour.** Each page sets it with a typed value (`#f7f2e9`) in `tools/build.py`. It is a close match to Warm Paper, not taken from the token.
 - **The darkening on the opening photograph.** Its colour is typed into the stylesheet and is not one of the eleven tokens.
-- **Unused helpers.** The stylesheet defines two small helpers (`.caps`, `.quiet`) that no page uses at present.
+- **Unused helpers.** The stylesheet defines a small helper (`.quiet`) that no page uses at present; `.caps` is used by the photo wall's words.
 - **Placeholder titles.** The Skills page lists three planned articles and says on the page that their titles are placeholders.
