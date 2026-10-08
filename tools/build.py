@@ -564,6 +564,7 @@ def build_gallery():
   <div class="pwall__tiles">
     {"".join(tiles)}
   </div>
+  <div class="pwall__ramp"></div>
   <header class="pwall__head">
     <p class="pwall__kicker caps" data-i18n="wallKicker">A photography wall</p>
     <h1 data-i18n="pTitle">Gallery</h1>

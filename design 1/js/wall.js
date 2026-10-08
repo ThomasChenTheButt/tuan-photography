@@ -4,8 +4,8 @@
    wall as it moves and the print nearest it rises; a click opens it in the viewer
    (main.js, pick()), the print growing from the wall into place. Four bars bottom right set
    the print size, the gap, the tilt and the drift speed; a word top right turns the paper
-   dark. Tried first as elements/gallery/ and merged on 2026-10-07 at the owner's word.
-   The numbers go to the stylesheet as --x --y --w --h --r --op; nothing drifts under
+   dark. The title sits bottom left on a ramp of the page's own paper (stylesheet). Tried first as elements/gallery/ and merged on 2026-10-07 at the owner's word.
+   The numbers go to the stylesheet as --x --y --w --h --r; nothing drifts under
    "reduce motion". Loads after main.js and uses its lang, t(), slides and pick(). */
 (function () {
   'use strict';
@@ -53,7 +53,7 @@
     return { id: el.querySelector('[data-slide]').dataset.slide, el, img,
              ar: (parseInt(img.getAttribute('width'), 10) || 3) / (parseInt(img.getAttribute('height'), 10) || 2),
              bx: 0, by: 0, bw: 0, bh: 0, tilt: 0,
-             x: 0, y: 0, w: 0, h: 0, r: 0, op: 1 };
+             x: 0, y: 0, w: 0, h: 0, r: 0 };
   });
   let seed = 7;
   const rand = () => { seed = (seed * 48271) % 2147483647; return seed / 2147483647; };
@@ -89,7 +89,7 @@
         const a = el.querySelector('[data-slide]');
         a.addEventListener('click', (e) => { if (e.metaKey || e.ctrlKey || e.shiftKey) return; e.preventDefault(); pick(src.id, a); });
         list.push({ id: src.id, el, img: el.querySelector('img'), ar: src.ar, ghost: true,
-                    bx: 0, by: 0, bw: 0, bh: 0, tilt: 0, x: 0, y: 0, w: 0, h: 0, r: 0, op: 1 });
+                    bx: 0, by: 0, bw: 0, bh: 0, tilt: 0, x: 0, y: 0, w: 0, h: 0, r: 0 });
         len += h * src.ar + GAP;
       }
       const row = { y: top + r * pitch + pitch / 2, len, shift: shifts[r] || 0,
@@ -154,17 +154,12 @@
   field.addEventListener('pointerleave', () => { mx = -1e4; my = -1e4; lift(null); });
   document.addEventListener('langchange', () => { if (lifted) setCaption(lifted); themeBtn.textContent = t(themeBtn.dataset.i18n); });
 
-  /* ---- the places where words sit over the wall: the prints beneath them go faint ---- */
-  const quiet = [document.querySelector('.top'), wall.querySelector('.pwall__head'),
-                 wall.querySelector('.pwall__tools'), wall.querySelector('.pwall__bars')].filter(Boolean);
-
   /* ---- one frame, eased by the clock so a slow screen settles in the same time ---- */
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(250, now - last); last = now;
     const ease = reduce ? 1 : 1 - Math.exp(-dt / 95);
     advance(dt);
-    const zones = quiet.map((el) => el.getBoundingClientRect());
     const short = Math.min(W, H);
     const liftEdge = short * 0.42;
     // the wall parts around the lifted print, wide enough to clear its name beneath;
@@ -194,21 +189,12 @@
       }
       p.x += (x - p.x) * ease; p.y += (y - p.y) * ease;
       p.w += (w - p.w) * ease; p.h += (h - p.h) * ease; p.r += (r - p.r) * ease;
-      let op = 1;
-      if (p !== lifted) {
-        for (const q of zones) {
-          if (p.x + p.w / 2 > q.left - 16 && p.x - p.w / 2 < q.right + 16 &&
-              p.y + p.h / 2 > q.top - 16 && p.y - p.h / 2 < q.bottom + 16) { op = 0.22; break; }
-        }
-      }
-      p.op += (op - p.op) * ease;
       const st = p.el.style;
       st.setProperty('--x', (p.x - p.w / 2).toFixed(1) + 'px');
       st.setProperty('--y', (p.y - p.h / 2).toFixed(1) + 'px');
       st.setProperty('--w', p.w.toFixed(1) + 'px');
       st.setProperty('--h', p.h.toFixed(1) + 'px');
       st.setProperty('--r', p.r.toFixed(2) + 'deg');
-      st.setProperty('--op', p.op.toFixed(3));
     }
     if (lifted) {
       caption.style.setProperty('--cx', lifted.x.toFixed(1) + 'px');

@@ -645,9 +645,10 @@ main { flex: 1; }
 /* ---------------- the photo wall (gallery.html) ----------------
    Every photograph as a small print on one screen, in close rows that drift
    sideways. The owner's call on 2026-10-07, merged from elements/gallery/:
-   the words float over the wall (the prints beneath them go faint), and this
-   one page has a Dark word. Both are exceptions recorded in DESIGN.md.
-   The script sets --x --y --w --h --r --op on each print. */
+   the title sits bottom left on a ramp of the page's own paper (the only
+   place the wall is veiled, his call of 2026-10-08), and this one page has a
+   Dark word. Both are exceptions recorded in DESIGN.md.
+   The script sets --x --y --w --h --r on each print. */
 
 :root[data-theme="dark"] {
   --bg: oklch(13% 0.006 60);
@@ -672,7 +673,6 @@ html:has(.pwall), html:has(.pwall) body { height: 100%; overflow: hidden; }
   position: absolute; left: 0; top: 0; margin: 0;
   width: var(--w); height: var(--h);
   transform: translate(var(--x), var(--y)) rotate(var(--r));
-  opacity: var(--op, 1);
   will-change: transform;
   background: var(--line);
   box-shadow: 0 0 0 0.5px var(--line);        /* a hairline, so a pale sky keeps an edge on the paper */
@@ -681,6 +681,13 @@ html:has(.pwall), html:has(.pwall) body { height: 100%; overflow: hidden; }
 .pwall .print img { display: block; width: 100%; height: 100%; object-fit: cover; -webkit-user-drag: none; }
 .pwall .print.lift { z-index: 3; }
 
+/* the words, bottom left, on a ramp of paper that fades into the wall: solid behind the
+   title, gone by about 58rem across and 30rem up */
+.pwall__ramp {
+  position: absolute; left: 0; bottom: 0; z-index: 4; pointer-events: none;
+  width: min(58rem, 100vw); height: min(30rem, 70vh);
+  background: radial-gradient(ellipse farthest-side at 0% 100%, var(--bg) 0%, var(--bg) 28%, transparent 100%);
+}
 /* the words, bottom left, over the wall */
 .pwall__head { position: absolute; left: var(--edge); bottom: var(--s-4); z-index: 5; max-width: min(22rem, 48vw); pointer-events: none; }
 .pwall__kicker { display: flex; align-items: center; gap: 0.8rem; margin: 0 0 0.9rem; color: var(--text-2); }
