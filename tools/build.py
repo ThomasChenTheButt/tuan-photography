@@ -537,17 +537,17 @@ def build_home():
 
 def build_gallery():
     """The photo wall: every photograph on the site as a small print on one screen, in close
-    rows that drift sideways; the cursor parts the wall, a click opens the viewer. Four bars
-    bottom right (size, gap, tilt, speed) and a Dark/Light word top right. Tried first as
+    rows that drift sideways; the cursor parts the wall, a click opens the viewer. Five bars
+    bottom right (size, gap, tilt, speed, vary) and a Dark/Light word top right. Tried first as
     elements/gallery/ and merged on 2026-10-07 at the owner's word. The behaviour is js/wall.js."""
     en, zh = {}, {}
     root = ""
     en.update(pTitle="Gallery", pSub="Move across the wall. Click a photograph to open it.",
               wallKicker="A photography wall", wallSize="Size", wallGap="Gap", wallTilt="Tilt",
-              wallSpeed="Speed", wallDark="Dark", wallLight="Light", wallLabel="Photographs")
+              wallSpeed="Speed", wallVary="Vary", wallDark="Dark", wallLight="Light", wallLabel="Photographs")
     zh.update(pTitle="作品集", pSub="滑過這面牆。點一張照片打開它。",
               wallKicker="一面照片牆", wallSize="大小", wallGap="間距", wallTilt="歪斜",
-              wallSpeed="速度", wallDark="深色", wallLight="淺色", wallLabel="照片")
+              wallSpeed="速度", wallVary="差異", wallDark="深色", wallLight="淺色", wallLabel="照片")
     lead = DATA["lead"]
     ids = [lead] + [s["id"] for s in DATA["slides"] if s["id"] != lead]
     tiles = []
@@ -578,6 +578,7 @@ def build_gallery():
 {bar("gap", "Gap", 'min="0" max="60" step="1" value="12"', "12px")}
 {bar("tilt", "Tilt", 'min="0" max="8" step="0.5" value="1.5"', "1.5°")}
 {bar("speed", "Speed", 'min="0" max="3" step="0.1" value="0.8"', "×0.8")}
+{bar("vary", "Vary", 'min="0" max="3" step="0.1" value="1"', "×1.0")}
   </div>
   <figcaption class="pwall__cap" aria-live="polite"><b></b><span></span></figcaption>
 </section>"""

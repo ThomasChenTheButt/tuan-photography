@@ -2,8 +2,8 @@
    Every photograph on the site as a small print on one screen. The prints stand in close
    rows that drift sideways without end, one row left, the next right; the cursor parts the
    wall as it moves and the print nearest it rises; a click opens it in the viewer
-   (main.js, pick()), the print growing from the wall into place. Four bars bottom right set
-   the print size, the gap, the tilt and the drift speed; a word top right turns the paper
+   (main.js, pick()), the print growing from the wall into place. Five bars bottom right set
+   the print size, the gap, the tilt, the drift speed and how much the rows' paces differ; a word top right turns the paper
    dark. The title sits bottom left on a ramp of the page's own paper (stylesheet). Tried first as elements/gallery/ and merged on 2026-10-07 at the owner's word.
    The numbers go to the stylesheet as --x --y --w --h --r; nothing drifts under
    "reduce motion". Loads after main.js and uses its lang, t(), slides and pick(). */
@@ -28,11 +28,13 @@
   const gapBar = bar('wall-gap', (v) => v.toFixed(0) + 'px');
   const tiltBar = bar('wall-tilt', (v) => v.toFixed(1) + '°');
   const speedBar = bar('wall-speed', (v) => '×' + v.toFixed(1));
-  let sizeK = sizeBar.read(), GAP = gapBar.read(), tiltK = tiltBar.read(), speedK = speedBar.read();
+  const varyBar = bar('wall-vary', (v) => '×' + v.toFixed(1));
+  let sizeK = sizeBar.read(), GAP = gapBar.read(), tiltK = tiltBar.read(), speedK = speedBar.read(), varyK = varyBar.read();
   sizeBar.input.addEventListener('input', () => { sizeK = sizeBar.read(); layout(); });
   gapBar.input.addEventListener('input', () => { GAP = gapBar.read(); layout(); });
   tiltBar.input.addEventListener('input', () => { tiltK = tiltBar.read(); });
   speedBar.input.addEventListener('input', () => { speedK = speedBar.read(); });
+  varyBar.input.addEventListener('input', () => { varyK = varyBar.read(); });
 
   /* ---- light or dark paper, chosen by the word top right, remembered by the browser ---- */
   const themeBtn = document.getElementById('wall-theme');
@@ -93,7 +95,7 @@
         len += h * src.ar + GAP;
       }
       const row = { y: top + r * pitch + pitch / 2, len, shift: shifts[r] || 0,
-                    speed: (r % 2 ? 1 : -1) * (9 + (r * 7) % 5), tiles: list };
+                    vary: (r * 7) % 5 - 2, tiles: list };          // -2..2, each row's own pace
       let x = 0;
       for (const p of list) {
         const w = h * p.ar;
@@ -113,7 +115,9 @@
 
   function advance(dt) {
     for (const row of rows) {
-      if (!reduce) row.shift += row.speed * speedK * dt / 1000;
+      // 11px a second, odd rows left and even rows right; the Vary bar spreads the rows' paces
+      const speed = (rows.indexOf(row) % 2 ? 1 : -1) * (11 + row.vary * varyK);
+      if (!reduce) row.shift += speed * speedK * dt / 1000;
       for (const p of row.tiles) {
         const m = ((p.x0 + row.shift) % row.len + row.len) % row.len;
         p.bx = m - row.len * 0.2;

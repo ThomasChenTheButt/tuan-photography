@@ -12,8 +12,8 @@
   <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-title" content="PT">
   <link rel="manifest" href="site.webmanifest">
-  <link rel="stylesheet" href="css/fonts.css?v=202610081221">
-  <link rel="stylesheet" href="css/style.css?v=202610081221">
+  <link rel="stylesheet" href="css/fonts.css?v=202610081228">
+  <link rel="stylesheet" href="css/style.css?v=202610081228">
 </head>
 <body>
 <a class="skip btn" href="#main" data-i18n="skip">Skip to the content</a>
@@ -52,6 +52,7 @@
     <label class="bar" for="wall-gap"><span data-i18n="wallGap">Gap</span><input type="range" id="wall-gap" min="0" max="60" step="1" value="12"><output id="wall-gap-out" for="wall-gap">12px</output></label>
     <label class="bar" for="wall-tilt"><span data-i18n="wallTilt">Tilt</span><input type="range" id="wall-tilt" min="0" max="8" step="0.5" value="1.5"><output id="wall-tilt-out" for="wall-tilt">1.5°</output></label>
     <label class="bar" for="wall-speed"><span data-i18n="wallSpeed">Speed</span><input type="range" id="wall-speed" min="0" max="3" step="0.1" value="0.8"><output id="wall-speed-out" for="wall-speed">×0.8</output></label>
+    <label class="bar" for="wall-vary"><span data-i18n="wallVary">Vary</span><input type="range" id="wall-vary" min="0" max="3" step="0.1" value="1"><output id="wall-vary-out" for="wall-vary">×1.0</output></label>
   </div>
   <figcaption class="pwall__cap" aria-live="polite"><b></b><span></span></figcaption>
 </section>
@@ -69,6 +70,7 @@ window.pageI18n = {
   "wallGap": "Gap",
   "wallTilt": "Tilt",
   "wallSpeed": "Speed",
+  "wallVary": "Vary",
   "wallDark": "Dark",
   "wallLight": "Light",
   "wallLabel": "Photographs",
@@ -361,6 +363,7 @@ window.pageI18n = {
   "wallGap": "間距",
   "wallTilt": "歪斜",
   "wallSpeed": "速度",
+  "wallVary": "差異",
   "wallDark": "深色",
   "wallLight": "淺色",
   "wallLabel": "照片",
@@ -647,7 +650,7 @@ window.pageI18n = {
  }
 };
 </script>
-<script src="js/main.js?v=202610081221"></script>
-<script src="js/wall.js?v=202610081221"></script>
+<script src="js/main.js?v=202610081228"></script>
+<script src="js/wall.js?v=202610081228"></script>
 </body>
 </html>
