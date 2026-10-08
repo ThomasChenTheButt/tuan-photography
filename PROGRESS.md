@@ -52,11 +52,11 @@ rerun `python3 tools/finder_view.py` so the top level stays tidy.
 
 ## 等你決定 Waiting on you
 
-- **Experiment `opening-graph` (localhost:8649):** nine openings made by his agent graph (fold, obscura,
-  outline, pane, pixels, register, ridgeline, silver, projector), each linked to its inspiration on
-  `localhost:8649/openings.html`; report in `experiments/opening-graph/.graph/RUN.md`. Keep or cut
-  each with a one-line reason; the reasons go into `.graph/taste.md` for the next run.
-
+- **Experiment `opening-graph` (localhost:8649):** his agent graph's first run made nine openings; he
+  cut eight and kept only the concept of `ridgeline` (lines draw the ridge, horizon and window frame on
+  paper, then the paper becomes the photograph). Verdict recorded in `.graph/excluded.md` and
+  `.graph/taste.md`. Next: decide whether to develop ridgeline or run the graph again with a stricter
+  manager.
 - **Experiment `opening` (localhost:8648):** 24 candidate openings for the home page on
   `localhost:8648/openings.html`: the six survivors (aperture, contact sheet, film strip, burst,
   letters, pull-back), each now with three more versions (`?opening=aperture-2` etc.). Pick one to tune.
