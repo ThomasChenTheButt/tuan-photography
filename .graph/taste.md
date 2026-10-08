@@ -16,3 +16,7 @@
 ## Before graph run two, 2026-10-08
 - Of the 24 versions in experiment `opening` he kept three: aperture (version 1), contact sheet version 2, letters version 4. Film strip, burst and pull-back are gone. So what survives everything so far: an iris opening with focus snapping sharp; a contact sheet of all his photographs with one chosen; his name as the window onto the photograph, letters arriving one by one; and the concept of ridgeline (lines drawing the landscape on paper, the paper becoming the photograph).
 - He now reviews the ideas himself before anything is built. The router should approve generously (about 20) and leave the taste call to him; its job is the hard rules and obvious weakness, not his taste.
+
+## Graph run two, verdict, 2026-10-08
+- 26 ideas passed the router and were shown to him as text, with how each would be built. He asked for one, shadows, to be built as a trial; it worked mechanically (scraps' shadows swinging into the ridge) and he cut it. Then: "全部都不要" (none of them), no reasons given.
+- Two rounds of the graph have now produced 35 approved ideas and he has kept one concept (ridgeline). The pattern across all his cuts: he rejects nearly everything that is a device applied to the photograph (paper, print, light, shadow, physics). What he has kept is the camera itself (aperture), his own body of work (contact sheet), his own name (letters), and the photograph's own lines (ridgeline). The next round, if any, should start from those four, not from outside references.

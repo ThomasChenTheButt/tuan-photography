@@ -853,10 +853,6 @@ OPENINGS = [
      "On empty paper, thin lines draw the photograph's own edges, the ridge of Aoraki, the horizon, the frame of the car window; then the paper dissolves and the lines turn out to have been the photograph all along, which fills the window.",
      "空白紙面上，細線先描出這張照片自己的輪廓：奧拉基的稜線、地平線、車窗的邊框；接著紙面消散，才發現線條原本就是這張照片，照片隨即佔滿整個視窗。",
      ("https://www.artofthetitle.com/title/north-by-northwest/", "The move from cold abstraction to perceived reality: thin lines on a flat ground that turn out, as the ground dissolves, to have been the geometry of the photograph underneath all along.")),
-    ("shadows", "Shadows", "影子",
-     "A dozen torn paper scraps stand on one line. A light walks across and their shadows swing, long and leaning, until at one angle they meet as the ridge of Aoraki; in that instant the shadow is the photograph's own dark and the paper warms into its sky.",
-     "十來片撕開的紙片站在一條線上。一道光走過，影子又長又斜地轉動，到某個角度合成奧拉基的山脊；那一瞬影子就是照片的暗部，紙面暖成它的天空。",
-     ("https://www.artofthetitle.com/title/mentiras-piadosas/", "Disorder that resolves under a passing light: shadows of unrelated scraps swinging into one silhouette at a single angle.")),
 ]
 
 

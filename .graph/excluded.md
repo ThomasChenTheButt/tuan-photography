@@ -40,3 +40,31 @@ Globe openings (three were dropped on design 2), a corridor of prints, a bookshe
 - silver: a silver plate tilts and the photograph appears like a daguerreotype
 - projector: a dark beat, the photograph drops into the gate like a slide, with a bounce
 - (also failed by the manager: peel, a page curl; scorch, burning paper)
+
+## Graph run two, 2026-10-08: all 26 approved ideas declined by the owner unbuilt ("全部都不要"); shadows was built as a trial and cut
+- needle: The Needle / 測光針: A single thin needle that swings, overshoots, damps and comes to rest on a mark, and that rest is the cue on which the photograph arrives wh
+- charcoal: Charcoal / 炭粉: The charcoal that is blown off: the ridge and horizon rubbed onto paper in the photograph's own dark tones (tone, not thin line), and one gu
+- stamp: The Stamp / 蓋印: The stamp: the photograph lands on the paper the way a carved stamp does, pressed down in one beat from a small height, the ink full where t
+- tube: The Tube / 映像管: Two beats at two speeds, a violent short one and a slow long one, so the picture's arrival has a rhythm instead of an ease.
+- rubbing: The Rubbing / 拓印: The picture delivered by strokes of a visible hand, each stroke a window, not a drawing.
+- tinting: Hand-Tinting / 手工上色: Colour arriving area by area as washes, each with a brush's soft overshoot, over a photograph that was already whole.
+- woodblock: Woodblock / 木刻版: Assembly by impressions, lightest first, each landing as one flat press, the photograph as the final impression.
+- shoji: The Shoji / 紙門: The photograph known first as its own shadow on the page, read before it is seen, then the page itself slid aside in one pull.
+- hanging: The Hanging Scroll / 掛軸: The photograph arriving as its own rolled sheet falling open, the weight of the rod making the bounce, in the gesture of a hanging scroll.
+- grad: The Grad Filter / 漸層減光鏡: The sky arriving by a dark sheet sliding down to the horizon and seating there, the photographer's grad filter at full size.
+- slab: The Slab / 雪板崩落: The page let go all at once along a fracture line and sliding out of the frame under its own weight, the photograph the ground it slid off.
+- inkjet: The Print / 出圖: The photograph arriving as a print being made, fed out band by band with the carriage's crossing rhythm, so the picture is seen being finish
+- timer: Self-timer / 自拍計時: A countdown told only by tempo: one small light blinking slow and then fast, and then the picture, with no number anywhere.
+- fan: Folding fan / 摺扇: The picture unfolds from a pivot in one flick and stops with a knock: the snap of a fan.
+- histogram: Histogram / 直方圖: The picture's own measurement drawn on paper first, true to the pixel, becoming the picture.
+- fence: Fence / 柵欄: The photograph assembled by persistence: it stands whole and lit behind a wall of narrow paper slits that passes across the window at the pa
+- komorebi: Komorebi / 葉隙光: The photograph seen first in coins of light through leaf-shadow: the window is the photograph under a moving shadow of foliage (several laye
+- shadows: Shadows / 影子: Disorder that resolves under a passing light: a scatter of standing paper scraps whose shadows, as one light walks across, swing into the on
+- cloud: Aoraki's cloud / 穿雲: The summit uncovered by one passing cloud that leaves the frame, the rest of the picture never hidden: weather as the thing that passes betw
+- alpenglow: Alpenglow / 曙光: Light reaching the summit first and walking down the face, the valley lighting last and all at once: the day arriving on the mountain before
+- pendulum: The lens cap / 鏡頭蓋: A passing object whose passes shorten until it leaves, the rhythm of a pendulum dying as the countdown; the picture arrives by being left al
+- squeegee: The screen print / 絹印: Two strokes, out and back: the first floods the window with one flat colour, the second leaves the photograph behind the blade.
+- flood: The watershed / 漫水: The photograph arriving in the order its own relief sets, flat regions as whole sheets, the broken edges last: the picture read by a flood.
+- chain: The chain reaction / 連鎖: The cause made visible: the photograph is brought by a short chain of small paper things on the page (a marble down a fold, a card tipping a
+- frost: Fern frost / 霜花: The photograph growing across the paper as frost grows across a pane: from three or four seeds (the ridge, a lower corner, the frame) branch
+- rain: Rain on paper / 雨點: The photograph brought up out of dry paper by drops: the page is plain, then drops land (rain, or sea spray), each making a small wet disc i
