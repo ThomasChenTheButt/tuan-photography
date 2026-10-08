@@ -7,3 +7,8 @@
 - He does not want his own premise to confine the scouts: look freely for what is eye-catching and unlike the usual site. The router, not the scouts, brings it back to his site.
 - References are sources of qualities, never templates. He rejected a look for copying a site.
 - Bilingual: any word that appears must exist in English and 繁體中文 (the page's language is on <html lang>).
+
+## Graph run one, 2026-10-08
+- Of nine openings that passed the manager, he kept none: "一個都不用留". He gave no reason for the eight he cut (fold, obscura, outline, pane, pixels, register, silver, projector). Ask him for one line each next time, before the next run.
+- He kept the CONCEPT of ridgeline: thin lines draw the ridge, the horizon and the window frame on paper, then the paper turns into the photograph. Its source: the North by Northwest title sequence (abstract lines that turn out to be the real picture). The concept stays; the execution is open to change.
+- So the graph's manager passed nine he did not want: the manager's bar is not his bar yet. Next run, the manager should be stricter on "eye-catching" and "epic" (scorecard items 7 and 8), and a pass should need 4 or more, not 3.

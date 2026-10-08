@@ -29,3 +29,14 @@
 
 ## Also excluded as families
 Globe openings (three were dropped on design 2), a corridor of prints, a bookshelf of books flying to a map, a circled spot on the photograph with a line to a detail.
+
+## Cut by the owner on 2026-10-08 (graph run one; only ridgeline's concept kept)
+- fold: the photograph mirrored on its centre line, the seam gives and the true half unfolds
+- obscura: upside down and dim as on ground glass, one turn rights and lights it
+- outline: the photograph whole except the mountain, left as paper, which fills in one beat
+- pane: fogged glass with drops, one wipe clears the view
+- pixels: flat colour blocks halving in hard steps until sharp
+- register: cyan, magenta and yellow plates out of register slide into alignment
+- silver: a silver plate tilts and the photograph appears like a daguerreotype
+- projector: a dark beat, the photograph drops into the gate like a slide, with a bounce
+- (also failed by the manager: peel, a page curl; scorch, burning paper)

@@ -1,9 +1,0 @@
-{
-  "name": "pane",
-  "en": "The Pane",
-  "zh": "車窗",
-  "desc_en": "Fogged glass with drops on it is the first thing you see; one wipe clears it and the view through the car window is simply there.",
-  "desc_zh": "先看到的是起霧、掛著水珠的玻璃；一抹擦開，車窗外的風景就在眼前。",
-  "source_url": "https://tympanus.net/Development/RainEffect/",
-  "borrowed": "The glass as a second surface between the visitor and the picture, seen before the picture and then cleared in one quick wipe, without the demo's WebGL refraction, rain or slow dripping."
-}
