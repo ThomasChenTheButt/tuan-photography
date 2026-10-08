@@ -69,7 +69,7 @@ Arranged on 2026-09-28 at his request, so the top level reads at a glance. Keep 
 | `design 1/` | visitors' | **the current website (was `site/`) and nothing else.** Served on 8642 |
 | `design 2/` | visitors' | **the complete redesign**, built beside it. Served on 8645 |
 | `data/`, `content/`, `tools/` | Claude's | what the pages are built from, and the scripts |
-| `elements/` | visitors' (tests) | **single elements tried on their own**, apart from both designs, to be merged later if kept (his plan, 2026-10-07). Served on 8647 (`elements` in launch.json). Links to design 1's photos, fonts and css and to design 2's `data.js`, so nothing is copied. `gallery/` (the photo wall) was merged into design 1's Gallery page on 2026-10-07 and is kept as its test bed; `design 1/js/wall.js` is the live copy |
+| `elements/` | visitors' (tests) | **single elements tried on their own**, apart from both designs, to be merged later if kept (his plan, 2026-10-07). Served on 8647 (`elements` in launch.json). Links to design 1's photos, fonts and css and to design 2's `data.js`, so nothing is copied. The first, `gallery/` (the photo wall), was merged into design 1's Gallery page on 2026-10-07 and the test copy removed the next day at his word; `design 1/js/wall.js` is the only copy |
 | `CLAUDE.md`, `DESIGN.md`, `PRODUCT.md`, `PROGRESS.md` | Claude's | notes. They stay at the top: tools look for them there |
 
 - **Two designs, one set of facts** (his call, 2026-10-01). `site/` was renamed `design 1/`
