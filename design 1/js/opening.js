@@ -72,8 +72,6 @@
   window.OPENING = o;
   window.Openings = window.Openings || {};
 
-  if (name === 'pullback' && version === 1) { o.done(null, 3000); return; }   // the first is done in the stylesheet
-
   const s = document.createElement('script');
   s.src = root + 'js/opening/' + name + '.js';
   s.onload = () => { const fn = window.Openings[name]; if (fn) fn(o); else o.done(null, 0); };
