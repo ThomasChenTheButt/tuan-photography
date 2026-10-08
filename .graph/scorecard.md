@@ -1,7 +1,7 @@
 # Scorecard, shared by the inspiration check and the manager review
 
 Each item is PASS or FAIL with one sentence of reason. One FAIL on items 1 to 6 fails the whole thing.
-Items 7 to 9 are graded 1 to 5; the manager fails anything scoring under 3 on any of them.
+Items 7 to 9 are graded 1 to 5; the manager fails anything scoring under 4 on items 7 and 8, or under 3 on item 9. (Raised from 3 on 2026-10-08: the first run's manager passed nine openings the owner kept none of.)
 
 ## Hard rules (the brief)
 1. Nothing is ever written across the photograph: no word, number, logo or button over it, at any moment. Words may sit on paper or on a dark stage beside or before the photograph, never on it.
