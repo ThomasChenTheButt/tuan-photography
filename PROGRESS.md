@@ -57,10 +57,9 @@ rerun `python3 tools/finder_view.py` so the top level stays tidy.
   paper, then the paper becomes the photograph). Verdict recorded in `.graph/excluded.md` and
   `.graph/taste.md`. Next: decide whether to develop ridgeline or run the graph again with a stricter
   manager.
-- **Experiment `opening` (localhost:8648):** 24 candidate openings for the home page on
-  `localhost:8648/openings.html`: the six survivors (aperture, contact sheet, film strip, burst,
-  letters, pull-back), each now with three more versions (`?opening=aperture-2` etc.). Pick one to tune.
-
+- **Experiment `opening` (localhost:8648):** down to three at his word on 2026-10-08: aperture,
+  contact sheet version 2, letters version 4. Every other version and the film strip, burst and pull-back
+  openings were removed (git history keeps them). Next: pick one of the three, or combine with ridgeline.
 - **Sea photograph:** which photographs besides Aoraki, if any? (`?ocean=all` cycles all 93.)
 - **Camera data for the 22 US photographs:** re-export from Lightroom with metadata, or drop the
   raw files in, and I'll add it.
