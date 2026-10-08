@@ -1,0 +1,9 @@
+{
+  "name": "register",
+  "en": "Register",
+  "zh": "套印",
+  "desc_en": "The photograph arrives as a print whose colour plates are out of register, cyan, magenta and yellow fringes a few millimetres apart, and the plates slide into alignment one after another until the picture is sharp and true.",
+  "desc_zh": "照片先以套印不準的狀態出現，青、洋紅、黃三色版錯開幾毫米，接著一版一版對齊，直到整張照片清晰準確。",
+  "source_url": "https://www.typohypergraphicobject.page/",
+  "borrowed": "The mis-registered proof: a photograph that arrives by its colour coming into register, as print does, rather than by fading in from nothing."
+}

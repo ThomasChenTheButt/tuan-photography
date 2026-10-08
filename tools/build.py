@@ -839,7 +839,7 @@ def build_guide(name, title_en, title_zh, desc):
 
 
 OPENINGS = [
-    # name, English name, 中文, what it does (en), 什麼效果 (zh)
+    # name, English name, 中文, what it does (en), 什麼效果 (zh), optional (source URL, what was borrowed)
     ("aperture", "Aperture", "光圈",
      "A shutter blink, then the iris blades turn open from the centre while the focus pulls sharp.",
      "快門一眨，光圈葉片從中央旋開，同時焦點從模糊拉到清晰。"),
@@ -912,7 +912,62 @@ OPENINGS = [
     ("pullback-4", "Pull back 4", "拉遠 4",
      "With a turn: it begins tight and a little rotated, and straightens as it pulls back.",
      "帶一點旋轉：一開始是歪的特寫，拉遠時慢慢轉正。"),
+    ("fold", "Fold", "對摺",
+     "The window opens on the photograph folded on its own centre line, the mountain and the car window mirrored into perfect symmetry; then the seam gives way and the real half unfolds to take the whole window.",
+     "視窗一開是照片沿中線對摺的樣子，山與車窗鏡像成完全對稱；接著中縫鬆開，真正的那一半展開佔滿整個視窗。",
+     ("https://www.artofthetitle.com/title/dark/", "The fold from the Dark main title: a real picture mirrored on its own vertical centre line so it reads as strangely symmetrical, here made only from his photograph and resolved by the seam unfolding into the true image.")),
+    ("obscura", "Camera Obscura", "暗箱",
+     "The photograph lies upside down and dim on the paper, as on a view camera's ground glass; one turn rights it and brings it to full light.",
+     "照片倒著、暗暗地躺在紙上，像大片幅相機的對焦屏；一個翻轉就轉正、亮起。",
+     ("https://www.abelardomorell.net/camera-obscura", "The landscape arriving inverted and dim on a surface, then righted in one decisive turn, as the prism and lens made Morell's room and view equal partners.")),
+    ("outline", "The Outline", "山的輪廓",
+     "The photograph arrives whole except for the mountain, whose shape stays bare paper for a moment, then Aoraki fills its own outline in one beat.",
+     "照片整張到齊，只有山是一塊空白的紙；停一下，庫克山在一拍之內填進自己的輪廓。",
+     ("https://www.artofthetitle.com/title/the-leftovers-season-2/", "A photograph that is whole except for one shape, so the eye goes straight to the hole and reads two depths at once; here the hole is the mountain, held as bare paper until it fills.")),
+    ("pane", "The Pane", "車窗",
+     "Fogged glass with drops on it is the first thing you see; one wipe clears it and the view through the car window is simply there.",
+     "先看到的是起霧、掛著水珠的玻璃；一抹擦開，車窗外的風景就在眼前。",
+     ("https://tympanus.net/Development/RainEffect/", "The glass as a second surface between the visitor and the picture, seen before the picture and then cleared in one quick wipe, without the demo's WebGL refraction, rain or slow dripping.")),
+    ("pixels", "Pixels", "畫素",
+     "The window opens as a handful of flat colour blocks, the photograph at eight pixels wide, and in a few hard steps the blocks halve and halve again until the sharp picture snaps into place.",
+     "視窗一開只有幾塊平塗色塊，是這張照片縮到八個畫素寬的樣子，接著幾個硬切，色塊一再對半細分，直到清晰的照片咔一聲定住。",
+     ("https://www.felicityingram.com/", "A stepped, not eased, reveal: a handful of hard cuts, each the photograph at a higher resolution, so the picture is present from the first frame as its own colour and arrives as detail.")),
+    ("projector", "Slide Projector", "幻燈機",
+     "A beat of dark, then the photograph drops whole from above into the window like a slide into the gate, lit from behind, and settles with a small mechanical bounce.",
+     "先黑一拍，照片像幻燈片落進機座，整張從上方落入視窗，背後透著光，輕輕一震便停住。",
+     ("https://en.wikipedia.org/wiki/Carousel_slide_projector", "The carousel's slide change: a dark beat, then one frame dropping whole by gravity into a fixed gate and settling with a mechanical bounce before the light comes up behind it.")),
+    ("register", "Register", "套印",
+     "The photograph arrives as a print whose colour plates are out of register, cyan, magenta and yellow fringes a few millimetres apart, and the plates slide into alignment one after another until the picture is sharp and true.",
+     "照片先以套印不準的狀態出現，青、洋紅、黃三色版錯開幾毫米，接著一版一版對齊，直到整張照片清晰準確。",
+     ("https://www.typohypergraphicobject.page/", "A photograph arriving by coming into register, false colour settling to true colour like a proof off the press, rather than fading in by opacity; here done by moving the plates, not by a filter.")),
+    ("ridgeline", "Ridgeline", "稜線",
+     "On empty paper, thin lines draw the photograph's own edges, the ridge of Aoraki, the horizon, the frame of the car window; then the paper dissolves and the lines turn out to have been the photograph all along, which fills the window.",
+     "空白紙面上，細線先描出這張照片自己的輪廓：奧拉基的稜線、地平線、車窗的邊框；接著紙面消散，才發現線條原本就是這張照片，照片隨即佔滿整個視窗。",
+     ("https://www.artofthetitle.com/title/north-by-northwest/", "The move from cold abstraction to perceived reality: thin lines on a flat ground that turn out, as the ground dissolves, to have been the geometry of the photograph underneath all along.")),
+    ("silver", "Silver Plate", "銀版",
+     "A dull silver sheet fills the window; it tilts a few degrees and, as the angle passes, the photograph appears on it like a daguerreotype and settles flat.",
+     "一面霧銀色的板子佔滿視窗，微微一傾，角度一到，照片便像銀版攝影般浮現，再平平停住。",
+     ("https://en.wikipedia.org/wiki/Daguerreotype", "The daguerreotype's picture arriving by angle: a silver surface that is only a mirror until it is tilted a few degrees, when the image is simply there, whole, with nothing laid over it and no slow fade.")),
 ]
+
+
+def _sidecar_openings():
+    """Openings registered as .graph/openings/<name>.json: each sidecar replaces or adds its entry."""
+    import glob
+    root = Path(__file__).resolve().parent.parent
+    for f in sorted(glob.glob(str(root / ".graph" / "openings" / "*.json"))):
+        d = json.loads(Path(f).read_text(encoding="utf-8"))
+        row = (d["name"], d["en"], d["zh"], d["desc_en"], d["desc_zh"])
+        if d.get("source_url"):
+            row += ((d["source_url"], d.get("borrowed", "")),)
+        i = next((k for k, r in enumerate(OPENINGS) if r[0] == d["name"]), None)
+        if i is None:
+            OPENINGS.append(row)
+        else:
+            OPENINGS[i] = row
+
+
+_sidecar_openings()
 
 
 def write_photos():
@@ -932,15 +987,26 @@ def write_photos():
     print("  wrote js/opening/photos.js")
 
 
+NUM_EN = {n: w for n, w in enumerate(["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"])}
+NUM_EN.update({t * 10 + u: (w + ("-" + NUM_EN[u].lower() if u else "")) for t, w in ((2, "Twenty"), (3, "Thirty"), (4, "Forty"), (5, "Fifty")) for u in range(10)})
+_ZD = "零一二三四五六七八九"
+NUM_ZH = {n: (("" if n < 20 else _ZD[n // 10]) + "十" + (_ZD[n % 10] if n % 10 else "")) if n >= 10 else _ZD[n] for n in range(60)}
+
+
 def build_openings():
     en, zh = {}, {}
-    en.update(opTitle="Openings", opSub="Twenty-four ways the home page could begin. Open one; it plays once and the page is itself again. Add ?opening=name to the home page's address to see any of them.")
-    zh.update(opTitle="開場", opSub="首頁可以怎麼開始的二十四種方式。點一個，播一次，頁面就回到原樣。在首頁網址後加 ?opening=名稱 也看得到。")
+    en.update(opTitle="Openings", opSub=f"{NUM_EN[len(OPENINGS)]} ways the home page could begin. Open one; it plays once and the page is itself again. Add ?opening=name to the home page's address to see any of them.")
+    zh.update(opTitle="開場", opSub=f"首頁可以怎麼開始的{NUM_ZH[len(OPENINGS)]}種方式。點一個，播一次，頁面就回到原樣。在首頁網址後加 ?opening=名稱 也看得到。")
     items = []
-    for name, ten, tzh, den, dzh in OPENINGS:
+    en["opSource"], zh["opSource"] = "Source", "來源"
+    for name, ten, tzh, den, dzh, *src in OPENINGS:
         en[f"on_{name}"], zh[f"on_{name}"] = ten, tzh
         en[f"od_{name}"], zh[f"od_{name}"] = den, dzh
-        items.append(f'    <li><a href="index.html?opening={name}"><b data-i18n="on_{name}">{e(ten)}</b><span data-i18n="od_{name}">{e(den)}</span></a></li>')
+        link = ""
+        if src:
+            url, borrowed = src[0]
+            link = f' <a class="op-source" href="{e(url)}" title="{e(borrowed)}" rel="noopener" data-i18n="opSource">Source</a>'
+        items.append(f'    <li><a href="index.html?opening={name}"><b data-i18n="on_{name}">{e(ten)}</b><span data-i18n="od_{name}">{e(den)}</span></a>{link}</li>')
     body = page_top("opTitle", en["opTitle"], "opSub", en["opSub"]) + '  <ol class="openings">\n' + "\n".join(items) + "\n  </ol>\n</div>"
     write("openings.html", f"Openings - {SITE}", f"開場 - {SITE}", "Candidate openings for the home page.", "", body, en, zh)
 
