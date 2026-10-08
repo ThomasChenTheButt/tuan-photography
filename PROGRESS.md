@@ -1,6 +1,6 @@
 # tuan photography 陳亮元 — Project Memo 專案備忘錄
 
-*Last updated: 2026-10-07 — handoff note. Read this first, then check the files to confirm.*
+*Last updated: 2026-10-08 — handoff note. Read this first, then check the files to confirm.*
 
 ## 現在狀態 Where things stand
 
@@ -30,36 +30,34 @@
 
 ## 上次做到哪 Where we left off
 
-2026-10-07: he kept experiment `taste2`. It is merged into `main` (design 2 on 8645 now has the
-five fixes); the worktree, branch, server 8646 and the `exp-taste2` launch entry are gone. No
-experiment is open.
+2026-10-08: the home-page opening, three rounds of candidates, almost all cut.
 
-Before that, 2026-10-05 and 2026-10-06, short sessions, no change to either site.
-
-- The ideas list kept up: Impeccable updated to 4.5.0 on the Mac and in the account, Motion and
-  Awwwards added, image-blaster marked dropped.
-- 2026-10-06: a prompt audit of `CLAUDE.md` and this note. `CLAUDE.md` lost its generic
-  "frontend aesthetics" block (replaced by a short list of defaults this site must not drift
-  toward) and its ten paragraphs of experiment history (now one table); a stale line about the
-  opening's files was corrected. This note was rewritten: it had still described experiment
-  `scroll`, dropped on 2026-10-04, as the open one.
+- **Experiment `opening` (8648):** from 24 versions he kept three: aperture, contact sheet version 2,
+  letters version 4. Film strip, burst, pull-back and every other version removed.
+- **Experiment `opening-graph` (8649):** his agent graph (source finder, four scouts, variety check,
+  scorecard router, builders, automatic test, manager, his approval). Run one built nine; he kept only
+  the concept of `ridgeline` (lines draw the ridge, horizon and window frame on paper, then the paper
+  becomes the photograph). Run two, with his review added before building, approved 26 ideas; he had
+  one (shadows) built as a trial, cut it, then declined all 26 ("全部都不要"). Everything is recorded
+  in `experiments/opening-graph/.graph/` (scorecard, excluded list now 60+ designs, taste file,
+  ideas.md with the 26, sources.md, workflow.js).
+- The pattern in `.graph/taste.md`: he cuts nearly every device applied to the photograph; what
+  survives is the camera (aperture), his own work (contact sheet), his name (letters), the
+  photograph's own lines (ridgeline).
 
 ## 接下來 Next up
 
-**The uncommitted pair.** Decide what `cutout.swift` (top level) and the 25 added lines in
-`data/sizes.json` are for: keep (commit, and `cutout.swift` moves to `tools/`), or remove. Then
-rerun `python3 tools/finder_view.py` so the top level stays tidy.
+**Ask him, before building anything:** of the four left (aperture, contact-2, letters-4 on 8648;
+ridgeline on 8649), which one to develop, and in which direction. If he wants another round of
+candidates, start from those four rather than from outside references (see the taste file), and
+show him written concepts first. Files: `experiments/opening/design 1/js/opening/`,
+`experiments/opening-graph/design 1/js/opening/ridgeline.js`, `experiments/opening-graph/.graph/taste.md`.
 
 ## 等你決定 Waiting on you
 
-- **Experiment `opening-graph` (localhost:8649):** his agent graph's first run made nine openings; he
-  cut eight and kept only the concept of `ridgeline` (lines draw the ridge, horizon and window frame on
-  paper, then the paper becomes the photograph). Verdict recorded in `.graph/excluded.md` and
-  `.graph/taste.md`. Next: decide whether to develop ridgeline or run the graph again with a stricter
-  manager.
-- **Experiment `opening` (localhost:8648):** down to three at his word on 2026-10-08: aperture,
-  contact sheet version 2, letters version 4. Every other version and the film strip, burst and pull-back
-  openings were removed (git history keeps them). Next: pick one of the three, or combine with ridgeline.
+- **The opening:** four candidates left. Pick one to develop, or say the whole opening idea is
+  parked. Also: should the 3 remaining versions and ridgeline be merged into one experiment, and the
+  other closed?
 - **Sea photograph:** which photographs besides Aoraki, if any? (`?ocean=all` cycles all 93.)
 - **Camera data for the 22 US photographs:** re-export from Lightroom with metadata, or drop the
   raw files in, and I'll add it.
