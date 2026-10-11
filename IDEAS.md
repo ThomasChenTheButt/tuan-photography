@@ -317,6 +317,11 @@
 - 狀態: 收集中
 - 這是什麼: 出自 RoboNuggets《25 Claude Design Tricks》第 24 招。（一）Whisper（OpenAI，免費，在自己的 Mac 上跑，https://github.com/openai/whisper）把影片裡講的話轉成逐字稿，每個字都有時間點；（二）Claude 讀逐字稿，挑出適合加圖解的時刻，查真實數字，用網站的設計做 HTML 動畫；（三）HyperFrames（HeyGen，開源 Apache 2.0，沒有按次收費）用無頭 Chrome 一格一格錄下來，存成 MP4，直接放進剪輯軟體。
 - 喜歡它什麼: 覺得之後應該會用到（2026-10-11）
+- 流程: （1）他錄影片，照平常拍，有講話就好，中英混講可以。（2）Whisper 在 Mac 上轉逐字稿，每個字帶時間點，約 1 分鐘；Claude 校正聽錯的地名；同一份逐字稿順便輸出字幕檔 SRT。（3）Claude 列出建議時刻表（時間、他說的話、建議動畫），數字查過真實資料，他勾要哪些。（4）每段動畫做成一個網頁檔，用網站的紙色、配色、Playfair 字體；Reels 直式 9:16、YouTube 橫式 16:9；先在瀏覽器預覽，他說要怎麼改。（5）HyperFrames 用看不見的 Chrome 一格一格錄成 MP4，每次錄出來都一樣；輸出到 animations/，檔名就是時間點（例如 0m15s-山高.mp4），他拖進剪輯軟體對應位置。
+- 分工: 他：錄影片、勾時刻、看預覽說怎麼改、剪輯。Claude：轉逐字稿和校正、查數字、做動畫、輸出 MP4。
+- 第一次準備: Claude 來裝，全部免費：ffmpeg、mlx-whisper（Apple 晶片版）、HyperFrames（npx 執行，需要 Node 22，已有）。兩件要他點頭：HyperFrames 動畫預設用 GSAP；它自帶的 Claude Code 外掛要先讀過程式再裝。最後包成 skill（例如 /motion），Mac 和 Claude 帳號兩邊放。
+- 沒有講話時: 給一份寫好時間的分鏡（例如「0:12 庫克山出現、0:20 湖」），從第（3）步開始，跳過 Whisper。
+- 例子: 2 分鐘直式 Reels 講庫克山：0:15「高三千七百二十四公尺」→ 數字從 0 跳到 3,724 m 配山稜線；0:42「從基督城開過來」→ 地圖上路線從基督城畫到庫克山村；1:10「我用 f/8、1/250」→ 相機參數一行行出現。
 - 用途: 有講話的旅行影片、Instagram Reels：念到城鎮時路線在地圖上畫出來、講到山高時數字往上跳、講拍法時相機參數出現、整趟旅程的距離天數國家數。
 - Claude 備註: 一定要有人聲；只有畫面配音樂的影片就改給一份寫好時間的分鏡。這台 Mac 有 Node 22（夠用），還缺 ffmpeg 和 Whisper（Apple 晶片上用 mlx-whisper 或 whisper.cpp 比較快）。HyperFrames 的動畫預設用 GSAP 寫，照他的規則要用之前先問。它自帶 Claude Code 外掛（21 個 skill），裝之前要先讀過它的程式。要做時包成一個 skill（例如 /motion），Mac 和 Claude 帳號兩邊都放。
 
