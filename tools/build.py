@@ -37,7 +37,8 @@ NAV = [("gallery", "navGallery", "Gallery", "gallery.html"),
        ("destinations", "navDestinations", "Destinations", "destinations.html"),
        ("blog", "navBlog", "Blog", "blog.html"),
        ("skills", "navSkills", "Skills", "skills.html"),
-       ("about", "navAbout", "About", "about.html")]
+       ("about", "navAbout", "About", "about.html"),
+       ("journey", "navJourney", "Journey", "http://localhost:8645/")]   # design 2, the pen-and-wash map; an absolute address, so no root prefix
 
 
 def e(text):
@@ -299,7 +300,7 @@ def head(title, desc, root):
 
 def header(root, current, over=False):
     items = "\n".join(
-        f'        <li><a href="{root}{href}" data-i18n="{key}"'
+        f'        <li><a href="{href if href.startswith("http") else root + href}" data-i18n="{key}"'
         + (' aria-current="page"' if current == nid else "") + f">{label}</a></li>"
         for nid, key, label, href in NAV)
     cls = {False: "wrap top", True: "wrap top top--over", "ink": "wrap top top--over top--ink"}[over]
@@ -322,7 +323,7 @@ def header(root, current, over=False):
 def footer(root, used, en, zh, foot=True, scripts=()):
     """The footer block, then the page's data and scripts. foot=False leaves the block out (the
     photo wall fills the window); scripts are the page's own, loaded after main.js."""
-    links = "\n".join(f'        <li><a href="{root}{href}" data-i18n="{key}">{label}</a></li>'
+    links = "\n".join(f'        <li><a href="{href if href.startswith("http") else root + href}" data-i18n="{key}">{label}</a></li>'
                       for _, key, label, href in NAV)
     data = []
     for sid in used:
