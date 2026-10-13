@@ -313,7 +313,7 @@ if (stackEl) {
   const stage = stackEl.parentElement;
   const books = [...stackEl.children];
   const n = books.length;
-  let cur = 0, settle = null, lastY = window.scrollY, shown = false;
+  let cur = 0, settle = null, lastY = window.scrollY, shown = false, front = -1;
   const place = () => {
     books.forEach((book, i) => {
       const d = i - cur, far = Math.abs(d);
@@ -323,6 +323,7 @@ if (stackEl) {
       book.hidden = far > 5;
       book.classList.toggle('front', Math.round(cur) === i);
     });
+    if (Math.round(cur) !== front) { front = Math.round(cur); stage.dispatchEvent(new CustomEvent('front', { detail: front, bubbles: true })); }
   };
   const go = (to, snap = true) => {
     cur = Math.min(n - 1, Math.max(0, to));
@@ -340,6 +341,7 @@ if (stackEl) {
     });
     book.addEventListener('focus', () => go(i));   // the keyboard walks the row
   });
+  stage.addEventListener('advance', () => go(Math.round(cur) + 1 < n ? Math.round(cur) + 1 : 0));
   stage.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight') { e.preventDefault(); go(Math.round(cur) + 1); }
     if (e.key === 'ArrowLeft') { e.preventDefault(); go(Math.round(cur) - 1); }
@@ -359,6 +361,94 @@ if (stackEl) {
     const dy = window.scrollY - lastY; lastY = window.scrollY;
     if (shown && !stage.matches(':hover')) go(cur + dy / 260, false);
   }, { passive: true });
+}
+
+/* ---------- 4b. The stage behind the books (experiment timed-cards) ----------
+   The book in front opens into a photograph behind the shelf: another photograph of the same
+   place (never the one on the cover) grows out of the cover until it fills the stage. A few
+   seconds later a second one does the same, then the row moves on to the next book by itself
+   (his call, 2026-10-13). Any wheel, swipe, key, click or page scroll on the row stops this;
+   after a few quiet seconds it carries on. While the book stays in front, every few seconds
+   the next photograph from the same book grows out of the cover in the same way. It waits while
+   the stage is out of view, the tab is hidden or the pointer is on a book. Under "reduce motion"
+   the photograph simply changes with the book, and nothing changes on its own. */
+const stageEl = document.querySelector('.stage');
+if (stageEl) {
+  const sets = JSON.parse(document.getElementById('stage-data').textContent);
+  const bg = stageEl.querySelector('.stage__bg');
+  const line = stageEl.querySelector('.stage__place');
+  const shelfEl = stageEl.querySelector('.shelf');
+  const root = document.documentElement.dataset.root || '';
+  const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const EVERY = 5000, GROW = 950, QUIET = 6000, PER_BOOK = 2;
+  let book = [...shelfEl.querySelectorAll('.book')].findIndex(b => b.classList.contains('front'));
+  let k = 0, timer = null, wait = null, inView = false, held = false, opened = false;
+  let seen = 0, lastHand = 0;
+  const last = {};   // where each book's photographs had got to, so a later visit shows others
+  const zh = () => document.documentElement.lang === 'zh-Hant';
+  const say = () => {
+    const x = sets[book] && sets[book][k];
+    if (!x) { line.classList.add('out'); return; }
+    line.querySelector('b').textContent = x.p[zh() ? 'zh' : 'en'];
+    line.querySelector('span').textContent = x.wh[zh() ? 'zh' : 'en'];
+    line.classList.remove('out');
+  };
+  const show = (grow) => {
+    const x = sets[book] && sets[book][k];
+    if (!x) { bg.replaceChildren(); say(); return; }   // a book with no other photograph: the plain stage
+    const img = new Image();
+    img.alt = '';
+    img.decoding = 'async';
+    img.sizes = '100vw';
+    img.srcset = `${root}images/web/1280/${x.f} 1280w, ${root}images/web/${x.f} ${x.w}w`;
+    img.src = `${root}images/web/1280/${x.f}`;
+    const put = () => {
+      bg.append(img);
+      line.classList.add('out');
+      const done = () => { while (bg.children.length > 1) bg.firstElementChild.remove(); say(); };
+      const face = shelfEl.querySelector('.book.front .book__face');
+      if (!grow || still || !face) { done(); return; }
+      // from the cover's place on the screen to the whole stage
+      const s = stageEl.getBoundingClientRect(), c = face.getBoundingClientRect();
+      const from = `inset(${c.top - s.top}px ${s.right - c.right}px ${s.bottom - c.bottom}px ${c.left - s.left}px)`;
+      img.animate([{ clipPath: from, transform: 'translateY(-1.5%)' }, { clipPath: 'inset(0px 0px 0px 0px)', transform: 'none' }],
+                  { duration: GROW, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }).finished.then(done, done);
+    };
+    img.decode().then(put, put);
+  };
+  const tick = () => {
+    clearTimeout(timer);
+    if (still || !inView || document.hidden) return;
+    timer = setTimeout(() => {
+      const n = (sets[book] || []).length;
+      if (!held && Date.now() - lastHand > QUIET) {
+        if (n > 1 && seen < PER_BOOK) { k = (k + 1) % n; last[book] = k; seen++; show(true); }
+        else shelfEl.dispatchEvent(new CustomEvent('advance'));
+      }
+      tick();
+    }, EVERY);
+  };
+  stageEl.addEventListener('front', e => {
+    book = e.detail;
+    const n = (sets[book] || []).length;
+    k = n && book in last ? (last[book] + 1) % n : 0; last[book] = k; seen = n ? 1 : 0;
+    // wait until the row has stopped moving, so the cover is where it will stay
+    clearTimeout(timer); clearTimeout(wait);
+    wait = setTimeout(() => { opened = opened || inView; show(inView); tick(); }, 480);
+  });
+  new IntersectionObserver(([e]) => {
+    inView = e.isIntersecting;
+    if (inView && !opened) { opened = true; last[book] = k; seen = (sets[book] || []).length ? 1 : 0; show(true); }   // the first time the stage comes into view, the cover opens
+    tick();
+  }, { threshold: 0.4 }).observe(stageEl);
+  document.addEventListener('visibilitychange', tick);
+  // the visitor's own hand on the row: wait until it has been quiet for a while
+  const hand = () => { lastHand = Date.now(); };
+  ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(t => shelfEl.addEventListener(t, hand, { passive: true }));
+  window.addEventListener('scroll', () => { if (inView) hand(); }, { passive: true });
+  shelfEl.addEventListener('pointerover', e => { held = !!e.target.closest('.book'); });
+  shelfEl.addEventListener('pointerleave', () => { held = false; });
+  new MutationObserver(say).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 }
 
 /* ---------- 5. Guide contents: mark the section being read ---------- */

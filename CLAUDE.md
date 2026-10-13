@@ -2,7 +2,13 @@
 > Trying: the "Timed Cards Opening" transition (Giulio Cuscito, Dribbble concept video,
 > `ideas/timed-cards-opening.mp4`): a small photo card lifts and grows until it fills the screen
 > and becomes the next full-page photograph. Only steps 1-2 of the reference are borrowed.
-> No skill. Suspended here: nothing yet. The brief still holds (nothing on the opening
+> Built on the home page's Guides shelf (his choice, 2026-10-13): a full-window photograph stands
+> behind the books, always another photograph of the front book's place, never its cover. It grows
+> out of the front book's cover; a second follows after 5 s, then the row moves to the next book
+> by itself. Any wheel, swipe, key, click or page scroll pauses this for 6 s. Code: `stage` in
+> `tools/build.py` `shelf()`, `.stage` in `design 1/css/style.css`, block 4b in `design 1/js/main.js`.
+> No skill. Suspended here: "nothing moves on its own" (the row advances by itself) and "no names
+> on a photograph" (the books and the front book's name stand over the stage photograph). The brief still holds (nothing on the opening
 > photograph, square corners, no shadows, no arrows or numbering, tokens only, both languages,
 > no GSAP without his yes). Which page, and auto-play or click, are his call before building.
 

@@ -433,13 +433,14 @@ def shelf(root, en, zh):
     zh.update(bandGuide="攝影師的攻略", bandPhotos="作品", bandNone="還沒有照片",
               bookOpen="閱讀攻略", bookNot="攻略還沒寫", series="tuan photography")
     tones = ("clay", "olive", "slate")
-    books = []
+    books, sets = [], []
     for i, b in enumerate(DATA["shelf"]):
         tone = tones[i % len(tones)]
         if "guide" in b:
             g = next(x for x in DATA["guides"] if x["id"] == b["guide"])
             key, title, href = f"bk_{g['id']}", g["title"], f"{root}{g['href']}"
             sid, band, status = b.get("photo") or g["lead"], "bandGuide", "bookOpen"
+            mine = lambda x, c=g["country"]: x["country"] == c
         else:
             # A book for one city (the four US cities) is keyed by its place and opens its
             # country's page; its photographs are the slides marked with that city.
@@ -452,6 +453,9 @@ def shelf(root, en, zh):
         en[f"bo_{key}"] = f"{title['en']}: {en[status].lower() if status == 'bookOpen' else en[status]}"
         zh[f"bo_{key}"] = f"{title['zh']}：{zh[status]}"
         t = e(title["en"])
+        # the stage behind the shelf: the book's other photographs, never the one on its cover (his call, 2026-10-13)
+        own = [x for x in DATA["slides"] if mine(x) and x["id"] != sid]
+        sets.append([{"f": x["file"], "w": x["w"], "p": x["place"], "wh": x["where"]} for x in own])
         if sid:
             strings(SLIDES[sid], en, zh)
             face = f'<span class="book__face">{img(SLIDES[sid], root, "11rem", soon=True, named=False)}'
@@ -463,7 +467,11 @@ def shelf(root, en, zh):
                      f'<span class="book__back"><i data-i18n="series">tuan photography</i></span><span class="book__edge"></span>'
                      f'<span class="book__top"></span><span class="book__shadow"></span><span class="book__veil"></span></span>'
                      f'<span class="book__name"><b data-i18n="{key}">{t}</b><span data-i18n="{status}">{e(en[status])}</span></span></a>')
-    return '<div class="shelf"><div class="stack">' + "".join(books) + "</div></div>"
+    data = json.dumps(sets, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    return ('<div class="stage"><div class="stage__bg" aria-hidden="true"></div>'
+            '<div class="shelf"><div class="stack">' + "".join(books) + "</div></div>"
+            '<p class="stage__place" aria-live="off"><b></b><span></span></p>'
+            f'<script type="application/json" id="stage-data">{data}</script></div>')
 
 
 # ------------------------------------------------------------------ pages

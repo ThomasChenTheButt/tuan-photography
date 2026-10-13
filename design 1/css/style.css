@@ -339,6 +339,23 @@ main { flex: 1; }
   .book__name b { font-size: 1.1rem; }
 }
 
+/* The stage (experiment timed-cards): the shelf stands in front of a photograph from the book in front.
+   The photograph grows out of that book's cover until it fills the stage, then the next one from the
+   same book does the same. Full width, like a window; the place line sits on the same darkening foot. */
+.band:has(.stage) { overflow-x: clip; }
+.stage { position: relative; display: grid; align-content: end; height: 100svh; min-height: 38rem; max-height: 75rem; margin-inline: calc(50% - 50vw); padding-bottom: 7rem; overflow: hidden; background: var(--slate); color: var(--paper); }
+.stage__bg { position: absolute; inset: 0; }
+.stage__bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.stage::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 26rem; pointer-events: none; background: linear-gradient(to top, oklch(20% 0.02 60 / 0.82), oklch(20% 0.02 60 / 0.55) 45%, oklch(20% 0.02 60 / 0)); }
+.stage .shelf { z-index: 2; width: 100%; max-width: none; }
+.stage .book__veil { background: var(--slate); }
+.stage .book__name, .stage .book__name span { color: var(--paper); }
+.stage__place { position: absolute; z-index: 3; left: var(--edge); right: var(--edge); bottom: 1.6rem; display: flex; gap: 0.2rem 1rem; flex-wrap: wrap; align-items: baseline; margin: 0; pointer-events: none; transition: opacity 400ms var(--out); }
+.stage__place b { font-family: var(--serif); font-weight: 400; font-size: 1.15rem; line-height: 1.25; }
+:lang(zh-Hant) .stage__place b { font-weight: 500; font-size: 1.1rem; letter-spacing: 0.05em; }
+.stage__place span { font-size: var(--t-xs); }
+.stage__place.out { opacity: 0; }
+
 /* a wall of photographs: rows that fill the width, nothing cropped, each with its name */
 .wall { display: grid; row-gap: var(--s-4); }
 .wall__row { display: flex; gap: var(--gap); align-items: flex-start; }
