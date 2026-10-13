@@ -1,13 +1,14 @@
 # tuan photography 陳亮元 — Project Memo 專案備忘錄
 
-*Last updated: 2026-10-08 — handoff note. Read this first, then check the files to confirm.*
+*Last updated: 2026-10-13 — handoff note. Read this first, then check the files to confirm.*
 
 ## 現在狀態 Where things stand
 
-- **Two sites, one set of facts.** `design 1/` is the current site ("The Printed Travel Journal",
-  localhost:8642). `design 2/` is the redesign, **Pen and wash** (`design 2/wc-sketch/`,
-  localhost:8645 opens it directly). Both are built from `data/site.json`, `content/` and the same
-  photographs. `start.command` starts both. The 18 other design-2 versions were removed on
+- **One site, one server (since 2026-10-13).** `design 1/` is the site ("The Printed Travel Journal",
+  localhost:8642). `design 2/`, **Pen and wash** (`design 2/wc-sketch/`), is its Journey page:
+  `design 1/journey` is a link to the design 2 folder, so `localhost:8642/journey/` opens it and
+  the menu's Journey item points there. Port 8645 is gone. Both are built from `data/site.json`,
+  `content/` and the same photographs. `start.command` starts the one server. The 18 other design-2 versions were removed on
   2026-10-03; they are at the tag `design2-all-versions-2026-10-03`.
 - **Design 2 is a full-screen sketchbook map:** all 20 books (his places; the USA as New York,
   Boston, Washington D.C., San Francisco, Los Angeles), the plate's slow zoom into a place, the
@@ -16,14 +17,14 @@
   `design 2/wc-sketch/DESIGN.md`. It passed the Impeccable finish review (ship) on 2026-10-02.
 - **93 photographs, 21 countries.** 22 US photographs have no camera data (exported from
   Photoshop); the site shows them without it, nothing invented.
-- **The map (8645):** the plate stretched upright 1.25× (`SY`), Antarctica always on the bottom
+- **The map (the Journey page):** the plate stretched upright 1.25× (`SY`), Antarctica always on the bottom
   edge; the photograph through the sea (Aoraki, strength 0.9, the dial bottom right); a tally
   "21 / 195 countries · 11% of the world"; up to six of his flights always in the air; a photograph
   behind the Flights view. Clicking a book turns the sea photograph into that place's cover.
 - **The Taste skill's five fixes are in design 2** (kept 2026-10-07): the phone's bottom-right row
   no longer wraps over the books, no word on the cover photograph, the place page no longer opens
   with "Guide not written yet", dates spoken as months, the Speed label in faded ink.
-- **The opening on 8645:** the globe (`design 2/wc-sketch/opening/globe.js`, four looks via
+- **The opening of the Journey page:** the globe (`design 2/wc-sketch/opening/globe.js`, four looks via
   `?globe=1|2|3|4`, look 4 the photo ball in `photoball.js`). The corridor of prints and the shelf
   of books were dropped on 2026-10-04 at his word; they are at the tag
   `before-drop-openings-2026-10-04`. `?opening` replays the opening.
@@ -72,6 +73,6 @@ show him written concepts first. Files: `experiments/opening/design 1/js/opening
 
 ## 如何接續 How to resume
 
-Say **"continue the travel website"**. Double-click **`start.command`** to open both sites
-(8642 design 1, 8645 design 2), or run `python3 tools/serve.py 8645 "design 2"` from the project
-folder. He works on 8645; design 1 is still there and still builds. No experiment is open.
+Say **"continue the travel website"**. Double-click **`start.command`** to open the site on 8642
+(the Journey page is `localhost:8642/journey/`), or run `python3 tools/serve.py` from the project
+folder.

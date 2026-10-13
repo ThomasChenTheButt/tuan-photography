@@ -1,17 +1,3 @@
-> **Experiment `timed-cards`** (started 2026-10-13, port 8650, branch `exp/timed-cards`, local only).
-> A straight copy of the "Timed Cards Opening" animation (Giulio Cuscito, Dribbble concept video,
-> `ideas/timed-cards-opening.mp4`) in place of the home page's Guides shelf, his call of 2026-10-13
-> after two closer-to-the-brief tries missed. Barcelona fills the stage first, without motion; the
-> other places wait as cards. Every 4 s the first card grows straight out from its place in one smooth motion
-> into the new background (the card's photo is the background); the name rises in line by line in
-> Bebas Neue; the row closes up; the counter (02 / 18) and a white progress line move; arrows step
-> either way; it pauses only while a photograph is open in the viewer. The line under each name lists what
-> his photographs there show. Taste skill review applied 2026-10-13 (clip-path and transform only).
-> Code: `timed_cards()` in `tools/build.py`, `.tc` in `design 1/css/style.css`, block 4b in
-> `design 1/js/main.js`, Bebas Neue added in `tools/fonts.py`. No skill. Suspended here: square
-> corners, no shadows, words not icons, no numbering, nothing written on a photograph, two
-> typefaces only, nothing moves on its own.
-
 # tuan photography 陳亮元 — project instructions
 
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
@@ -56,8 +42,8 @@ updating in the same commit. The short version:
 | Names and headings | Playfair Display, weight 400, centred (中文: Noto Serif TC, 500) |
 | Reading text | Geist (中文: Noto Sans TC) |
 | Labels, menu, buttons | Geist in small spaced capitals. No mono face |
-| Corners | square, everywhere |
-| Controls | words, never icons or arrows |
+| Corners | square, everywhere, except the Guides cards on the home page (rounded, with a soft shadow; his call, 2026-10-13) |
+| Controls | words, never icons or arrows, except the two round arrows of the Guides cards (2026-10-13) |
 | Photographs | bare, untrimmed in rows, names beneath and never on top. The continent squares are trimmed to even openings (his call, 2026-09-30). The Gallery page is the photo wall: every photograph as a small drifting print, the title and four bars floating over faint prints (his call, 2026-10-07) |
 | Punctuation | no long dashes; at most one middle dot in a line; 中文 uses full-width marks |
 
@@ -81,7 +67,7 @@ Arranged on 2026-09-28 at his request, so the top level reads at a glance. Keep 
 | `start.command`, `photo-list.command`, `建置進度.command` | his | double-click launchers |
 | `originals/`, `ideas/`, `IDEAS.md`, `TODO.md`, `我的筆記.txt`, `experiments/` | his | his photos, his ideas, his to-do list, his own notes, trials |
 | `design 1/` | visitors' | **the current website (was `site/`) and nothing else.** Served on 8642 |
-| `design 2/` | visitors' | **the complete redesign**, built beside it. Served on 8645 |
+| `design 2/` | visitors' | **the complete redesign**, built beside it. Since 2026-10-13 it is the site's Journey page: `design 1/journey` is a link to this folder, so it is served on 8642 at `/journey/` and has no server of its own |
 | `data/`, `content/`, `tools/` | Claude's | what the pages are built from, and the scripts |
 | `elements/` | visitors' (tests) | **single elements tried on their own**, apart from both designs, to be merged later if kept (his plan, 2026-10-07). Served on 8647 (`elements` in launch.json). Links to design 1's photos, fonts and css and to design 2's `data.js`, so nothing is copied. The first, `gallery/` (the photo wall), was merged into design 1's Gallery page on 2026-10-07 and the test copy removed the next day at his word; `design 1/js/wall.js` is the only copy |
 | `CLAUDE.md`, `DESIGN.md`, `PRODUCT.md`, `PROGRESS.md` | Claude's | notes. They stay at the top: tools look for them there |
@@ -106,10 +92,12 @@ Arranged on 2026-09-28 at his request, so the top level reads at a glance. Keep 
   approximate, for the map. It is not the camera's GPS (the files carry none).
 - **Design 2 is "Pen and wash"**, `design 2/wc-sketch/` (his choice, 2026-10-02, after four rounds
   of variants). Its own design system is `design 2/wc-sketch/DESIGN.md` (the root `DESIGN.md` is
-  design 1). It passed the Impeccable finish review (ship). `localhost:8645` opens it directly
-  (`design 2/index.html` forwards there). The other 18 versions were removed on 2026-10-03 at his
+  design 1). It passed the Impeccable finish review (ship). `localhost:8642/journey/` opens it
+  (`design 2/index.html` forwards to `wc-sketch/`); the Journey item in design 1's menu points there. The other 18 versions were removed on 2026-10-03 at his
   word; they are at the tag `design2-all-versions-2026-10-03`. `?opening` replays the opening.
-  `start.command` starts both servers, 8642 and 8645.
+  `start.command` starts the one server, 8642. Port 8645 was retired on 2026-10-13 at his word:
+  `tools/check_site.py` judges "inside the site" by the address, not the resolved file, so pages
+  reached through the `journey` link count as the site's own.
 - **Inside `design 2/wc-sketch/`, the opening and the map are kept apart** (his call, 2026-10-04,
   so he can collect opening candidates and choose later): `opening/` holds one file per candidate
   (`globe.js`, the globe that unrolls into the map, and `photoball.js`, its photo-ball look),
@@ -325,6 +313,7 @@ Decided experiments. Rejected ideas are not proposed again; the tags hold the co
 | `earth`, `scope`, `cssglobe` (three globe openings for design 2) | dropped | 2026-10-03 | reflog only |
 | `scroll` (books on shelves flying to their places on scroll; became `opening/shelf.js`, tried beside the corridor) | dropped with the corridor; only the globe stays | 2026-10-04 | `before-drop-openings-2026-10-04`, `exp-scroll-dropped-2026-10-04` |
 | `taste2` (Taste skill audit-first on design 2: phone bottom-right row, the word on the cover photo, the place page opening line, dates as months, the Speed label) | kept | 2026-10-07 | merged into `main` |
+| `timed-cards` (the Guides shelf replaced by a copy of Giulio Cuscito's "Timed Cards Opening": a full-window photograph, rounded photo cards, the first card grows into the next background every 4 s, Bebas Neue names, arrows, 02 / 18) | kept | 2026-10-13 | merged into `main`; the books before it at `before-timed-cards-2026-10-13` |
 
 **Weekly report 週報** (set up 2026-09-28). A scheduled task, `weekly-web-design-report`, runs
 every Monday about 9:00 and searches the web for the week's new AI web-design tools, skills,
@@ -345,3 +334,8 @@ until he says he is interested in an item. Nothing it finds gets installed witho
   himself by double-clicking `start.command`.
 - Preview: `.claude/launch.json` → "travel-site" runs the same `tools/serve.py`. If port 8642 is
   already serving (he launched it himself), open the preview by URL instead of by name.
+
+<!-- claude-reflect: learned rules (saved from the band; edit freely) -->
+## Learned rules
+- Ask the user before adding GSAP to the project; use plain CSS/JavaScript for animations unless they approve GSAP.
+<!-- end claude-reflect -->

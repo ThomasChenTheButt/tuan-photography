@@ -254,7 +254,7 @@ Measured contrast, worked out from the built tokens. Warm Ink on Warm Paper is a
 
 **Display Font:** Playfair Display (with Noto Serif TC for Chinese, then Georgia, serif)
 **Body Font:** Geist (with Noto Sans TC for Chinese, then system-ui, sans-serif)
-**Label/Mono Font:** none. Labels are Geist in small spaced capitals. Figures use lining numerals, and tabular numerals wherever numbers line up.
+**Label/Mono Font:** none. Labels are Geist in small spaced capitals. **The one exception:** the Guides cards on the home page name their places in Bebas Neue, capitals (his call, 2026-10-13); nowhere else. Figures use lining numerals, and tabular numerals wherever numbers line up.
 
 **Character:** A high-contrast book serif for the names of places, against a plain modern sans for everything that is read. The serif is always weight 400 in English; emphasis comes from size and from centring, not from bold.
 
@@ -299,7 +299,7 @@ Content sits in one centred column, 88rem at its widest, with a side margin that
 
 - **Sections:** padded by the large step top and bottom. A section's heading is centred and sits 5rem above its content. Two sections that follow each other on the same ground share one gap, not two.
 - **Bands:** a Stone band always reaches both edges of the window, even when the section sits inside the page column.
-- **Home:** the opening photograph, which stays in place while the rest of the page is drawn up over it; then the centred intro on paper (its second button goes straight to the guide while there is only one), a window onto a photograph, the guides as a row of books on stone, a second window, the wall of photographs on paper (a dozen, one from each country in turn), a third window, the footer. The three colour doors were removed on 2026-10-01 at his call (the menu already leads there); the shelf and the window were added the same day, after the home page of Hello Emilie.
+- **Home:** the opening photograph, which stays in place while the rest of the page is drawn up over it; then the centred intro on paper (its second button goes straight to the guide while there is only one), a window onto a photograph, the guides as timed cards (one place's photograph filling the window, the next places as a row of cards in front of it), a second window, the wall of photographs on paper (a dozen, one from each country in turn), a third window, the footer. The three colour doors were removed on 2026-10-01 at his call (the menu already leads there); the shelf and the window were added the same day, after the home page of Hello Emilie.
 - **Rows of photographs:** rows are worked out when the pages are built (`rows_of()` in `tools/build.py`). Photographs are split into rows of nearly equal total width, about 3.2 square widths each, never one photograph alone in a row, and every photograph grows in proportion to its own shape, so each row fills the column at one height and nothing is trimmed. The gap between photographs is 0.75rem; rows are 2.5rem apart to leave room for captions. A photograph alone in its row is held to 58rem and centred.
 - **Gallery:** the portfolio first, a dozen photographs in a tight grid four across with 0.5rem between them; then every country with photographs, each its own wall of rows under its name and count (2026-10-01, his call: divided by country); then the names of the places not photographed yet, on stone.
 - **Destinations:** the continents travelled, four to a row in a 72rem column, each a square with its name and a count beneath, centred as a group; then the continents not travelled, as names on stone.
@@ -323,7 +323,7 @@ How the layout changes on smaller windows, as built:
 
 ## Elevation & Depth
 
-The system is flat. Nothing casts a shadow, at rest or on hover, except the books on the home page's shelf, the one thing drawn in three dimensions, by the owner's choice (2026-10-01). Otherwise depth comes from four things only: the change of ground between paper and stone, the page drawn up over the opening photograph, the quick facts card laid over the edge of a photograph, and the viewer, which replaces the page with the same paper ground.
+The system is flat. Nothing casts a shadow, at rest or on hover, except the cards of the Guides section on the home page, by the owner's choice (2026-10-13; they replaced the books, which had the shadow before). Otherwise depth comes from four things only: the change of ground between paper and stone, the page drawn up over the opening photograph, the quick facts card laid over the edge of a photograph, and the viewer, which replaces the page with the same paper ground.
 
 There is one place with gradients: the opening photograph has a soft darkening at its top edge (14rem tall) and at its bottom edge (12rem tall), so the site name, the menu and the place name can be read in Paper White on any photograph. These are warm near-black fading to nothing (`oklch(20% 0.02 60)` at 50% and 80%). They are not decoration and are not used anywhere else.
 
@@ -335,7 +335,7 @@ Motion has three reasons only, in the stylesheet's own words: arriving, leaving 
 - **Leaving the opening photograph:** on the home page the opening photograph stays where it is while the rest of the page, one leaf of paper, is drawn up over it. As that happens the photograph rises slowly, at about a third of the page's speed. The owner asked for this on 2026-09-30; it is carried over from the site as it was before the redesign. The slow rise is tied to scrolling itself and only happens in browsers that support it; in others the photograph simply stays in place.
 - **The window:** part way down the home page a second photograph fills the window's width; it is fixed to the screen and the figure is a window cut in the page, so the page is drawn over it, and it drifts slowly upward as the window passes (the script sets `--drift` from the window's place on the screen). Under "reduce motion" it is simply a photograph in the page.
 - **Walking the wall:** photographs in a wall or in the portfolio grid, features and tiles rise gently as they enter the window.
-- **Taking a book:** under the pointer a book comes forward, lifts 1rem and turns to face the visitor (0.6 seconds), and its name appears beneath it. On a touch screen the first tap does this and the second opens the guide. This is tied to scrolling itself and only happens in browsers that support it; in others they are simply there.
+- **The Guides cards:** every 4 seconds the first card in the row opens out from its place until it is the whole window (1.2 seconds, clip-path and transform only), the place's name rises in line by line, the row closes up and the counter and white progress line move. The arrows step either way (back shrinks the photograph into the first slot). It waits while out of view, while the tab is hidden and while a photograph is open in the viewer; under "reduce motion" it changes only on the arrows, at once.
 - **Under the pointer:** a photograph enlarges very slightly inside its own frame (2%, over 0.9 seconds); a button changes fill; links change colour. Pressing a button moves it down 1px.
 - **Opening a photograph:** the photograph travels from its place in the row to its place in the viewer (0.46 seconds; from the photo wall, 0.56 seconds and back again on close). Stepping to the next photograph dims the one on screen to 35% until the next file has arrived.
 - **The photo wall:** the one place on the site that moves on its own. Its rows drift sideways without end and the wall parts around the cursor; the owner chose this on 2026-10-07 after Motion's "Moments". It stops under "reduce motion" and the Speed bar can hold it still.
@@ -344,11 +344,11 @@ Motion has three reasons only, in the stylesheet's own words: arriving, leaving 
 ### Named Rules
 **The Flat Rule.** No shadows. Separation is made with a change of ground first, space second, and a 1px hairline third.
 
-**The Three Reasons Rule.** Something moves only when the visitor arrives, when the page is drawn up over the opening photograph, or when a photograph comes into view, plus the small answers to the pointer. Nothing loops and nothing moves on its own, with one exception the owner made on 2026-10-07: the photo wall's drift. All of it stops under "reduce motion".
+**The Three Reasons Rule.** Something moves only when the visitor arrives, when the page is drawn up over the opening photograph, or when a photograph comes into view, plus the small answers to the pointer. Nothing loops and nothing moves on its own, with two exceptions the owner made: the photo wall's drift (2026-10-07) and the Guides cards (2026-10-13). All of it stops under "reduce motion".
 
 ## Shapes
 
-Every corner is square. Photographs, buttons, cards, notes, the contents box, the viewer and the focus ring all have no rounding. There is no rounded shape anywhere in the build.
+Every corner is square. Photographs, buttons, cards, notes, the contents box, the viewer and the focus ring all have no rounding. The one exception is the Guides section on the home page (2026-10-13): its cards are rounded (0.75rem), its button is a pill and its two arrows are circles, a copy of the reference he chose.
 
 Lines are 1px. They separate rows in a list or table, and divide the language switch. The only boxes drawn with an outline are the buttons. The rule under a table's header row is Warm Ink; every other rule is Hairline.
 
@@ -387,8 +387,8 @@ Directly under the opening photograph, on paper, centred: the line "Travel like 
 ### Doors (removed)
 Three flat colour blocks to Gallery, Destinations and About stood on the home page until 2026-10-01, when the owner removed them: the menu already leads to the same pages. The earth colours now appear only on the shelf's spines and the footer.
 
-### Shelf (the guides on the home page)
-The guides as a row of books, one per country, sixteen today, in the order of `data/site.json` (`"shelf"`), after the coverflow he chose on 2026-10-01. All the books stand turned 24 degrees the same way, spine to the left, the one in front at the middle and the rest stepped back 5rem a place to either side, a book-width apart; the ones further back are veiled in the page's own paper (a veil face, never transparency, so nothing shows through), and only the three or four nearest either side are in view. Each book is a box 12rem by 17rem and 3.2rem deep: a cover made the way a printed guide is (the photograph named for the book over a Paper White band with the name and a small capital series line: "A photographer's guide", "Photographs", or "No photographs yet"), boards that overhang the page block a little, a page block with fine paper lines on its edge and its top, a spine and a back in one of the three earth colours in turn with the imprint "tuan photography", and a soft shadow on the floor beneath. A country with no photograph yet has a plain Card Paper cover with its name. The wheel sideways, the arrow keys, a swipe on a touch screen, or the page's own scrolling while the row is in view move the row; a click on a book further back brings it to the front; the book in front opens (a written guide, or the country's page). Under the cursor a book lifts its veil, comes forward 2rem and turns to face the visitor; the front book's name and where it leads sit beneath it. Nothing here moves on its own. This is the one place the site draws depth, and the one place with shadows and shading. On phones the books are 8.5rem by 12rem. The script sets each book's distance from the front as `--d`, its depth as `--z` and its veil as `--o`.
+### Timed cards (the guides on the home page)
+Since 2026-10-13, his call, after Giulio Cuscito's "Timed Cards Opening" (Dribbble): a copy of that reference, kept as experiment `timed-cards`. The section fills the window (never shorter than 38rem, never taller than 75rem) on a Stone band under the heading "Guides". One place's photograph (the shelf entry's `cover`) fills it, darkened from the left. At the left, a short white rule, the country (or the continent), the place's name in Bebas Neue capitals one word to a line (中文: Noto Sans TC 600), one line saying what his photographs there show ("Photographs of …", built from the photographs' own names, each subject once), and a pill button: "Read the guide" for a written guide, "See the photographs" otherwise. From 41% across, the next places as cards (2:3, rounded 0.75rem, a soft shadow), each with a short rule, its country or continent and its name in Bebas Neue on its foot; the row runs off the right edge. Under the cards, two round arrows, a white progress line and the counter ("02 / 18"). Barcelona is first and arrives without motion; places without a photograph are left out. Motion is under Motion. Built by `timed_cards()` in `tools/build.py` (the first state as plain HTML, the rest as data); the script sets `--j`, each card's slot. On phones the words sit at the top and the cards below them. The shelf of books it replaced (`.shelf`, `.book`, `shelf()`) is retired; its classes remain, unused; the last look is at the tag `before-timed-cards-2026-10-13`.
 
 ### Feature (a guide)
 A guide shown large: its photograph beside its plain name at Display size, one line of facts in Second Ink, and the words "Read the guide" in small capitals with a rule beneath. The whole block is the link. The photograph keeps its own shape.
@@ -458,17 +458,17 @@ A page with no work says so in one centred sentence in Second Ink, at most 46 ch
 
 ### Don't:
 - **Don't** write a headline, a sentence, a button or a panel across the opening photograph. The owner asked for this on his original site because the words blocked the image.
-- **Don't** set names, labels or badges on top of any photograph. (The photo wall's title sits on a ramp of paper over the wall, the owner's call of 2026-10-07 and 10-08; no word is set on a single photograph.)
+- **Don't** set names, labels or badges on top of any photograph. (The Guides cards are a copy of a reference he chose, 2026-10-13: the place's name, a line and a button sit on its photograph, and each card's name sits on its foot. The photo wall's title sits on a ramp of paper over the wall, the owner's call of 2026-10-07 and 10-08; no word is set on a single photograph.)
 - **Don't** trim a photograph in a row to make a grid even. The portfolio grid and the square openings are the only even grids.
 - **Don't** frame, round, border or shadow a photograph.
 - **Don't** add a dark theme or a theme switch, beyond the Gallery page's own Dark word (2026-10-07).
-- **Don't** add icons, arrows or pictograms to controls.
-- **Don't** round anything, including buttons.
+- **Don't** add icons, arrows or pictograms to controls (the Guides cards' two arrows are the one exception, 2026-10-13).
+- **Don't** round anything, including buttons, outside the Guides cards.
 - **Don't** add shadows, or gradients other than the two on the opening photograph.
 - **Don't** use clay, olive or slate for reading text or as tints.
 - **Don't** put a small capital line above a heading as decoration. The only line that sits above a title is the breadcrumb, and it is made of real links.
-- **Don't** add a third typeface, or bold the serif in English.
-- **Don't** add motion that loops or plays on its own, beyond the photo wall's drift (2026-10-07).
+- **Don't** add a third typeface, or bold the serif in English. (Bebas Neue lives only in the Guides cards.)
+- **Don't** add motion that loops or plays on its own, beyond the photo wall's drift (2026-10-07) and the Guides cards (2026-10-13).
 - **Don't** use long dashes, or more than one middle dot in a line.
 - **Don't** fill an empty place with a stand-in image, an invented guide, invented camera data, or a claim the site cannot yet support.
 
