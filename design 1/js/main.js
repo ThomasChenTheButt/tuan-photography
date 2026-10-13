@@ -371,7 +371,7 @@ if (stackEl) {
 const tcEl = document.querySelector('.tc');
 if (tcEl) {
   const P = JSON.parse(document.getElementById('tc-data').textContent);
-  const N = P.length, EVERY = 4000, GROW = 1400;
+  const N = P.length, EVERY = 4000, GROW = 1200;
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const ease = 'cubic-bezier(0.65, 0, 0.25, 1)', out = 'cubic-bezier(0.16, 1, 0.3, 1)';
   const bg = tcEl.querySelector('.tc__bg'), row = tcEl.querySelector('.tc__cards');
@@ -456,13 +456,11 @@ if (tcEl) {
     const fly = layer(cur, true);
     Object.assign(fly.style, px(b));
     bg.append(fly); first.remove();
-    const lift = { left: b.left - W * 0.025, top: b.top - 16, width: b.width * 1.05, height: b.height * 1.05 };
-    // over the title: wider and lower than a card, on its way to the stage's own shape
-    const drift = { left: W * 0.2, top: H * 0.22, width: W * 0.34, height: H * 0.56 };
+    const lift = { left: b.left - b.width * 0.025, top: b.top - 16 - b.height * 0.025, width: b.width * 1.05, height: b.height * 1.05 };
+    // it lifts a little, then grows straight out from where it is until it is the whole stage
     fly.animate([
       { ...px(b), borderRadius: '12px', offset: 0, easing: out },
-      { ...px(lift), borderRadius: '12px', offset: 0.16, easing: 'cubic-bezier(0.45, 0, 0.55, 1)' },
-      { ...px(drift), borderRadius: '10px', offset: 0.55, easing: 'cubic-bezier(0.45, 0, 0.2, 1)' },
+      { ...px(lift), borderRadius: '12px', offset: 0.18, easing: 'cubic-bezier(0.5, 0, 0.2, 1)' },
       { left: '0px', top: '0px', width: W + 'px', height: H + 'px', borderRadius: '0px', offset: 1 }
     ], { duration: GROW, fill: 'forwards' }).finished.then(() => {
       fly.getAnimations().forEach(a => a.cancel());
