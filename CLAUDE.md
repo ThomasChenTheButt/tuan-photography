@@ -67,7 +67,7 @@ Arranged on 2026-09-28 at his request, so the top level reads at a glance. Keep 
 | `start.command`, `photo-list.command`, `建置進度.command` | his | double-click launchers |
 | `originals/`, `ideas/`, `IDEAS.md`, `TODO.md`, `我的筆記.txt`, `experiments/` | his | his photos, his ideas, his to-do list, his own notes, trials |
 | `design 1/` | visitors' | **the current website (was `site/`) and nothing else.** Served on 8642 |
-| `design 2/` | visitors' | **the complete redesign**, built beside it. Served on 8645 |
+| `design 2/` | visitors' | **the complete redesign**, built beside it. Since 2026-10-13 it is the site's Journey page: `design 1/journey` is a link to this folder, so it is served on 8642 at `/journey/` and has no server of its own |
 | `data/`, `content/`, `tools/` | Claude's | what the pages are built from, and the scripts |
 | `elements/` | visitors' (tests) | **single elements tried on their own**, apart from both designs, to be merged later if kept (his plan, 2026-10-07). Served on 8647 (`elements` in launch.json). Links to design 1's photos, fonts and css and to design 2's `data.js`, so nothing is copied. The first, `gallery/` (the photo wall), was merged into design 1's Gallery page on 2026-10-07 and the test copy removed the next day at his word; `design 1/js/wall.js` is the only copy |
 | `CLAUDE.md`, `DESIGN.md`, `PRODUCT.md`, `PROGRESS.md` | Claude's | notes. They stay at the top: tools look for them there |
@@ -92,10 +92,12 @@ Arranged on 2026-09-28 at his request, so the top level reads at a glance. Keep 
   approximate, for the map. It is not the camera's GPS (the files carry none).
 - **Design 2 is "Pen and wash"**, `design 2/wc-sketch/` (his choice, 2026-10-02, after four rounds
   of variants). Its own design system is `design 2/wc-sketch/DESIGN.md` (the root `DESIGN.md` is
-  design 1). It passed the Impeccable finish review (ship). `localhost:8645` opens it directly
-  (`design 2/index.html` forwards there). The other 18 versions were removed on 2026-10-03 at his
+  design 1). It passed the Impeccable finish review (ship). `localhost:8642/journey/` opens it
+  (`design 2/index.html` forwards to `wc-sketch/`); the Journey item in design 1's menu points there. The other 18 versions were removed on 2026-10-03 at his
   word; they are at the tag `design2-all-versions-2026-10-03`. `?opening` replays the opening.
-  `start.command` starts both servers, 8642 and 8645.
+  `start.command` starts the one server, 8642. Port 8645 was retired on 2026-10-13 at his word:
+  `tools/check_site.py` judges "inside the site" by the address, not the resolved file, so pages
+  reached through the `journey` link count as the site's own.
 - **Inside `design 2/wc-sketch/`, the opening and the map are kept apart** (his call, 2026-10-04,
   so he can collect opening candidates and choose later): `opening/` holds one file per candidate
   (`globe.js`, the globe that unrolls into the map, and `photoball.js`, its photo-ball look),
@@ -331,3 +333,8 @@ until he says he is interested in an item. Nothing it finds gets installed witho
   himself by double-clicking `start.command`.
 - Preview: `.claude/launch.json` → "travel-site" runs the same `tools/serve.py`. If port 8642 is
   already serving (he launched it himself), open the preview by URL instead of by name.
+
+<!-- claude-reflect: learned rules (saved from the band; edit freely) -->
+## Learned rules
+- Ask the user before adding GSAP to the project; use plain CSS/JavaScript for animations unless they approve GSAP.
+<!-- end claude-reflect -->

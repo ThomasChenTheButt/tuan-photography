@@ -156,7 +156,7 @@ Word 版：雙擊專案資料夾裡的 `建置進度.command` 就會更新並打
 - 日期: 2026-10-03
 - 重點: 四輪試作後選定，通過 Impeccable 審查
 - 狀態: 完成
-- 說明: localhost:8645。全螢幕速寫本地圖、書在地圖上、放大進入照片、飛過的航線回放真實旅程、開場名稱 Tuan, Through the Lens。設計規範在 `design 2/wc-sketch/DESIGN.md`。
+- 說明: localhost:8642/journey/（2026-10-13 起併入網站的 Journey 旅程頁，8645 已停用）。全螢幕速寫本地圖、書在地圖上、放大進入照片、飛過的航線回放真實旅程、開場名稱 Tuan, Through the Lens。設計規範在 `design 2/wc-sketch/DESIGN.md`。
 
 ### 美國 25 張照片與華盛頓特區的書
 - 類型: 已完成

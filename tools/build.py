@@ -38,7 +38,7 @@ NAV = [("gallery", "navGallery", "Gallery", "gallery.html"),
        ("blog", "navBlog", "Blog", "blog.html"),
        ("skills", "navSkills", "Skills", "skills.html"),
        ("about", "navAbout", "About", "about.html"),
-       ("journey", "navJourney", "Journey", "http://localhost:8645/")]   # design 2, the pen-and-wash map; an absolute address, so no root prefix
+       ("journey", "navJourney", "Journey", "journey/")]   # design 2, the pen-and-wash map: design 1/journey is a link to the design 2 folder
 
 
 def e(text):

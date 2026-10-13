@@ -14,6 +14,7 @@ so two builds of the same site compare as identical.
 """
 import hashlib
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -57,11 +58,13 @@ def check(folder):
             if not path:
                 continue
             base = folder if path.startswith("/") else f.parent
-            goal = (base / path.lstrip("/")).resolve()
+            # tidied by name, not resolved: design 1/journey is a link to the design 2 folder,
+            # and what a page reaches through that link still counts as inside the site
+            goal = Path(os.path.normpath(base / path.lstrip("/")))
             followed += 1
             if not goal.exists():
                 missing.append((rel, t, "leads nowhere"))
-            elif folder.resolve() not in goal.parents and goal != folder.resolve():
+            elif folder not in goal.parents and goal != folder:
                 missing.append((rel, t, "leaves the site folder"))
     return pages, missing, followed, outside
 
