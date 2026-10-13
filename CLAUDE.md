@@ -1,3 +1,11 @@
+> **Experiment `timed-cards`** (started 2026-10-13, port 8650, branch `exp/timed-cards`, local only).
+> Trying: the "Timed Cards Opening" transition (Giulio Cuscito, Dribbble concept video,
+> `ideas/timed-cards-opening.mp4`): a small photo card lifts and grows until it fills the screen
+> and becomes the next full-page photograph. Only steps 1-2 of the reference are borrowed.
+> No skill. Suspended here: nothing yet. The brief still holds (nothing on the opening
+> photograph, square corners, no shadows, no arrows or numbering, tokens only, both languages,
+> no GSAP without his yes). Which page, and auto-play or click, are his call before building.
+
 # tuan photography 陳亮元 — project instructions
 
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
