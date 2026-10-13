@@ -4,7 +4,9 @@
 > after two closer-to-the-brief tries missed. Barcelona fills the stage first, without motion; the
 > other places wait as cards. Every 4 s the first card grows straight out from its place in one smooth motion
 > into the new background (the card's photo is the background); the name rises in line by line in
-> Bebas Neue; the row closes up; the counter and progress line move; arrows step either way.
+> Bebas Neue; the row closes up; the counter (02 / 18) and a white progress line move; arrows step
+> either way; it pauses while the pointer or keyboard is on it. The line under each name lists what
+> his photographs there show. Taste skill review applied 2026-10-13 (clip-path and transform only).
 > Code: `timed_cards()` in `tools/build.py`, `.tc` in `design 1/css/style.css`, block 4b in
 > `design 1/js/main.js`, Bebas Neue added in `tools/fonts.py`. No skill. Suspended here: square
 > corners, no shadows, words not icons, no numbering, nothing written on a photograph, two

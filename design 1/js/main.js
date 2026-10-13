@@ -366,7 +366,8 @@ if (stackEl) {
    as cards in a row. Every few seconds the first card leaves the row and grows until it is
    the new background, the place's name rises in at the left line by line, the row closes up and
    the place just left joins the end. The arrows step either way. It waits while the stage is out
-   of view or the tab is hidden; under "reduce motion" it changes only on the arrows, at once.
+   of view, the tab is hidden, or the pointer or keyboard is on it; under "reduce motion" it
+   changes only on the arrows, at once.
    Each card's slot goes to the stylesheet as --j. */
 const tcEl = document.querySelector('.tc');
 if (tcEl) {
@@ -395,7 +396,7 @@ if (tcEl) {
   const slot = (li, j) => { li.style.setProperty('--j', j); li.hidden = j > 6; li.dataset.j = j; };
   const layer = (k, asCard) => {
     const d = document.createElement('div');
-    d.className = 'tc__layer' + (asCard ? ' is-card' : '');
+    d.className = 'tc__layer' + (asCard ? ' is-card' : ''); d.dataset.k = k;
     d.innerHTML = `<img src="${big(P[k])}" alt="" decoding="async"><i class="tc__shade"></i>`;
     return d;
   };
@@ -412,7 +413,7 @@ if (tcEl) {
   const number = k => {
     const s = count.querySelector('span');
     s.textContent = String(k + 1).padStart(2, '0');
-    tcEl.querySelector('.tc__bar').style.setProperty('--p', ((k + 1) / N * 100).toFixed(2) + '%');
+    tcEl.querySelector('.tc__bar').style.setProperty('--p', ((k + 1) / N).toFixed(4));
     return s;
   };
   const draw = () => {   // the whole state at once: the first view, a language change, reduce motion
@@ -444,6 +445,25 @@ if (tcEl) {
     return { left: r.left - s.left, top: r.top - s.top, width: r.width, height: r.height };
   };
   const px = b => ({ left: b.left + 'px', top: b.top + 'px', width: b.width + 'px', height: b.height + 'px' });
+  /* The flight between a card's box and the whole stage. The layer always covers the stage and is
+     only ever clipped and moved, never resized, so the browser does not lay the page out again on
+     every frame. At the card end the photograph is scaled down and centred on the card, so it shows
+     exactly the card's crop; at the stage end it is the full background. */
+  const flight = (lay, b, toStage) => {
+    const W = tcEl.clientWidth, H = tcEl.clientHeight, im = lay.querySelector('img');
+    const iw = im.naturalWidth || P[+lay.dataset.k].w, ih = im.naturalHeight || P[+lay.dataset.k].h;
+    const k = Math.max(b.width / iw, b.height / ih) / Math.max(W / iw, H / ih);
+    const dx = b.left + b.width / 2 - W / 2, dy = b.top + b.height / 2 - H / 2;
+    const card = { clip: `inset(${b.top}px ${W - b.left - b.width}px ${H - b.top - b.height}px ${b.left}px round 12px)`,
+                   img: `translate(${dx}px, ${dy}px) scale(${k})` };
+    const stage = { clip: 'inset(0px 0px 0px 0px round 0px)', img: 'translate(0px, 0px) scale(1)' };
+    const [a, z] = toStage ? [card, stage] : [stage, card];
+    const opts = { duration: GROW, easing: 'cubic-bezier(0.65, 0, 0.25, 1)', fill: 'forwards' };
+    lay.classList.add('is-flying');
+    im.animate([{ transform: a.img }, { transform: z.img }], opts);
+    lay.querySelector('.tc__shade').animate([{ opacity: toStage ? 0 : 1 }, { opacity: toStage ? 1 : 0 }], { ...opts, easing: toStage ? 'ease-in' : 'ease-out' });
+    return lay.animate([{ clipPath: a.clip }, { clipPath: z.clip }], opts).finished;
+  };
 
   const next = () => {
     if (busy) return;
@@ -451,25 +471,19 @@ if (tcEl) {
     if (still || !first) { cur = mod(cur + 1); draw(); return; }
     busy = true;
     const was = cur; cur = mod(cur + 1);
-    const b = box(first), W = tcEl.clientWidth, H = tcEl.clientHeight;
-    // the card leaves the row and becomes a layer of the stage, then grows to fill it
-    const fly = layer(cur, true), im = fly.querySelector('img');
+    const b = box(first);
+    // the card leaves the row and becomes the top layer of the stage, then opens out to fill it
+    const fly = layer(cur, false), im = fly.querySelector('img');
     im.src = first.querySelector('img').currentSrc || first.querySelector('img').src;
     const sharp = new Image(); sharp.src = big(P[cur]);
     sharp.decode().then(() => { im.src = sharp.src; }, () => {});
-    Object.assign(fly.style, px(b));
     bg.append(fly); first.remove();
-    // one smooth motion from the card's place to the whole stage, no stop on the way
-    fly.animate([
-      { ...px(b), borderRadius: '12px' },
-      { left: '0px', top: '0px', width: W + 'px', height: H + 'px', borderRadius: '0px' }
-    ], { duration: GROW, easing: 'cubic-bezier(0.65, 0, 0.25, 1)', fill: 'forwards' }).finished.then(() => {
-      fly.getAnimations().forEach(a => a.cancel());
-      fly.removeAttribute('style'); fly.classList.remove('is-card');
+    flight(fly, b, true).then(() => {
+      fly.getAnimations({ subtree: true }).forEach(an => an.cancel());
+      fly.classList.remove('is-flying');
       [...bg.children].forEach(c => { if (c !== fly) c.remove(); });
       busy = false; plan();
     });
-    fly.querySelector('.tc__shade').animate([{ opacity: 0 }, { opacity: 1 }], { duration: GROW, easing: 'ease-in', fill: 'forwards' });
     // the rest of the row closes up, and the place just left joins the end
     setTimeout(() => {
       row.querySelectorAll('.tc__card').forEach(li => slot(li, +li.dataset.j - 1));
@@ -492,21 +506,17 @@ if (tcEl) {
     // the row opens a slot at the front, and the card that comes back to be the stage leaves the end
     row.querySelector(`.tc__card[data-k="${cur}"]`)?.remove();
     row.querySelectorAll('.tc__card').forEach(li => slot(li, +li.dataset.j + 1));
-    top.classList.add('is-card');
-    top.animate([
-      { left: '0px', top: '0px', width: tcEl.clientWidth + 'px', height: tcEl.clientHeight + 'px', borderRadius: '0px' },
-      { ...px(b), borderRadius: '12px' }
-    ], { duration: GROW, easing: ease, fill: 'forwards' }).finished.then(() => {
+    flight(top, b, false).then(() => {
       row.prepend(card(was, 0));
       top.remove(); busy = false; plan();
     });
-    top.querySelector('.tc__shade').animate([{ opacity: 1 }, { opacity: 0 }], { duration: GROW, easing: 'ease-out', fill: 'forwards' });
     words(cur);
   };
 
+  let held = false;   // the pointer is on the stage, or the keyboard is inside it: wait
   const plan = () => {
     clearTimeout(timer);
-    if (still || !inView || document.hidden) return;
+    if (still || !inView || held || document.hidden) return;
     timer = setTimeout(next, EVERY);
   };
   tcEl.querySelectorAll('.tc__arrow').forEach(btn => btn.addEventListener('click', () => {
@@ -516,6 +526,10 @@ if (tcEl) {
   }));
   new IntersectionObserver(([e]) => { inView = e.isIntersecting; plan(); }, { threshold: 0.5 }).observe(tcEl);
   document.addEventListener('visibilitychange', plan);
+  tcEl.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { held = true; plan(); } });
+  tcEl.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') { held = false; plan(); } });
+  tcEl.addEventListener('focusin', () => { held = true; plan(); });
+  tcEl.addEventListener('focusout', e => { if (!tcEl.contains(e.relatedTarget)) { held = false; plan(); } });
   document.addEventListener('langchange', () => { if (!busy) draw(); });
   draw();
   preload(mod(cur + 1));

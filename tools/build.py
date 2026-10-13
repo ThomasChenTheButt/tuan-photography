@@ -495,7 +495,24 @@ def timed_cards(root, en, zh):
         if not sid:
             continue
         x = SLIDES[sid]
-        note = c.get("note") or {"en": "", "zh": ""}
+        # the line under the name says what his photographs there show: up to three subjects,
+        # each only once ("Matterhorn" and "Matterhorn reflected" are one subject)
+        if "guide" in b:
+            mine = lambda y, c=c: y["country"] == c["id"]
+        elif b.get("place"):
+            mine = lambda y, pl=b["place"]: y.get("city") == pl
+        else:
+            mine = lambda y, c=c: y["country"] == c["id"]
+        def subject(y):   # "The Capitol at dusk" and "The Capitol" are one subject: its first two words
+            w = [t for t in re.split(r"[\s,/]+", y["place"]["en"].lower()) if t and t != "the"]
+            return " ".join(w[:2]) if len(w) > 1 and w[1] not in ("at", "in", "from", "of", "over") else w[0]
+        picked, seen = [], set()
+        for y in DATA["slides"]:
+            if mine(y) and len(picked) < 3 and not any(subject(y).startswith(o) or o.startswith(subject(y)) for o in seen):
+                seen.add(subject(y)); picked.append(y)
+        en_names, zh_names = [q["place"]["en"] for q in picked], [q["place"]["zh"] for q in picked]
+        en_list = en_names[0] if len(en_names) == 1 else ", ".join(en_names[:-1]) + " and " + en_names[-1]
+        note = {"en": f"Photographs of {en_list}.", "zh": "照片：" + "、".join(zh_names) + "。"}
         places.append({"f": x["file"], "w": x["w"], "h": x["h"], "href": root + href, "btn": btn,
                        "name": name, "where": where,
                        "note": {"en": clean_en(note["en"]), "zh": clean_zh(note["zh"])}})
@@ -522,7 +539,7 @@ def timed_cards(root, en, zh):
     <button class="tc__arrow" type="button" data-go="-1" aria-label="Previous" data-i18n-aria="tcPrev">{chev("M14.5 6 8.5 12l6 6")}</button>
     <button class="tc__arrow" type="button" data-go="1" aria-label="Next" data-i18n-aria="tcNext">{chev("M9.5 6l6 6-6 6")}</button>
     <span class="tc__bar"><i></i></span>
-    <span class="tc__count num"><span>01</span></span>
+    <span class="tc__count num"><span>01</span><small>/ {n:02d}</small></span>
   </div>
   <script type="application/json" id="tc-data">{data}</script>
 </section>"""

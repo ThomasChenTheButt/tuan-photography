@@ -348,6 +348,8 @@ main { flex: 1; }
   position: relative; height: 100svh; min-height: 38rem; max-height: 75rem; margin-inline: calc(50% - 50vw); overflow: hidden; background: var(--slate); color: var(--paper); }
 .tc__bg, .tc__layer { position: absolute; inset: 0; }
 .tc__layer { overflow: hidden; }
+.tc__layer.is-flying { will-change: clip-path; }
+.tc__layer.is-flying img { will-change: transform; }
 .tc__layer img, .tc__card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .tc__layer.is-card { border-radius: 0.75rem; box-shadow: 0 1.4rem 3rem color-mix(in oklch, var(--shade) 55%, transparent); }
 .tc__shade { position: absolute; inset: 0; pointer-events: none;
@@ -378,10 +380,11 @@ main { flex: 1; }
 .tc__arrow { display: grid; place-items: center; width: 3.3rem; height: 3.3rem; padding: 0; border: 1px solid color-mix(in oklch, var(--paper) 55%, transparent); border-radius: 50%; background: none; color: var(--paper); cursor: pointer; transition: border-color 300ms var(--out), background 300ms var(--out); }
 .tc__arrow:hover { border-color: var(--paper); background: color-mix(in oklch, var(--paper) 12%, transparent); }
 .tc__arrow svg { width: 1.3rem; height: 1.3rem; }
-.tc__bar { flex: 1; height: 2px; margin-left: 1.2rem; background: color-mix(in oklch, var(--paper) 25%, transparent); }
-.tc__bar i { display: block; width: var(--p, 0%); height: 100%; background: var(--clay); transition: width 900ms var(--out); }
-.tc__count { display: block; overflow: hidden; min-width: 2.6ch; font-family: var(--display); font-size: clamp(2.6rem, 1rem + 3.4vw, 4.6rem); line-height: 1; text-align: right; }
+.tc__bar { flex: 1; height: 3px; margin-left: 1.2rem; background: color-mix(in oklch, var(--paper) 28%, transparent); }
+.tc__bar i { display: block; height: 100%; background: var(--paper); transform: scaleX(var(--p, 0)); transform-origin: left; transition: transform 900ms var(--out); }
+.tc__count { display: flex; align-items: baseline; gap: 0.35rem; overflow: hidden; font-family: var(--display); font-size: clamp(2.6rem, 1rem + 3.4vw, 4.6rem); line-height: 1; }
 .tc__count span { display: block; }
+.tc__count small { font-size: 0.38em; letter-spacing: 0.04em; color: color-mix(in oklch, var(--paper) 70%, transparent); }
 @media (max-width: 40rem) {
   .tc { --cx: 5vw; --cw: 36vw; --cg: 3.5vw; --ct: 52%; min-height: 40rem; }
   .tc__shade { background: linear-gradient(to bottom, color-mix(in oklch, var(--shade) 60%, transparent), color-mix(in oklch, var(--shade) 25%, transparent)); }
