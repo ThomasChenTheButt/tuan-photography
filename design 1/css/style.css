@@ -31,6 +31,7 @@
 
   --serif: "Playfair Display", "Noto Serif TC", Georgia, serif;
   --sans: "Geist", "Noto Sans TC", system-ui, sans-serif;
+  --display: "Bebas Neue", "Noto Sans TC", "Geist", sans-serif;   /* experiment timed-cards only */
 
   --t-xs: 0.8125rem;
   --t-s: 0.9375rem;
@@ -339,24 +340,56 @@ main { flex: 1; }
   .book__name b { font-size: 1.1rem; }
 }
 
-/* The stage (experiment timed-cards): the shelf stands in front of a photograph from the book in front.
-   The photograph grows out of that book's cover until it fills the stage, then the next one from the
-   same book does the same. Full width, like a window; the place line sits on the same darkening foot. */
-.band:has(.stage) { overflow-x: clip; }
-.stage { position: relative; display: grid; align-content: end; height: 100svh; min-height: 38rem; max-height: 75rem; margin-inline: calc(50% - 50vw); padding-bottom: 7rem; overflow: hidden; background: var(--slate); color: var(--paper); }
-.stage__bg { position: absolute; inset: 0; }
-.stage__bg > div { position: absolute; inset: 0; overflow: hidden; }
-.stage__bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.stage::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 26rem; pointer-events: none; background: linear-gradient(to top, oklch(20% 0.02 60 / 0.82), oklch(20% 0.02 60 / 0.55) 45%, oklch(20% 0.02 60 / 0)); }
-.stage .shelf { z-index: 2; width: 100%; max-width: none; }
-.stage .book__veil { background: var(--slate); }
-.stage .book__name, .stage .book__name span { color: var(--paper); }
-.stage__place { position: absolute; z-index: 3; left: var(--edge); right: var(--edge); bottom: 1.6rem; display: flex; gap: 0.2rem 1rem; flex-wrap: wrap; align-items: baseline; margin: 0; pointer-events: none; transition: opacity 400ms var(--out); }
-.stage__place b { font-family: var(--serif); font-weight: 400; font-size: 1.15rem; line-height: 1.25; }
-:lang(zh-Hant) .stage__place b { font-weight: 500; font-size: 1.1rem; letter-spacing: 0.05em; }
-.stage__place span { font-size: var(--t-xs); }
-.stage__place { transition: opacity 500ms var(--out), transform 700ms var(--out); }
-.stage__place.out { opacity: 0; transform: translateY(0.75rem); transition: none; }
+/* Timed cards (experiment timed-cards): a straight copy of the reference animation, his call of
+   2026-10-13. The brief's square corners, flat cards, words-only controls, no numbering and no
+   lettering on photographs are suspended here. The script sets --j (a card's slot) on each card. */
+.band:has(.tc) { overflow-x: clip; }
+.tc { --cx: 41vw; --cw: 14.5vw; --ch: calc(var(--cw) * 1.5); --cg: 1.8vw; --ct: 39%; --shade: oklch(20% 0.02 60);
+  position: relative; height: 100svh; min-height: 38rem; max-height: 75rem; margin-inline: calc(50% - 50vw); overflow: hidden; background: var(--slate); color: var(--paper); }
+.tc__bg, .tc__layer { position: absolute; inset: 0; }
+.tc__layer { overflow: hidden; }
+.tc__layer img, .tc__card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.tc__layer.is-card { border-radius: 0.75rem; box-shadow: 0 1.4rem 3rem color-mix(in oklch, var(--shade) 55%, transparent); }
+.tc__shade { position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to right, color-mix(in oklch, var(--shade) 62%, transparent), color-mix(in oklch, var(--shade) 18%, transparent) 55%, color-mix(in oklch, var(--shade) 10%, transparent)); }
+.tc__layer.is-card .tc__shade { opacity: 0; }
+.tc__text { position: absolute; z-index: 2; left: 5vw; top: 50%; width: 33vw; transform: translateY(-50%); }
+.tc__rule { display: block; width: 2.2rem; height: 3px; margin-bottom: 1.1rem; background: var(--paper); }
+.tc__where { margin: 0 0 0.5rem; font-size: clamp(1rem, 0.6rem + 0.9vw, 1.35rem); font-weight: 400; }
+.tc__title { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(3.4rem, 1rem + 6.4vw, 8rem); line-height: 0.92; letter-spacing: 0.01em; text-transform: uppercase; }
+:lang(zh-Hant) .tc__title { font-weight: 600; font-size: clamp(2.6rem, 1rem + 4.4vw, 5.5rem); line-height: 1.15; letter-spacing: 0.04em; }
+.tc__line { display: block; overflow: hidden; padding-bottom: 0.04em; }
+.tc__line > span { display: block; }
+.tc__note { max-width: 26rem; margin: 1.2rem 0 1.8rem; font-size: clamp(0.85rem, 0.7rem + 0.3vw, 0.95rem); line-height: 1.6; color: color-mix(in oklch, var(--paper) 86%, transparent); }
+.tc__btn { display: inline-block; padding: 0.85rem 1.7rem; border: 1px solid var(--paper); border-radius: 999px; color: var(--paper); text-decoration: none; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; transition: background 300ms var(--out), color 300ms var(--out); }
+.tc__btn:hover { background: var(--paper); color: var(--text); }
+:lang(zh-Hant) .tc__btn { font-size: 0.85rem; letter-spacing: 0.14em; }
+.tc__cards { position: absolute; z-index: 3; inset: 0; margin: 0; padding: 0; list-style: none; pointer-events: none; }
+.tc__card { position: absolute; left: var(--cx); top: var(--ct); width: var(--cw); height: var(--ch); overflow: hidden; border-radius: 0.75rem; background: var(--slate);
+  box-shadow: 0 1.2rem 2.6rem color-mix(in oklch, var(--shade) 50%, transparent);
+  transform: translateX(calc(var(--j, 0) * (var(--cw) + var(--cg)))); transition: transform 800ms var(--out); }
+.tc__card[hidden] { display: block; visibility: hidden; }
+.tc__foot { position: absolute; left: 0; right: 0; bottom: 0; display: grid; gap: 0.15rem; padding: 3.5rem 0.9rem 1rem; background: linear-gradient(to top, color-mix(in oklch, var(--shade) 75%, transparent), transparent); }
+.tc__foot i { display: block; width: 1rem; height: 2px; margin-bottom: 0.4rem; background: var(--paper); }
+.tc__foot small { font-size: 0.72rem; }
+.tc__foot b { font-family: var(--display); font-weight: 400; font-size: clamp(1.2rem, 0.6rem + 1vw, 1.7rem); line-height: 1; text-transform: uppercase; }
+:lang(zh-Hant) .tc__foot b { font-weight: 600; font-size: 1.05rem; line-height: 1.3; letter-spacing: 0.06em; }
+.tc__nav { position: absolute; z-index: 3; left: var(--cx); right: 3vw; top: calc(var(--ct) + var(--ch) + 2.2rem); display: flex; align-items: center; gap: 1.1rem; }
+.tc__arrow { display: grid; place-items: center; width: 3.3rem; height: 3.3rem; padding: 0; border: 1px solid color-mix(in oklch, var(--paper) 55%, transparent); border-radius: 50%; background: none; color: var(--paper); cursor: pointer; transition: border-color 300ms var(--out), background 300ms var(--out); }
+.tc__arrow:hover { border-color: var(--paper); background: color-mix(in oklch, var(--paper) 12%, transparent); }
+.tc__arrow svg { width: 1.3rem; height: 1.3rem; }
+.tc__bar { flex: 1; height: 2px; margin-left: 1.2rem; background: color-mix(in oklch, var(--paper) 25%, transparent); }
+.tc__bar i { display: block; width: var(--p, 0%); height: 100%; background: var(--clay); transition: width 900ms var(--out); }
+.tc__count { display: block; overflow: hidden; min-width: 2.6ch; font-family: var(--display); font-size: clamp(2.6rem, 1rem + 3.4vw, 4.6rem); line-height: 1; text-align: right; }
+.tc__count span { display: block; }
+@media (max-width: 40rem) {
+  .tc { --cx: 5vw; --cw: 36vw; --cg: 3.5vw; --ct: 52%; min-height: 40rem; }
+  .tc__shade { background: linear-gradient(to bottom, color-mix(in oklch, var(--shade) 60%, transparent), color-mix(in oklch, var(--shade) 25%, transparent)); }
+  .tc__text { top: 11%; width: 90vw; transform: none; }
+  .tc__note { margin: 0.8rem 0 1.1rem; }
+  .tc__nav { left: 5vw; right: 5vw; top: auto; bottom: 1.4rem; }
+  .tc__arrow { width: 2.7rem; height: 2.7rem; }
+}
 
 /* a wall of photographs: rows that fill the width, nothing cropped, each with its name */
 .wall { display: grid; row-gap: var(--s-4); }

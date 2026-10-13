@@ -313,7 +313,7 @@ if (stackEl) {
   const stage = stackEl.parentElement;
   const books = [...stackEl.children];
   const n = books.length;
-  let cur = 0, settle = null, lastY = window.scrollY, shown = false, front = -1;
+  let cur = 0, settle = null, lastY = window.scrollY, shown = false;
   const place = () => {
     books.forEach((book, i) => {
       const d = i - cur, far = Math.abs(d);
@@ -323,7 +323,6 @@ if (stackEl) {
       book.hidden = far > 5;
       book.classList.toggle('front', Math.round(cur) === i);
     });
-    if (Math.round(cur) !== front) { front = Math.round(cur); stage.dispatchEvent(new CustomEvent('front', { detail: front, bubbles: true })); }
   };
   const go = (to, snap = true) => {
     cur = Math.min(n - 1, Math.max(0, to));
@@ -341,7 +340,6 @@ if (stackEl) {
     });
     book.addEventListener('focus', () => go(i));   // the keyboard walks the row
   });
-  stage.addEventListener('advance', () => go(Math.round(cur) + 1 < n ? Math.round(cur) + 1 : 0));
   stage.addEventListener('keydown', e => {
     if (e.key === 'ArrowRight') { e.preventDefault(); go(Math.round(cur) + 1); }
     if (e.key === 'ArrowLeft') { e.preventDefault(); go(Math.round(cur) - 1); }
@@ -363,102 +361,165 @@ if (stackEl) {
   }, { passive: true });
 }
 
-/* ---------- 4b. The stage behind the books (experiment timed-cards) ----------
-   The book in front opens into a photograph behind the shelf: another photograph of the same
-   place (never the one on the cover) grows out of the cover until it fills the stage. A few
-   seconds later a second one does the same, then the row moves on to the next book by itself
-   (his call, 2026-10-13). Any wheel, swipe, key, click or page scroll on the row stops this;
-   after a few quiet seconds it carries on. While the book stays in front, every few seconds
-   the next photograph from the same book grows out of the cover in the same way. It waits while
-   the stage is out of view, the tab is hidden or the pointer is on a book. Under "reduce motion"
-   the photograph simply changes with the book, and nothing changes on its own. */
-const stageEl = document.querySelector('.stage');
-if (stageEl) {
-  const sets = JSON.parse(document.getElementById('stage-data').textContent);
-  const bg = stageEl.querySelector('.stage__bg');
-  const line = stageEl.querySelector('.stage__place');
-  const shelfEl = stageEl.querySelector('.shelf');
-  const root = document.documentElement.dataset.root || '';
+/* ---------- 4b. Timed cards (experiment timed-cards) ----------
+   After Giulio Cuscito's "Timed Cards Opening": one place fills the stage, the next places wait
+   as cards in a row. Every few seconds the first card lifts out of the row and grows until it is
+   the new background, the place's name rises in at the left line by line, the row closes up and
+   the place just left joins the end. The arrows step either way. It waits while the stage is out
+   of view or the tab is hidden; under "reduce motion" it changes only on the arrows, at once.
+   Each card's slot goes to the stylesheet as --j. */
+const tcEl = document.querySelector('.tc');
+if (tcEl) {
+  const P = JSON.parse(document.getElementById('tc-data').textContent);
+  const N = P.length, EVERY = 4000, GROW = 1400;
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const EVERY = 5000, GROW = 1300, QUIET = 6000, PER_BOOK = 2;
-  let book = [...shelfEl.querySelectorAll('.book')].findIndex(b => b.classList.contains('front'));
-  let k = 0, timer = null, wait = null, inView = false, held = false, opened = false;
-  let seen = 0, lastHand = 0;
-  const last = {};   // where each book's photographs had got to, so a later visit shows others
-  const zh = () => document.documentElement.lang === 'zh-Hant';
-  const say = () => {
-    const x = sets[book] && sets[book][k];
-    if (!x) { line.classList.add('out'); return; }
-    line.querySelector('b').textContent = x.p[zh() ? 'zh' : 'en'];
-    line.querySelector('span').textContent = x.wh[zh() ? 'zh' : 'en'];
-    line.classList.remove('out');
+  const ease = 'cubic-bezier(0.65, 0, 0.25, 1)', out = 'cubic-bezier(0.16, 1, 0.3, 1)';
+  const bg = tcEl.querySelector('.tc__bg'), row = tcEl.querySelector('.tc__cards');
+  const text = tcEl.querySelector('.tc__text'), count = tcEl.querySelector('.tc__count');
+  const root = document.documentElement.dataset.root || '';
+  const L = () => document.documentElement.lang === 'zh-Hant' ? 'zh' : 'en';
+  const word = key => (window.pageI18n?.[L()] || {})[key] || key;
+  const big = p => `${root}images/web/1280/${p.f}`;
+  let cur = 0, busy = false, timer = null, inView = false;
+  const mod = k => (k % N + N) % N;
+
+  const card = (k, j) => {
+    const p = P[k], li = document.createElement('li');
+    li.className = 'tc__card'; li.dataset.k = k;
+    li.innerHTML = `<img src="${root}images/web/640/${p.f}" alt="" decoding="async"><span class="tc__foot"><i></i><small></small><b></b></span>`;
+    li.querySelector('small').textContent = p.where[L()];
+    li.querySelector('b').textContent = p.name[L()];
+    slot(li, j);
+    return li;
   };
-  const show = (grow) => {
-    const x = sets[book] && sets[book][k];
-    if (!x) { bg.replaceChildren(); say(); return; }   // a book with no other photograph: the plain stage
-    const img = new Image();
-    img.alt = '';
-    img.decoding = 'async';
-    img.sizes = '100vw';
-    img.srcset = `${root}images/web/1280/${x.f} 1280w, ${root}images/web/${x.f} ${x.w}w`;
-    img.src = `${root}images/web/1280/${x.f}`;
-    // each photograph is a card: a bare rectangle that the photograph fills, whatever its shape
-    const card = document.createElement('div');
-    card.append(img);
-    const put = () => {
-      const old = [...bg.children];
-      bg.append(card);
-      line.classList.add('out');
-      const done = () => { old.forEach(o => o.remove()); say(); };
-      const face = shelfEl.querySelector('.book.front .book__face');
-      if (!grow || still || !face) { done(); return; }
-      // as in the reference: the card lifts out of the front book, up and a little to the left, clear of the row,
-      // then grows until it is the whole stage, while the photograph before it sinks into shadow
-      const s = stageEl.getBoundingClientRect(), c = face.getBoundingClientRect();
-      const at = (l, t, w, h) => ({ left: l + 'px', top: t + 'px', width: w + 'px', height: h + 'px' });
-      const x0 = c.left - s.left, y0 = c.top - s.top;
-      card.animate([
-        { ...at(x0, y0, c.width, c.height), offset: 0 },
-        { ...at(x0 - c.width * 0.3, y0 - c.height * 0.95, c.width * 1.08, c.height * 1.08), offset: 0.35 },
-        { ...at(0, 0, s.width, s.height), offset: 1 }
-      ], { duration: GROW, easing: 'cubic-bezier(0.55, 0, 0.25, 1)' }).finished.then(done, done);
-      old.forEach(o => o.animate([{ opacity: 1 }, { opacity: 0.3 }], { duration: GROW, easing: 'ease-in', fill: 'forwards' }));
-    };
-    img.decode().then(put, put);
+  const slot = (li, j) => { li.style.setProperty('--j', j); li.hidden = j > 6; li.dataset.j = j; };
+  const layer = (k, asCard) => {
+    const d = document.createElement('div');
+    d.className = 'tc__layer' + (asCard ? ' is-card' : '');
+    d.innerHTML = `<img src="${big(P[k])}" alt="" decoding="async"><i class="tc__shade"></i>`;
+    return d;
   };
-  const tick = () => {
+  const fill = k => {
+    const p = P[k], l = L();
+    text.querySelector('.tc__where').textContent = p.where[l];
+    text.querySelector('.tc__title').innerHTML = (l === 'zh' ? [p.name.zh] : p.name.en.split(' '))
+      .map(w => `<span class="tc__line"><span></span></span>`).join('');
+    const ws = l === 'zh' ? [p.name.zh] : p.name.en.split(' ');
+    text.querySelectorAll('.tc__line > span').forEach((s, n) => { s.textContent = ws[n]; });
+    text.querySelector('.tc__note').textContent = p.note[l];
+    const a = text.querySelector('.tc__btn'); a.href = p.href; a.textContent = word(p.btn);
+  };
+  const number = k => {
+    const s = count.querySelector('span');
+    s.textContent = String(k + 1).padStart(2, '0');
+    tcEl.querySelector('.tc__bar').style.setProperty('--p', ((k + 1) / N * 100).toFixed(2) + '%');
+    return s;
+  };
+  const draw = () => {   // the whole state at once: the first view, a language change, reduce motion
+    bg.replaceChildren(layer(cur, false));
+    row.replaceChildren(...Array.from({ length: N - 1 }, (_, j) => card(mod(cur + 1 + j), j)));
+    fill(cur); number(cur);
+  };
+  const preload = k => { const im = new Image(); im.src = big(P[k]); };
+
+  // the new words come in: the old fade away, then the title rises line by line, the rest after it
+  const words = k => {
+    const parts = [...text.children];
+    parts.forEach(el => el.animate([{ opacity: 1, transform: 'none' }, { opacity: 0, transform: 'translateY(-0.6rem)' }],
+      { duration: 380, delay: 150, easing: 'ease-in', fill: 'forwards' }));
+    setTimeout(() => {
+      fill(k);
+      parts.forEach(el => el.getAnimations().forEach(a => a.cancel()));
+      text.querySelectorAll('.tc__line > span').forEach((s, n) =>
+        s.animate([{ transform: 'translateY(105%)' }, { transform: 'none' }], { duration: 750, delay: n * 90, easing: out, fill: 'backwards' }));
+      [text.querySelector('.tc__rule'), text.querySelector('.tc__where')].forEach(el =>
+        el.animate([{ opacity: 0, transform: 'translateY(0.6rem)' }, { opacity: 1, transform: 'none' }], { duration: 600, easing: out, fill: 'backwards' }));
+      [text.querySelector('.tc__note'), text.querySelector('.tc__btn')].forEach((el, n) =>
+        el.animate([{ opacity: 0, transform: 'translateY(0.8rem)' }, { opacity: 1, transform: 'none' }], { duration: 700, delay: 220 + n * 90, easing: out, fill: 'backwards' }));
+      number(k).animate([{ transform: 'translateY(100%)' }, { transform: 'none' }], { duration: 600, easing: out });
+    }, 950);
+  };
+  const box = el => {
+    const s = tcEl.getBoundingClientRect(), r = el.getBoundingClientRect();
+    return { left: r.left - s.left, top: r.top - s.top, width: r.width, height: r.height };
+  };
+  const px = b => ({ left: b.left + 'px', top: b.top + 'px', width: b.width + 'px', height: b.height + 'px' });
+
+  const next = () => {
+    if (busy) return;
+    const first = row.querySelector('.tc__card[data-j="0"]');
+    if (still || !first) { cur = mod(cur + 1); draw(); return; }
+    busy = true;
+    const was = cur; cur = mod(cur + 1);
+    const b = box(first), W = tcEl.clientWidth, H = tcEl.clientHeight;
+    // the card leaves the row and becomes a layer of the stage, then grows to fill it
+    const fly = layer(cur, true);
+    Object.assign(fly.style, px(b));
+    bg.append(fly); first.remove();
+    const lift = { left: b.left - W * 0.025, top: b.top - 16, width: b.width * 1.05, height: b.height * 1.05 };
+    // over the title: wider and lower than a card, on its way to the stage's own shape
+    const drift = { left: W * 0.2, top: H * 0.22, width: W * 0.34, height: H * 0.56 };
+    fly.animate([
+      { ...px(b), borderRadius: '12px', offset: 0, easing: out },
+      { ...px(lift), borderRadius: '12px', offset: 0.16, easing: 'cubic-bezier(0.45, 0, 0.55, 1)' },
+      { ...px(drift), borderRadius: '10px', offset: 0.55, easing: 'cubic-bezier(0.45, 0, 0.2, 1)' },
+      { left: '0px', top: '0px', width: W + 'px', height: H + 'px', borderRadius: '0px', offset: 1 }
+    ], { duration: GROW, fill: 'forwards' }).finished.then(() => {
+      fly.getAnimations().forEach(a => a.cancel());
+      fly.removeAttribute('style'); fly.classList.remove('is-card');
+      [...bg.children].forEach(c => { if (c !== fly) c.remove(); });
+      busy = false; plan();
+    });
+    fly.querySelector('.tc__shade').animate([{ opacity: 0 }, { opacity: 1 }], { duration: GROW, easing: 'ease-in', fill: 'forwards' });
+    // the rest of the row closes up, and the place just left joins the end
+    setTimeout(() => {
+      row.querySelectorAll('.tc__card').forEach(li => slot(li, +li.dataset.j - 1));
+      const end = card(was, N - 2);
+      row.append(end);
+      end.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 700, delay: 300, easing: out, fill: 'backwards' });
+    }, 520);
+    words(cur);
+    preload(mod(cur + 1));
+  };
+
+  const prev = () => {
+    if (busy) return;
+    const first = row.querySelector('.tc__card[data-j="0"]');
+    if (still || !first) { cur = mod(cur - 1); draw(); return; }
+    busy = true;
+    const was = cur; cur = mod(cur - 1);
+    const b = box(first), top = bg.lastElementChild;
+    bg.prepend(layer(cur, false));   // the place before waits underneath
+    // the row opens a slot at the front, and the card that comes back to be the stage leaves the end
+    row.querySelector(`.tc__card[data-k="${cur}"]`)?.remove();
+    row.querySelectorAll('.tc__card').forEach(li => slot(li, +li.dataset.j + 1));
+    top.classList.add('is-card');
+    top.animate([
+      { left: '0px', top: '0px', width: tcEl.clientWidth + 'px', height: tcEl.clientHeight + 'px', borderRadius: '0px' },
+      { ...px(b), borderRadius: '12px' }
+    ], { duration: GROW, easing: ease, fill: 'forwards' }).finished.then(() => {
+      row.prepend(card(was, 0));
+      top.remove(); busy = false; plan();
+    });
+    top.querySelector('.tc__shade').animate([{ opacity: 1 }, { opacity: 0 }], { duration: GROW, easing: 'ease-out', fill: 'forwards' });
+    words(cur);
+  };
+
+  const plan = () => {
     clearTimeout(timer);
     if (still || !inView || document.hidden) return;
-    timer = setTimeout(() => {
-      const n = (sets[book] || []).length;
-      if (!held && Date.now() - lastHand > QUIET) {
-        if (n > 1 && seen < PER_BOOK) { k = (k + 1) % n; last[book] = k; seen++; show(true); }
-        else shelfEl.dispatchEvent(new CustomEvent('advance'));
-      }
-      tick();
-    }, EVERY);
+    timer = setTimeout(next, EVERY);
   };
-  stageEl.addEventListener('front', e => {
-    book = e.detail;
-    const n = (sets[book] || []).length;
-    k = n && book in last ? (last[book] + 1) % n : 0; last[book] = k; seen = n ? 1 : 0;
-    // wait until the row has stopped moving, so the cover is where it will stay
-    clearTimeout(timer); clearTimeout(wait);
-    wait = setTimeout(() => { opened = opened || inView; show(inView); tick(); }, 480);
-  });
-  new IntersectionObserver(([e]) => {
-    inView = e.isIntersecting;
-    if (inView && !opened) { opened = true; last[book] = k; seen = (sets[book] || []).length ? 1 : 0; show(true); }   // the first time the stage comes into view, the cover opens
-    tick();
-  }, { threshold: 0.4 }).observe(stageEl);
-  document.addEventListener('visibilitychange', tick);
-  // the visitor's own hand on the row: wait until it has been quiet for a while
-  const hand = () => { lastHand = Date.now(); };
-  ['wheel', 'touchstart', 'keydown', 'pointerdown'].forEach(t => shelfEl.addEventListener(t, hand, { passive: true }));
-  window.addEventListener('scroll', () => { if (inView) hand(); }, { passive: true });
-  shelfEl.addEventListener('pointerover', e => { held = !!e.target.closest('.book'); });
-  shelfEl.addEventListener('pointerleave', () => { held = false; });
-  new MutationObserver(say).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+  tcEl.querySelectorAll('.tc__arrow').forEach(btn => btn.addEventListener('click', () => {
+    clearTimeout(timer);
+    (btn.dataset.go === '1' ? next : prev)();
+    if (!busy) plan();
+  }));
+  new IntersectionObserver(([e]) => { inView = e.isIntersecting; plan(); }, { threshold: 0.5 }).observe(tcEl);
+  document.addEventListener('visibilitychange', plan);
+  document.addEventListener('langchange', () => { if (!busy) draw(); });
+  draw();
+  preload(mod(cur + 1));
 }
 
 /* ---------- 5. Guide contents: mark the section being read ---------- */

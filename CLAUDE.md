@@ -1,16 +1,14 @@
 > **Experiment `timed-cards`** (started 2026-10-13, port 8650, branch `exp/timed-cards`, local only).
-> Trying: the "Timed Cards Opening" transition (Giulio Cuscito, Dribbble concept video,
-> `ideas/timed-cards-opening.mp4`): a small photo card lifts and grows until it fills the screen
-> and becomes the next full-page photograph. Only steps 1-2 of the reference are borrowed.
-> Built on the home page's Guides shelf (his choice, 2026-10-13): a full-window photograph stands
-> behind the books, always another photograph of the front book's place, never its cover. It grows
-> out of the front book like a card (lifts up out of the book, then grows to fill the stage, 1.3 s); a second follows after 5 s, then the row moves to the next book
-> by itself. Any wheel, swipe, key, click or page scroll pauses this for 6 s. Code: `stage` in
-> `tools/build.py` `shelf()`, `.stage` in `design 1/css/style.css`, block 4b in `design 1/js/main.js`.
-> No skill. Suspended here: "nothing moves on its own" (the row advances by itself) and "no names
-> on a photograph" (the books and the front book's name stand over the stage photograph). The brief still holds (nothing on the opening
-> photograph, square corners, no shadows, no arrows or numbering, tokens only, both languages,
-> no GSAP without his yes). Which page, and auto-play or click, are his call before building.
+> A straight copy of the "Timed Cards Opening" animation (Giulio Cuscito, Dribbble concept video,
+> `ideas/timed-cards-opening.mp4`) in place of the home page's Guides shelf, his call of 2026-10-13
+> after two closer-to-the-brief tries missed. Barcelona fills the stage first, without motion; the
+> other places wait as cards. Every 4 s the first card lifts, drifts left over the title and grows
+> into the new background (the card's photo is the background); the name rises in line by line in
+> Bebas Neue; the row closes up; the counter and progress line move; arrows step either way.
+> Code: `timed_cards()` in `tools/build.py`, `.tc` in `design 1/css/style.css`, block 4b in
+> `design 1/js/main.js`, Bebas Neue added in `tools/fonts.py`. No skill. Suspended here: square
+> corners, no shadows, words not icons, no numbering, nothing written on a photograph, two
+> typefaces only, nothing moves on its own.
 
 # tuan photography 陳亮元 — project instructions
 

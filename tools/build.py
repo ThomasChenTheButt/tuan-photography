@@ -433,14 +433,13 @@ def shelf(root, en, zh):
     zh.update(bandGuide="攝影師的攻略", bandPhotos="作品", bandNone="還沒有照片",
               bookOpen="閱讀攻略", bookNot="攻略還沒寫", series="tuan photography")
     tones = ("clay", "olive", "slate")
-    books, sets = [], []
+    books = []
     for i, b in enumerate(DATA["shelf"]):
         tone = tones[i % len(tones)]
         if "guide" in b:
             g = next(x for x in DATA["guides"] if x["id"] == b["guide"])
             key, title, href = f"bk_{g['id']}", g["title"], f"{root}{g['href']}"
             sid, band, status = b.get("photo") or g["lead"], "bandGuide", "bookOpen"
-            mine = lambda x, c=g["country"]: x["country"] == c
         else:
             # A book for one city (the four US cities) is keyed by its place and opens its
             # country's page; its photographs are the slides marked with that city.
@@ -453,9 +452,6 @@ def shelf(root, en, zh):
         en[f"bo_{key}"] = f"{title['en']}: {en[status].lower() if status == 'bookOpen' else en[status]}"
         zh[f"bo_{key}"] = f"{title['zh']}：{zh[status]}"
         t = e(title["en"])
-        # the stage behind the shelf: the book's other photographs, never the one on its cover (his call, 2026-10-13)
-        own = [x for x in DATA["slides"] if mine(x) and x["id"] != sid]
-        sets.append([{"f": x["file"], "w": x["w"], "p": x["place"], "wh": x["where"]} for x in own])
         if sid:
             strings(SLIDES[sid], en, zh)
             face = f'<span class="book__face">{img(SLIDES[sid], root, "11rem", soon=True, named=False)}'
@@ -467,11 +463,69 @@ def shelf(root, en, zh):
                      f'<span class="book__back"><i data-i18n="series">tuan photography</i></span><span class="book__edge"></span>'
                      f'<span class="book__top"></span><span class="book__shadow"></span><span class="book__veil"></span></span>'
                      f'<span class="book__name"><b data-i18n="{key}">{t}</b><span data-i18n="{status}">{e(en[status])}</span></span></a>')
-    data = json.dumps(sets, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
-    return ('<div class="stage"><div class="stage__bg" aria-hidden="true"></div>'
-            '<div class="shelf"><div class="stack">' + "".join(books) + "</div></div>"
-            '<p class="stage__place" aria-live="off"><b></b><span></span></p>'
-            f'<script type="application/json" id="stage-data">{data}</script></div>')
+    return '<div class="shelf"><div class="stack">' + "".join(books) + "</div></div>"
+
+
+def timed_cards(root, en, zh):
+    """Experiment timed-cards: the guides as a row of photo cards in front of one full-window
+    photograph, after Giulio Cuscito's "Timed Cards Opening". Every few seconds the first card
+    lifts out of the row and grows into the new background, and the name of that place rises in
+    at the left. The first place is drawn here as plain HTML; the script runs the rest."""
+    en.update(tcGuide="Read the guide", tcPhotos="See the photographs", tcPrev="Previous", tcNext="Next",
+              tcLabel="Guides, one place at a time")
+    zh.update(tcGuide="閱讀攻略", tcPhotos="看照片", tcPrev="上一個", tcNext="下一個",
+              tcLabel="攻略，一次一個地方")
+    conts = {c["id"]: c for c in DATA["continents"]}
+    places = []
+    for b in DATA["shelf"]:
+        if "guide" in b:
+            g = next(x for x in DATA["guides"] if x["id"] == b["guide"])
+            c = COUNTRIES[g["country"]]
+            name, where, href, btn = g["title"], {"en": c["en"], "zh": c["zh"]}, g["href"], "tcGuide"
+        else:
+            c, place = COUNTRIES[b["country"]], b.get("place")
+            name = b.get("title") or {"en": c["en"], "zh": c["zh"]}
+            if name["en"] != c["en"]:
+                where = {"en": c["en"], "zh": c["zh"]}
+            else:
+                k = conts[c["continent"]]
+                where = {"en": k["en"], "zh": k["zh"]}
+            href, btn = f"countries/{c['id']}.html", "tcPhotos"
+        sid = b.get("cover") or b.get("photo")
+        if not sid:
+            continue
+        x = SLIDES[sid]
+        note = c.get("note") or {"en": "", "zh": ""}
+        places.append({"f": x["file"], "w": x["w"], "h": x["h"], "href": root + href, "btn": btn,
+                       "name": name, "where": where,
+                       "note": {"en": clean_en(note["en"]), "zh": clean_zh(note["zh"])}})
+    first, n = places[0], len(places)
+    data = json.dumps(places, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
+    lines = "".join(f'<span class="tc__line"><span>{e(w)}</span></span>' for w in first["name"]["en"].split())
+    cards = "".join(
+        f'<li class="tc__card" data-j="{j}"><img src="{root}images/web/640/{p["f"]}" alt="" loading="lazy" decoding="async">'
+        f'<span class="tc__foot"><i></i><small>{e(p["where"]["en"])}</small><b>{e(p["name"]["en"])}</b></span></li>'
+        for j, p in enumerate(places[1:]))
+    chev = lambda d: (f'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="{d}" fill="none" '
+                      f'stroke="currentColor" stroke-width="1.6"/></svg>')
+    return f"""<section class="tc" aria-label="{e(en['tcLabel'])}" data-i18n-aria="tcLabel">
+  <div class="tc__bg"><div class="tc__layer"><img src="{root}images/web/1280/{first['f']}" srcset="{root}images/web/1280/{first['f']} 1280w, {root}images/web/{first['f']} {first['w']}w" sizes="100vw" alt=""><i class="tc__shade"></i></div></div>
+  <div class="tc__text" aria-live="polite">
+    <i class="tc__rule"></i>
+    <p class="tc__where">{e(first['where']['en'])}</p>
+    <h3 class="tc__title">{lines}</h3>
+    <p class="tc__note">{e(first['note']['en'])}</p>
+    <a class="tc__btn" href="{first['href']}">{e(en[first['btn']])}</a>
+  </div>
+  <ol class="tc__cards">{cards}</ol>
+  <div class="tc__nav">
+    <button class="tc__arrow" type="button" data-go="-1" aria-label="Previous" data-i18n-aria="tcPrev">{chev("M14.5 6 8.5 12l6 6")}</button>
+    <button class="tc__arrow" type="button" data-go="1" aria-label="Next" data-i18n-aria="tcNext">{chev("M9.5 6l6 6-6 6")}</button>
+    <span class="tc__bar"><i></i></span>
+    <span class="tc__count num"><span>01</span></span>
+  </div>
+  <script type="application/json" id="tc-data">{data}</script>
+</section>"""
 
 
 # ------------------------------------------------------------------ pages
@@ -523,7 +577,7 @@ def build_home():
 <div class="band">
   <section class="wrap part" aria-labelledby="guides-h">
     <div class="part__head"><h2 id="guides-h" data-i18n="guidesTitle">Guides</h2></div>
-    {shelf(root, en, zh)}
+    {timed_cards(root, en, zh)}
     <p class="after"><span data-i18n="moreText">{e(en['moreText'])}</span> <a href="{root}destinations.html" data-i18n="moreCta">See every destination</a></p>
   </section>
 </div>

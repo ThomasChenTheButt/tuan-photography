@@ -22,7 +22,7 @@ ROOT = Path(__file__).resolve().parent.parent
 FONTS = ROOT / "design 1" / "fonts"
 SHEET = ROOT / "design 1" / "css" / "fonts.css"
 
-FAMILIES = ("family=Playfair+Display&family=Geist:wght@400..600"
+FAMILIES = ("family=Bebas+Neue&family=Playfair+Display&family=Geist:wght@400..600"
             "&family=Noto+Serif+TC:wght@500..600&family=Noto+Sans+TC:wght@400..600")
 SOURCE = f"https://fonts.googleapis.com/css2?{FAMILIES}&display=swap"
 # Google sends the small modern format (woff2, sliced) only to a browser it recognises.
