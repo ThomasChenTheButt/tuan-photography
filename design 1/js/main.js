@@ -363,7 +363,7 @@ if (stackEl) {
 
 /* ---------- 4b. Timed cards (experiment timed-cards) ----------
    After Giulio Cuscito's "Timed Cards Opening": one place fills the stage, the next places wait
-   as cards in a row. Every few seconds the first card lifts out of the row and grows until it is
+   as cards in a row. Every few seconds the first card leaves the row and grows until it is
    the new background, the place's name rises in at the left line by line, the row closes up and
    the place just left joins the end. The arrows step either way. It waits while the stage is out
    of view or the tab is hidden; under "reduce motion" it changes only on the arrows, at once.
@@ -453,16 +453,17 @@ if (tcEl) {
     const was = cur; cur = mod(cur + 1);
     const b = box(first), W = tcEl.clientWidth, H = tcEl.clientHeight;
     // the card leaves the row and becomes a layer of the stage, then grows to fill it
-    const fly = layer(cur, true);
+    const fly = layer(cur, true), im = fly.querySelector('img');
+    im.src = first.querySelector('img').currentSrc || first.querySelector('img').src;
+    const sharp = new Image(); sharp.src = big(P[cur]);
+    sharp.decode().then(() => { im.src = sharp.src; }, () => {});
     Object.assign(fly.style, px(b));
     bg.append(fly); first.remove();
-    const lift = { left: b.left - b.width * 0.025, top: b.top - 16 - b.height * 0.025, width: b.width * 1.05, height: b.height * 1.05 };
-    // it lifts a little, then grows straight out from where it is until it is the whole stage
+    // one smooth motion from the card's place to the whole stage, no stop on the way
     fly.animate([
-      { ...px(b), borderRadius: '12px', offset: 0, easing: out },
-      { ...px(lift), borderRadius: '12px', offset: 0.18, easing: 'cubic-bezier(0.5, 0, 0.2, 1)' },
-      { left: '0px', top: '0px', width: W + 'px', height: H + 'px', borderRadius: '0px', offset: 1 }
-    ], { duration: GROW, fill: 'forwards' }).finished.then(() => {
+      { ...px(b), borderRadius: '12px' },
+      { left: '0px', top: '0px', width: W + 'px', height: H + 'px', borderRadius: '0px' }
+    ], { duration: GROW, easing: 'cubic-bezier(0.65, 0, 0.25, 1)', fill: 'forwards' }).finished.then(() => {
       fly.getAnimations().forEach(a => a.cancel());
       fly.removeAttribute('style'); fly.classList.remove('is-card');
       [...bg.children].forEach(c => { if (c !== fly) c.remove(); });

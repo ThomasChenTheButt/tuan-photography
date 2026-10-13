@@ -2,7 +2,7 @@
 > A straight copy of the "Timed Cards Opening" animation (Giulio Cuscito, Dribbble concept video,
 > `ideas/timed-cards-opening.mp4`) in place of the home page's Guides shelf, his call of 2026-10-13
 > after two closer-to-the-brief tries missed. Barcelona fills the stage first, without motion; the
-> other places wait as cards. Every 4 s the first card lifts a little and grows straight out from its place
+> other places wait as cards. Every 4 s the first card grows straight out from its place in one smooth motion
 > into the new background (the card's photo is the background); the name rises in line by line in
 > Bebas Neue; the row closes up; the counter and progress line move; arrows step either way.
 > Code: `timed_cards()` in `tools/build.py`, `.tc` in `design 1/css/style.css`, block 4b in
