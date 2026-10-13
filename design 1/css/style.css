@@ -345,6 +345,7 @@ main { flex: 1; }
 .band:has(.stage) { overflow-x: clip; }
 .stage { position: relative; display: grid; align-content: end; height: 100svh; min-height: 38rem; max-height: 75rem; margin-inline: calc(50% - 50vw); padding-bottom: 7rem; overflow: hidden; background: var(--slate); color: var(--paper); }
 .stage__bg { position: absolute; inset: 0; }
+.stage__bg > div { position: absolute; inset: 0; overflow: hidden; }
 .stage__bg img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .stage::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 26rem; pointer-events: none; background: linear-gradient(to top, oklch(20% 0.02 60 / 0.82), oklch(20% 0.02 60 / 0.55) 45%, oklch(20% 0.02 60 / 0)); }
 .stage .shelf { z-index: 2; width: 100%; max-width: none; }
@@ -354,7 +355,8 @@ main { flex: 1; }
 .stage__place b { font-family: var(--serif); font-weight: 400; font-size: 1.15rem; line-height: 1.25; }
 :lang(zh-Hant) .stage__place b { font-weight: 500; font-size: 1.1rem; letter-spacing: 0.05em; }
 .stage__place span { font-size: var(--t-xs); }
-.stage__place.out { opacity: 0; }
+.stage__place { transition: opacity 500ms var(--out), transform 700ms var(--out); }
+.stage__place.out { opacity: 0; transform: translateY(0.75rem); transition: none; }
 
 /* a wall of photographs: rows that fill the width, nothing cropped, each with its name */
 .wall { display: grid; row-gap: var(--s-4); }

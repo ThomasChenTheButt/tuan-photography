@@ -4,7 +4,7 @@
 > and becomes the next full-page photograph. Only steps 1-2 of the reference are borrowed.
 > Built on the home page's Guides shelf (his choice, 2026-10-13): a full-window photograph stands
 > behind the books, always another photograph of the front book's place, never its cover. It grows
-> out of the front book's cover; a second follows after 5 s, then the row moves to the next book
+> out of the front book like a card (lifts up out of the book, then grows to fill the stage, 1.3 s); a second follows after 5 s, then the row moves to the next book
 > by itself. Any wheel, swipe, key, click or page scroll pauses this for 6 s. Code: `stage` in
 > `tools/build.py` `shelf()`, `.stage` in `design 1/css/style.css`, block 4b in `design 1/js/main.js`.
 > No skill. Suspended here: "nothing moves on its own" (the row advances by itself) and "no names

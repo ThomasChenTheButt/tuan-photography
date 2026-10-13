@@ -380,7 +380,7 @@ if (stageEl) {
   const shelfEl = stageEl.querySelector('.shelf');
   const root = document.documentElement.dataset.root || '';
   const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const EVERY = 5000, GROW = 950, QUIET = 6000, PER_BOOK = 2;
+  const EVERY = 5000, GROW = 1300, QUIET = 6000, PER_BOOK = 2;
   let book = [...shelfEl.querySelectorAll('.book')].findIndex(b => b.classList.contains('front'));
   let k = 0, timer = null, wait = null, inView = false, held = false, opened = false;
   let seen = 0, lastHand = 0;
@@ -402,17 +402,27 @@ if (stageEl) {
     img.sizes = '100vw';
     img.srcset = `${root}images/web/1280/${x.f} 1280w, ${root}images/web/${x.f} ${x.w}w`;
     img.src = `${root}images/web/1280/${x.f}`;
+    // each photograph is a card: a bare rectangle that the photograph fills, whatever its shape
+    const card = document.createElement('div');
+    card.append(img);
     const put = () => {
-      bg.append(img);
+      const old = [...bg.children];
+      bg.append(card);
       line.classList.add('out');
-      const done = () => { while (bg.children.length > 1) bg.firstElementChild.remove(); say(); };
+      const done = () => { old.forEach(o => o.remove()); say(); };
       const face = shelfEl.querySelector('.book.front .book__face');
       if (!grow || still || !face) { done(); return; }
-      // from the cover's place on the screen to the whole stage
+      // as in the reference: the card lifts out of the front book, up and a little to the left, clear of the row,
+      // then grows until it is the whole stage, while the photograph before it sinks into shadow
       const s = stageEl.getBoundingClientRect(), c = face.getBoundingClientRect();
-      const from = `inset(${c.top - s.top}px ${s.right - c.right}px ${s.bottom - c.bottom}px ${c.left - s.left}px)`;
-      img.animate([{ clipPath: from, transform: 'translateY(-1.5%)' }, { clipPath: 'inset(0px 0px 0px 0px)', transform: 'none' }],
-                  { duration: GROW, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' }).finished.then(done, done);
+      const at = (l, t, w, h) => ({ left: l + 'px', top: t + 'px', width: w + 'px', height: h + 'px' });
+      const x0 = c.left - s.left, y0 = c.top - s.top;
+      card.animate([
+        { ...at(x0, y0, c.width, c.height), offset: 0 },
+        { ...at(x0 - c.width * 0.3, y0 - c.height * 0.95, c.width * 1.08, c.height * 1.08), offset: 0.35 },
+        { ...at(0, 0, s.width, s.height), offset: 1 }
+      ], { duration: GROW, easing: 'cubic-bezier(0.55, 0, 0.25, 1)' }).finished.then(done, done);
+      old.forEach(o => o.animate([{ opacity: 1 }, { opacity: 0.3 }], { duration: GROW, easing: 'ease-in', fill: 'forwards' }));
     };
     img.decode().then(put, put);
   };
