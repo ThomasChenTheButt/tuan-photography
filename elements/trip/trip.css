@@ -1,0 +1,143 @@
+/* ==========================================================
+   A trip, told along its route (trial, 2026-10-13)
+
+   After Codrops' Storytelling Map, in the Journey page's hand:
+   the places on the left, the sketchbook map on the right. As
+   the page scrolls, the route is drawn leg by leg in pen and
+   vermilion wash and the map follows it; the photograph being
+   read throws a pale wash across to where it was made.
+   Tokens are design 2's ("Pen and wash"), copied here.
+   ========================================================== */
+
+@font-face { font-family: "Alegreya"; font-style: normal; font-weight: 400; font-display: swap; src: url(../wc/fonts/alegreya/alegreya-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "Alegreya"; font-style: italic; font-weight: 400; font-display: swap; src: url(../wc/fonts/alegreya/alegreya-latin-400-italic.woff2) format("woff2"); }
+@font-face { font-family: "Alegreya Sans"; font-style: normal; font-weight: 400; font-display: swap; src: url(../wc/fonts/alegreya-sans/alegreya-sans-latin-400-normal.woff2) format("woff2"); }
+@font-face { font-family: "Alegreya Sans"; font-style: italic; font-weight: 400; font-display: swap; src: url(../wc/fonts/alegreya-sans/alegreya-sans-latin-400-italic.woff2) format("woff2"); }
+@font-face { font-family: "Alegreya Sans"; font-style: normal; font-weight: 500; font-display: swap; src: url(../wc/fonts/alegreya-sans/alegreya-sans-latin-500-normal.woff2) format("woff2"); }
+@font-face { font-family: "Alegreya Sans"; font-style: normal; font-weight: 700; font-display: swap; src: url(../wc/fonts/alegreya-sans/alegreya-sans-latin-700-normal.woff2) format("woff2"); }
+
+:root {
+  color-scheme: light;
+  --paper: oklch(98.4% 0.0075 95);
+  --paper-2: oklch(95.4% 0.011 88);
+  --ink: oklch(24.5% 0.008 45);
+  --ink-2: oklch(41% 0.012 60);
+  --ink-3: oklch(62% 0.014 65);
+  --hair: oklch(88% 0.012 80);
+  --sea-deep: oklch(42% 0.085 240);
+  --warm-deep: oklch(49% 0.15 34);
+  --warm-wash: oklch(91.5% 0.04 40);
+  --ochre-wash: oklch(93% 0.04 85);
+  /* the wash a photograph throws across to its place: ochre, let down further */
+  --beam: oklch(90% 0.05 80);
+
+  --sans: "Alegreya Sans", "Noto Sans TC", system-ui, sans-serif;
+  --serif: "Alegreya", "Noto Serif TC", Georgia, serif;
+  --serif-zh: "Noto Serif TC", "Noto Sans TC", serif;
+  --soft: cubic-bezier(0.45, 0, 0.55, 1);
+  --edge: 22px;
+  --story-w: min(40rem, 42vw);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--paper); -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--sans); font-size: 1.0625rem; line-height: 1.5;
+  -webkit-font-smoothing: antialiased; font-variant-numeric: lining-nums;
+}
+:lang(zh-Hant) body { line-height: 1.7; }
+::selection { background: var(--warm-wash); color: var(--ink); }
+img { display: block; max-width: 100%; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; border-radius: 0; }
+p, h1, h2, figure { margin: 0; }
+:focus-visible { outline: 2px solid var(--warm-deep); outline-offset: 3px; }
+
+.caps, .lang__btn { font-size: 0.72rem; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; line-height: 1.3; }
+:lang(zh-Hant) :is(.caps, .lang__btn) { font-size: 0.8rem; letter-spacing: 0.26em; text-transform: none; }
+
+/* the margins: the site's name and the language, lettered on the paper */
+.mast { position: absolute; z-index: 4; top: var(--edge); left: var(--edge); font-size: 0.8rem; color: var(--ink-2); -webkit-text-stroke: 3.5px var(--paper); paint-order: stroke fill; }
+.lang { position: fixed; z-index: 4; top: calc(var(--edge) - 0.8rem); right: calc(var(--edge) - 0.45rem); display: flex; }
+.lang__btn { min-width: 2.75rem; min-height: 2.75rem; padding: 0 0.45rem; color: var(--ink-2); -webkit-text-stroke: 3.5px var(--paper); paint-order: stroke fill; }
+.lang__btn:hover { color: var(--ink); }
+.lang__btn[aria-pressed="true"] { color: var(--ink); text-decoration: underline; text-underline-offset: 0.4em; text-decoration-thickness: 1px; }
+
+/* ------------------------------------------------------------ the spread: story left, map right */
+
+.trip { position: relative; }
+.trip__map {
+  position: fixed; z-index: 0; top: 0; right: 0; bottom: 0;
+  left: calc(var(--story-w) + 2 * var(--edge));
+}
+.trip__paint { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* the drawing runs out into the paper toward the story, as a sketch does at its edge */
+.trip__map { -webkit-mask-image: linear-gradient(to right, transparent, #000 7rem); mask-image: linear-gradient(to right, transparent, #000 7rem); }
+.trip__tooth {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: var(--tooth, none); background-size: 192px 192px;
+  mix-blend-mode: soft-light; opacity: 0.36;
+}
+/* the beam lies over the map and under the story */
+.beam { position: fixed; z-index: 1; inset: 0; width: 100%; height: 100%; pointer-events: none; mix-blend-mode: multiply; }
+.beam polygon { fill: var(--beam); opacity: calc(var(--a, 0) * 0.62); transition: opacity 260ms var(--soft); }
+
+.trip__story { position: relative; z-index: 2; width: var(--story-w); margin-left: calc(var(--edge) * 2); }
+
+/* ------------------------------------------------------------ the opening of the trip */
+
+.intro { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: 6rem 0 4rem; }
+.intro__when { color: var(--ink-2); margin-bottom: 1.1rem; }
+.intro__title { font-family: var(--serif); font-weight: 400; font-size: clamp(2.75rem, 1.5rem + 4vw, 5.25rem); line-height: 1; letter-spacing: -0.015em; }
+.intro__route { margin-top: 1.4rem; font-style: italic; color: var(--ink-2); font-size: 1.15rem; line-height: 1.55; max-width: 34rem; }
+.intro__hint { margin-top: 3rem; color: var(--ink-2); }
+:lang(zh-Hant) .intro__title { font-family: var(--serif-zh); font-weight: 500; letter-spacing: 0.06em; line-height: 1.15; }
+:lang(zh-Hant) .intro__route { font-style: normal; letter-spacing: 0.02em; }
+
+/* ------------------------------------------------------------ one stop */
+
+.stop { min-height: 115svh; padding: 34svh 0 16svh; }
+.stop__how { color: var(--ink-2); margin-bottom: 0.9rem; }
+.stop__name { font-family: var(--serif); font-weight: 400; font-size: clamp(2.2rem, 1.4rem + 2.6vw, 3.6rem); line-height: 1.02; letter-spacing: -0.01em; }
+:lang(zh-Hant) .stop__name { font-family: var(--serif-zh); font-weight: 500; letter-spacing: 0.06em; line-height: 1.2; }
+.stop__where { margin-top: 0.6rem; color: var(--ink-2); font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+.stop__photos { display: grid; gap: 3.2rem; margin-top: 2.6rem; }
+
+/* sized before it loads (--ar is the photograph's shape), so the page never jumps under the reader */
+.shot img { width: min(100%, 78svh * var(--ar, 1.5)); height: auto; background: var(--paper-2); }
+.shot figcaption { margin-top: 0.7rem; }
+.shot__name { font-family: var(--serif); font-size: 1.2rem; line-height: 1.25; }
+.shot__where { display: block; font-style: italic; color: var(--ink-2); font-size: 0.95rem; }
+:lang(zh-Hant) .shot__name { font-family: var(--serif-zh); font-weight: 500; letter-spacing: 0.04em; }
+:lang(zh-Hant) .shot__where { font-style: normal; letter-spacing: 0.02em; }
+
+/* where a photograph will go: a frame hatched in pen, waiting */
+.blank {
+  aspect-ratio: 3 / 2; display: grid; place-items: center;
+  border: 1px solid var(--hair);
+  background: repeating-linear-gradient(-57deg, oklch(24.5% 0.008 45 / 0.09) 0 1px, transparent 1px 7px) var(--paper-2);
+}
+.blank span { color: var(--ink-2); background: var(--paper-2); padding: 0.35rem 0.7rem; }
+
+.coda { min-height: 115svh; padding: 34svh 0 30svh; }
+.coda__tally { margin-top: 1.4rem; color: var(--ink-2); font-style: italic; font-size: 1.1rem; }
+:lang(zh-Hant) .coda__tally { font-style: normal; letter-spacing: 0.02em; }
+
+/* ------------------------------------------------------------ phones: the map pinned at the top */
+
+@media (max-width: 47.99rem) {
+  :root { --edge: 14px; --story-w: auto; }
+  .trip__map { position: sticky; top: 0; left: 0; height: 46svh; z-index: 3; background: var(--paper); border-bottom: 1px solid var(--hair); }
+  .trip__story { margin: 0 var(--edge); }
+  .beam { display: none; }
+  .trip__map { -webkit-mask-image: none; mask-image: none; }
+  .mast { position: absolute; }
+  .lang { position: absolute; }
+  .intro { min-height: 70svh; padding-top: 3rem; }
+  .stop { min-height: 90svh; padding: 10svh 0 12svh; }
+  .shot img { width: min(100%, 60svh * var(--ar, 1.5)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .beam polygon { transition: none; }
+}
