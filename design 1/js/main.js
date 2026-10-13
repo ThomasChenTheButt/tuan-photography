@@ -366,7 +366,7 @@ if (stackEl) {
    as cards in a row. Every few seconds the first card leaves the row and grows until it is
    the new background, the place's name rises in at the left line by line, the row closes up and
    the place just left joins the end. The arrows step either way. It waits while the stage is out
-   of view, the tab is hidden, or the pointer or keyboard is on it; under "reduce motion" it
+   of view, the tab is hidden, or a photograph is open in the viewer; under "reduce motion" it
    changes only on the arrows, at once.
    Each card's slot goes to the stylesheet as --j. */
 const tcEl = document.querySelector('.tc');
@@ -513,11 +513,11 @@ if (tcEl) {
     words(cur);
   };
 
-  let held = false;   // the pointer is on the stage, or the keyboard is inside it: wait
   const plan = () => {
     clearTimeout(timer);
-    if (still || !inView || held || document.hidden) return;
-    timer = setTimeout(next, EVERY);
+    if (still || !inView || document.hidden) return;
+    // while a photograph is open in the viewer, wait and look again (his call, 2026-10-13)
+    timer = setTimeout(() => (viewer?.open ? plan() : next()), EVERY);
   };
   tcEl.querySelectorAll('.tc__arrow').forEach(btn => btn.addEventListener('click', () => {
     clearTimeout(timer);
@@ -526,10 +526,6 @@ if (tcEl) {
   }));
   new IntersectionObserver(([e]) => { inView = e.isIntersecting; plan(); }, { threshold: 0.5 }).observe(tcEl);
   document.addEventListener('visibilitychange', plan);
-  tcEl.addEventListener('pointerenter', e => { if (e.pointerType === 'mouse') { held = true; plan(); } });
-  tcEl.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') { held = false; plan(); } });
-  tcEl.addEventListener('focusin', () => { held = true; plan(); });
-  tcEl.addEventListener('focusout', e => { if (!tcEl.contains(e.relatedTarget)) { held = false; plan(); } });
   document.addEventListener('langchange', () => { if (!busy) draw(); });
   draw();
   preload(mod(cur + 1));
