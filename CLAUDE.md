@@ -1,11 +1,3 @@
-> **Experiment `trip-link`** (started 2026-10-15, branch `exp/trip-link`, port 8650 serving this
-> copy's `design 1/`, Journey page at `/journey/`). Tried: the trip story page joined to the Journey
-> page. It moves into `design 2/wc-sketch/trip/` (`?trip=<journey id>`), works for every journey with
-> legs, and each journey in Flights gets one word, "The trip, along its route / 沿著路線看這趟". The
-> map, the books and the Flights replay are untouched (his call). `tools/build2.py` now writes each
-> photograph's capture day (`taken`, from EXIF) so a trip shows only its own photographs.
-> Rules of this file suspended here: none.
-
 # tuan photography 陳亮元 — project instructions
 
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
@@ -304,7 +296,7 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 - Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
   harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
 
-Open now: `opening` (started 2026-10-07, port 8648): an opening animation for the home page of design 1, the pull-back from the summit of Aoraki. Its own session. Also `opening-graph` (started 2026-10-08, port 8649): openings made by his agent graph (source finder, scouts, router, builders, test, manager); its working files are in that folder's `.graph/`. Also `trip-link` (started 2026-10-15, port 8650): the trip story page joined to the Journey page, one link per journey in Flights; waiting on his verdict, the test copy `elements/trip/` (8647) stays meanwhile.
+Open now: `opening` (started 2026-10-07, port 8648): an opening animation for the home page of design 1, the pull-back from the summit of Aoraki. Its own session. Also `opening-graph` (started 2026-10-08, port 8649): openings made by his agent graph (source finder, scouts, router, builders, test, manager); its working files are in that folder's `.graph/`.
 
 Decided experiments. Rejected ideas are not proposed again; the tags hold the code.
 
@@ -323,6 +315,7 @@ Decided experiments. Rejected ideas are not proposed again; the tags hold the co
 | `taste2` (Taste skill audit-first on design 2: phone bottom-right row, the word on the cover photo, the place page opening line, dates as months, the Speed label) | kept | 2026-10-07 | merged into `main` |
 | `timed-cards` (the Guides shelf replaced by a copy of Giulio Cuscito's "Timed Cards Opening": a full-window photograph, rounded photo cards, the first card grows into the next background every 4 s, Bebas Neue names, arrows, 02 / 18) | kept | 2026-10-13 | merged into `main`; the books before it at `before-timed-cards-2026-10-13` |
 | `taste-trip` (Taste skill audit-first on the trip page `elements/trip/`: one wash for both countries with vermilion for the route only, smaller blank frames, no coordinates, no scroll hint, even title lines; then the place name under the phone map and country names kept off the route) | kept | 2026-10-15 | merged into `main` |
+| `trip-link` (the trip story page moved into `design 2/wc-sketch/trip/` (`?trip=<journey id>`), one link per journey in Flights, "The trip, along its route / 沿著路線看這趟"; `tools/build2.py` writes each photo's `taken` day so a trip shows only its own photos; "Flights" keeps its name) | kept | 2026-10-15 | merged into `main` |
 
 **Weekly report 週報** (set up 2026-09-28). A scheduled task, `weekly-web-design-report`, runs
 every Monday about 9:00 and searches the web for the week's new AI web-design tools, skills,
