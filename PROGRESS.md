@@ -48,19 +48,17 @@
 
 ## 接下來 Next up
 
-**Ask him, before building anything:** of the four left (aperture, contact-2, letters-4 on 8648;
-ridgeline on 8649), which one to develop, and in which direction. If he wants another round of
-candidates, start from those four rather than from outside references (see the taste file), and
-show him written concepts first. Files: `experiments/opening/design 1/js/opening/`,
-`experiments/opening-graph/design 1/js/opening/ridgeline.js`, `experiments/opening-graph/.graph/taste.md`.
+**Ask him for his verdict on trial `destinations-map` (port 8651):** the map on Destinations, a
+book's dive ending on the country page, Journey as the Flights list. On keep, merge
+`exp/destinations-map`, remove the worktree and branch. Files: `experiments/destinations-map/`
+(`tools/build.py` `build_destinations`/`cover_of`, `design 2/wc-sketch/app.js` `handOver`).
+The two opening trials were dropped on 2026-10-15 at his word (tags `exp-opening-dropped-2026-10-15`,
+`exp-opening-graph-dropped-2026-10-15`).
 
 ## 等你決定 Waiting on you
 
 - **Trial `destinations-map` (port 8651, started 2026-10-15):** the map now sits on Destinations above the continent squares; clicking a book zooms in, the name rises, the photo fades in, and the country page opens on that same photo; the menu's Journey item now opens the Flights list of trips. Blog stays, empty. Keep or drop? (Trip stories you write later will hang off each trip in Journey.)
 
-- **The opening:** four candidates left. Pick one to develop, or say the whole opening idea is
-  parked. Also: should the 3 remaining versions and ridgeline be merged into one experiment, and the
-  other closed?
 - **Sea photograph:** which photographs besides Aoraki, if any? (`?ocean=all` cycles all 93.)
 - **Camera data for the 22 US photographs:** re-export from Lightroom with metadata, or drop the
   raw files in, and I'll add it.
