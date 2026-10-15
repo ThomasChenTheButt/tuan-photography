@@ -335,6 +335,29 @@ until he says he is interested in an item. Nothing it finds gets installed witho
 - Preview: `.claude/launch.json` → "travel-site" runs the same `tools/serve.py`. If port 8642 is
   already serving (he launched it himself), open the preview by URL instead of by name.
 
+## Two places: his Mac and the cloud — pull first, push last
+
+He works on this site from two places (set up 2026-10-15, at his request): sessions on his Mac,
+in the travel website folder, and cloud sessions in the Claude app (the "Cloud" group in the
+sidebar, labelled `tuan-photography`), which he can use from his phone with the laptop closed.
+Both work on the same GitHub repo; GitHub is the only thing they share.
+
+- **Pull first.** At the start of every session, before reading `PROGRESS.md`: `git pull` (on
+  the Mac, on `main`). If a cloud branch is waiting (`git branch -r` shows `origin/claude/…`
+  with commits not on `main`), tell him in one line what it holds and ask whether to merge it.
+- **Push last.** Commit and push before the session ends, so the other place starts from the
+  latest version. Never leave work only on one machine.
+- **One place at a time.** Don't work on the same thing in a Mac and a cloud session at once;
+  two versions of one file have to be untangled by hand.
+- **Cloud sessions work on their own branch** (`claude/…`), not `main`. Merge into `main` only
+  on his word ("merge it into main"); the next Mac session pulls it in.
+- **What the cloud cannot see:** anything gitignored or unpushed: `originals/` (so no new web
+  photos from the cloud), `ideas/` and its Word files, `我的筆記.txt`, `.claude/`, and the
+  experiments (their branches are local). Say so plainly rather than working around it.
+- **Preview in the cloud:** `localhost:8642` is not reachable from his phone. Show changes as
+  screenshots from the cloud's Chromium, or republish the claude.ai copy (`tools/build_artifact.py`)
+  when he asks.
+
 <!-- claude-reflect: learned rules (saved from the band; edit freely) -->
 ## Learned rules
 - Ask the user before adding GSAP to the project; use plain CSS/JavaScript for animations unless they approve GSAP.
