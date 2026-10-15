@@ -1,3 +1,11 @@
+> **Experiment `destinations-map`** (started 2026-10-15, branch `exp/destinations-map`, port 8651
+> serving this copy's `design 1/`). Tried, his call: the Journey page's map moves onto Destinations,
+> above the continent squares (an `iframe` of design 2 with `?embed`); a book's dive (zoom, the name
+> rising, the photograph dissolving in) ends on design 1's country page, which now opens on that
+> photograph over the whole window; the name Journey goes to the trips: the menu's Journey item
+> opens the Flights spread alone (`?trips`), each trip's story one link away. Blog stays, empty.
+> Rules of this file suspended here: none.
+
 # tuan photography 陳亮元 — project instructions
 
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.

@@ -150,6 +150,53 @@ if (panes.length && !window.matchMedia('(prefers-reduced-motion: reduce)').match
 const root = document.documentElement.dataset.root || '';
 const dataEl = document.getElementById('slides-data');
 const slides = dataEl ? JSON.parse(dataEl.textContent) : [];
+
+/* A country page reached from one of the map's books opens on that book's photograph:
+   countries/usa.html?from=golden-gate-fog. The map dives into it, so the page begins on it */
+const fromId = new URLSearchParams(location.search).get('from');
+const fromSlide = fromId && slides.find(x => x.id === fromId);
+const coverFig = document.querySelector('.cover');
+if (fromSlide && coverFig) {
+  const im = coverFig.querySelector('img');
+  im.srcset = fromSlide.srcset;
+  im.src = `${root}images/web/1280/${fromSlide.file}`;
+  im.width = fromSlide.w; im.height = fromSlide.h;
+  im.sizes = `max(100vw, ${Math.round(100 * fromSlide.w / fromSlide.h)}vh)`;
+  im.dataset.i18nAlt = `sa_${fromId}`;
+  const a = coverFig.querySelector('a');
+  a.dataset.slide = fromId;
+  a.href = `${root}gallery.html#s-${fromId}`;
+  a.dataset.i18nAria = `sl_${fromId}`;
+  coverFig.querySelector('figcaption b').dataset.i18n = `sp_${fromId}`;
+  coverFig.querySelector('figcaption span').dataset.i18n = `sw_${fromId}`;
+  // the English words now; 中文 follows with the rest of the page at the start
+  coverFig.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = i18n.en[el.dataset.i18n] ?? el.textContent; });
+  im.alt = i18n.en[`sa_${fromId}`] ?? '';
+  a.setAttribute('aria-label', i18n.en[`sl_${fromId}`] ?? '');
+}
+
+/* Back from a country page one of the map's books opened: the map's frame is let go of the
+   window, and the page comes back with the map in view */
+const atlas = document.getElementById('atlas');
+if (atlas) {
+  const toMap = (done) => {
+    if (!history.state?.atlas) return;
+    atlas.scrollIntoView({ block: 'start' });
+    if (!done) return;
+    // once only: a later Back to this page (from a continent, say) finds it as it was left
+    history.replaceState({ ...history.state, atlas: false }, '');
+  };
+  // the browser's own scroll memory comes back when the page is left again
+  window.addEventListener('pagehide', () => { history.scrollRestoration = 'auto'; });
+  if (history.state?.atlas) history.scrollRestoration = 'manual';
+  toMap(false);
+  window.addEventListener('load', () => toMap(true));
+  window.addEventListener('pageshow', e => {
+    if (!e.persisted) return;
+    atlas.classList.remove('is-diving');
+    toMap(true);
+  });
+}
 const order = [...new Set([...document.querySelectorAll('[data-slide]')].map(el => el.dataset.slide))]
   .filter(id => slides.some(s => s.id === id));
 

@@ -251,14 +251,16 @@ def shot(sid, root, en, zh):
     return piece(sid, root, en, zh, "(max-width: 50rem) 92vw, 50rem", anchor=True, flex=True, data=True)
 
 
-def cover(sid, root, en, zh):
-    """The opening photograph of the home page: the whole window, nothing written across it."""
+def cover(sid, root, en, zh, arrive=True):
+    """The opening photograph of the home page: the whole window, nothing written across it.
+    arrive=False: it is already there when the page opens (a country page, reached from the map's
+    photograph, which is the same one), so it does not settle in again."""
     s = SLIDES[sid]
     strings(s, en, zh)
     en[f"sw_{sid}"], zh[f"sw_{sid}"] = s["where"]["en"], s["where"]["zh"]
     # the photograph is cropped to the window's height, so on a tall narrow screen it is wider than the window
     sizes = "max(100vw, " + str(round(100 * s["w"] / s["h"])) + "vh)"
-    return (f'<figure class="cover arrive"><a {opens(sid, root, en, zh)}>{img(s, root, sizes, first=True)}</a>'
+    return (f'<figure class="cover{" arrive" if arrive else ""}"><a {opens(sid, root, en, zh)}>{img(s, root, sizes, first=True)}</a>'
             f'<figcaption><b data-i18n="sp_{sid}">{e(s["place"]["en"])}</b>'
             f'<span data-i18n="sw_{sid}">{e(s["where"]["en"])}</span></figcaption></figure>')
 
@@ -703,7 +705,16 @@ def build_destinations():
         <h2 class="tile__name" data-i18n="k_{kid}">{e(k['en'])}</h2>
         <span class="tile__count num" data-i18n="kn_{kid}">{e(en[f'kn_{kid}'])}</span>
       </a></li>""")
-    body = page_top("pTitle", "Destinations", "pSub", en["pSub"]) + f"""  <section class="part">
+    # the map above the squares (his call, 2026-10-15): design 2's painted map, its books opening
+    # into their country pages. It runs in a frame of its own, so its look never mixes with this one
+    en.update(mapLabel="Map of the places travelled: choose a book to open the place")
+    zh.update(mapLabel="走過的地方地圖：選一本書，打開那個地方")
+    body = page_top("pTitle", "Destinations", "pSub", en["pSub"]) + f"""</div>
+<section class="atlas" id="atlas">
+  <iframe class="atlas__map" src="journey/wc-sketch/?embed" title="{e(en['mapLabel'])}" aria-label="{e(en['mapLabel'])}" data-i18n-aria="mapLabel"></iframe>
+</section>
+<div class="wrap">
+  <section class="part">
     <ul class="tiles tiles--four">
 {chr(10).join(tiles)}
     </ul>
@@ -771,6 +782,18 @@ def build_continents():
               f"{k['en']}: countries photographed by 陳亮元 Thomas Chen.", "destinations", body, en, zh)
 
 
+def cover_of(cid):
+    """The photograph a country opens on: its book's cover, as on the map (design 2). A guide's
+    book stands for its country; a country of several books (the United States) takes its first."""
+    guides = {g["id"]: g["country"] for g in DATA["guides"]}
+    for b in DATA["shelf"]:
+        if (b.get("country") or guides.get(b.get("guide"))) == cid:
+            sid = b.get("cover") or b.get("photo")
+            if sid in SLIDES:
+                return sid
+    return None
+
+
 def build_countries():
     for c in DATA["countries"]:
         en, zh = {}, {}
@@ -815,8 +838,14 @@ def build_countries():
     </div>
   </section>""")
         parts.append("</div>")
+        # the country's photograph over the whole window, then the page drawn up over it, as on the
+        # home page. It is the one the map's book opens on, so arriving from the map is one movement
+        lead = cover_of(cid)
+        if lead:
+            parts = [cover(lead, root, en, zh, arrive=False), '<div class="leaf">'] + parts + ["</div>"]
         write(f"countries/{cid}.html", f"{c['en']} - {SITE}", f"{c['zh']} - {SITE}",
-              f"{c['en']}: photographs and guides by 陳亮元 Thomas Chen.", "destinations", "\n".join(parts), en, zh)
+              f"{c['en']}: photographs and guides by 陳亮元 Thomas Chen.", "destinations", "\n".join(parts), en, zh,
+              over=bool(lead))
 
 
 def build_blog():

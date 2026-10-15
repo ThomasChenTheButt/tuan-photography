@@ -61,6 +61,8 @@
       names: ["Tuan's Photography Journey", 'Tuan, Through the Lens', 'Where Tuan Has Been', 'A Journey in Photographs', "Tuan's Travels, in Photographs"],
       endLine: 'Every photograph here is his own, made on the trip.',
       bookAria: (p, s) => `${p}: ${s}`,
+      embedHint: 'Drag, or use the arrow keys, to move the map. Pinch, Ctrl and scroll, or press plus and minus, to zoom. Tab moves through the books.',
+      siteBack: 'Back to the site',
     },
     zh: {
       ig: 'Instagram',
@@ -93,6 +95,8 @@
       names: ['Tuan 的攝影旅程', 'Tuan 的鏡頭之旅', 'Tuan 去過的地方', '用照片走過的路', 'Tuan 的旅行照片'],
       endLine: '這裡每張照片都是他自己在旅途中拍的。',
       bookAria: (p, s) => `${p}：${s}`,
+      embedHint: '拖曳或用方向鍵移動地圖；雙指縮放、按住 Ctrl 捲動，或按加號、減號縮放。Tab 鍵逐一走過每本書。',
+      siteBack: '回到網站',
     },
   };
   let lang = 'en';
@@ -104,6 +108,13 @@
   } catch (e) { /* storage blocked: stay in English */ }
 
   const ask = new URLSearchParams(location.search);
+  // two other ways in (his call, 2026-10-15). ?embed: the map inside design 1's Destinations page,
+  // a book's dive ending on design 1's own country page. ?trips: the Journey page, which is the
+  // Flights spread alone, every trip's story one link away. Both hand a place over to design 1
+  const EMBED = ask.has('embed') && window.parent !== window;
+  const TRIPS = ask.has('trips') && !EMBED;
+  document.documentElement.classList.toggle('is-embed', EMBED);
+  document.documentElement.classList.toggle('is-trips', TRIPS);
   // his choice (2026-10-02): "Tuan, Through the Lens" / Tuan 的鏡頭之旅; ?name=1 to 5 still shows the others
   const nameN = clamp(parseInt(ask.get('name'), 10) || 2, 1, 5) - 1;
   // the opening a first visit plays: the globe that unrolls into the map (opening/globe.js), the
@@ -662,8 +673,13 @@
 
   /* ------------------------------------------------------------ zoom and pan */
 
+  // whether a hand has moved the map yet: until then a new window size simply shows the map's home
+  // view again (a frame inside a page can be laid out after the map has started)
+  let touched = false;
   const zoom = d3.zoom()
     .scaleExtent([1, 160])
+    // inside the Destinations page the wheel scrolls the page; a pinch (Ctrl and the wheel) zooms
+    .filter((e) => (EMBED && e.type === 'wheel' ? e.ctrlKey : (!e.ctrlKey || e.type === 'wheel') && !e.button))
     // d3's own constraint, except that a map shorter than the window sits on the window's
     // bottom edge, not in the middle: Antarctica always covers the foot of the window and
     // whatever room is left lies above (his call, 2026-10-03)
@@ -675,7 +691,7 @@
         dy1 > dy0 ? dy1 : Math.min(0, dy0) || Math.max(0, dy1),
       );
     })
-    .on('start', (e) => { if (e.sourceEvent && e.sourceEvent.type !== 'wheel') mapEl.classList.add('is-dragging'); })
+    .on('start', (e) => { if (e.sourceEvent) touched = true; if (e.sourceEvent && e.sourceEvent.type !== 'wheel') mapEl.classList.add('is-dragging'); })
     .on('zoom', (e) => {
       state.z = e.transform;
       state.settle = 2;
@@ -1459,6 +1475,12 @@
   function clearDissolve() { ['--fade', '--blur', '--sc'].forEach((k) => cover.style.removeProperty(k)); }
   function settleOpen(gen) {
     if (gen !== pageGen) return;
+    if (handing) {
+      // Back from the country page returns to the map, not to wherever the page had scrolled
+      if (host) try { window.parent.history.replaceState({ ...(window.parent.history.state || {}), atlas: true }, ''); } catch (e) { /* fine */ }
+      window.top.location.href = handing;
+      return;
+    }
     leaf.classList.remove('is-dissolving');
     leaf.classList.add('is-open');
     clearDissolve();
@@ -1699,7 +1721,8 @@
     if (h === 'flights') return { page: null, photo: null, flights: true };
     if (h.startsWith('photo-') && S.slides[h.slice(6)]) return { page: validView(st.page) ? viewBook(st.page).view : null, photo: h.slice(6), cover: st.cover };
     if (validView(h)) return { page: viewBook(h).view, photo: null, cover: st.cover };
-    return { page: null, photo: null };
+    // the Journey page is never without its Flights spread
+    return { page: null, photo: null, flights: TRIPS };
   }
   function apply(want, animate) {
     if (want.photo !== photo && photo) hideViewer();
@@ -1711,9 +1734,43 @@
     if (want.flights && !flightsOpen) openFlights({ animate });
     if (want.photo && want.photo !== photo) showViewer(want.photo, photoList, photoFrom);
   }
+  // ?embed and ?trips: the dive plays over the whole window, and as the photograph settles design
+  // 1's country page takes over, opening on the same photograph. Nothing goes on the history, so
+  // Back returns to the page the dive started from
+  let handing = null;
+  const host = EMBED && window.frameElement ? window.frameElement.closest('.atlas') : null;
+  function handOver(view, coverId) {
+    const b = viewBook(view);
+    const first = coverFor(b, coverId);
+    const href = new URL(`../../countries/${b.country}.html`, location.href);
+    // the country page opens on its first book's photograph; another book's is asked for by name
+    if (first && first !== coverFor(bookByCountry[b.country])) href.searchParams.set('from', first);
+    handing = href.href;
+    if (first) {
+      // fetched and decoded now, as the country page will ask for it, so it is there at once
+      const s = S.slides[first], top = window.top;
+      const at = (size) => new URL(`../../images/web/${size ? size + '/' : ''}${s.file}`, location.href).href;
+      const im = new top.Image();
+      im.sizes = `max(100vw, ${Math.round((100 * s.w) / s.h)}vh)`;
+      im.srcset = `${at(640)} 640w, ${at(1280)} 1280w, ${at()} ${s.w}w`;
+      im.decode().catch(() => {});
+    }
+    openPage(view, { animate: true, cover: coverId });
+    if (host) {
+      // the map's frame comes to fill the window first, then holds there for the dive
+      const pw = window.parent;
+      pw.scrollTo({ top: host.getBoundingClientRect().top + pw.scrollY, behavior: reduce.matches ? 'auto' : 'smooth' });
+      later(() => { if (handing) host.classList.add('is-diving'); }, reduce.matches ? 0 : 650);
+    }
+  }
+  function letGo() {
+    handing = null;
+    if (host) host.classList.remove('is-diving');
+  }
   function go(view, coverId) {
     if (page === view || diving) return;
     if (opening && !opening.done) opening.skip();
+    if (EMBED || TRIPS) { handOver(view, coverId); return; }
     try { history.pushState({ wc: true, page: view, cover: coverId || null }, '', `#${view}`); } catch (e) { /* fine */ }
     if (page) closePage({ animate: false, focus: false });
     openPage(view, { animate: true, cover: coverId });
@@ -1729,6 +1786,13 @@
     showViewer(id, list, opts.from);
   }
   function back() {
+    if (handing) {
+      letGo();
+      closePage({ animate: true });
+      if (TRIPS) openFlights({ animate: true });
+      return;
+    }
+    if (TRIPS && flightsOpen && !photo) { location.href = '../../index.html'; return; }
     if (history.state && history.state.wc) history.back();
     else {
       try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* fine */ }
@@ -1740,6 +1804,7 @@
   $('#cover-back').addEventListener('click', () => back());
   document.addEventListener('keydown', (e) => {
     if (e.key !== 'Escape') return;
+    if (TRIPS && flightsOpen && !photo) return;
     if (photo || page || flightsOpen) { e.preventDefault(); back(); }
     else if (indexEl.classList.contains('is-open')) { e.preventDefault(); setIndex(false); }
   });
@@ -1759,6 +1824,8 @@
     $('#ig').setAttribute('aria-label', `${t('follow')}: tuan_1127`);
     $('#globe').setAttribute('aria-label', T[lang].globeLabel);
     $('#opener-name').textContent = T[lang].names[nameN];
+    if (EMBED) $('#map-hint').textContent = T[lang].embedHint;
+    if (TRIPS) $('#flights-back').textContent = T[lang].siteBack;
     // the tally by the zoom words: his countries out of the world's 195 (his figure), and the share
     $('#tally').textContent = T[lang].tally(S.countries.length, WORLD_COUNTRIES, Math.round((100 * S.countries.length) / WORLD_COUNTRIES));
   }
@@ -1783,6 +1850,15 @@
   document.addEventListener('click', (e) => {
     const b = e.target.closest('.lang button');
     if (b) setLang(b.dataset.lang);
+  });
+  // the language chosen anywhere else on the site (the Destinations page around the map)
+  window.addEventListener('storage', (e) => { if (e.key === 'tlap-lang' && (e.newValue === 'en' || e.newValue === 'zh')) setLang(e.newValue); });
+  // Back from the country page: the page comes back as it was left, mid-dive; put it at rest
+  window.addEventListener('pageshow', (e) => {
+    if (!e.persisted || !handing) return;
+    letGo();
+    closePage({ animate: false, focus: false });
+    if (TRIPS) openFlights({ animate: false });
   });
 
   /* ------------------------------------------------------------ the paper and the swatches */
@@ -2013,6 +2089,7 @@
       // a place in a journey: straight into it on the map
       const view = pl.dataset.view;
       closeFlights({ animate: false, focus: false });
+      if (TRIPS) { handOver(view); return; }
       try { history.replaceState({ wc: true, page: view, cover: null }, '', `#${view}`); } catch (err) { /* fine */ }
       openPage(view, { animate: true });
       return;
@@ -2650,7 +2727,7 @@
     try { first = !sessionStorage.getItem('wc-opened'); sessionStorage.setItem('wc-opened', '1'); } catch (e) { first = false; }
     // ?opening in the address plays it every time, for review
     if (ask.has('opening')) first = true;
-    const playOpening = first && !reduce.matches && !want.page && !want.photo && !want.flights;
+    const playOpening = first && !reduce.matches && !want.page && !want.photo && !want.flights && !EMBED && !TRIPS;
     const opener = $('#opener');
     const oc = $('#opening');
     if (playOpening) {
@@ -2700,6 +2777,7 @@
       loading.then(() => { if (!page && !flightsOpen) globe.start(); }).catch(() => {});
     }
 
+    if (TRIPS && !want.page && !want.photo) want.flights = true;
     // a page or photograph named in the address opens directly
     if (want.page || want.photo || want.flights) {
       // an older address (#place-usa) is rewritten as its book's own (#place-new-york)
@@ -2716,6 +2794,7 @@
         sizeMap();
         sizeGlobe();
         if (flightsOpen) sizeBig();
+        if (!touched && !page && !diving) { moveTo(homeTransform(), 0); state.settle = 4; queueDraw(); return; }
         const b = baseXY([c[1], c[0]]);
         state.z = d3.zoomIdentity.translate(state.W / 2 - b[0] * k, state.H / 2 - b[1] * k).scale(k);
         sel.call(zoom.transform, state.z);

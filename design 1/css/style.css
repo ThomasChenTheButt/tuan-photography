@@ -216,6 +216,18 @@ main { flex: 1; }
 /* everything after the opening photograph is one leaf of paper, drawn up over it */
 .leaf { position: relative; z-index: 1; background: var(--bg); }
 
+/* ---------------- destinations: the map ----------------
+   Design 2's painted map, in a frame of its own, the whole width and the window's height under
+   the page title, the continent squares below it. Choosing a book scrolls the frame to fill the
+   window and holds it there (is-diving) while the map dives into the place; the country page
+   then opens on the same photograph. The wheel scrolls past it; a pinch zooms it */
+.atlas { position: relative; height: 100svh; min-height: 30rem; border-block: 1px solid var(--line); background: var(--paper); }
+.atlas__map { display: block; width: 100%; height: 100%; border: 0; }
+.atlas.is-diving { position: fixed; inset: 0; z-index: 50; height: auto; min-height: 0; border: 0; }
+@media (max-width: 47.99rem) {
+  .atlas { height: 72svh; min-height: 26rem; }
+}
+
 /* a second window onto a photograph, part way down the page. The photograph is fixed to the
    screen and the figure is a window cut in the page, so the page is drawn over it as the
    visitor moves, like the opening photograph. Nothing is written across it but its place. */

@@ -4,11 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>tuan photography 陳亮元</title>
-  <!-- design 2 is Pen and wash; the address keeps whatever comes after it (?opening, #place-japan) -->
-  <script>location.replace('wc-sketch/' + location.search + location.hash);</script>
-  <noscript><meta http-equiv="refresh" content="0; url=wc-sketch/"></noscript>
+  <!-- design 2 is Pen and wash; the menu's Journey item opens its Flights spread (?trips), and the
+       address keeps whatever else comes after it (?opening, #place-japan) -->
+  <script>location.replace('wc-sketch/' + (location.search || '?trips') + location.hash);</script>
+  <noscript><meta http-equiv="refresh" content="0; url=wc-sketch/?trips"></noscript>
 </head>
 <body>
-  <p><a href="wc-sketch/">tuan photography 陳亮元</a></p>
+  <p><a href="wc-sketch/?trips">tuan photography 陳亮元</a></p>
 </body>
 </html>

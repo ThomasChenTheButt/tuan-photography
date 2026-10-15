@@ -778,3 +778,11 @@ button.jplace:hover img, .jplace:focus-visible img { transform: translateY(-2px)
   .print__cap { left: -3px; margin-top: 6px; font-size: 0.76rem; }
   .print__cap i { font-size: 0.58rem; }
 }
+
+/* ---------------- two other ways in (2026-10-15) ----------------
+   ?embed: the map inside design 1's Destinations page. The masthead, the language words, the
+   Flights globe and the photographs index belong to the page around it or to the Journey page.
+   ?trips: the Journey page, the Flights spread alone. In both a place is handed over to design
+   1's country page as its photograph settles, so the place page's own bar and words never show */
+.is-embed :is(.mast, .chrome, .corner, .index) { display: none; }
+:is(.is-embed, .is-trips) :is(.leaf__bar, .leaf__content, .cover__shade, .cover__back, .cover__foot) { display: none; }
