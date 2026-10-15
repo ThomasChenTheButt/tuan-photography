@@ -1,0 +1,85 @@
+/* experiment home-variations, v02 "Two roads"
+   Five photographs, each large; beneath each, a 1px fork: one road to the trip (Journey),
+   one to the place (Guides). The roads gather at the end into the four tabs.
+   The moment: each fork draws itself as it comes into view (v02.js arms it). */
+
+.v02-intro { padding-bottom: var(--s-5); }
+.v02-intro h1 { font-size: var(--t-2xl); }
+.v02-intro p { max-width: 46ch; }
+
+.v02-roads { padding-bottom: var(--s-6); }
+
+/* ---------------- one photograph and its two roads ---------------- */
+
+.road { text-align: center; }
+.road + .road { margin-top: var(--s-6); }
+
+/* large, whole, never trimmed: as wide as the column allows, and never taller than the window */
+.road__photo { width: min(100%, 68rem, calc(84svh * var(--ar))); margin-inline: auto; }
+.road__photo a { display: block; overflow: hidden; background: var(--band); }
+.road__photo a:hover { color: inherit; }
+.road__photo a:focus-visible { outline-offset: 4px; }
+.road__photo img { width: 100%; height: auto; transition: transform 900ms var(--out); }
+.road__photo a:hover img { transform: scale(1.02); }
+
+.road__name { margin-top: var(--s-3); font-size: clamp(1.5rem, 1.25rem + 0.9vw, 2rem); }
+.road__line { margin-top: 0.4rem; color: var(--text-2); font-size: var(--t-s); }
+
+/* the two ends of the fork: each road's name, and what kind of road it is */
+.road__ends { display: grid; grid-template-columns: 1fr 1fr; width: min(100%, 36rem); margin-inline: auto; }
+.road__go { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; padding: 0.9rem 0.5rem 0.5rem; text-decoration: none; }
+.road__go:hover { color: inherit; }
+.road__to { font-family: var(--serif); font-size: var(--t-l); line-height: 1.25; text-decoration: underline 1px var(--line); text-underline-offset: 0.24em; transition: color 200ms var(--out), text-decoration-color 200ms var(--out); }
+.road__go:hover .road__to { color: var(--accent); text-decoration-color: currentColor; }
+.road__go .caps { color: var(--text-2); }
+:lang(zh-Hant) .road__to { font-weight: 500; letter-spacing: 0.04em; }
+
+/* ---------------- the fork: a thin line splitting in two, 1px everywhere ----------------
+   a stem down from the middle, a bar drawn out both ways, a leg down to each road.
+   --l and --r are where the legs land, as a share of the fork's width. */
+
+.fork { --l: 25%; --r: 75%; position: relative; width: min(100%, 36rem); height: 4.5rem; margin: var(--s-3) auto 0; color: var(--text-2); }
+.fork i { position: absolute; display: block; background: currentColor; opacity: 0.55; }
+.fork__stem { left: 50%; top: 0; width: 1px; height: 50%; transform-origin: 50% 0; }
+.fork__a { top: 50%; left: var(--l); right: 50%; height: 1px; transform-origin: 100% 50%; }
+.fork__b { top: 50%; left: 50%; right: calc(100% - var(--r) - 1px); height: 1px; transform-origin: 0 50%; }
+.fork__c, .fork__d { top: 50%; width: 1px; height: 50%; transform-origin: 50% 0; }
+.fork__c { left: var(--l); }
+.fork__d { left: var(--r); }
+
+/* ---------------- where the roads go: the four tabs ---------------- */
+
+.ends { text-align: center; }
+.ends__head { font-size: var(--t-xl); }
+.fork--ends { --l: 37.5%; --r: 62.5%; width: min(100%, 64rem); margin-top: var(--s-4); }
+.ends__tabs { display: grid; grid-template-columns: repeat(4, 1fr); width: min(100%, 64rem); margin-inline: auto; }
+.ends__go { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: var(--s-3) var(--s-1) var(--s-2); text-decoration: none; }
+.ends__go:hover { color: inherit; }
+.ends__name { font-family: var(--serif); font-size: var(--t-xl); line-height: 1.14; transition: color 200ms var(--out); }
+:lang(zh-Hant) .ends__name { font-weight: 500; letter-spacing: 0.05em; }
+.ends__go:hover .ends__name { color: var(--accent); }
+.ends__job { max-width: 16ch; color: var(--text-2); font-size: var(--t-s); line-height: 1.45; }
+
+@media (max-width: 40rem) {
+  .road + .road { margin-top: var(--s-5); }
+  .road__to { font-size: 1.125rem; }
+  /* the two roads land on Journey and Guides; Gallery and About sit in the row beneath */
+  .fork--ends { --l: 25%; --r: 75%; }
+  .ends__tabs { grid-template-columns: 1fr 1fr; }
+  .ends__journey { order: 1; }
+  .ends__guides { order: 2; }
+  .ends__gallery { order: 3; }
+  .ends__about { order: 4; }
+}
+
+/* ---------------- the moment: the fork draws itself ----------------
+   Only once v02.js has armed the page (so without the script, or under reduce motion,
+   every fork is simply drawn). Stem first, then the bar outward, then both legs. */
+
+@media (prefers-reduced-motion: no-preference) {
+  .forks-armed .fork i { transition: transform 520ms var(--out); }
+  .forks-armed .fork .fork__a, .forks-armed .fork .fork__b { transition-delay: 300ms; }
+  .forks-armed .fork .fork__c, .forks-armed .fork .fork__d { transition-delay: 640ms; }
+  .forks-armed .fork:not(.is-drawn) :is(.fork__stem, .fork__c, .fork__d) { transform: scaleY(0); }
+  .forks-armed .fork:not(.is-drawn) :is(.fork__a, .fork__b) { transform: scaleX(0); }
+}
