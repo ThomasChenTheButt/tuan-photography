@@ -1,0 +1,72 @@
+/* ==========================================================
+   Variation 08, "Margin notes / 頁邊筆記"
+   A field notebook: the photographs large in a wide main column, and
+   in a narrow margin on the right, level with each one, its notes in
+   small type. Alignment and one short hairline are all that join a
+   note to its photograph. Each note stays beside its photograph while
+   the photograph passes (sticky inside its own row), so the margin
+   reads as one running column with air between the notes.
+   ========================================================== */
+
+/* no photograph under the top bar here, so it is set in ink like any other page */
+.top--over { position: relative; color: var(--text); }
+.top--over .name span { color: var(--text-2); opacity: 1; }
+.top--over .lang button { color: var(--text-2); opacity: 1; }
+.top--over .lang button[aria-pressed="true"] { color: inherit; }
+
+.v8 {
+  --margin: clamp(13rem, 19vw, 17.5rem);
+  --gutter: clamp(2rem, 4.2vw, 4.5rem);
+  --pause: clamp(6rem, 13vw, 11rem);
+  padding-block: var(--s-2) var(--s-6);
+}
+
+/* one row: the photograph in the main column, its notes in the margin */
+.v8-row, .v8-end { display: grid; grid-template-columns: minmax(0, 1fr) var(--margin); column-gap: var(--gutter); }
+.v8-row + .v8-row, .v8-row + .v8-end { margin-top: var(--pause); }
+
+.v8-photo { display: block; justify-self: end; align-self: start; width: min(100%, calc(84svh * var(--ar))); overflow: hidden; background: var(--band); }
+.v8-photo:hover { color: inherit; }
+.v8-photo img { width: 100%; height: auto; transition: transform 900ms var(--out); }
+.v8-photo:hover img { transform: scale(1.02); }
+
+/* the margin: the note keeps level with the top of its photograph and travels with it */
+.v8-margin { min-width: 0; }
+.v8-note { position: sticky; top: var(--s-3); display: grid; gap: 0.85rem; font-size: var(--t-xs); line-height: 1.5; color: var(--text-2); }
+.v8-note::before { content: ""; position: absolute; top: 0.8rem; right: calc(100% + 0.85rem); width: calc(var(--gutter) - 0.85rem); border-top: 1px solid var(--line); }
+
+.v8-place { font-family: var(--serif); font-weight: 400; font-size: 1.25rem; line-height: 1.25; color: var(--text); text-wrap: balance; }
+:lang(zh-Hant) .v8-place { font-weight: 500; font-size: 1.15rem; letter-spacing: 0.04em; }
+
+.v8-lines > span, .v8-lines > a { display: block; }
+.v8-lines > .v8-set { display: flex; flex-wrap: wrap; gap: 0 0.7rem; color: var(--text); }
+.v8-note a { color: var(--accent); text-decoration-color: color-mix(in oklch, var(--accent) 40%, transparent); }
+.v8-note a:hover { text-decoration-color: currentColor; }
+.v8-go { display: grid; gap: 0.2rem; padding-top: 0.15rem; }
+
+/* the end: the last photograph, its notes at the top of the margin and the way in at the foot */
+.v8-end { grid-template-rows: auto auto; }
+.v8-end > .v8-row { grid-column: 1 / -1; grid-row: 1 / 3; grid-template-columns: subgrid; grid-template-rows: subgrid; }
+.v8-end .v8-photo { grid-row: 1 / 3; }
+.v8-end .v8-margin { grid-column: 2; grid-row: 1; }
+
+.v8-ways { grid-column: 2; grid-row: 2; align-self: end; padding-top: var(--s-5); }
+.v8-ways ul { display: grid; gap: 1rem; padding-top: var(--s-3); border-top: 1px solid var(--line); }
+.v8-ways li { display: grid; gap: 0.15rem; }
+.v8-ways a.v8-place { justify-self: start; text-decoration-color: var(--line); }
+.v8-ways a.v8-place:hover { color: var(--accent); text-decoration-color: currentColor; }
+.v8-ways span { font-size: var(--t-xs); line-height: 1.5; color: var(--text-2); }
+
+/* phone and narrow windows: the notes come directly under each photograph, indented */
+@media (max-width: 52rem) {
+  .v8 { --pause: var(--s-5); }
+  .v8-row, .v8-end { grid-template-columns: minmax(0, 1fr); }
+  .v8-photo { justify-self: center; width: min(100%, calc(80svh * var(--ar))); }
+  .v8-margin { padding: 1.1rem 0 0 1.75rem; }
+  .v8-note { position: relative; top: auto; }
+  .v8-note::before { right: auto; left: -1.75rem; width: 1.1rem; }
+  .v8-end { grid-template-rows: auto; }
+  .v8-end > .v8-row { grid-column: 1; grid-row: 1; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; }
+  .v8-end .v8-photo, .v8-end .v8-margin { grid-column: 1; grid-row: auto; }
+  .v8-ways { grid-column: 1; grid-row: 2; padding: var(--s-5) 0 0 1.75rem; }
+}

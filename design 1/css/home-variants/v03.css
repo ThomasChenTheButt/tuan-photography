@@ -1,0 +1,89 @@
+/* ==========================================================
+   Variation 03, "The caption grows / 說明慢慢長出來"
+   One photograph to a screen, centred on paper with wide margins,
+   its name beneath it. As it settles in the middle of the screen the
+   caption unfolds, line by line, into the whole account; scrolled
+   away, it folds back to the name. The space for the account is kept
+   at all times, so nothing on the page moves but the lines themselves.
+   ========================================================== */
+
+/* the opening photograph carries nothing at all: its name is the first caption on the leaf,
+   directly beneath it, so the lower shade that was there to carry the name goes too */
+.cover figcaption { display: none; }
+.cover::after { content: none; }
+
+.v3 { padding-bottom: var(--s-5); }
+
+.v3-plate { min-height: 100svh; display: grid; place-items: center; padding: var(--s-4) var(--edge); }
+.v3-plate--first { min-height: 0; place-items: start center; padding-block: 1.1rem var(--s-6); }
+.v3-plate--last { min-height: 72svh; }
+
+.v3-fig { --ph: min(58svh, calc(100svh - 21rem)); display: grid; justify-items: center; gap: 1.1rem; width: 100%; }
+
+.v3-photo { display: block; width: min(100%, calc(var(--ph) * var(--ar))); overflow: hidden; background: var(--band); }
+.v3-photo:hover { color: inherit; }
+.v3-photo img { width: 100%; height: auto; transition: transform 900ms var(--out); }
+.v3-photo:hover img { transform: scale(1.02); }
+
+/* the caption: the name, then the account as two columns either side of the centre line */
+.v3-cap { display: grid; justify-items: center; gap: 0.85rem; width: min(100%, 36rem); text-align: center; }
+.v3-name { font-family: var(--serif); font-weight: 400; font-size: 1.35rem; line-height: 1.25; text-wrap: balance; }
+:lang(zh-Hant) .v3-name { font-weight: 500; letter-spacing: 0.04em; }
+
+.v3-acct { display: grid; gap: 0.35rem; width: 100%; }
+.v3-acct > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 1.25rem; align-items: baseline; }
+.v3-acct dt { text-align: right; color: var(--text-2); }
+.v3-acct dd { text-align: left; font-size: var(--t-s); line-height: 1.45; }
+.v3-set { display: flex; flex-wrap: wrap; gap: 0 0.85rem; }
+
+.v3-go { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem 1.75rem; padding-top: 0.35rem; font-size: var(--t-s); }
+.v3-go a, .v3-acct dd a { color: var(--accent); text-decoration-color: color-mix(in oklch, var(--accent) 40%, transparent); }
+.v3-go a:hover, .v3-acct dd a:hover { text-decoration-color: currentColor; }
+
+/* the way into the four tabs: the names of the tabs where the labels stood */
+.v3-acct--ways { gap: 0.55rem; }
+.v3-acct--ways dt a { color: var(--accent); text-decoration-color: color-mix(in oklch, var(--accent) 40%, transparent); }
+.v3-acct--ways dt a:hover { text-decoration-color: currentColor; }
+.v3-acct--ways dd { color: var(--text-2); }
+.v3-say { margin-top: -0.35rem; margin-bottom: 0.5rem; color: var(--text-2); font-size: var(--t-s); }
+
+@media (max-width: 40rem) {
+  .v3-fig { --ph: 52svh; }
+  .v3-plate { padding-block: var(--s-3); }
+  .v3-plate--first { padding-block: 1rem var(--s-5); }
+  .v3-acct > div { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); column-gap: 1rem; }
+  .v3-acct dd { font-size: 0.875rem; }
+  .v3-acct--ways > div { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); }
+}
+
+/* ---------------- the moment: the caption unfolding ----------------
+   Each line has its own place in the order (--i). It unfolds from under the line above while
+   the caption rises into the middle of the screen, and the last line folds away first as it
+   leaves. The scroll itself drives it; where the browser cannot do that, v03.js opens the
+   caption while it is in the middle of the screen. */
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .v3-cap { view-timeline: --v3cap block; }
+    .v3-line {
+      animation: v3-open linear both, v3-fold linear forwards;
+      animation-timeline: --v3cap, --v3cap;
+      animation-range:
+        cover calc(10% + var(--i) * 2%) cover calc(18% + var(--i) * 2%),
+        cover calc(56% - var(--i) * 2%) cover calc(66% - var(--i) * 2%);
+    }
+  }
+
+  .v3-io .v3-line {
+    opacity: 0; clip-path: inset(0 0 100% 0); transform: translateY(-0.5rem);
+    transition: opacity 500ms var(--out), clip-path 650ms var(--out), transform 650ms var(--out);
+    transition-delay: calc((6 - var(--i)) * 45ms);
+  }
+  .v3-io .is-open .v3-line { opacity: 1; clip-path: inset(0); transform: none; transition-delay: calc(var(--i) * 110ms); }
+}
+
+/* a link that has the keyboard's focus is never folded away */
+.v3-cap:focus-within .v3-line { animation: none; opacity: 1; clip-path: none; transform: none; }
+
+@keyframes v3-open { from { opacity: 0; clip-path: inset(0 0 100% 0); transform: translateY(-0.5rem); } to { opacity: 1; clip-path: inset(0); transform: none; } }
+@keyframes v3-fold { from { opacity: 1; clip-path: inset(0); transform: none; } to { opacity: 0; clip-path: inset(0 0 100% 0); transform: translateY(-0.5rem); } }
