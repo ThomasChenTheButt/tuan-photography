@@ -17,12 +17,11 @@
 .lb-head, .lb-log { width: var(--col); margin-inline: auto; }
 
 /* the head of the log */
-.lb-head { padding-block: clamp(2.5rem, 7vw, 5.5rem) 0; display: grid; grid-template-columns: 1fr auto; gap: 0.75rem 2rem; align-items: end; }
-.lb-head__title { font-size: clamp(2.6rem, 1.6rem + 4.4vw, 5.2rem); font-weight: 500; letter-spacing: -0.035em; line-height: 0.95; grid-column: 1 / -1; }
+.lb-head { padding-block: clamp(2.5rem, 6vw, 5rem) 0; display: grid; gap: 0.9rem; }
+.lb-head__title { font-size: clamp(2.6rem, 1.6rem + 4.4vw, 5.2rem); font-weight: 500; letter-spacing: -0.035em; line-height: 0.95; }
 :lang(zh-Hant) .lb-head__title { letter-spacing: 0.04em; }
 .lb-head__intro { color: var(--ink-2); max-width: 38ch; font-size: 1.05rem; }
-.lb-head__tally { display: flex; gap: 1.6rem; color: var(--ink-2); font-size: 0.9rem; white-space: nowrap; }
-@media (max-width: 47.99rem) { .lb-head { grid-template-columns: 1fr; } .lb-head__tally { flex-wrap: wrap; gap: 0.2rem 1.2rem; } }
+.lb-head__tally { display: flex; flex-wrap: wrap; gap: 0.2rem 1.6rem; color: var(--ink-3); font-size: 0.9rem; }
 
 /* every trip, drawn at once on one world: the record of where */
 .lb-world { margin: clamp(1.5rem, 4vw, 3rem) auto clamp(2.5rem, 6vw, 4.5rem); width: min(112rem, 100% - 2 * var(--edge)); }
@@ -30,16 +29,13 @@
 .lb-world .coast { stroke-width: 0.5; }
 .lb-world .border { stroke-width: 0.4; }
 
-/* the log: a year in large figures, then its trips, each on one ruled line */
-.lb-year { display: grid; grid-template-columns: minmax(8rem, 15rem) minmax(0, 1fr); position: relative; padding-top: 1px; }
+/* the log: a year in large figures under one ruled line, then its trips */
+.lb-year { display: grid; grid-template-columns: minmax(8rem, 15rem) minmax(0, 1fr); position: relative; padding-block: 0.5rem 2.5rem; }
 .lb-year::before { content: ""; position: absolute; top: 0; left: 0; right: 0; border-top: 1px solid var(--ink); transform: scaleX(0); transform-origin: left; transition: transform 1.4s var(--ease); }
 .lb-year.is-in::before { transform: none; }
 .lb-year__n { font-size: clamp(3rem, 1.6rem + 4.6vw, 6.6rem); font-weight: 400; letter-spacing: -0.055em; line-height: 0.86; padding-top: 1.1rem; align-self: start; position: sticky; top: 1rem; }
-.lb-row { position: relative; display: grid; grid-template-columns: minmax(17rem, 1fr) minmax(0, max-content); gap: 2rem; align-items: center; padding-block: 1.25rem; opacity: 0; transform: translateY(0.6rem); transition: opacity 0.9s var(--ease), transform 0.9s var(--ease); }
+.lb-row { position: relative; display: grid; grid-template-columns: minmax(17rem, 1fr) minmax(0, max-content); gap: 2rem; align-items: center; padding-block: 1.4rem; opacity: 0; transform: translateY(0.4rem); transition: opacity 0.9s var(--ease), transform 0.9s var(--ease); }
 .lb-row.is-in { opacity: 1; transform: none; }
-.lb-row::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; border-bottom: 1px solid var(--hair); transform: scaleX(0); transform-origin: left; transition: transform 1.2s var(--ease) 0.15s; }
-.lb-row.is-in::after { transform: none; }
-.lb-row:last-child::after { display: none; }
 .lb-row__link { display: grid; grid-template-columns: 6.5rem minmax(0, 1fr); gap: 1.6rem; align-items: baseline; text-decoration: none; min-height: 3.5rem; }
 .lb-row__when { color: var(--ink-2); }
 .lb-row__what { display: grid; gap: 0.2rem; }

@@ -113,7 +113,7 @@
   const ours = (id) => {
     const s = S.slides[id];
     if (!s) return false;
-    if (s.taken) return !from || (s.taken.slice(0, 7) >= from && s.taken.slice(0, 7) <= till);
+    if (s.taken) return from ? (s.taken.slice(0, 7) >= from && s.taken.slice(0, 7) <= till) : s.taken.slice(0, 4) === J.id.slice(0, 4); // no months: its year
     return S.journeys.filter((j) => (j.countries || []).includes(s.country)).length === 1;
   };
   // each goes to the stop it was made nearest to

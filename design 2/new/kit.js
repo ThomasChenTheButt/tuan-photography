@@ -18,7 +18,7 @@
       site: 'tuan photography', menu: 'Menu',
       nav: { gallery: 'Gallery', journey: 'Journey', guides: 'Guides', about: 'About' },
       journey: 'Journey',
-      intro: 'Every trip I have taken with a camera, newest first, each along its route.',
+      intro: 'Every trip I have taken with a camera, newest first.',
       trips: (n) => `${n} trips`, countries: (n) => `${n} countries`,
       since: (y) => `since ${y}`,
       photos: (n) => (n === 1 ? '1 photograph' : `${n} photographs`),
@@ -42,7 +42,7 @@
       site: 'tuan photography', menu: '選單',
       nav: { gallery: '作品集', journey: '旅程', guides: '攻略', about: '關於我' },
       journey: '旅程',
-      intro: '每一趟帶著相機的旅行，從最近的開始，各自沿著走過的路線。',
+      intro: '每一趟帶著相機的旅行，從最近的開始。',
       trips: (n) => `${n} 趟旅行`, countries: (n) => `${n} 個國家`,
       since: (y) => `從 ${y} 年起`,
       photos: (n) => `${n} 張照片`,
@@ -127,7 +127,7 @@
     const ours = (id) => {
       const s = S.slides[id];
       if (!s) return false;
-      if (s.taken) return !from || (s.taken.slice(0, 7) >= from && s.taken.slice(0, 7) <= till);
+      if (s.taken) return from ? (s.taken.slice(0, 7) >= from && s.taken.slice(0, 7) <= till) : s.taken.slice(0, 4) === J.id.slice(0, 4); // no months: its year
       return S.journeys.filter((j) => (j.countries || []).includes(s.country)).length === 1;
     };
     const photos = countries.flatMap((c) => c.photos).filter(ours);
