@@ -1,3 +1,11 @@
+> **Experiment `trip-link`** (started 2026-10-15, branch `exp/trip-link`, port 8650 serving this
+> copy's `design 1/`, Journey page at `/journey/`). Tried: the trip story page joined to the Journey
+> page. It moves into `design 2/wc-sketch/trip/` (`?trip=<journey id>`), works for every journey with
+> legs, and each journey in Flights gets one word, "The trip, along its route / 沿著路線看這趟". The
+> map, the books and the Flights replay are untouched (his call). `tools/build2.py` now writes each
+> photograph's capture day (`taken`, from EXIF) so a trip shows only its own photographs.
+> Rules of this file suspended here: none.
+
 # tuan photography 陳亮元 — project instructions
 
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.

@@ -39,6 +39,7 @@
       flightsTitle: 'Flights', flightsHow: 'Drag to turn the globe', speed: 'Speed', speedSlow: 'Slow',
       flightsLede: (n) => `${n} journeys. Choose one to follow its flights on the globe.`,
       journeyAria: (d) => `Follow the journey of ${d}`,
+      journeyStory: 'The trip, along its route',
       modes: { flight: 'flight', train: 'train', bus: 'bus', car: 'car', ground: 'overland' },
       legTail: (b, m) => `${b} · ${m}`,
       wholeJourney: 'The whole journey',
@@ -71,6 +72,7 @@
       flightsTitle: '飛過的航線', flightsHow: '拖曳轉動地球', speed: '速度', speedSlow: '慢慢看',
       flightsLede: (n) => `${n} 段旅程。選一段，在地球上看它的航線。`,
       journeyAria: (d) => `看 ${d} 的旅程`,
+      journeyStory: '沿著路線看這趟',
       modes: { flight: '飛機', train: '火車', bus: '巴士', car: '開車', ground: '陸路' },
       legTail: (b, m) => `${b}・${m}`,
       wholeJourney: '整趟旅程',
@@ -217,7 +219,8 @@
         stops.push({ key, ll, city: end.zh ? { en: end.city, zh: end.zh } : end.city, cid: end.cid, via: idx[n], dep });
       });
     });
-    return { ...j, legs, idx, stops };
+    // (only a journey with its own legs can be told along its route)
+    return { ...j, legs, idx, stops, told: Array.isArray(j.legs) && j.legs.length > 0 };
   });
   const flights = WC.routes(routeList);
   /* ------------------------------------------------------------ elements */
@@ -1937,7 +1940,10 @@
       return `<li class="journey" data-j="${n}">` +
         `<h3 class="journey__head"><button type="button" class="journey__date" data-j="${n}" aria-pressed="${n === jOn}" aria-label="${esc(T[lang].journeyAria(L(j.date)))}">${esc(L(j.date))}</button></h3>` +
         (route ? `<p class="journey__route">${esc(route)}</p>` : '') +
-        `<ul class="journey__places">${places}</ul></li>`;
+        `<ul class="journey__places">${places}</ul>` +
+        // the trip told stop by stop along its route, on a page of its own (trip/, 2026-10-15)
+        (j.id && j.told ? `<p class="journey__story"><a class="word journey__go" href="trip/?trip=${encodeURIComponent(j.id)}">${esc(T[lang].journeyStory)}</a></p>` : '') +
+        '</li>';
     }).join('');
   }
   // the photograph behind the Flights spread: a journey's first place with a cover while the hand
@@ -1998,6 +2004,7 @@
     if (!journeysEl.contains(e.relatedTarget)) jLeave = setTimeout(() => focusJourney(-1), 260);
   });
   journeysEl.addEventListener('click', (e) => {
+    if (e.target.closest('.journey__go')) return;   // a link: the browser goes there
     const li = e.target.closest('.journey');
     const n = li ? +li.dataset.j : -1;
     const touch = lastPointer === 'touch' || lastPointer === 'pen';

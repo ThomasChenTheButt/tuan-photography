@@ -9,7 +9,9 @@ one file, design 2/data.js, which every design 2 page loads. Nothing in design 1
 
 What it writes, as window.SITE:
   countries  every country travelled, with its place on the map (ll) and its photographs
-  slides     every photograph: file, shape, names, camera data, place on the map
+  slides     every photograph: file, shape, names, camera data, place on the map, and the day
+             it was taken ("taken", read from the web copy's own EXIF; missing when the file
+             carries none), so a journey can tell its own photographs from another visit's
   books      the guides as books, one per shelf entry (a country, or a city within one such as
              New York), in the owner's order (the same as design 1). Each has a stable key: the
              city's place id if it has one, else the guide id or the country id
@@ -33,10 +35,25 @@ D = b.DATA
 TONES = ("clay", "olive", "slate")
 
 
+def taken(file):
+    """The day a photograph was taken, from its own EXIF (DateTimeOriginal), or None."""
+    try:
+        from PIL import Image
+        with Image.open(ROOT / "design 1" / "images" / "web" / file) as im:
+            v = im.getexif().get_ifd(0x8769).get(36867)
+        m = re.match(r"(\d{4}):(\d\d):(\d\d)", v or "")
+        return f"{m[1]}-{m[2]}-{m[3]}" if m else None
+    except Exception:
+        return None
+
+
 def slide(s):
     keep = ("file", "w", "h", "country", "ll", "place", "where", "alt", "best", "note", "map",
             "camera", "lens", "focal", "aperture", "shutter", "iso", "guide", "city")
     out = {k: s[k] for k in keep if k in s}
+    day = taken(s["file"])
+    if day:
+        out["taken"] = day
     for field in ("place", "where", "alt", "best", "note"):
         if field in out:
             out[field] = {"en": b.clean_en(out[field]["en"]), "zh": b.clean_zh(out[field]["zh"])}

@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>Australia and New Zealand · tuan photography 陳亮元</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="../../fonts.css">
+<link rel="stylesheet" href="trip.css">
+</head>
+<body>
+
+<a class="back word" id="back" href="../#flights">Back to Flights</a>
+<div class="lang" role="group" aria-label="Language">
+  <button type="button" class="lang__btn" data-lang="en" aria-pressed="true">EN</button>
+  <button type="button" class="lang__btn" data-lang="zh" aria-pressed="false" lang="zh-Hant">中文</button>
+</div>
+
+<main class="trip">
+  <div class="trip__map" id="map" aria-hidden="true">
+    <canvas class="trip__paint" id="paint"></canvas>
+    <div class="trip__tooth"></div>
+    <p class="trip__now" id="now"></p>
+  </div>
+  <svg class="beam" id="beam" aria-hidden="true"><polygon id="beam-shape" points="0,0 0,0 0,0"/></svg>
+  <div class="trip__story" id="story"></div>
+</main>
+
+<script src="../../vendor/d3.min.js"></script>
+<script src="../../vendor/topojson-client.min.js"></script>
+<script src="../../data.js"></script>
+<script src="../paint.js"></script>
+<script src="trip.js"></script>
+</body>
+</html>
