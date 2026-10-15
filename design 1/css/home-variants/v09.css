@@ -1,0 +1,139 @@
+/* Variation 09, "The fold / 摺頁".
+   Each photograph is printed on the top half of a sheet of card paper; the lower half is folded
+   up behind it. "Unfold" swings the lower half down along the crease (rotateX, hinged at the
+   crease) and the room for it opens at the same pace, so the account is read on the sheet
+   itself. The photograph is never covered: the lower half only ever moves below the crease. */
+
+.folds { padding-block: var(--s-5) var(--s-6); }
+
+/* ---------------- the sheet ---------------- */
+
+/* --side places a sheet a little left or right of centre; it falls to nothing on a phone */
+.fold {
+  --side: -1;
+  --shift: clamp(0rem, 9vw - 3rem, 7rem);
+  --mat: 4%;
+  width: 100%;
+  max-width: 46rem;
+  margin: 0 auto;
+  translate: calc(var(--side) * var(--shift)) 0;
+}
+.fold:nth-child(even) { --side: 1; }
+.fold--tall { max-width: 28rem; }
+.fold + .fold { margin-top: var(--s-6); }
+
+/* the top half: card paper, the photograph printed on it with an even margin */
+.fold__top { padding: var(--mat); background: var(--card); }
+.fold__top a { display: block; overflow: hidden; background: var(--band); }
+.fold__top img { width: 100%; height: auto; transition: transform 900ms var(--out); }
+.fold__top a:hover img { transform: scale(1.02); }
+
+/* the room below the crease: none while folded, the lower half's height when open */
+.fold__room { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 1100ms var(--out); }
+.fold__clip { min-height: 0; overflow: clip; perspective: 1400px; perspective-origin: 50% 0; }
+
+/* the lower half: the same size as the top half (it grows only if its words need the room),
+   hinged at the crease, folded edge-on until it is opened */
+.fold__panel {
+  position: relative;
+  aspect-ratio: calc(1 / (0.92 / var(--ar) + 0.08));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  padding: 8% 9%;
+  background: var(--card);
+  border-top: 1px solid var(--line);
+  text-align: center;
+  transform-origin: 50% 0;
+  transform: rotateX(-90deg);
+  transition: transform 1100ms var(--out);
+}
+/* the paper turning toward the light: a faint shade that lifts as the half comes down flat */
+.fold__panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--text);
+  opacity: 0.1;
+  pointer-events: none;
+  transition: opacity 1100ms var(--out);
+}
+.fold.is-open .fold__room { grid-template-rows: 1fr; }
+.fold.is-open .fold__panel { transform: none; }
+.fold.is-open .fold__panel::after { opacity: 0; }
+
+/* ---------------- what is written inside ---------------- */
+
+.fold__place { font-size: var(--t-xl); line-height: 1.15; }
+.fold--tall .fold__place { font-size: clamp(1.5rem, 1.2rem + 0.8vw, 1.8rem); }
+.fold__where { margin-top: -0.6rem; color: var(--text-2); font-size: var(--t-s); }
+.fold__facts { width: 100%; max-width: 24rem; margin-top: 0.4rem; border-top: 1px solid var(--line); font-size: var(--t-xs); line-height: 1.4; }
+.fold__facts > div { display: flex; justify-content: space-between; align-items: baseline; gap: 0.2rem 1rem; flex-wrap: wrap; padding: 0.55rem 0; border-bottom: 1px solid var(--line); text-align: right; }
+.fold__facts dt { color: var(--text-2); text-align: left; }
+.fold__facts dd { margin-left: auto; }
+.fold__cam { display: inline-flex; flex-wrap: wrap; justify-content: flex-end; gap: 0 0.7em; }
+.fold__go { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem 1.5rem; margin-top: 0.3rem; font-size: var(--t-s); }
+
+:lang(zh-Hant) .fold__place { font-weight: 500; letter-spacing: 0.05em; }
+:lang(zh-Hant) .fold__facts { line-height: 1.6; }
+
+/* the last sheet: its fold holds the four parts of the site */
+.fold__ways { width: 100%; max-width: 24rem; }
+.fold__ways ul { border-top: 1px solid var(--line); }
+.fold__ways li { border-bottom: 1px solid var(--line); }
+.fold__ways a { display: flex; flex-direction: column; align-items: center; gap: 0.15rem; padding: 0.85rem 0; text-decoration: none; }
+.fold__ways b { font-family: var(--serif); font-weight: 400; font-size: var(--t-l); line-height: 1.25; transition: color 200ms var(--out); }
+.fold__ways span { color: var(--text-2); font-size: var(--t-xs); }
+.fold__ways a:hover { color: var(--text); }
+.fold__ways a:hover b { color: var(--accent); }
+:lang(zh-Hant) .fold__ways b { font-weight: 500; letter-spacing: 0.06em; }
+
+/* ---------------- the word beneath ---------------- */
+
+.fold__btn {
+  display: block;
+  margin: 0.55rem 0 0;
+  padding: 0.6rem 0;
+  min-height: 2.75rem;
+  border: 0;
+  background: none;
+  color: var(--text-2);
+  cursor: pointer;
+  text-decoration: underline 1px var(--line);
+  text-underline-offset: 0.45em;
+  transition: color 200ms var(--out), text-decoration-color 200ms var(--out);
+}
+.fold__btn:hover { color: var(--accent); text-decoration-color: currentColor; }
+.fold__btn[aria-expanded="true"] { color: var(--text); }
+
+/* ---------------- smaller windows ---------------- */
+
+@media (max-width: 40rem) {
+  .fold--tall { max-width: 82%; margin-inline: 0 auto; }
+  .fold--tall:nth-child(even) { margin-inline: auto 0; }
+  .fold__panel { padding: 7% 6%; gap: 0.8rem; }
+  .fold__place { font-size: 1.5rem; }
+  /* a wide sheet on a phone is short: the account closes up so the halves stay near equal */
+  .fold--wide .fold__panel { padding: 4% 6%; gap: 0.45rem; }
+  .fold--wide .fold__place { font-size: 1.25rem; }
+  .fold--wide .fold__where { margin-top: -0.35rem; font-size: var(--t-xs); }
+  .fold--wide .fold__facts { margin-top: 0.1rem; }
+  .fold--wide .fold__facts > div { padding: 0.25rem 0; }
+  :lang(zh-Hant) .fold--wide .fold__facts { line-height: 1.45; }
+  .fold--wide .fold__go { margin-top: 0.1rem; font-size: var(--t-xs); line-height: 1.4; }
+}
+
+/* without the script nothing can unfold: the sheets are shown open */
+@media (scripting: none) {
+  .fold__room { grid-template-rows: 1fr; }
+  .fold__panel { transform: none; }
+  .fold__panel::after { opacity: 0; }
+  .fold__btn { display: none; }
+}
+
+/* no swing: the lower half simply appears (style.css also stops every transition) */
+@media (prefers-reduced-motion: reduce) {
+  .fold__room, .fold__panel, .fold__panel::after, .fold__top img { transition: none; }
+}

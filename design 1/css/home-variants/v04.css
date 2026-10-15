@@ -1,0 +1,166 @@
+/* Variation 04, "The back of the print / 照片背面".
+   Six prints lie on the stone table, each in a thin border of card paper. The front carries no
+   words. "Turn over" beneath a print turns it (one CSS 3D turn) to its back, where its notes are
+   written in the site's own type. The four parts of the site end the table as four backs. */
+
+.v4 { padding-block: var(--s-6); }
+
+/* ---------------- the table ---------------- */
+
+.table {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: var(--col-gap);
+  row-gap: var(--s-5);
+  align-items: start;
+}
+/* a loose, considered arrangement: each print its own size and its own place, never a grid of
+   equal frames. --dy lowers a print a little from the top of its row; --lean is a slight lean. */
+.print { --dy: 0rem; --lean: 0deg; margin-top: var(--dy); }
+.print:nth-child(1) { grid-column: 1 / span 6; --lean: -0.4deg; }
+.print:nth-child(2) { grid-column: 8 / span 3; --dy: 6rem; --lean: 0.5deg; }
+.print:nth-child(3) { grid-column: 2 / span 3; --dy: 1.5rem; --lean: 0.3deg; }
+.print:nth-child(4) { grid-column: 6 / span 7; --dy: 7.5rem; --lean: -0.3deg; }
+.print:nth-child(5) { grid-column: 1 / span 5; --dy: 2rem; --lean: 0.4deg; }
+.print:nth-child(6) { grid-column: 8 / span 3; --dy: -3rem; --lean: -0.5deg; }
+
+.print__stage { container-type: inline-size; perspective: 1800px; rotate: var(--lean); }
+
+/* both faces sit in one cell, so the print is as tall as the taller of the two */
+.print__card {
+  display: grid;
+  transform-style: preserve-3d;
+  transition: transform 1100ms var(--out);
+}
+.print__front, .print__back {
+  grid-area: 1 / 1;
+  background: var(--card);
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+.print__front { padding: clamp(0.45rem, 0.9vw, 0.8rem); }
+.print__front a { display: block; overflow: hidden; background: var(--band); }
+.print__front a:focus-visible { outline-offset: 3px; }
+.print__front img { width: 100%; height: auto; transition: transform 900ms var(--out); }
+.print__front a:hover img { transform: scale(1.02); }
+
+.print.is-turned .print__card { transform: rotateY(180deg); }
+.print__back { transform: rotateY(180deg); }
+
+/* ---------------- the back: notes in the site's own type ---------------- */
+
+.print__back {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.9rem;
+  padding: clamp(1rem, 6cqi, 2rem) clamp(1rem, 7cqi, 2.25rem);
+  text-align: center;
+}
+.back__place { font-size: clamp(1.15rem, 0.9rem + 3cqi, 1.6rem); line-height: 1.2; }
+.back__where { margin-top: -0.55rem; color: var(--text-2); font-size: var(--t-xs); line-height: 1.4; }
+.back__facts { width: 100%; max-width: 24rem; margin-inline: auto; border-top: 1px solid var(--line); font-size: var(--t-xs); line-height: 1.4; }
+.back__facts > div { display: flex; justify-content: space-between; align-items: baseline; gap: 0.2rem 1rem; flex-wrap: wrap; padding: 0.45rem 0; border-bottom: 1px solid var(--line); text-align: right; }
+.back__facts dt { color: var(--text-2); text-align: left; }
+.back__facts dd { margin-left: auto; color: var(--text); }
+.back__cam { display: inline-flex; flex-wrap: wrap; justify-content: flex-end; gap: 0 0.7em; }
+.back__go { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem 1.4rem; font-size: var(--t-s); line-height: 1.4; }
+.back__go a, .back__facts a { text-decoration-color: var(--line); }
+.back__go a:hover, .back__facts a:hover { color: var(--accent); text-decoration-color: currentColor; }
+
+:lang(zh-Hant) .back__place { font-weight: 500; letter-spacing: 0.05em; }
+:lang(zh-Hant) .back__facts { line-height: 1.6; }
+
+/* a small landscape print (a phone, a narrow window) has little height: the notes close up so
+   the back stays the size of the front */
+@container (max-width: 24rem) {
+  .print--wide .print__back { gap: 0.35rem; padding: 0.5rem 1.1rem; }
+  .print--wide .back__place { font-size: 1.05rem; }
+  .print--wide .back__where { margin-top: -0.3rem; }
+  .print--wide .back__facts { margin-block: 0.15rem; }
+  .print--wide .back__facts > div { padding: 0.2rem 0; }
+  :lang(zh-Hant) .print--wide .back__facts { line-height: 1.45; }
+  .print--wide .back__go { font-size: var(--t-xs); }
+}
+
+/* a narrow print: the labels sit over their values, and the notes close up too */
+@container (max-width: 17rem) {
+  .print__back { gap: 0.35rem; padding: 0.6rem 0.9rem; }
+  .back__place { font-size: 1.05rem; }
+  .back__where { margin-top: -0.3rem; }
+  .back__facts > div { display: block; padding: 0.22rem 0; text-align: center; }
+  :lang(zh-Hant) .back__facts { line-height: 1.45; }
+  .back__facts dt { text-align: center; }
+  .back__facts dd { margin-left: 0; }
+  .back__cam { justify-content: center; }
+  .back__go { font-size: var(--t-xs); }
+}
+
+/* ---------------- the word beneath ---------------- */
+
+.print__turn {
+  display: block;
+  margin: 0.55rem 0 0;
+  padding: 0.6rem 0;
+  min-height: 2.75rem;
+  border: 0;
+  background: none;
+  color: var(--text-2);
+  cursor: pointer;
+  text-decoration: underline 1px var(--line);
+  text-underline-offset: 0.45em;
+  transition: color 200ms var(--out), text-decoration-color 200ms var(--out);
+}
+.print__turn:hover { color: var(--accent); text-decoration-color: currentColor; }
+.print__turn[aria-pressed="true"] { color: var(--text); text-decoration-color: currentColor; }
+
+/* ---------------- the way in: four backs ---------------- */
+
+.backs { margin-top: var(--s-6); }
+.backs ul { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--col-gap); max-width: 66rem; margin-inline: auto; }
+.backs__card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 11rem;
+  height: 100%;
+  padding: var(--s-3) var(--s-2);
+  background: var(--card);
+  text-align: center;
+  text-decoration: none;
+}
+.backs__card b { font-family: var(--serif); font-weight: 400; font-size: var(--t-l); line-height: 1.2; padding-bottom: 0.6rem; border-bottom: 1px solid var(--line); transition: color 200ms var(--out); }
+.backs__card span { color: var(--text-2); font-size: var(--t-xs); line-height: 1.5; max-width: 16ch; }
+.backs__card:hover { color: var(--text); }
+.backs__card:hover b { color: var(--accent); }
+:lang(zh-Hant) .backs__card b { font-weight: 500; letter-spacing: 0.06em; }
+:lang(zh-Hant) .backs__card span { max-width: 11em; }
+
+/* ---------------- smaller windows ---------------- */
+
+@media (max-width: 52rem) {
+  .table { grid-template-columns: repeat(6, minmax(0, 1fr)); row-gap: var(--s-4); }
+  .print:nth-child(n) { --dy: 0rem; }
+  .print:nth-child(1) { grid-column: 1 / -1; }
+  .print:nth-child(2) { grid-column: 2 / span 5; }
+  .print:nth-child(3) { grid-column: 1 / span 5; }
+  .print:nth-child(4) { grid-column: 1 / -1; }
+  .print:nth-child(5) { grid-column: 1 / -1; }
+  .print:nth-child(6) { grid-column: 2 / span 5; }
+  .backs ul { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .backs__card { min-height: 9rem; }
+}
+
+/* without the script nothing can turn: the notes are written out under each print instead */
+@media (scripting: none) {
+  .print__turn { display: none; }
+  .print__back { grid-area: 2 / 1; transform: none; }
+}
+
+/* no turning motion: the back simply takes the front's place (style.css also stops every
+   transition under "reduce motion") */
+@media (prefers-reduced-motion: reduce) {
+  .print__card, .print__front img { transition: none; }
+}
