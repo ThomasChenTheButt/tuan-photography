@@ -5,11 +5,21 @@
   },
   "email": "thomaslychen@gmail.com",
   "lead": "aoraki",
-  "windows": [
-    "aurora",
-    "matterhorn-lake",
-    "westminster-bridge"
-  ],
+  "home": {
+    "sequence": [
+      {"step": "large", "photos": ["fuji-lake"]},
+      {"step": "pair", "photos": ["tekapo-stars", "sapa-terraces"]},
+      {"step": "small", "photos": ["kifune"]},
+      {"step": "window", "photos": ["aurora"]},
+      {"step": "row", "photos": ["peak-night", "golden-gate-fog", "calanque-tall"]}
+    ],
+    "doors": {
+      "gallery": "matterhorn-lake",
+      "journey": "roys-peak",
+      "guides": "park-guell",
+      "about": "taipei-101"
+    }
+  },
   "slides": [
     {
       "id": "bunkers",

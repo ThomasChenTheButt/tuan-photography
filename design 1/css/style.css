@@ -408,6 +408,20 @@ main { flex: 1; }
   .wall__row { display: grid; row-gap: var(--s-4); }
 }
 
+/* the home sequence: one photograph after another, the size changing from step to step,
+   so the pace comes from scale and space alone. Each step is a wall of one row. */
+.seq { display: grid; row-gap: var(--s-6); padding-bottom: var(--s-6); }
+.window + .seq { padding-top: var(--s-6); }
+.seq__step { width: 100%; margin-inline: auto; }
+.seq__step .wall__row > :only-child { max-width: none; }
+.seq__step--large { max-width: 72rem; }
+.seq__step--pair { max-width: 52rem; }
+.seq__step--small { max-width: 24rem; margin-inline: auto 10%; }
+@media (max-width: 40rem) {
+  .seq__step--pair .wall__row { display: flex; }
+  .seq__step--small { max-width: 80%; margin-inline: auto; }
+}
+
 /* the portfolio: a tight grid of even openings, no captions. The whole photograph is one step away. */
 .grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-1); }
 .grid figure { scroll-margin-top: 1.5rem; }

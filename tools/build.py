@@ -549,67 +549,69 @@ def timed_cards(root, en, zh):
 
 # ------------------------------------------------------------------ pages
 
+# how wide each step of the home sequence is drawn, for the browser's choice of file
+STEP_SIZES = {"large": "(max-width: 40rem) 92vw, min(92vw, 72rem)", "pair": "(max-width: 40rem) 46vw, 26rem",
+              "small": "(max-width: 40rem) 80vw, 24rem", "row": "(max-width: 40rem) 92vw, 34vw"}
+
+
+def step(kind, ids, root, en, zh):
+    """One step of the home sequence: one photograph, a pair or a row, at the size its kind sets.
+    A window is the full-width photograph the page is drawn over."""
+    if kind == "window":
+        return window(ids[0], root, en, zh)
+    items = "\n".join("    " + piece(sid, root, en, zh, STEP_SIZES[kind], flex=True) for sid in ids)
+    return f'<div class="wall seq__step seq__step--{kind}">\n  <div class="wall__row">\n{items}\n  </div>\n</div>'
+
+
 def build_home():
+    """Hold the visitor with the photographs, then show the way in (PRODUCT.md, Tabs 定位).
+    The opening photograph; his line; a sequence of photographs whose sizes change step by step
+    (data/site.json "home" "sequence"); then four photographs, one door to each tab."""
     en, zh = {}, {}
     root = ""
-    lead = DATA["lead"]
-    n_places = len(COUNTRIES)
-    one = DATA["guides"][0] if len(DATA["guides"]) == 1 else None
+    home = DATA["home"]
     en.update(heroLine="Travel like a photographer.",
-              heroSay='Landscape photographs by Thomas Chen <span class="nb">陳亮元</span>. Open any one to see how it was made.',
-              guidesCta="Read the guide" if one else "Read the guides",
-              workTitle="Photographs", workCta="See the gallery", guidesTitle="Guides",
-              moreText=f"Guides for {n_places - 1} more countries are not written yet.",
-              moreCta="See every guide")
+              heroSay='Landscape photographs by Thomas Chen <span class="nb">陳亮元</span>.',
+              doorsLabel="Where to go next")
     zh.update(heroLine='<span class="nb">像攝影師</span><span class="nb">一樣旅行。</span>',
-              heroSay="陳亮元的風景攝影。點開任何一張，看它是怎麼拍的。",
-              guidesCta="閱讀攻略",
-              workTitle="作品", workCta="看全部作品", guidesTitle="攻略",
-              moreText=f"還有 {n_places - 1} 個國家的攻略還沒寫。",
-              moreCta="看所有攻略")
-    leads = {g["lead"] for g in DATA["guides"]}
-    # the home page shows a dozen, one from each country in turn; the gallery shows them all
-    windows = DATA.get("windows", [])
-    seen, others = set(), []
-    for x in DATA["slides"]:
-        if x["id"] == lead or x["id"] in leads or x["id"] in windows or x["country"] in seen:
-            continue
-        seen.add(x["country"])
-        others.append(x["id"])
-    others = others[:12]
-    # the windows are dealt out between the sections, so a photograph is behind the page all the way down
-    panes = [window(sid, root, en, zh) for sid in windows] + ["", "", ""]
-    body = f"""{cover(lead, root, en, zh)}
+              heroSay="陳亮元的風景攝影。",
+              doorsLabel="接下來去哪裡")
+    # the sequence runs in the page column; a window breaks out of it to the full width
+    runs, column = [], []
+    for s in home["sequence"]:
+        if s["step"] == "window":
+            if column:
+                runs.append('<div class="wrap seq">\n' + "\n".join(column) + "\n</div>")
+                column = []
+            runs.append(step("window", s["photos"], root, en, zh))
+        else:
+            column.append(step(s["step"], s["photos"], root, en, zh))
+    if column:
+        runs.append('<div class="wrap seq">\n' + "\n".join(column) + "\n</div>")
+    doors = []
+    for nid, key, label, href in NAV:
+        sid = home["doors"][nid]
+        doors.append(f"""      <li><a class="tile" href="{root}{href}">
+        <span class="tile__photo">{img(SLIDES[sid], root, "(max-width: 56rem) 46vw, 17rem", named=False)}</span>
+        <span class="tile__name" data-i18n="{key}">{label}</span>
+      </a></li>""")
+    body = f"""{cover(DATA["lead"], root, en, zh)}
 
 <div class="leaf">
 <section class="wrap intro arrive">
   <h1 class="rise" style="--i: 0" data-i18n-html="heroLine">Travel like a photographer.</h1>
   <p class="rise" style="--i: 1" data-i18n-html="heroSay">{en['heroSay']}</p>
-  <div class="intro__acts rise" style="--i: 2">
-    <a class="btn" href="{IG['url']}" target="_blank" rel="noopener" data-i18n="followCta">Follow on Instagram</a>
-    <a class="btn btn--line" href="{one['href'] if one else '#guides-h'}" data-i18n="guidesCta">{e(en['guidesCta'])}</a>
+</section>
+
+{chr(10).join(runs)}
+
+<nav class="band doors" aria-label="Where to go next" data-i18n-aria="doorsLabel">
+  <div class="wrap part">
+    <ul class="tiles tiles--four">
+{chr(10).join(doors)}
+    </ul>
   </div>
-</section>
-
-{panes[0]}
-
-<div class="band">
-  <section class="wrap part" aria-labelledby="guides-h">
-    <div class="part__head"><h2 id="guides-h" data-i18n="guidesTitle">Guides</h2></div>
-    {timed_cards(root, en, zh)}
-    <p class="after"><span data-i18n="moreText">{e(en['moreText'])}</span> <a href="{root}guides.html" data-i18n="moreCta">See every guide</a></p>
-  </section>
-</div>
-
-{panes[1]}
-
-<section class="wrap part" aria-labelledby="work-h">
-  <div class="part__head"><h2 id="work-h" data-i18n="workTitle">Photographs</h2></div>
-  {wall(others, root, en, zh)}
-  <p class="part__more"><a class="btn btn--line" href="gallery.html" data-i18n="workCta">See the gallery</a></p>
-</section>
-
-{panes[2]}
+</nav>
 </div>"""
     write("index.html", f"{SITE} - Landscape photographs and how each one was made",
           f"{SITE} - 風景攝影，以及每一張是怎麼拍的",

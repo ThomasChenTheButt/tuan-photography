@@ -1,3 +1,10 @@
+> **Experiment `home` (2026-10-16), port 8646.** The home page redesigned against its job in
+> `PRODUCT.md` → "Tabs 定位": Aoraki stays as the opening; his line without buttons; a sequence of
+> eight photographs at changing sizes (large, pair, small, window, row of three); four photographs
+> as doors to Gallery, Journey, Guides and About. The Guides cards come off Home (his call; the
+> Guides session places them). No skill used. No rule of this file is suspended. Only Home's
+> files change: `tools/build.py` `build_home()`, `design 1/css/style.css`, `data/site.json` `"home"`.
+
 # tuan photography 陳亮元 — project instructions
 
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
