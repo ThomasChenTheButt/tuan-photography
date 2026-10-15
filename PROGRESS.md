@@ -56,6 +56,8 @@ show him written concepts first. Files: `experiments/opening/design 1/js/opening
 
 ## 等你決定 Waiting on you
 
+- **Trip story on the Journey page (trial `trip-link`, port 8650, started 2026-10-15):** each trip in Flights gets "The trip, along its route", opening its story page (any trip, only that trip's own photos). Keep or drop, rename "Flights" or not; he is still deciding. Nothing removed meanwhile: the real Journey page and the test copy `localhost:8647/trip/` stay as they are.
+
 - **The opening:** four candidates left. Pick one to develop, or say the whole opening idea is
   parked. Also: should the 3 remaining versions and ridgeline be merged into one experiment, and the
   other closed?
