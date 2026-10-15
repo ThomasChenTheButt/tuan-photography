@@ -48,16 +48,12 @@
 
 ## 接下來 Next up
 
-**Ask him for his verdict on trial `destinations-map` (port 8651):** the map on Destinations, a
-book's dive ending on the country page, Journey as the Flights list. On keep, merge
-`exp/destinations-map`, remove the worktree and branch. Files: `experiments/destinations-map/`
-(`tools/build.py` `build_destinations`/`cover_of`, `design 2/wc-sketch/app.js` `handOver`).
-The two opening trials were dropped on 2026-10-15 at his word (tags `exp-opening-dropped-2026-10-15`,
-`exp-opening-graph-dropped-2026-10-15`).
+**2026-10-15: the site was restructured to four tabs** (Gallery · Journey · Guides · About), each
+with one job written in `PRODUCT.md` → "Tabs 定位". Next: design each tab against it, one at a
+time. He wants Journey restyled and the Gallery's six controls removed.
+The trial `destinations-map` was dropped (tag `exp-destinations-map-dropped-2026-10-15`).
 
 ## 等你決定 Waiting on you
-
-- **Trial `destinations-map` (port 8651, started 2026-10-15):** the map now sits on Destinations above the continent squares; clicking a book zooms in, the name rises, the photo fades in, and the country page opens on that same photo; the menu's Journey item now opens the Flights list of trips. Blog stays, empty. Keep or drop? (Trip stories you write later will hang off each trip in Journey.)
 
 - **Sea photograph:** which photographs besides Aoraki, if any? (`?ocean=all` cycles all 93.)
 - **Camera data for the 22 US photographs:** re-export from Lightroom with metadata, or drop the

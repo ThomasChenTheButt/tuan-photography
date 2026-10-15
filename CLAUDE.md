@@ -18,8 +18,11 @@ Bilingual EN / 繁體中文. Owner is not a developer — explain in plain Engli
   Descriptive detail belongs in the small line under it.
 - **References are sources of qualities, never templates.** He rejected an earlier look for
   copying wilhelmchang.com. The site keeps its own identity.
-- **No email on the site** (his call, 2026-09-28). The way to reach him is Instagram,
-  `tuan_1127`. The About biography stays as written (his call, same day).
+- **Contact: Instagram `tuan_1127`, and his email on About only** (thomaslychen@gmail.com,
+  his call 2026-10-15, reversing "no email" of 2026-09-28; the build writes it as character
+  codes). The About biography stays as written (his call, 2026-09-28).
+- **Every tab has one job**, set in `PRODUCT.md` → "Tabs 定位" (his call, 2026-10-15). Check a
+  design for a tab against it. Journey is about time (his trips), Guides about place (what to do there).
 
 ## Design system — `DESIGN.md` and `PRODUCT.md`
 
@@ -120,8 +123,9 @@ Arranged on 2026-09-28 at his request, so the top level reads at a glance. Keep 
 
 ## Structure — the pages are built, not hand-written
 
-Nav: Gallery 作品集 · Destinations 目的地 · Blog 網誌 · Skills 攝影技巧 · About 關於我.
-Destinations drills down: 7 continents → country pages → guides (`design 1/posts/`).
+Nav (since 2026-10-15): Gallery 作品集 · Journey 旅程 · Guides 攻略 · About 關於我. Blog and Skills
+were removed: trip stories belong to Journey, general tips to the General part of Guides.
+Guides (`guides.html`, once `destinations.html`) drills down: 7 continents → country pages → guides (`design 1/posts/`).
 
 **Every `.html` page in `design 1/` is written out by `python3 tools/build.py`. Never hand-edit the
 HTML** —
@@ -296,7 +300,7 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 - Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
   harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
 
-Open now: `destinations-map` (started 2026-10-15, port 8651): the Journey page's map moved onto Destinations above the continent squares, a book's dive ending on design 1's country page (now opening on that photograph), and the menu's Journey item opening the Flights spread; waiting on his verdict.
+Open now: none.
 
 Decided experiments. Rejected ideas are not proposed again; the tags hold the code.
 
@@ -316,6 +320,7 @@ Decided experiments. Rejected ideas are not proposed again; the tags hold the co
 | `timed-cards` (the Guides shelf replaced by a copy of Giulio Cuscito's "Timed Cards Opening": a full-window photograph, rounded photo cards, the first card grows into the next background every 4 s, Bebas Neue names, arrows, 02 / 18) | kept | 2026-10-13 | merged into `main`; the books before it at `before-timed-cards-2026-10-13` |
 | `taste-trip` (Taste skill audit-first on the trip page `elements/trip/`: one wash for both countries with vermilion for the route only, smaller blank frames, no coordinates, no scroll hint, even title lines; then the place name under the phone map and country names kept off the route) | kept | 2026-10-15 | merged into `main` |
 | `trip-link` (the trip story page moved into `design 2/wc-sketch/trip/` (`?trip=<journey id>`), one link per journey in Flights, "The trip, along its route / 沿著路線看這趟"; `tools/build2.py` writes each photo's `taken` day so a trip shows only its own photos; "Flights" keeps its name) | kept | 2026-10-15 | merged into `main` |
+| `destinations-map` (the Journey map moved onto Destinations, a book's dive ending on the country page, Journey as the Flights list) | dropped: the map means "where I've been", which is Journey's job | 2026-10-15 | tag `exp-destinations-map-dropped-2026-10-15`; the dive into the country page may come back as the Journey to Guides link |
 | `opening` (home-page openings for design 1; three left: aperture, contact sheet 2, letters 4) and `opening-graph` (openings from his agent graph; ridgeline left) | dropped, both | 2026-10-15 | tags `exp-opening-dropped-2026-10-15`, `exp-opening-graph-dropped-2026-10-15` |
 
 **Weekly report 週報** (set up 2026-09-28). A scheduled task, `weekly-web-design-report`, runs

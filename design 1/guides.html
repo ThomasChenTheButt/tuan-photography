@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Destinations - tuan photography 陳亮元</title>
-  <meta name="description" content="The countries photographed by 陳亮元 Thomas Chen, by continent.">
+  <title>Guides - tuan photography 陳亮元</title>
+  <meta name="description" content="Travel and photography guides by 陳亮元 Thomas Chen, by country, plus what fits any trip.">
   <meta name="theme-color" content="#f7f2e9">
   <link rel="icon" type="image/png" href="icons/favicon-96x96.png" sizes="96x96">
   <link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
@@ -12,8 +12,8 @@
   <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-title" content="PT">
   <link rel="manifest" href="site.webmanifest">
-  <link rel="stylesheet" href="css/fonts.css?v=202610132205">
-  <link rel="stylesheet" href="css/style.css?v=202610132205">
+  <link rel="stylesheet" href="css/fonts.css?v=202610152337">
+  <link rel="stylesheet" href="css/style.css?v=202610152337">
 </head>
 <body>
 <a class="skip btn" href="#main" data-i18n="skip">Skip to the content</a>
@@ -23,11 +23,9 @@
   <nav class="menu" id="menu" aria-label="Site">
     <ul>
         <li><a href="gallery.html" data-i18n="navGallery">Gallery</a></li>
-        <li><a href="destinations.html" data-i18n="navDestinations" aria-current="page">Destinations</a></li>
-        <li><a href="blog.html" data-i18n="navBlog">Blog</a></li>
-        <li><a href="skills.html" data-i18n="navSkills">Skills</a></li>
-        <li><a href="about.html" data-i18n="navAbout">About</a></li>
         <li><a href="journey/" data-i18n="navJourney">Journey</a></li>
+        <li><a href="guides.html" data-i18n="navGuides" aria-current="page">Guides</a></li>
+        <li><a href="about.html" data-i18n="navAbout">About</a></li>
     </ul>
     <div class="lang" role="group" aria-label="Language">
       <button id="lang-en" type="button" aria-pressed="true" lang="en">EN</button><i></i><button id="lang-zh" type="button" aria-pressed="false" lang="zh-Hant">中文</button>
@@ -37,7 +35,7 @@
 <main id="main" tabindex="-1">
 <div class="wrap">
   <header class="page-top">
-    <h1 data-i18n="pTitle">Destinations</h1>
+    <h1 data-i18n="pTitle">Guides</h1>
     <p data-i18n="pSub">21 countries, by continent. One guide so far: Barcelona.</p>
   </header>
   <section class="part">
@@ -64,6 +62,17 @@
       </a></li>
     </ul>
   </section>
+  <section class="part" aria-labelledby="gen-h">
+    <div class="part__head">
+      <h2 id="gen-h" data-i18n="genTitle">General</h2>
+      <p data-i18n="genSub">For any trip, wherever it goes.</p>
+    </div>
+    <ul class="plain">
+      <li><span data-i18n="g1">How I plan a photography trip (my full SOP)</span><span data-i18n="notYet">Not written yet</span></li>
+      <li><span data-i18n="g2">Finding photo spots before you&#x27;ve ever been there</span><span data-i18n="notYet">Not written yet</span></li>
+      <li><span data-i18n="g3">What&#x27;s in my camera bag (and what stays home)</span><span data-i18n="notYet">Not written yet</span></li>
+    </ul>
+  </section>
   <section class="part bleed" aria-labelledby="rest-h">
     <div class="part__head"><h2 id="rest-h" data-i18n="restTitle">Not travelled yet</h2></div>
     <div class="names"><span data-i18n="k_south-america">South America</span><span data-i18n="k_africa">Africa</span><span data-i18n="k_antarctica">Antarctica</span></div>
@@ -78,11 +87,9 @@
     <div class="foot__small">
       <ul>
         <li><a href="gallery.html" data-i18n="navGallery">Gallery</a></li>
-        <li><a href="destinations.html" data-i18n="navDestinations">Destinations</a></li>
-        <li><a href="blog.html" data-i18n="navBlog">Blog</a></li>
-        <li><a href="skills.html" data-i18n="navSkills">Skills</a></li>
-        <li><a href="about.html" data-i18n="navAbout">About</a></li>
         <li><a href="journey/" data-i18n="navJourney">Journey</a></li>
+        <li><a href="guides.html" data-i18n="navGuides">Guides</a></li>
+        <li><a href="about.html" data-i18n="navAbout">About</a></li>
       </ul>
       <p data-i18n="footNote">© 2026 tuan photography 陳亮元. All photographs are my own.</p>
     </div>
@@ -93,10 +100,16 @@
 <script>
 window.pageI18n = {
  "en": {
-  "pTitle": "Destinations",
+  "pTitle": "Guides",
   "pSub": "21 countries, by continent. One guide so far: Barcelona.",
   "noPhoto": "No photographs yet",
   "restTitle": "Not travelled yet",
+  "genTitle": "General",
+  "genSub": "For any trip, wherever it goes.",
+  "notYet": "Not written yet",
+  "g1": "How I plan a photography trip (my full SOP)",
+  "g2": "Finding photo spots before you've ever been there",
+  "g3": "What's in my camera bag (and what stays home)",
   "k_europe": "Europe",
   "kn_europe": "7 countries",
   "sp_casa-batllo": "Casa Batlló",
@@ -120,13 +133,19 @@ window.pageI18n = {
   "k_south-america": "South America",
   "k_africa": "Africa",
   "k_antarctica": "Antarctica",
-  "docTitle": "Destinations - tuan photography 陳亮元"
+  "docTitle": "Guides - tuan photography 陳亮元"
  },
  "zh": {
-  "pTitle": "目的地",
+  "pTitle": "攻略",
   "pSub": "21 個國家，依大洲排列。攻略目前只有一篇：巴賽隆納。",
   "noPhoto": "還沒有照片",
   "restTitle": "還沒去過",
+  "genTitle": "通用篇",
+  "genSub": "不分國家，每趟旅行都用得上。",
+  "notYet": "還沒寫",
+  "g1": "我如何規劃一趟攝影旅行（完整 SOP）",
+  "g2": "出發前就找到攝影點的方法",
+  "g3": "我的相機包裡有什麼（以及什麼留在家）",
   "k_europe": "歐洲",
   "kn_europe": "7 個國家",
   "sp_casa-batllo": "巴特由之家",
@@ -150,10 +169,10 @@ window.pageI18n = {
   "k_south-america": "南美洲",
   "k_africa": "非洲",
   "k_antarctica": "南極洲",
-  "docTitle": "目的地 - tuan photography 陳亮元"
+  "docTitle": "攻略 - tuan photography 陳亮元"
  }
 };
 </script>
-<script src="js/main.js?v=202610132205"></script>
+<script src="js/main.js?v=202610152337"></script>
 </body>
 </html>

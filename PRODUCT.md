@@ -49,8 +49,28 @@ to stand there.
   tables, spot tables with map links, food tables, gear lists, sunset times. Guides are written
   from those documents after the trip.
 - 16 countries travelled so far; Taiwan is home base.
-- Site sections: Gallery 作品集 · Destinations 目的地 · Blog 網誌 · Skills 攝影技巧 · About 關於我.
-  Destinations drills down: 7 continents → country pages → guides.
+- Site sections (since 2026-10-15): Home, then Gallery 作品集 · Journey 旅程 · Guides 攻略 ·
+  About 關於我. Guides drills down: 7 continents → country pages → guides. What each one is for
+  is under **Tabs 定位** below.
+
+## Tabs 定位
+
+Set by the owner on 2026-10-15, so each tab has one job and every design choice can be checked
+against it. Journey and Guides split by **time and place**: Journey answers "where did he go, and
+what happened?", trip by trip, in order; Guides answers "what should I do there?", place by
+place. They link to each other: a trip to the guides of the places it passed through, a guide to
+the trips that went there.
+
+| Tab | Its job | Not its job |
+|---|---|---|
+| **Home** | Hold the visitor with the photographs, then show the way in. The craft is in pacing, scale and sequence, never effects laid over a photograph. | Explaining, listing, every photograph |
+| **Gallery 作品集** | Every photograph, and nothing else. | Controls, words, guides |
+| **Journey 旅程** | His whole travel record: where he has been, and each trip along its route ("The trip, along its route"). Trip stories live here. | How-to advice |
+| **Guides 攻略** | What he learned, for a reader planning their own trip: by country (photo spots, timing, routes, practical notes), plus a General part for what fits any trip (planning, finding spots, gear). | His story, the full photo record |
+| **About 關於我** | Who he is, what interests him and what does not, why his advice can be trusted, and how to reach him: Instagram and email. | Selling a service |
+
+The former Blog (trip stories) became part of Journey and the former Skills (general tips) the
+General part of Guides; both tabs were removed on 2026-10-15.
 
 ## Capabilities and Constraints
 
@@ -73,8 +93,9 @@ to stand there.
 - The continent → country → guide hierarchy is fixed. Everything else, including the main
   menu, may be redesigned (owner, 2026-09-27).
 - Undecided: which country gets the next guide; whether the newsletter sign-up is wanted.
-- Decided 2026-09-28: the About text stays as written, no email is published, and the
-  typefaces are kept with the site.
+- Decided 2026-09-28: the About text stays as written and the typefaces are kept with the
+  site. Changed 2026-10-15: his email, thomaslychen@gmail.com, is published on About, beside
+  Instagram.
 
 ## Brand Commitments
 

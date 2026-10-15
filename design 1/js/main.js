@@ -14,9 +14,7 @@
 const i18n = {
   en: {
     navGallery: 'Gallery',
-    navDestinations: 'Destinations',
-    navBlog: 'Blog',
-    navSkills: 'Skills',
+    navGuides: 'Guides',
     navAbout: 'About',
     navJourney: 'Journey',
     navMenu: 'Menu',
@@ -40,9 +38,7 @@ const i18n = {
   },
   zh: {
     navGallery: '作品集',
-    navDestinations: '目的地',
-    navBlog: '網誌',
-    navSkills: '攝影技巧',
+    navGuides: '攻略',
     navAbout: '關於我',
     navJourney: '旅程',
     navMenu: '選單',

@@ -26,6 +26,9 @@ SLIDES = {s["id"]: s for s in DATA["slides"]}
 COUNTRIES = {c["id"]: c for c in DATA["countries"]}
 CONTINENTS = {c["id"]: c for c in DATA["continents"]}
 IG = DATA["instagram"]
+# his email, published on About only (his call, 2026-10-15), written as character codes so the
+# address reads and clicks normally but simple address-collecting bots do not find it
+MAIL = "".join(f"&#{ord(ch)};" for ch in DATA["email"])
 SIZES = (640, 1280)
 SRGB = "/System/Library/ColorSync/Profiles/sRGB Profile.icc"
 SITE = "tuan photography 陳亮元"
@@ -33,12 +36,11 @@ STAMP = time.strftime("%Y%m%d%H%M")   # added to the stylesheet and script addre
 
 PAPER = "#f7f2e9"   # the page ground, for the browser's own bars
 
+# what each tab is for: PRODUCT.md, "Tabs 定位"
 NAV = [("gallery", "navGallery", "Gallery", "gallery.html"),
-       ("destinations", "navDestinations", "Destinations", "destinations.html"),
-       ("blog", "navBlog", "Blog", "blog.html"),
-       ("skills", "navSkills", "Skills", "skills.html"),
-       ("about", "navAbout", "About", "about.html"),
-       ("journey", "navJourney", "Journey", "journey/")]   # design 2, the pen-and-wash map: design 1/journey is a link to the design 2 folder
+       ("journey", "navJourney", "Journey", "journey/"),   # design 2, the pen-and-wash map: design 1/journey is a link to the design 2 folder
+       ("guides", "navGuides", "Guides", "guides.html"),
+       ("about", "navAbout", "About", "about.html")]
 
 
 def e(text):
@@ -558,13 +560,13 @@ def build_home():
               guidesCta="Read the guide" if one else "Read the guides",
               workTitle="Photographs", workCta="See the gallery", guidesTitle="Guides",
               moreText=f"Guides for {n_places - 1} more countries are not written yet.",
-              moreCta="See every destination")
+              moreCta="See every guide")
     zh.update(heroLine='<span class="nb">像攝影師</span><span class="nb">一樣旅行。</span>',
               heroSay="陳亮元的風景攝影。點開任何一張，看它是怎麼拍的。",
               guidesCta="閱讀攻略",
               workTitle="作品", workCta="看全部作品", guidesTitle="攻略",
               moreText=f"還有 {n_places - 1} 個國家的攻略還沒寫。",
-              moreCta="看所有目的地")
+              moreCta="看所有攻略")
     leads = {g["lead"] for g in DATA["guides"]}
     # the home page shows a dozen, one from each country in turn; the gallery shows them all
     windows = DATA.get("windows", [])
@@ -595,7 +597,7 @@ def build_home():
   <section class="wrap part" aria-labelledby="guides-h">
     <div class="part__head"><h2 id="guides-h" data-i18n="guidesTitle">Guides</h2></div>
     {timed_cards(root, en, zh)}
-    <p class="after"><span data-i18n="moreText">{e(en['moreText'])}</span> <a href="{root}destinations.html" data-i18n="moreCta">See every destination</a></p>
+    <p class="after"><span data-i18n="moreText">{e(en['moreText'])}</span> <a href="{root}guides.html" data-i18n="moreCta">See every guide</a></p>
   </section>
 </div>
 
@@ -667,8 +669,10 @@ def build_gallery():
           "gallery", body, en, zh, over="ink", foot=False, scripts=("wall.js",))
 
 
-def build_destinations():
-    """The continents travelled, each a square; the continents not travelled, as names."""
+def build_guides():
+    """What he learned, for a reader planning a trip: the continents travelled, each a square,
+    then the General part (what fits any trip; once the Skills tab), then the continents not
+    travelled, as names."""
     en, zh = {}, {}
     root = ""
     n_c, guides = len(COUNTRIES), DATA["guides"]
@@ -678,10 +682,19 @@ def build_destinations():
     else:
         tail_en = f"{len(guides)} guides so far."
         tail_zh = f"攻略目前有 {len(guides)} 篇。"
-    en.update(pTitle="Destinations", pSub=f"{n_c} countries, by continent. {tail_en}",
-              noPhoto="No photographs yet", restTitle="Not travelled yet")
-    zh.update(pTitle="目的地", pSub=f"{n_c} 個國家，依大洲排列。{tail_zh}",
-              noPhoto="還沒有照片", restTitle="還沒去過")
+    en.update(pTitle="Guides", pSub=f"{n_c} countries, by continent. {tail_en}",
+              noPhoto="No photographs yet", restTitle="Not travelled yet",
+              genTitle="General", genSub="For any trip, wherever it goes.", notYet="Not written yet",
+              g1="How I plan a photography trip (my full SOP)",
+              g2="Finding photo spots before you've ever been there",
+              g3="What's in my camera bag (and what stays home)")
+    zh.update(pTitle="攻略", pSub=f"{n_c} 個國家，依大洲排列。{tail_zh}",
+              noPhoto="還沒有照片", restTitle="還沒去過",
+              genTitle="通用篇", genSub="不分國家，每趟旅行都用得上。", notYet="還沒寫",
+              g1="我如何規劃一趟攝影旅行（完整 SOP）", g2="出發前就找到攝影點的方法",
+              g3="我的相機包裡有什麼（以及什麼留在家）")
+    general = "\n".join(f'      <li><span data-i18n="g{i}">{e(en[f"g{i}"])}</span>'
+                        f'<span data-i18n="notYet">Not written yet</span></li>' for i in (1, 2, 3))
     tiles, names = [], []
     for k in DATA["continents"]:
         kid = k["id"]
@@ -703,9 +716,18 @@ def build_destinations():
         <h2 class="tile__name" data-i18n="k_{kid}">{e(k['en'])}</h2>
         <span class="tile__count num" data-i18n="kn_{kid}">{e(en[f'kn_{kid}'])}</span>
       </a></li>""")
-    body = page_top("pTitle", "Destinations", "pSub", en["pSub"]) + f"""  <section class="part">
+    body = page_top("pTitle", "Guides", "pSub", en["pSub"]) + f"""  <section class="part">
     <ul class="tiles tiles--four">
 {chr(10).join(tiles)}
+    </ul>
+  </section>
+  <section class="part" aria-labelledby="gen-h">
+    <div class="part__head">
+      <h2 id="gen-h" data-i18n="genTitle">General</h2>
+      <p data-i18n="genSub">{e(en['genSub'])}</p>
+    </div>
+    <ul class="plain">
+{general}
     </ul>
   </section>
   <section class="part bleed" aria-labelledby="rest-h">
@@ -713,15 +735,15 @@ def build_destinations():
     <div class="names">{''.join(names)}</div>
   </section>
 </div>"""
-    write("destinations.html", f"Destinations - {SITE}", f"目的地 - {SITE}",
-          "The countries photographed by 陳亮元 Thomas Chen, by continent.",
-          "destinations", body, en, zh)
+    write("guides.html", f"Guides - {SITE}", f"攻略 - {SITE}",
+          "Travel and photography guides by 陳亮元 Thomas Chen, by country, plus what fits any trip.",
+          "guides", body, en, zh)
 
 
 def back(root, en, zh):
-    en.setdefault("backBtn", "Back to destinations")
-    zh.setdefault("backBtn", "回到目的地")
-    return f'<a class="btn btn--line" href="{root}destinations.html" data-i18n="backBtn">Back to destinations</a>'
+    en.setdefault("backBtn", "Back to guides")
+    zh.setdefault("backBtn", "回到攻略")
+    return f'<a class="btn btn--line" href="{root}guides.html" data-i18n="backBtn">Back to guides</a>'
 
 
 def build_continents():
@@ -731,10 +753,10 @@ def build_continents():
         kid = k["id"]
         own = [c for c in DATA["countries"] if c["continent"] == kid]
         sub = k.get("sub") or k["state"]
-        en.update(pTitle=k["en"], pSub=sub["en"], pathDest="Destinations")
-        zh.update(pTitle=k["zh"], pSub=sub["zh"], pathDest="目的地")
+        en.update(pTitle=k["en"], pSub=sub["en"], pathDest="Guides")
+        zh.update(pTitle=k["zh"], pSub=sub["zh"], pathDest="攻略")
         top = page_top("pTitle", k["en"], "pSub", sub["en"],
-                       crumbs([(f"{root}destinations.html", "pathDest", "Destinations")]))
+                       crumbs([(f"{root}guides.html", "pathDest", "Guides")]))
         if own:
             tiles, names = [], []
             for c in own:
@@ -768,7 +790,7 @@ def build_continents():
   </section>
 </div>"""
         write(f"continents/{kid}.html", f"{k['en']} - {SITE}", f"{k['zh']} - {SITE}",
-              f"{k['en']}: countries photographed by 陳亮元 Thomas Chen.", "destinations", body, en, zh)
+              f"{k['en']}: countries photographed by 陳亮元 Thomas Chen.", "guides", body, en, zh)
 
 
 def build_countries():
@@ -780,10 +802,10 @@ def build_countries():
         own = [s["id"] for s in DATA["slides"] if s["country"] == cid]
         guides = [g for g in DATA["guides"] if g["country"] == cid]
         en.update(pTitle=c["en"], pSub=c["note"]["en"], statLabel=c["date"]["en"],
-                  pathDest="Destinations", pathCont=k["en"])
+                  pathDest="Guides", pathCont=k["en"])
         zh.update(pTitle=c["zh"], pSub=c["note"]["zh"], statLabel=c["date"]["zh"],
-                  pathDest="目的地", pathCont=k["zh"])
-        path = crumbs([(f"{root}destinations.html", "pathDest", "Destinations"),
+                  pathDest="攻略", pathCont=k["zh"])
+        path = crumbs([(f"{root}guides.html", "pathDest", "Guides"),
                        (f"{root}continents/{k['id']}.html", "pathCont", k["en"])])
         when = f'\n    <p class="when num" data-i18n="statLabel">{e(c["date"]["en"])}</p>'
         parts = [page_top("pTitle", c["en"], "pSub", c["note"]["en"], path, when)]
@@ -816,53 +838,7 @@ def build_countries():
   </section>""")
         parts.append("</div>")
         write(f"countries/{cid}.html", f"{c['en']} - {SITE}", f"{c['zh']} - {SITE}",
-              f"{c['en']}: photographs and guides by 陳亮元 Thomas Chen.", "destinations", "\n".join(parts), en, zh)
-
-
-def build_blog():
-    en, zh = {}, {}
-    en.update(pTitle="Blog", pSub="Field notes, travel stories, and what actually happened between the photos.",
-              emptyText="Nothing is published yet. The first story is planned for after the Vietnam trip.",
-              backHome="See the photographs")
-    zh.update(pTitle="網誌", pSub="田野筆記、旅行故事,以及照片與照片之間真正發生的事。",
-              emptyText="還沒有文章。第一篇故事預計在越南旅程之後刊出。", backHome="看作品")
-    body = page_top("pTitle", "Blog", "pSub", en["pSub"]) + f"""  <section class="part">
-    <div class="empty">
-      <p data-i18n="emptyText">{e(en['emptyText'])}</p>
-      <a class="btn btn--line" href="gallery.html" data-i18n="backHome">See the photographs</a>
-    </div>
-  </section>
-</div>"""
-    write("blog.html", f"Blog - {SITE}", f"網誌 - {SITE}",
-          "Field notes and travel stories by 陳亮元 Thomas Chen.", "blog", body, en, zh)
-
-
-def build_skills():
-    en, zh = {}, {}
-    en.update(pTitle="Photography Skills", pSub="How I plan, shoot, and edit — written down so you can steal it.",
-              s1title="How I plan a photography trip (my full SOP)",
-              s2title="Finding photo spots before you've ever been there",
-              s3title="What's in my camera bag (and what stays home)",
-              wipNote="Articles in progress — titles are placeholders for now.",
-              notYet="Not written yet", planned="Planned")
-    zh.update(pTitle="攝影技巧", pSub="我如何規劃、拍攝、後製——全部寫下來,歡迎偷學。",
-              s1title="我如何規劃一趟攝影旅行(完整 SOP)", s2title="出發前就找到攝影點的方法",
-              s3title="我的相機包裡有什麼(以及什麼留在家)", wipNote="文章製作中——目前標題為暫定。",
-              notYet="還沒寫", planned="預計撰寫")
-    rows = "\n".join(f'      <li><span data-i18n="s{i}title">{e(en[f"s{i}title"])}</span>'
-                     f'<span data-i18n="notYet">Not written yet</span></li>' for i in (1, 2, 3))
-    body = page_top("pTitle", "Photography Skills", "pSub", en["pSub"]) + f"""  <section class="part" aria-labelledby="plan-h">
-    <div class="part__head">
-      <h2 id="plan-h" data-i18n="planned">Planned</h2>
-      <p data-i18n="wipNote">{e(en['wipNote'])}</p>
-    </div>
-    <ul class="plain">
-{rows}
-    </ul>
-  </section>
-</div>"""
-    write("skills.html", f"Photography Skills - {SITE}", f"攝影技巧 - {SITE}",
-          "How 陳亮元 Thomas Chen plans, shoots and edits.", "skills", body, en, zh)
+              f"{c['en']}: photographs and guides by 陳亮元 Thomas Chen.", "guides", "\n".join(parts), en, zh)
 
 
 def build_about():
@@ -874,13 +850,13 @@ def build_about():
               abBody1="This site is that homework, published. Every guide tells you where the photo was taken, when to stand there, and what to do with the rest of your day. Some spots get exact pins; the fragile ones stay vague on purpose — you'll understand when you get there.",
               fCountries="Countries", fCountriesV=f"{len(COUNTRIES)} so far",
               fHome="Home base", fHomeV="Taiwan",
-              fCamera="Camera", fLens="Lenses", fIg="Instagram")
+              fCamera="Camera", fLens="Lenses", fIg="Instagram", fMail="Email")
     zh.update(abTitle="我把旅行當拍攝案規劃——因為它本來就是。",
               abLede="每趟旅行前,我都會埋進研究裡:光線方向、季節、開放時間、交通,還有當地人真正在吃的東西。然後出發、照計畫拍攝,再記下哪些是真的、哪些不是。",
               abBody1="這個網站就是那些功課的出版版本。每份指南都告訴你照片在哪裡拍、什麼時候該站在那裡,以及一天剩下的時間該做什麼。有些機位給精確座標;脆弱的秘境則刻意模糊——到了你就懂。",
               fCountries="國家數", fCountriesV=f"目前 {len(COUNTRIES)} 個",
               fHome="大本營", fHomeV="台灣",
-              fCamera="相機", fLens="鏡頭", fIg="Instagram")
+              fCamera="相機", fLens="鏡頭", fIg="Instagram", fMail="電子郵件")
     body = f"""<div class="wrap">
   <section class="about arrive">
     <h1 class="rise" style="--i: 0" data-i18n="abTitle">{e(en['abTitle'])}</h1>
@@ -896,6 +872,7 @@ def build_about():
       <div><dt data-i18n="fCamera">Camera</dt><dd>{e(', '.join(cams))}</dd></div>
       <div><dt data-i18n="fLens">Lenses</dt><dd>{'<br>'.join(e(x) for x in lenses)}</dd></div>
       <div><dt data-i18n="fIg">Instagram</dt><dd><a href="{IG['url']}" target="_blank" rel="noopener">@{IG['handle']}</a></dd></div>
+      <div><dt data-i18n="fMail">Email</dt><dd><a href="mailto:{MAIL}">{MAIL}</a></dd></div>
     </dl>
     </div>
   </section>
@@ -927,7 +904,7 @@ def build_guide(name, title_en, title_zh, desc):
         body = body.replace(a, b)
     body = re.sub(r"<th(?=[ >])(?![^>]*role=)", '<th role="columnheader"', body)
     body = re.sub(r"<td(?=[ >])(?![^>]*role=)", '<td role="cell"', body)
-    write(f"posts/{name}.html", title_en, title_zh, desc, "destinations", body, en, zh)
+    write(f"posts/{name}.html", title_en, title_zh, desc, "guides", body, en, zh)
 
 
 if __name__ == "__main__":
@@ -936,11 +913,9 @@ if __name__ == "__main__":
     print("Writing pages…")
     build_home()
     build_gallery()
-    build_destinations()
+    build_guides()
     build_continents()
     build_countries()
-    build_blog()
-    build_skills()
     build_about()
     build_guide("barcelona", f"Barcelona - {SITE}", f"巴賽隆納 - {SITE}",
                 "A photographer's real 4-day Barcelona guide: Gaudí photo spots with best light, Bunkers del Carmel sunset, Tibidabo, day-by-day route, and a tested tapas list.")
