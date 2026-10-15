@@ -305,7 +305,7 @@ Content sits in one centred column, 88rem at its widest, with a side margin that
 - **Guides** (once Destinations): the continents travelled, four to a row in a 72rem column, each a square with its name and a count beneath, centred as a group; then the General part (articles for any trip, in a plain list); then the continents not travelled, as names on stone.
 - **Feature:** a twelve-column grid. The photograph takes seven columns and the name takes four, with one column of air between them. Every second feature is mirrored.
 - **Guide:** the title and lead photograph (up to 74rem wide), then one centred column of 50rem. Paragraphs, lists and notes inside it are held to 40rem. Rows of photographs in a guide break out of the column to 74rem.
-- **About:** a twelve-column grid, the text on six columns and the facts on three.
+- **About:** his name centred as the heading, a line in Second Ink beneath it, then a twelve-column grid: the text on six columns and the facts (home base, countries, camera, lenses) on three. The text is the opening paragraph in the serif, two plain paragraphs, then, below a hairline, one line inviting questions with the Instagram button and his email beside it.
 
 How the layout changes on smaller windows, as built:
 
@@ -483,8 +483,8 @@ These are recorded as open. None of them is a settled part of the system.
 
 ### Decided by the owner on 2026-09-28
 - **Typeface hosting.** The typefaces are kept with the site, in `design 1/fonts/`.
-- **About biography.** The text on the About page stays as it is.
-- **Contact email.** Published on About only, in the facts list beside Instagram (his call, 2026-10-15).
+- **About biography.** Rewritten on 2026-10-16 from facts he had given, approved by him: who he is, what he shoots and leaves out, why the guides can be trusted. Change it only at his word.
+- **Contact email.** Published on About only, beside the Instagram button at the end of the text (his call, 2026-10-15).
 
 ### Recorded as built, not as rules to extend
 - **Where a photograph is trimmed.** Four places. The opening photograph is fitted to the window, so its edges are trimmed to the window's shape (on a phone held upright, a good deal of its width). Country tiles are fitted to a 3 by 2 opening. The portfolio grid fits every photograph to a 3 by 2 opening, and the continents to a square; both are the owner's own request of 2026-09-30. The feature photograph is not trimmed; it keeps its own shape, as do the guide's lead photograph, the quick facts photograph and every photograph in a row. The whole photograph is always available in the viewer. None of these is a licence to trim elsewhere.
