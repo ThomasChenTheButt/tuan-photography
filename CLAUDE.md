@@ -1,3 +1,9 @@
+> **Experiment `taste-trip`** (started 2026-10-15, branch `exp/taste-trip`, port 8650 serving
+> `elements/`). Tried: the Taste skill (`design-taste-frontend`), audit-first, on the trip page
+> `elements/trip/` only (the Storytelling Map trial for Australia and New Zealand). A refinement,
+> not a redesign: the route drawn by scroll, the map following, the beam and the blank frames stay.
+> Rules of this file suspended here: none.
+
 # tuan photography 陳亮元 — project instructions
 
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.

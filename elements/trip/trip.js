@@ -36,7 +36,6 @@
 
   const WORDS = {
     en: {
-      hint: 'Scroll to follow the route',
       blank: 'No photograph yet',
       home: 'Home',
       and: ' and ', list: ', ',
@@ -44,11 +43,8 @@
       leg: (m, f) => `${m} from ${f}`,
       then: ', then ',
       tally: (p, n) => `${p} places, ${n} photographs`,
-      lat: (v) => `${Math.abs(v).toFixed(2)}° ${v < 0 ? 'S' : 'N'}`,
-      lng: (v) => `${Math.abs(v).toFixed(2)}° ${v < 0 ? 'W' : 'E'}`,
     },
     zh: {
-      hint: '往下捲，跟著路線走',
       blank: '還沒有照片',
       home: '回家',
       and: '與', list: '、',
@@ -56,8 +52,6 @@
       leg: (m, f) => `從${f}${m}`,
       then: '，再',
       tally: (p, n) => `${p} 個地方，${n} 張照片`,
-      lat: (v) => `${v < 0 ? '南緯' : '北緯'} ${Math.abs(v).toFixed(2)}°`,
-      lng: (v) => `${v < 0 ? '西經' : '東經'} ${Math.abs(v).toFixed(2)}°`,
     },
   };
   let lang = new URLSearchParams(location.search).get('lang') === 'zh' ? 'zh' : 'en';
@@ -122,7 +116,6 @@
     const s = w.leg(w.mode[l.mode] || l.mode, nameOf(l.from));
     return i === 0 ? s : w.then + s;
   }).join('');
-  const where = (ll) => `${W_().lat(ll[0])}  ${W_().lng(ll[1])}`;
   const src = (f, n) => `../images/web/${n ? n + '/' : ''}${f}`;
 
   function renderStory() {
@@ -134,8 +127,7 @@
     let html = `<section class="intro" data-i="-1">
       <p class="intro__when caps">${esc((J.date || J.label)[lang])}</p>
       <h1 class="intro__title">${esc(title)}</h1>
-      <p class="intro__route">${esc(stops.map((c) => nameOf(c.at)).join(w.list))}</p>
-      <p class="intro__hint caps">${esc(w.hint)}</p>
+      <p class="intro__route">${stops.map((c) => `<span>${esc(nameOf(c.at))}</span>`).join(esc(w.list))}</p>
     </section>`;
     chapters.forEach((c, i) => {
       if (c.home) {
@@ -159,7 +151,7 @@
       html += `<section class="stop" data-i="${i}">
         <p class="stop__how caps">${esc(legLine(c))}</p>
         <h2 class="stop__name">${esc(nameOf(c.at))}</h2>
-        <p class="stop__where">${esc(country ? country.name[lang] : '')} · ${esc(where(c.at.ll))}</p>
+        <p class="stop__where">${esc(country ? country.name[lang] : '')}</p>
         <div class="stop__photos">${shots}</div>
       </section>`;
     });
@@ -271,8 +263,10 @@
   const env = {
     LON0, LAT_N: 90, LAT_S: -90, SY,
     land: () => state.land50,
-    // close in, the route alone carries the vermilion: the countries keep their own washes
-    travel: () => (state.paintR < 22 ? state.travel : []),
+    // the route alone carries the vermilion, at every distance: the countries keep their own
+    // washes. (A rose wash on the far paintings only showed as a hard-edged block wherever a
+    // closer painting, without it, lay over part of a country.)
+    travel: () => [],
     lakes: (r) => (r >= 45 && state.lakesAll ? state.lakesAll : state.lakes),
     relief: (r) => (r >= 22 && state.reliefFine ? state.reliefFine : state.relief),
   };
@@ -297,7 +291,6 @@
         u0: b.lon[0] - LON0, v0: -b.lat[0] * SY,
         w: Math.round((b.lon[1] - b.lon[0]) * b.r), h: Math.round((b.lat[0] - b.lat[1]) * SY * b.r),
       };
-      state.paintR = b.r;
       try {
         const c = await WC.paint(job, env);
         state.bands.push({ ...job, base: !!b.base, canvas: feather(c, b.base ? 90 : 56), born: performance.now() });
