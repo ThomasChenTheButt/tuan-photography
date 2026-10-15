@@ -1,3 +1,11 @@
+> **Experiment `home-impeccable` (2026-10-16), port 8646.** The Impeccable critique of the home
+> page (21/32, `.impeccable/critique/2026-10-15T16-20-02Z__design-1-index-html.md` on main) and its
+> five fixes, his choice: the Guides cards hold still on hover, keyboard focus and a Pause word, stop
+> announcing themselves, read clearly at the counter, and a card can be clicked; every card's small
+> line is the continent; honest wording under the cards; photographs before the guides; three new
+> windows that keep their subject on a phone, no photograph twice, the Matterhorn last. Skill:
+> Impeccable (critique, then harden, clarify, adapt, layout, polish). No rule of this file is suspended.
+
 # tuan photography 陳亮元 — project instructions
 
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
