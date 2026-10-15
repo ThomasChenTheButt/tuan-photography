@@ -58,8 +58,6 @@ show him written concepts first. Files: `experiments/opening/design 1/js/opening
 
 - **Trial `destinations-map` (port 8651, started 2026-10-15):** the map now sits on Destinations above the continent squares; clicking a book zooms in, the name rises, the photo fades in, and the country page opens on that same photo; the menu's Journey item now opens the Flights list of trips. Blog stays, empty. Keep or drop? (Trip stories you write later will hang off each trip in Journey.)
 
-- **The test copy of the trip page, `elements/trip/` (localhost:8647/trip/):** now that the trip story is on the Journey page, this copy is a duplicate. Remove it, with its line in `elements/index.html`? (Asked 2026-10-15.)
-
 - **The opening:** four candidates left. Pick one to develop, or say the whole opening idea is
   parked. Also: should the 3 remaining versions and ridgeline be merged into one experiment, and the
   other closed?
