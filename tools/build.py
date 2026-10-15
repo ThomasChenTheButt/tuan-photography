@@ -845,34 +845,45 @@ def build_about():
     en, zh = {}, {}
     cams = sorted({s["camera"] for s in DATA["slides"] if "camera" in s})
     lenses = sorted({s["lens"] for s in DATA["slides"] if "lens" in s})
-    en.update(abTitle="I plan trips like shoots — because they are.",
-              abLede="Before every trip I disappear into research: light direction, seasons, opening hours, transport, and the food locals actually eat. Then I go, shoot the plan, and write down what was true and what wasn't.",
-              abBody1="This site is that homework, published. Every guide tells you where the photo was taken, when to stand there, and what to do with the rest of your day. Some spots get exact pins; the fragile ones stay vague on purpose — you'll understand when you get there.",
+    # his words, drafted from what he had told us and approved by him on 2026-10-16
+    en.update(abName="Thomas Chen", abLine="Landscape photographer, Taiwan",
+              abWho=f"I photograph the places I travel to, natural landscapes and cities both, and the photograph is always about the place: its scale and its light. I live in Taiwan and have been to {len(COUNTRIES)} countries, the first of them Malaysia, when I was eight.",
+              abLook="I go out for the hour when the light suits a place, and I'll wait for it. I leave myself out of the frame, and I'm not interested in spots that are famous only for being photographed.",
+              abTrust="Every trip starts before I leave, in planning documents: where each spot is, when the sun sets there, how to get there, what to eat nearby. Then I go and stand in those places. The guides here are written afterwards, from what actually happened. I walked every spot in them myself, and every photograph on this site is mine. Some spots get an exact pin; fragile ones are left as a general area on purpose.",
+              abReach="Questions about a place or a photograph: write to me.",
               fCountries="Countries", fCountriesV=f"{len(COUNTRIES)} so far",
               fHome="Home base", fHomeV="Taiwan",
-              fCamera="Camera", fLens="Lenses", fIg="Instagram", fMail="Email")
-    zh.update(abTitle="我把旅行當拍攝案規劃——因為它本來就是。",
-              abLede="每趟旅行前,我都會埋進研究裡:光線方向、季節、開放時間、交通,還有當地人真正在吃的東西。然後出發、照計畫拍攝,再記下哪些是真的、哪些不是。",
-              abBody1="這個網站就是那些功課的出版版本。每份指南都告訴你照片在哪裡拍、什麼時候該站在那裡,以及一天剩下的時間該做什麼。有些機位給精確座標;脆弱的秘境則刻意模糊——到了你就懂。",
+              fCamera="Camera", fLens="Lenses", fMail="Email")
+    zh.update(abName="陳亮元", abLine="風景攝影，台灣",
+              abWho=f"我拍旅途中的風景，自然與城市都拍，但照片拍的永遠是那個地方本身：它的尺度，它的光。我住在台灣，去過 {len(COUNTRIES)} 個國家，第一個是八歲那年的馬來西亞。",
+              abLook="我出門是為了等一個地方光線最對的那個時刻，願意為它等。我不把自己放進畫面，也對「只因為被拍過才有名」的景點沒興趣。",
+              abTrust="每趟旅行在出發前就開始了，寫在規劃文件裡：每個機位在哪、那裡幾點日落、怎麼去、附近吃什麼。然後我出發，親自站到那些地方。這裡的攻略都是回來之後，照實際發生的寫成。裡面每個機位我都親自走過，網站上每張照片都是我拍的。有些機位給精確座標，脆弱的地方則刻意只給大概範圍。",
+              abReach="想問某個地方或某張照片，歡迎來信。",
               fCountries="國家數", fCountriesV=f"目前 {len(COUNTRIES)} 個",
               fHome="大本營", fHomeV="台灣",
-              fCamera="相機", fLens="鏡頭", fIg="Instagram", fMail="電子郵件")
+              fCamera="相機", fLens="鏡頭", fMail="電子郵件")
     body = f"""<div class="wrap">
   <section class="about arrive">
-    <h1 class="rise" style="--i: 0" data-i18n="abTitle">{e(en['abTitle'])}</h1>
+    <h1 class="rise" style="--i: 0" data-i18n="abName">{e(en['abName'])}</h1>
+    <p class="about__line rise" style="--i: 1" data-i18n="abLine">{e(en['abLine'])}</p>
     <div class="about__cols">
-    <div class="about__say rise" style="--i: 1">
-      <p class="lede" data-i18n="abLede">{e(en['abLede'])}</p>
-      <p data-i18n="abBody1">{e(en['abBody1'])}</p>
-      <a class="btn" href="{IG['url']}" target="_blank" rel="noopener" data-i18n="followCta">Follow on Instagram</a>
+    <div class="about__say rise" style="--i: 2">
+      <p class="lede" data-i18n="abWho">{e(en['abWho'])}</p>
+      <p data-i18n="abLook">{e(en['abLook'])}</p>
+      <p data-i18n="abTrust">{e(en['abTrust'])}</p>
+      <div class="about__reach">
+        <p data-i18n="abReach">{e(en['abReach'])}</p>
+        <div class="about__ways">
+          <a class="btn" href="{IG['url']}" target="_blank" rel="noopener" data-i18n="followCta">Follow on Instagram</a>
+          <a href="mailto:{MAIL}">{MAIL}</a>
+        </div>
+      </div>
     </div>
-    <dl class="facts rise" style="--i: 2">
-      <div><dt data-i18n="fCountries">Countries</dt><dd class="num" data-i18n="fCountriesV">{e(en['fCountriesV'])}</dd></div>
+    <dl class="facts rise" style="--i: 3">
       <div><dt data-i18n="fHome">Home base</dt><dd data-i18n="fHomeV">Taiwan</dd></div>
+      <div><dt data-i18n="fCountries">Countries</dt><dd class="num" data-i18n="fCountriesV">{e(en['fCountriesV'])}</dd></div>
       <div><dt data-i18n="fCamera">Camera</dt><dd>{e(', '.join(cams))}</dd></div>
       <div><dt data-i18n="fLens">Lenses</dt><dd>{'<br>'.join(e(x) for x in lenses)}</dd></div>
-      <div><dt data-i18n="fIg">Instagram</dt><dd><a href="{IG['url']}" target="_blank" rel="noopener">@{IG['handle']}</a></dd></div>
-      <div><dt data-i18n="fMail">Email</dt><dd><a href="mailto:{MAIL}">{MAIL}</a></dd></div>
     </dl>
     </div>
   </section>
