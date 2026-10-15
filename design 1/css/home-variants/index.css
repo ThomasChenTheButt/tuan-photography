@@ -1,0 +1,10 @@
+/* experiment home-variations: the list of variations */
+.vx { max-width: 52rem; margin: 0 auto; padding: 0; list-style: none; border-top: 1px solid var(--line); }
+.vx li { border-bottom: 1px solid var(--line); }
+.vx a { display: grid; grid-template-columns: 3rem 14rem 1fr; gap: 0.3rem var(--s-3); align-items: baseline; padding: var(--s-3) 0; text-decoration: none; color: var(--text); }
+.vx a:hover b { color: var(--accent); }
+.vx .num { color: var(--text-2); font-size: var(--t-s); }
+.vx b { font-family: var(--serif); font-weight: 400; font-size: var(--t-l); transition: color 200ms var(--out); }
+:lang(zh-Hant) .vx b { font-weight: 500; }
+.vx a > span:last-child { color: var(--text-2); font-size: var(--t-s); line-height: 1.6; }
+@media (max-width: 40rem) { .vx a { grid-template-columns: 2.5rem 1fr; } .vx a > span:last-child { grid-column: 2; } }
