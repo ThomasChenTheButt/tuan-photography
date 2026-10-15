@@ -1,6 +1,6 @@
 # tuan photography 陳亮元 — Project Memo 專案備忘錄
 
-*Last updated: 2026-10-16, handoff note. Read this first, then check the files to confirm.*
+*Last updated: 2026-10-16 night, handoff note. Read this first, then check the files to confirm.*
 
 ## 現在狀態 Where things stand
 
@@ -34,7 +34,30 @@
   `journey-pen-and-wash-2026-10-15` (Journey as it is now), `journey-logbook-v1-2026-10-16`
   (route squiggles), `journey-logbook-v2-2026-10-16` (constant traffic, Claude's own trip page).
 
+2026-10-16, Home redesign (another session, beside the Journey one):
+
+- Experiment `home` (a sequence of photographs at changing sizes, four photograph doors): he said
+  get rid of it. Dropped, tag `exp-home-dropped-2026-10-16`.
+- **Impeccable critique of the real home page: 21/32** (`.impeccable/critique/2026-10-15T16-20-02Z__design-1-index-html.md`).
+  Its five fixes are built in experiment **`home-impeccable`** (`localhost:8646`): the Guides cards
+  pause on hover, keyboard and a Pause word, click a card to jump, every card's small line is the
+  continent, honest wording under them, photographs before the guides, three new full-width photos
+  that keep their subject on a phone (aurora, Fuji with the bullet train, the Matterhorn last).
+- Then he asked for a full redesign with variations, same paper look, "every photograph has a
+  story", and went to sleep asking for at least ten: **experiment `home-variations`
+  (`localhost:8649/home-variants/` lists them)**. Ten whole home pages: 1 Facing pages, 2 Two roads,
+  3 The caption grows, 4 The back of the print, 5 One photograph all the way, 6 Exposure, 7 One at a
+  time, 8 Margin notes, 9 The fold, 10 Same place twice. Each checked on a computer and a phone, in
+  both languages; no broken links.
+
 ## 接下來 Next up
+
+**Home:** start the `exp-home-variations` preview (`.claude/launch.json`), open
+`localhost:8649/home-variants/` with him and ask which variations he likes. Then keep one (or
+combine), drop the rest, and decide whether `home-impeccable` (the five fixes) is still wanted.
+Files: `experiments/home-variations/tools/home_variants/vNN.py`, `design 1/css/home-variants/`.
+
+**Journey:**
 
 **Open `localhost:8644/journey/new/logbook.html` with him** (start the `exp-journey` preview;
 `.claude/launch.json` has it) and ask: keep and merge, or more changes. To merge: make the Logbook
@@ -44,6 +67,8 @@ merge `exp/journey` into `main` and check on 8642. Files: `design 2/new/logbook.
 `design 2/wc-sketch/trip/trip.js`.
 
 ## 等你決定 Waiting on you
+
+- **Home:** which of the ten variations (8649)? And keep or drop `home-impeccable` (8646)?
 
 - **Journey:** merge the Logbook, or change more? If kept: drop Chapters and Atlas (their code
   stays in git), and do the old map and Flights view stay anywhere?
