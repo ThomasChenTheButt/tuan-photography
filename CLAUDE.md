@@ -300,7 +300,7 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 - Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
   harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
 
-Open now: none.
+Open now: `journey` (8644, the Journey tab: three directions in `design 2/new/`, he chose Logbook; waiting on keep or change). `home-impeccable` and `home-variations` belong to the Home sessions.
 
 Decided experiments. Rejected ideas are not proposed again; the tags hold the code.
 
@@ -348,4 +348,5 @@ until he says he is interested in an item. Nothing it finds gets installed witho
 <!-- claude-reflect: learned rules (saved from the band; edit freely) -->
 ## Learned rules
 - Ask the user before adding GSAP to the project; use plain CSS/JavaScript for animations unless they approve GSAP.
+- Keep earlier experiment versions intact; do not delete or overwrite them when creating new experiment directions.
 <!-- end claude-reflect -->

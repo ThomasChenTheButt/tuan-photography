@@ -1,74 +1,62 @@
 # tuan photography 陳亮元 — Project Memo 專案備忘錄
 
-*Last updated: 2026-10-13 — handoff note. Read this first, then check the files to confirm.*
+*Last updated: 2026-10-16, handoff note. Read this first, then check the files to confirm.*
 
 ## 現在狀態 Where things stand
 
-- **One site, one server (since 2026-10-13).** `design 1/` is the site ("The Printed Travel Journal",
-  localhost:8642). `design 2/`, **Pen and wash** (`design 2/wc-sketch/`), is its Journey page:
-  `design 1/journey` is a link to the design 2 folder, so `localhost:8642/journey/` opens it and
-  the menu's Journey item points there. Port 8645 is gone. Both are built from `data/site.json`,
-  `content/` and the same photographs. `start.command` starts the one server. The 18 other design-2 versions were removed on
-  2026-10-03; they are at the tag `design2-all-versions-2026-10-03`.
-- **Design 2 is a full-screen sketchbook map:** all 20 books (his places; the USA as New York,
-  Boston, Washington D.C., San Francisco, Los Angeles), the plate's slow zoom into a place, the
-  place name rising large, a full-frame photo dissolve, a cover gallery, and a Flights view (small
-  globe bottom-left) that replays his real journeys leg by leg. Its own design system is
-  `design 2/wc-sketch/DESIGN.md`. It passed the Impeccable finish review (ship) on 2026-10-02.
-- **93 photographs, 21 countries.** 22 US photographs have no camera data (exported from
-  Photoshop); the site shows them without it, nothing invented.
-- **The map (the Journey page):** the plate stretched upright 1.25× (`SY`), Antarctica always on the bottom
-  edge; the photograph through the sea (Aoraki, strength 0.9, the dial bottom right); a tally
-  "21 / 195 countries · 11% of the world"; up to six of his flights always in the air; a photograph
-  behind the Flights view. Clicking a book turns the sea photograph into that place's cover.
-- **The Taste skill's five fixes are in design 2** (kept 2026-10-07): the phone's bottom-right row
-  no longer wraps over the books, no word on the cover photograph, the place page no longer opens
-  with "Guide not written yet", dates spoken as months, the Speed label in faded ink.
-- **The opening of the Journey page:** the globe (`design 2/wc-sketch/opening/globe.js`, four looks via
-  `?globe=1|2|3|4`, look 4 the photo ball in `photoball.js`). The corridor of prints and the shelf
-  of books were dropped on 2026-10-04 at his word; they are at the tag
-  `before-drop-openings-2026-10-04`. `?opening` replays the opening.
+- **Four tabs since 2026-10-15:** Gallery · Journey · Guides · About, each with one job in
+  `PRODUCT.md` → "Tabs 定位". Sessions redesign them one tab each, side by side.
+- **One site, one server:** `design 1/` on localhost:8642. The Journey tab is still `design 2/`
+  ("Pen and wash", `design 2/wc-sketch/`): the sketchbook map, Flights, and each trip "along its
+  route" (`wc-sketch/trip/?trip=<id>`).
+- **About was rewritten and kept** (2026-10-16, experiment `about`, merged). **Gallery stays as it
+  was** (experiment `gallery` dropped, tag `exp-gallery-dropped-2026-10-16`).
+- **93 photographs, 21 countries.** 22 US photographs have no camera data; shown without it.
 
 ## 上次做到哪 Where we left off
 
-2026-10-08: the home-page opening, three rounds of candidates, almost all cut.
+2026-10-16, Journey redesign, experiment `journey` (localhost:8644, `experiments/journey/`):
 
-- **Experiment `opening` (8648):** from 24 versions he kept three: aperture, contact sheet version 2,
-  letters version 4. Film strip, burst, pull-back and every other version removed.
-- **Experiment `opening-graph` (8649):** his agent graph (source finder, four scouts, variety check,
-  scorecard router, builders, automatic test, manager, his approval). Run one built nine; he kept only
-  the concept of `ridgeline` (lines draw the ridge, horizon and window frame on paper, then the paper
-  becomes the photograph). Run two, with his review added before building, approved 26 ideas; he had
-  one (shadows) built as a trial, cut it, then declined all 26 ("全部都不要"). Everything is recorded
-  in `experiments/opening-graph/.graph/` (scorecard, excluded list now 60+ designs, taste file,
-  ideas.md with the 26, sources.md, workflow.js).
-- The pattern in `.graph/taste.md`: he cuts nearly every device applied to the photograph; what
-  survives is the camera (aperture), his own work (contact sheet), his name (letters), the
-  photograph's own lines (ridgeline).
+- He found the current Journey messy. Three new directions were built side by side in
+  `design 2/new/` (`localhost:8644/journey/new/` lists them): Logbook, Chapters, Atlas. **He chose
+  Logbook** (`design 2/new/logbook.html`).
+- Logbook now: "Journey", one sentence, "16 trips, 21 countries, since 2010"; a world map where one
+  plane leaves Taiwan for each of his 21 countries, once, all together, the nearer ones landing
+  first, and the red routes stay; then the log by year (large year figures, each trip with month,
+  countries, route and a strip of its photographs; a photo opens the viewer).
+- **Clicking a trip opens the existing "along its route" page** (his call: it should look like
+  that one), `wc-sketch/trip/?trip=<id>&from=logbook`; its back word then says "All trips" and
+  returns to the Logbook. Myanmar 2022 and Netherlands 2012 have no route, so no link.
+- Taste skill audit done and fixed: the 2014 and 2015 USA trips had shown three 2025 photographs
+  (a trip with no months now keeps only its own year's photos; fixed on the trip page too),
+  the head in one column, a shorter intro, only the year keeps a ruled line.
+- **Old versions are safe** (his rule, now in CLAUDE.md "Learned rules"): tags pushed to GitHub,
+  `journey-pen-and-wash-2026-10-15` (Journey as it is now), `journey-logbook-v1-2026-10-16`
+  (route squiggles), `journey-logbook-v2-2026-10-16` (constant traffic, Claude's own trip page).
 
 ## 接下來 Next up
 
-**2026-10-15: the site was restructured to four tabs** (Gallery · Journey · Guides · About), each
-with one job written in `PRODUCT.md` → "Tabs 定位". Next: design each tab against it, one at a
-time. He wants Journey restyled and the Gallery's six controls removed.
-The trial `destinations-map` was dropped (tag `exp-destinations-map-dropped-2026-10-15`).
+**Open `localhost:8644/journey/new/logbook.html` with him** (start the `exp-journey` preview;
+`.claude/launch.json` has it) and ask: keep and merge, or more changes. To merge: make the Logbook
+the Journey page (`design 2/index.html` forwards to it instead of `wc-sketch/`), keep
+`wc-sketch/trip/` as the trip page, decide whether the old map and Flights stay reachable, then
+merge `exp/journey` into `main` and check on 8642. Files: `design 2/new/logbook.*`, `kit.*`,
+`design 2/wc-sketch/trip/trip.js`.
 
 ## 等你決定 Waiting on you
 
-- **Sea photograph:** which photographs besides Aoraki, if any? (`?ocean=all` cycles all 93.)
+- **Journey:** merge the Logbook, or change more? If kept: drop Chapters and Atlas (their code
+  stays in git), and do the old map and Flights view stay anywhere?
+- **Sea photograph** on the old Journey map: which photographs besides Aoraki, if any?
 - **Camera data for the 22 US photographs:** re-export from Lightroom with metadata, or drop the
   raw files in, and I'll add it.
 - **Boston** has a book but no photographs yet.
-- **Reviewer's optional ideas, not done:** sketchbook touches on the guide and photo pages, drawn
-  covers for the books without photos.
 - **Older items:** the second guide (Vietnam and Japan have the most photos); Barcelona's SIM row;
   newsletter sign-up; the old three Barcelona layouts; 紐西蘭暫緩.
-- **Two uncommitted things:** 25 added lines in `data/sizes.json` (an Artifact packer for design 2
-  wrote them) and `cutout.swift` at the top level, a small script that cuts the subject out of a
-  photo with macOS Vision. Both left as they are. Keep, move or remove?
+- **Two uncommitted things:** 25 added lines in `data/sizes.json` and `cutout.swift` at the top
+  level (cuts the subject out of a photo with macOS Vision). Keep, move or remove?
 
 ## 如何接續 How to resume
 
-Say **"continue the travel website"**. Double-click **`start.command`** to open the site on 8642
-(the Journey page is `localhost:8642/journey/`), or run `python3 tools/serve.py` from the project
-folder.
+Say **"continue the travel website"** (for Journey: "continue the Journey logbook"). Double-click
+**`start.command`** for the site on 8642; the Journey trial runs on 8644.
