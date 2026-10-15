@@ -45,6 +45,7 @@
       then: ', then ',
       tally: (p, n) => `${p} places, ${n} photographs`,
       back: 'Back to Flights',
+      log: 'All trips',
     },
     zh: {
       blank: '還沒有照片',
@@ -55,6 +56,7 @@
       then: '，再',
       tally: (p, n) => `${p} 個地方，${n} 張照片`,
       back: '回到飛過的航線',
+      log: '所有旅程',
     },
   };
   // the language is the Journey page's own choice, remembered on the browser
@@ -144,7 +146,9 @@
     const names = countries.map((c) => c.name[lang]);
     const title = names.length > 2 ? names.slice(0, -1).join(w.list) + w.and + names[names.length - 1] : names.join(w.and);
     document.title = `${title} · tuan photography 陳亮元`;
-    $('#back').textContent = w.back;
+    // opened from the Journey log (experiment `journey`), it leads back there
+    if (ask.get('from') === 'logbook') $('#back').href = '../../new/logbook.html';
+    $('#back').textContent = ask.get('from') === 'logbook' ? w.log : w.back;
     let html = `<section class="intro" data-i="-1">
       <p class="intro__when caps">${esc((J.date || J.label)[lang])}</p>
       <h1 class="intro__title">${esc(title)}</h1>
