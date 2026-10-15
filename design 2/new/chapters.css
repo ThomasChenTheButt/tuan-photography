@@ -1,0 +1,94 @@
+/* Direction B, "Chapters": a photo book. Warm paper, Playfair names, Geist for the rest;
+   the photographs large, bare and untrimmed, the words small and centred beneath them. */
+
+.chapters {
+  --paper: oklch(97.2% 0.011 85);
+  --paper-2: oklch(93.4% 0.013 82);
+  --ink: oklch(23% 0.012 55);
+  --ink-2: oklch(45% 0.014 58);
+  --ink-3: oklch(64% 0.014 62);
+  --hair: oklch(87% 0.014 78);
+  --route: oklch(50% 0.12 40);
+  --link: oklch(45% 0.11 40);
+  --been: oklch(90% 0.025 72);
+  --f-name: "Playfair Display", "Noto Serif TC", serif;
+  --col: min(76rem, 100% - 2 * var(--edge));
+}
+.chapters :lang(zh-Hant) { --f-name: "Noto Serif TC", serif; }
+
+.ch-head, .ch-book, .ch-trail, .ch-open, .ch-stops, .ch-end { width: var(--col); margin-inline: auto; }
+
+.ch-head { text-align: center; padding-block: clamp(3rem, 9vw, 7rem) clamp(3rem, 8vw, 6rem); }
+.ch-head__title { font-family: var(--f-name); font-weight: 400; font-size: clamp(2.8rem, 1.8rem + 4.6vw, 5.6rem); line-height: 1; }
+:lang(zh-Hant) .ch-head__title { font-weight: 500; letter-spacing: 0.12em; }
+.ch-head__intro { color: var(--ink-2); margin: 1.2rem auto 0; max-width: 34ch; text-wrap: balance; }
+.ch-head__tally { display: flex; justify-content: center; gap: 1.6rem; color: var(--ink-2); margin-top: 1.4rem; }
+
+/* the year, quietly, where it changes */
+.ch-year { font-family: var(--f-name); font-size: 1.1rem; color: var(--ink-2); text-align: center; display: flex; align-items: center; gap: 1.25rem; margin-block: 0 clamp(2.5rem, 6vw, 4.5rem); font-variant-numeric: lining-nums; }
+.ch-year::before, .ch-year::after { content: ""; flex: 1; border-top: 1px solid var(--hair); }
+
+/* a chapter: the photograph, then its name */
+.ch { margin-bottom: clamp(5rem, 12vw, 9rem); text-align: center; }
+.ch__photo { display: block; }
+.ch__img { margin-inline: auto; width: auto; max-width: 100%; max-height: 80svh; background: var(--paper-2); }
+.ch__img--tall { max-height: 84svh; }
+.ch__say { margin-top: 1.6rem; }
+.ch__when { color: var(--ink-2); }
+.ch__title { font-family: var(--f-name); font-weight: 400; font-size: clamp(1.9rem, 1.4rem + 1.8vw, 2.9rem); line-height: 1.1; margin-top: 0.55rem; text-wrap: balance; }
+:lang(zh-Hant) .ch__title { font-weight: 500; letter-spacing: 0.08em; }
+.ch__title a { text-decoration: none; }
+.ch__title a:hover { color: var(--link); }
+.ch__route { color: var(--ink-2); font-size: 0.95rem; margin: 0.6rem auto 0; max-width: 52ch; text-wrap: balance; }
+.ch__go { display: flex; justify-content: center; align-items: center; gap: 1.5rem; margin-top: 0.6rem; color: var(--ink-3); font-size: 0.9rem; }
+.ch__go .word { color: var(--link); text-decoration: underline; text-underline-offset: 0.45em; text-decoration-thickness: 1px; }
+.ch--quiet { margin-bottom: clamp(3.5rem, 8vw, 6rem); }
+.ch--quiet .ch__title { font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem); }
+
+.ch-arrive { opacity: 0; transform: translateY(1.25rem); transition: opacity 1.1s var(--ease), transform 1.1s var(--ease); }
+.ch-arrive.is-in { opacity: 1; transform: none; }
+
+/* one trip */
+.ch-trail { padding-top: 0.25rem; }
+.ch-open { text-align: center; padding-block: 1rem clamp(3rem, 8vw, 6rem); }
+.ch-open__photo { margin: 0 auto 2rem; }
+.ch-open__img { margin-inline: auto; width: auto; max-width: 100%; max-height: 82svh; cursor: zoom-in; background: var(--paper-2); }
+.ch-open__title { font-family: var(--f-name); font-weight: 400; font-size: clamp(2.6rem, 1.6rem + 4vw, 5rem); line-height: 1.02; margin-top: 0.6rem; text-wrap: balance; }
+:lang(zh-Hant) .ch-open__title { font-weight: 500; letter-spacing: 0.1em; line-height: 1.2; }
+.ch-open__route { color: var(--ink-2); margin: 1rem auto 0; max-width: 50ch; text-wrap: balance; }
+.ch-open__facts { display: flex; justify-content: center; flex-wrap: wrap; gap: 0.2rem 1.6rem; color: var(--ink-3); font-size: 0.9rem; margin-top: 0.8rem; }
+.ch-open__none { color: var(--ink-3); margin-top: 2rem; }
+
+.ch-stop { padding-block: clamp(2.5rem, 6vw, 4.5rem); }
+.ch-stop__head { text-align: center; margin-bottom: clamp(2rem, 5vw, 3.25rem); }
+.ch-stop__how { color: var(--ink-2); }
+.ch-stop__name { font-family: var(--f-name); font-weight: 400; font-size: clamp(1.8rem, 1.4rem + 1.4vw, 2.6rem); line-height: 1.1; margin-top: 0.5rem; }
+:lang(zh-Hant) .ch-stop__name { font-weight: 500; letter-spacing: 0.08em; }
+.ch-stop__where { color: var(--ink-2); margin-top: 0.3rem; }
+.ch-stop--bare { padding-block: 0.75rem; }
+.ch-stop--bare .ch-stop__head { margin-bottom: 0; }
+.ch-stop--bare .ch-stop__name { font-size: 1.35rem; margin-top: 0.2rem; color: var(--ink-2); }
+.ch-stop--bare .ch-stop__where { display: none; }
+.ch-stop__photos { display: grid; gap: clamp(2.5rem, 6vw, 4.5rem); }
+
+.ch-one .shot, .ch-pair .shot { text-align: center; }
+.ch-one .shot__img { margin-inline: auto; width: auto; max-width: 100%; max-height: 84svh; }
+.ch-pair { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 3vw, 2.25rem); align-items: end; max-width: 64rem; margin-inline: auto; }
+.ch-pair .shot__img { width: 100%; }
+.shot__img { cursor: zoom-in; background: var(--paper-2); }
+.shot__cap { color: var(--ink-2); font-size: 0.85rem; margin-top: 0.75rem; }
+@media (max-width: 47.99rem) {
+  .ch-pair { grid-template-columns: 1fr; }
+  .ch__img, .ch-open__img { max-height: none; width: 100%; }
+}
+
+/* the end of a trip: the route drawn once, the guides, the next trip */
+.ch-end { text-align: center; border-top: 1px solid var(--hair); padding-block: clamp(3rem, 7vw, 5rem) 6rem; }
+.ch-end__map { max-width: 47.5rem; margin: 0 auto clamp(2.5rem, 6vw, 4rem); }
+.ch-end__map svg { display: block; width: 100%; height: auto; }
+.ch-end__map .leg--trip { stroke: var(--route); stroke-width: 1.2; }
+.ch-end__label { font-family: var(--f-text); font-size: 11px; fill: var(--ink); paint-order: stroke; stroke: var(--paper); stroke-width: 3px; }
+.ch-end__head { color: var(--ink-2); }
+.ch-end__guides { display: flex; justify-content: center; flex-wrap: wrap; gap: 0 2rem; margin-top: 0.4rem; }
+.ch-end__guides a { color: var(--link); text-underline-offset: 0.25em; text-decoration-thickness: 1px; display: inline-flex; align-items: center; min-height: 2.75rem; }
+.ch-end__step { display: flex; justify-content: space-between; margin-top: 3rem; }
