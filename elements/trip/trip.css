@@ -71,6 +71,7 @@ p, h1, h2, figure { margin: 0; }
   left: calc(var(--story-w) + 2 * var(--edge));
 }
 .trip__paint { position: absolute; inset: 0; width: 100%; height: 100%; }
+.trip__now { display: none; }
 /* the drawing runs out into the paper toward the story, as a sketch does at its edge */
 .trip__map { -webkit-mask-image: linear-gradient(to right, transparent, #000 7rem); mask-image: linear-gradient(to right, transparent, #000 7rem); }
 .trip__tooth {
@@ -133,6 +134,14 @@ p, h1, h2, figure { margin: 0; }
   .trip__story { margin: 0 var(--edge); }
   .beam { display: none; }
   .trip__map { -webkit-mask-image: none; mask-image: none; }
+  /* the place being read, lettered on the map's lower edge: on a phone the stop's own name has
+     already scrolled up under the map by the time the map reaches it */
+  .trip__now {
+    display: block; position: absolute; left: var(--edge); bottom: 0.55rem; margin: 0;
+    font-size: 0.9rem; font-weight: 700; letter-spacing: 0.07em; font-variant-caps: small-caps; color: var(--ink);
+    -webkit-text-stroke: 3.5px var(--paper); paint-order: stroke fill;
+  }
+  :lang(zh-Hant) .trip__now { font-size: 0.86rem; font-weight: 600; letter-spacing: 0.14em; font-variant-caps: normal; }
   .mast { position: absolute; }
   .lang { position: absolute; }
   .intro { min-height: 70svh; padding-top: 3rem; }
