@@ -1,3 +1,12 @@
+> **Experiment `home-variations` (2026-10-16), port 8649.** Ten whole home pages, built overnight at his
+> request ("at least ten different variations"), after the Impeccable redesign round (surface scope,
+> seed 0ab69658). His answers: same paper world, new layout; nothing has to stay; a visitor should
+> leave knowing "every photograph has a story". Start at `localhost:8649/home-variants/` (the list).
+> Each variation is `tools/home_variants/vNN.py` + `design 1/css/home-variants/vNN.css` (+ `vNN.js`),
+> written by `python3 tools/home_variants/run.py`; the real `index.html` is untouched. Suspended here:
+> "new CSS goes into style.css" (each variation keeps its own stylesheet until one is chosen; the chosen
+> one's rules move into style.css and DESIGN.md on merge). Every other rule holds.
+
 # tuan photography 陳亮元 — project instructions
 
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.

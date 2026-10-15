@@ -1,0 +1,98 @@
+/* Variation 01, Facing pages: the home page as an opened travel journal.
+   Each spread is two pages of card paper laid on the stone band, meeting at a 1px gutter.
+   One page holds the photograph, untrimmed, inside the page's margins; the facing page holds
+   its account. The photograph changes sides from spread to spread. Flat: no shadows. */
+
+.v01 { padding-block: var(--s-6); }
+.v01-run { display: grid; gap: var(--s-6); justify-items: center; padding-inline: var(--edge); }
+
+/* a page is about 1 by 1.36, the spread as large as the window allows */
+.v01-spread {
+  --pw: min(40rem, (100vw - 2 * var(--edge)) / 2, (100svh - 4rem) / 1.36);
+  display: grid;
+  grid-template-columns: var(--pw) var(--pw);
+}
+.v01-page { aspect-ratio: 1 / 1.36; background: var(--card); min-width: 0; }
+.v01-page + .v01-page { border-left: 1px solid var(--line); }
+.v01-spread--flip .v01-page--photo { order: 2; border-left: 1px solid var(--line); }
+.v01-spread--flip .v01-page--words { border-left: 0; }
+
+/* the photograph's page: the photograph keeps its own shape inside generous margins,
+   a little more room at the foot, as on a printed page */
+.v01-page--photo { container-type: size; display: grid; place-items: center; padding: 10% 8% 14%; }
+.v01-photo { display: block; overflow: hidden; background: var(--band); width: min(100cqw, 100cqh * var(--ar)); }
+.v01-photo img { width: 100%; height: auto; transition: transform 900ms var(--out); }
+.v01-photo:hover img { transform: scale(1.02); }
+
+/* the facing page: the account, set quietly in the lower half of the page */
+.v01-page--words {
+  display: flex; flex-direction: column; justify-content: flex-end; align-items: center;
+  padding: 12% 11% 16%; text-align: center;
+}
+.v01-page--words h2 { font-size: var(--t-xl); }
+.v01-where { margin-top: 0.6rem; color: var(--text-2); font-size: var(--t-s); }
+
+.v01-facts { margin-top: var(--s-4); width: 100%; max-width: 20rem; border-top: 1px solid var(--line); }
+.v01-facts div { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-2); padding-block: 0.7rem; border-bottom: 1px solid var(--line); }
+.v01-facts dt { color: var(--text-2); font-size: 0.7rem; }
+:lang(zh-Hant) .v01-facts dt { font-size: 0.8rem; }
+.v01-facts dd { font-size: var(--t-xs); text-align: right; }
+.v01-cam { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 0 0.7em; }
+
+.v01-on { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem var(--s-3); margin-top: var(--s-4); }
+.v01-on a { text-decoration-line: underline; text-decoration-color: var(--line); text-underline-offset: 0.5em; padding-block: 0.35rem; }
+.v01-on a:hover { text-decoration-color: currentColor; }
+
+/* the last spread: the journal's contents, the way into the four tabs */
+.v01-page--title { display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 12% 13%; text-align: center; }
+.v01-page--title h2 { font-size: var(--t-2xl); }
+.v01-page--title p { margin-top: var(--s-3); max-width: 30ch; color: var(--text-2); font-size: var(--t-s); }
+.v01-page--contents { display: flex; flex-direction: column; justify-content: center; padding: 12% 11%; }
+.v01-toc li + li { margin-top: var(--s-3); }
+.v01-toc a { display: flex; align-items: baseline; gap: var(--s-2); padding-block: 0.4rem; text-decoration: none; }
+.v01-toc b { font-family: var(--serif); font-weight: 400; font-size: var(--t-xl); line-height: 1.14; transition: color 200ms var(--out); }
+:lang(zh-Hant) .v01-toc b { font-weight: 500; letter-spacing: 0.05em; }
+.v01-lead { flex: 1; border-bottom: 1px solid var(--line); transform: translateY(-0.3em); min-width: var(--s-2); }
+.v01-toc a > span:last-child { color: var(--text-2); font-size: var(--t-s); white-space: nowrap; transition: color 200ms var(--out); }
+.v01-toc a:hover b, .v01-toc a:hover > span:last-child { color: var(--accent); }
+
+/* a phone or a narrow window: the spread becomes photograph, then account */
+@media (max-width: 48rem) {
+  .v01 { padding-block: var(--s-5); }
+  .v01-run { gap: var(--s-5); }
+  .v01-spread { grid-template-columns: minmax(0, 34rem); width: 100%; justify-content: center; }
+  .v01-page { aspect-ratio: auto; }
+  .v01-page + .v01-page, .v01-spread--flip .v01-page--photo { border-left: 0; }
+  .v01-spread--flip .v01-page--photo { order: 0; }
+  .v01-page--words, .v01-spread--flip .v01-page--words, .v01-page--contents { border-top: 1px solid var(--line); }
+  .v01-page--photo { container-type: normal; display: block; padding: var(--s-3) var(--s-3) var(--s-3); }
+  .v01-page--tall .v01-photo { width: 78%; margin-inline: auto; }
+  .v01-photo { width: 100%; }
+  .v01-page--words { padding: var(--s-4) var(--s-3) var(--s-4); }
+  .v01-page--title { padding: var(--s-5) var(--s-3) var(--s-4); }
+  .v01-page--contents { padding: var(--s-4) var(--s-3); }
+}
+
+/* the one moment: as the first spread comes into view, its facing page is laid open from the
+   gutter, the way a journal's page settles flat, and the account comes up after it.
+   The script adds .is-shut only when motion is welcome and the spread is still below the window;
+   without it everything is simply in place. */
+@media (prefers-reduced-motion: no-preference) and (min-width: 48.01rem) {
+  .v01-spread:first-child { perspective: 2800px; }
+  .v01-spread:first-child .v01-page--words { transform-origin: left center; transition: transform 1500ms var(--out), opacity 500ms var(--out); }
+  .v01-spread.is-shut .v01-page--words { transform: rotateY(80deg); opacity: 0; }
+  .v01-spread:first-child .v01-photo img { transition: transform 1800ms var(--out), opacity 900ms var(--out); }
+  .v01-spread.is-shut .v01-photo img { transform: scale(1.05); opacity: 0.001; }
+  .v01-spread.is-open .v01-page--words > * { animation: rise 900ms var(--out) both; }
+  .v01-spread.is-open .v01-page--words > :nth-child(1) { animation-delay: 650ms; }
+  .v01-spread.is-open .v01-page--words > :nth-child(2) { animation-delay: 740ms; }
+  .v01-spread.is-open .v01-page--words > :nth-child(3) { animation-delay: 830ms; }
+  .v01-spread.is-open .v01-page--words > :nth-child(4) { animation-delay: 920ms; }
+}
+@media (prefers-reduced-motion: no-preference) and (max-width: 48rem) {
+  .v01-spread.is-shut .v01-page--words > * { opacity: 0; transform: translateY(1.5rem); }
+  .v01-spread.is-open .v01-page--words > * { animation: rise 900ms var(--out) both; }
+  .v01-spread.is-open .v01-page--words > :nth-child(2) { animation-delay: 90ms; }
+  .v01-spread.is-open .v01-page--words > :nth-child(3) { animation-delay: 180ms; }
+  .v01-spread.is-open .v01-page--words > :nth-child(4) { animation-delay: 270ms; }
+}
