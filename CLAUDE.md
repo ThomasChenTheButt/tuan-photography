@@ -1,3 +1,13 @@
+> **Experiment `journey` (started 2026-10-16).** A new look for the Journey tab only, his
+> request: the current pen-and-wash page felt messy ("I don't feel the aesthetic"); he asked for
+> something new and left the direction to Claude, the trip page included. Three directions are
+> built side by side in `design 2/new/` (`localhost:8644/journey/new/` lists them): A `logbook`,
+> B `chapters`, C `atlas`, sharing `kit.js` / `kit.css`. The current page is untouched in
+> `design 2/wc-sketch/` and tagged `journey-pen-and-wash-2026-10-15` (pushed): his rule, keep old
+> versions safe. Suspended here: design 2's pen-and-wash system (each direction has its own
+> look). Kept: light only, nothing written on photographs, both languages, no long dashes.
+> Other sessions redesign the other tabs at the same time: touch Journey only, merge on his word.
+
 # tuan photography 陳亮元 — project instructions
 
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
