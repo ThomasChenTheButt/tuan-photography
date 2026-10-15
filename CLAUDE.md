@@ -354,9 +354,11 @@ Both work on the same GitHub repo; GitHub is the only thing they share.
 - **What the cloud cannot see:** anything gitignored or unpushed: `originals/` (so no new web
   photos from the cloud), `ideas/` and its Word files, `我的筆記.txt`, `.claude/`, and the
   experiments (their branches are local). Say so plainly rather than working around it.
-- **Preview in the cloud:** `localhost:8642` is not reachable from his phone. Show changes as
-  screenshots from the cloud's Chromium, or republish the claude.ai copy (`tools/build_artifact.py`)
-  when he asks.
+- **Preview in the cloud:** `localhost:8642` is not reachable from his phone. His phone preview
+  is a private Artifact, https://claude.ai/artifact/Di49T4RR11Yacfa1dULjnC (2026-10-15): run
+  `python3 tools/build_artifact.py` and publish `.claude/artifact-build/` to that address (two
+  publishes, 255 files each at most). It has no Journey page yet. The older copy,
+  https://claude.ai/artifact/VjuNp7mBxXM8VCSLhjPSXM, is shared by link: update it only on his word.
 
 <!-- claude-reflect: learned rules (saved from the band; edit freely) -->
 ## Learned rules
