@@ -353,7 +353,8 @@ main { flex: 1; }
 .tc__layer img, .tc__card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .tc__layer.is-card { border-radius: 0.75rem; box-shadow: 0 1.4rem 3rem color-mix(in oklch, var(--shade) 55%, transparent); }
 .tc__shade { position: absolute; inset: 0; pointer-events: none;
-  background: linear-gradient(to right, color-mix(in oklch, var(--shade) 62%, transparent), color-mix(in oklch, var(--shade) 18%, transparent) 55%, color-mix(in oklch, var(--shade) 10%, transparent)); }
+  background: linear-gradient(to top, color-mix(in oklch, var(--shade) 72%, transparent), color-mix(in oklch, var(--shade) 38%, transparent) 26%, transparent 52%),
+    linear-gradient(to right, color-mix(in oklch, var(--shade) 62%, transparent), color-mix(in oklch, var(--shade) 18%, transparent) 55%, color-mix(in oklch, var(--shade) 10%, transparent)); }
 .tc__layer.is-card .tc__shade { opacity: 0; }
 .tc__text { position: absolute; z-index: 2; left: 5vw; top: 50%; width: 33vw; transform: translateY(-50%); }
 .tc__rule { display: block; width: 2.2rem; height: 3px; margin-bottom: 1.1rem; background: var(--paper); }
@@ -362,11 +363,13 @@ main { flex: 1; }
 :lang(zh-Hant) .tc__title { font-weight: 600; font-size: clamp(2.6rem, 1rem + 4.4vw, 5.5rem); line-height: 1.15; letter-spacing: 0.04em; }
 .tc__line { display: block; overflow: hidden; padding-bottom: 0.04em; }
 .tc__line > span { display: block; }
-.tc__note { max-width: 26rem; margin: 1.2rem 0 1.8rem; font-size: clamp(0.85rem, 0.7rem + 0.3vw, 0.95rem); line-height: 1.6; color: color-mix(in oklch, var(--paper) 86%, transparent); }
+.tc__note { max-width: 26rem; margin: 1.2rem 0 1.8rem; font-size: clamp(0.85rem, 0.7rem + 0.3vw, 0.95rem); line-height: 1.6; color: var(--paper); text-shadow: 0 1px 10px color-mix(in oklch, var(--shade) 70%, transparent); }
 .tc__btn { display: inline-block; padding: 0.85rem 1.7rem; border: 1px solid var(--paper); border-radius: 999px; color: var(--paper); text-decoration: none; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; transition: background 300ms var(--out), color 300ms var(--out); }
 .tc__btn:hover { background: var(--paper); color: var(--text); }
 :lang(zh-Hant) .tc__btn { font-size: 0.85rem; letter-spacing: 0.14em; }
 .tc__cards { position: absolute; z-index: 3; inset: 0; margin: 0; padding: 0; list-style: none; pointer-events: none; }
+/* a card can be clicked to bring its place forward; the arrows do the same for the keyboard */
+.tc__card { pointer-events: auto; cursor: pointer; }
 .tc__card { position: absolute; left: var(--cx); top: var(--ct); width: var(--cw); height: var(--ch); overflow: hidden; border-radius: 0.75rem; background: var(--slate);
   box-shadow: 0 1.2rem 2.6rem color-mix(in oklch, var(--shade) 50%, transparent);
   transform: translateX(calc(var(--j, 0) * (var(--cw) + var(--cg)))); transition: transform 800ms var(--out); }
@@ -382,16 +385,22 @@ main { flex: 1; }
 .tc__arrow svg { width: 1.3rem; height: 1.3rem; }
 .tc__bar { flex: 1; height: 3px; margin-left: 1.2rem; background: color-mix(in oklch, var(--paper) 28%, transparent); }
 .tc__bar i { display: block; height: 100%; background: var(--paper); transform: scaleX(var(--p, 0)); transform-origin: left; transition: transform 900ms var(--out); }
-.tc__count { display: flex; align-items: baseline; gap: 0.35rem; overflow: hidden; font-family: var(--display); font-size: clamp(2.6rem, 1rem + 3.4vw, 4.6rem); line-height: 1; }
+.tc__count { display: flex; align-items: baseline; gap: 0.35rem; overflow: hidden; font-family: var(--display); font-size: clamp(2.6rem, 1rem + 3.4vw, 4.6rem); line-height: 1; text-shadow: 0 1px 14px color-mix(in oklch, var(--shade) 70%, transparent); }
 .tc__count span { display: block; }
-.tc__count small { font-size: 0.38em; letter-spacing: 0.04em; color: color-mix(in oklch, var(--paper) 70%, transparent); }
+.tc__count small { font-size: 0.38em; letter-spacing: 0.04em; }
+/* the word that holds the cards still: a word, like every other control on the site */
+.tc__pause { min-height: 2.75rem; padding: 0 0.2rem; border: 0; background: none; color: var(--paper); cursor: pointer;
+  font-size: 0.72rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: underline; text-decoration-color: color-mix(in oklch, var(--paper) 45%, transparent); text-underline-offset: 0.35em; transition: text-decoration-color 300ms var(--out); }
+.tc__pause:hover, .tc__pause[aria-pressed="true"] { text-decoration-color: var(--paper); }
+.tc__pause[hidden] { display: none; }
+:lang(zh-Hant) .tc__pause { font-size: 0.85rem; letter-spacing: 0.14em; }
 @media (max-width: 40rem) {
   .tc { --cx: 5vw; --cw: 36vw; --cg: 3.5vw; --ct: 52%; min-height: 40rem; }
   .tc__shade { background: linear-gradient(to bottom, color-mix(in oklch, var(--shade) 60%, transparent), color-mix(in oklch, var(--shade) 25%, transparent)); }
   .tc__text { top: 11%; width: 90vw; transform: none; }
   .tc__note { margin: 0.8rem 0 1.1rem; }
   .tc__nav { left: 5vw; right: 5vw; top: auto; bottom: 1.4rem; }
-  .tc__arrow { width: 2.7rem; height: 2.7rem; }
+  .tc__arrow { width: 2.75rem; height: 2.75rem; }
 }
 
 /* a wall of photographs: rows that fill the width, nothing cropped, each with its name */

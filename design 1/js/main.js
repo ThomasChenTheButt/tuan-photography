@@ -361,9 +361,12 @@ if (stackEl) {
    After Giulio Cuscito's "Timed Cards Opening": one place fills the stage, the next places wait
    as cards in a row. Every few seconds the first card leaves the row and grows until it is
    the new background, the place's name rises in at the left line by line, the row closes up and
-   the place just left joins the end. The arrows step either way. It waits while the stage is out
-   of view, the tab is hidden, or a photograph is open in the viewer; under "reduce motion" it
-   changes only on the arrows, at once.
+   the place just left joins the end. The arrows step either way, and a card can be clicked to
+   bring its place forward. It waits while the stage is out of view, the tab is hidden, a
+   photograph is open in the viewer, the pointer is over it or the keyboard is inside it, and
+   for as long as the visitor has pressed Pause. While it plays by itself it says nothing to a
+   screen reader; a step the visitor asked for is announced. Under "reduce motion" it changes
+   only on the arrows, at once, and the Pause word is not shown.
    Each card's slot goes to the stylesheet as --j. */
 const tcEl = document.querySelector('.tc');
 if (tcEl) {
@@ -377,7 +380,8 @@ if (tcEl) {
   const L = () => document.documentElement.lang === 'zh-Hant' ? 'zh' : 'en';
   const word = key => (window.pageI18n?.[L()] || {})[key] || key;
   const big = p => `${root}images/web/1280/${p.f}`;
-  let cur = 0, busy = false, timer = null, inView = false;
+  let cur = 0, busy = false, timer = null, inView = false, paused = false, held = false;
+  const pause = tcEl.querySelector('.tc__pause');
   const mod = k => (k % N + N) % N;
 
   const card = (k, j) => {
@@ -511,15 +515,38 @@ if (tcEl) {
 
   const plan = () => {
     clearTimeout(timer);
-    if (still || !inView || document.hidden) return;
+    if (still || !inView || document.hidden || paused || held) return;
     // while a photograph is open in the viewer, wait and look again (his call, 2026-10-13)
-    timer = setTimeout(() => (viewer?.open ? plan() : next()), EVERY);
+    timer = setTimeout(() => {
+      if (viewer?.open) return plan();
+      text.setAttribute('aria-live', 'off');
+      next();
+    }, EVERY);
   };
+  const asked = () => { clearTimeout(timer); text.setAttribute('aria-live', 'polite'); };
   tcEl.querySelectorAll('.tc__arrow').forEach(btn => btn.addEventListener('click', () => {
-    clearTimeout(timer);
+    asked();
     (btn.dataset.go === '1' ? next : prev)();
     if (!busy) plan();
   }));
+  row.addEventListener('click', e => {
+    const li = e.target.closest('.tc__card');
+    if (!li || busy) return;
+    asked();
+    if (+li.dataset.j === 0 && !still) next();   // the first card opens out, as it would by itself
+    else { cur = +li.dataset.k; draw(); }
+    if (!busy) plan();
+  });
+  // held still while the pointer is over the stage or the keyboard is inside it
+  const hold = () => { held = tcEl.matches(':hover') || tcEl.matches(':focus-within'); held ? clearTimeout(timer) : plan(); };
+  tcEl.addEventListener('mouseenter', hold);
+  tcEl.addEventListener('mouseleave', hold);
+  tcEl.addEventListener('focusin', hold);
+  tcEl.addEventListener('focusout', () => setTimeout(hold));
+  const say = () => { const k = paused ? 'tcPlay' : 'tcPause'; pause.dataset.i18n = k; pause.textContent = word(k); pause.setAttribute('aria-pressed', paused); };
+  if (still) pause.hidden = true;
+  pause.addEventListener('click', () => { paused = !paused; say(); paused ? clearTimeout(timer) : plan(); });
+  document.addEventListener('langchange', say);
   new IntersectionObserver(([e]) => { inView = e.isIntersecting; plan(); }, { threshold: 0.5 }).observe(tcEl);
   document.addEventListener('visibilitychange', plan);
   document.addEventListener('langchange', () => { if (!busy) draw(); });
