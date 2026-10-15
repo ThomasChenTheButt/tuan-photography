@@ -5,7 +5,9 @@
     python3 tools/build_artifact.py --selftest   also adds selftest.html (test only)
 
 Claude then publishes .claude/artifact-build/index.html with the Artifact tool and every
-other file in the folder alongside it (the list is in files.json). Nothing in design 1/ changes.
+other file in the folder alongside it (the list is in files.json). One publish takes at most
+255 files, so a longer list goes up in two publishes to the same address. Nothing in design 1/
+changes. Photographs are re-encoded with sips on the Mac and with Pillow in a cloud session.
 
 What differs from design 1/:
 - index.html loses its <html>/<head>/<body> wrapper, because the publisher supplies one.
@@ -33,7 +35,7 @@ SITE = ROOT / "design 1"
 OUT = ROOT / ".claude" / "artifact-build"
 
 TITLE = "tuan photography 陳亮元"
-FILE_LIMIT = 255
+FILE_LIMIT = 511                      # per Artifact version; 255 per publish
 SIZE_LIMIT_MB = 64
 BIG_EDGE, BIG_QUALITY = 1800, 60      # the copy the viewer shows large
 MID_QUALITY = 55                      # the 1280px copy used in rows and on phones
@@ -60,6 +62,8 @@ def photo_copy(src: Path, edge, quality: int):
     """A re-encoded copy of one photograph (cached by source time); returns path and width."""
     key = f"{edge or 'same'}-{quality}"
     dst = IMG_CACHE / key / src.relative_to(SITE)
+    if not shutil.which("sips"):
+        return photo_copy_pillow(src, dst, edge, quality)
     if not dst.exists() or dst.stat().st_mtime < src.stat().st_mtime:
         dst.parent.mkdir(parents=True, exist_ok=True)
         cmd = ["sips"] + (["-Z", str(edge)] if edge else []) + [
@@ -67,6 +71,21 @@ def photo_copy(src: Path, edge, quality: int):
         subprocess.run(cmd, check=True, capture_output=True)
     out = subprocess.run(["sips", "-g", "pixelWidth", str(dst)], capture_output=True, text=True).stdout
     return dst, int(out.rsplit(":", 1)[1])
+
+
+def photo_copy_pillow(src: Path, dst: Path, edge, quality: int):
+    """The same copy made with Pillow, for the cloud sessions (Linux has no sips)."""
+    from PIL import Image
+    if not dst.exists() or dst.stat().st_mtime < src.stat().st_mtime:
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        with Image.open(src) as im:
+            icc, exif = im.info.get("icc_profile"), im.info.get("exif")
+            if edge:
+                im.thumbnail((edge, edge), Image.LANCZOS)
+            extra = {k: v for k, v in (("icc_profile", icc), ("exif", exif)) if v}
+            im.save(dst, "JPEG", quality=quality, optimize=True, progressive=True, **extra)
+    with Image.open(dst) as im:
+        return dst, im.width
 
 
 def page_copy(html: str, widths: dict) -> str:
