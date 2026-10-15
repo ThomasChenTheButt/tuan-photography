@@ -1,53 +1,23 @@
 /* ---------- The photo wall (gallery.html) ----------
-   Every photograph on the site as a small print on one screen. The prints stand in close
-   rows that drift sideways without end, one row left, the next right; the cursor parts the
-   wall as it moves and the print nearest it rises; a click opens it in the viewer
-   (main.js, pick()), the print growing from the wall into place. Five bars bottom right set
-   the print size, the gap, the tilt, the drift speed and how much the rows' paces differ; a word top right turns the paper
-   dark. The title sits bottom left on a ramp of the page's own paper (stylesheet). Tried first as elements/gallery/ and merged on 2026-10-07 at the owner's word.
+   Every photograph on the site as a small print on one screen, and nothing else (his call,
+   2026-10-15: no words, no controls). The prints stand in close rows that drift sideways
+   without end, one row left, the next right; the cursor parts the wall as it moves and the
+   print nearest it rises; a click opens it in the viewer (main.js, pick()), the print growing
+   from the wall into place. Size, gap, tilt, speed and pace are fixed below, at the values
+   the five bars started at. Tried first as elements/gallery/ and merged on 2026-10-07.
    The numbers go to the stylesheet as --x --y --w --h --r; nothing drifts under
-   "reduce motion". Loads after main.js and uses its lang, t(), slides and pick(). */
+   "reduce motion". Loads after main.js and uses its pick(). */
 (function () {
   'use strict';
 
   const wall = document.querySelector('.pwall');
   if (!wall) return;
   const field = wall.querySelector('.pwall__tiles');
-  const caption = wall.querySelector('.pwall__cap');
-  const capPlace = caption.querySelector('b');
-  const capWhere = caption.querySelector('span');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---- the bars ---- */
-  const bar = (id, fmt) => {
-    const input = document.getElementById(id), out = document.getElementById(id + '-out');
-    const read = () => { out.value = fmt(parseFloat(input.value)); return parseFloat(input.value); };
-    return { input, read };
-  };
-  const sizeBar = bar('wall-size', (v) => '×' + v.toFixed(1));
-  const gapBar = bar('wall-gap', (v) => v.toFixed(0) + 'px');
-  const tiltBar = bar('wall-tilt', (v) => v.toFixed(1) + '°');
-  const speedBar = bar('wall-speed', (v) => '×' + v.toFixed(1));
-  const varyBar = bar('wall-vary', (v) => '×' + v.toFixed(1));
-  let sizeK = sizeBar.read(), GAP = gapBar.read(), tiltK = tiltBar.read(), speedK = speedBar.read(), varyK = varyBar.read();
-  sizeBar.input.addEventListener('input', () => { sizeK = sizeBar.read(); layout(); });
-  gapBar.input.addEventListener('input', () => { GAP = gapBar.read(); layout(); });
-  tiltBar.input.addEventListener('input', () => { tiltK = tiltBar.read(); });
-  speedBar.input.addEventListener('input', () => { speedK = speedBar.read(); });
-  varyBar.input.addEventListener('input', () => { varyK = varyBar.read(); });
-
-  /* ---- light or dark paper, chosen by the word top right, remembered by the browser ---- */
-  const themeBtn = document.getElementById('wall-theme');
-  let theme = 'light';
-  try { theme = localStorage.getItem('tlap-theme') || theme; } catch (e) { /* private mode */ }
-  function applyTheme() {
-    document.documentElement.dataset.theme = theme;
-    themeBtn.dataset.i18n = theme === 'dark' ? 'wallLight' : 'wallDark';
-    themeBtn.textContent = t(themeBtn.dataset.i18n);
-    try { localStorage.setItem('tlap-theme', theme); } catch (e) { /* private mode */ }
-  }
-  themeBtn.addEventListener('click', () => { theme = theme === 'dark' ? 'light' : 'dark'; applyTheme(); });
-  applyTheme();
+  /* ---- the wall's measures, once five bars: print size, gap (px), tilt (degrees at most),
+     drift speed, and how far the rows' paces differ ---- */
+  const sizeK = 1.2, GAP = 12, tiltK = 1.5, speedK = 0.8, varyK = 1;
 
   /* ---- the prints, in a fixed shuffle so countries mix but the wall is the same each visit ---- */
   const own = [...field.querySelectorAll('.print')].map((el) => {
@@ -68,8 +38,6 @@
   const rows = [];
   function layout() {
     W = innerWidth; H = innerHeight;
-    // the print height comes from the size bar alone; the gap is added on top of it,
-    // so widening the gap makes fewer rows, not smaller prints
     const ph = H / Math.max(3, Math.sqrt(n * H * 0.76 / W)) * sizeK - 10;
     const pitch = ph + GAP;
     const top = -pitch * 0.45;                           // the first row begins above the window
@@ -101,7 +69,7 @@
         const w = h * p.ar;
         p.row = row; p.x0 = x + w / 2;
         p.bw = w; p.bh = h; p.by = row.y;
-        p.tilt = (rand() - 0.5) * 2;                     // -1..1, the tilt bar makes it degrees
+        p.tilt = (rand() - 0.5) * 2;                     // -1..1, tiltK makes it degrees
         x += w + GAP;
       }
       rows.push(row);
@@ -115,7 +83,7 @@
 
   function advance(dt) {
     for (const row of rows) {
-      // 11px a second, odd rows left and even rows right; the Vary bar spreads the rows' paces
+      // 11px a second, odd rows left and even rows right; varyK spreads the rows' paces
       const speed = (rows.indexOf(row) % 2 ? 1 : -1) * (11 + row.vary * varyK);
       if (!reduce) row.shift += speed * speedK * dt / 1000;
       for (const p of row.tiles) {
@@ -136,19 +104,11 @@
     }
     return Math.sqrt(bd) < cell * 1.4 ? best : null;
   }
-  function setCaption(p) {
-    if (!p) { caption.classList.remove('show'); return; }
-    const s = slides.find((x) => x.id === p.id);
-    capPlace.textContent = s ? s.place[lang] : '';
-    capWhere.textContent = s ? s.where[lang] : '';
-    caption.classList.add('show');
-  }
   function lift(p) {
     if (p === lifted) return;
     if (lifted) lifted.el.classList.remove('lift');
     lifted = p;
     if (p) p.el.classList.add('lift');
-    setCaption(p);
   }
   field.addEventListener('pointermove', (e) => {
     if (e.pointerType === 'touch') return;
@@ -156,7 +116,6 @@
     lift(nearest());
   });
   field.addEventListener('pointerleave', () => { mx = -1e4; my = -1e4; lift(null); });
-  document.addEventListener('langchange', () => { if (lifted) setCaption(lifted); themeBtn.textContent = t(themeBtn.dataset.i18n); });
 
   /* ---- one frame, eased by the clock so a slow screen settles in the same time ---- */
   let last = performance.now();
@@ -166,12 +125,11 @@
     advance(dt);
     const short = Math.min(W, H);
     const liftEdge = short * 0.42;
-    // the wall parts around the lifted print, wide enough to clear its name beneath;
-    // with nothing up, a small part follows the cursor
+    // the wall parts around the lifted print; with nothing up, a small part follows the cursor
     let fx = mx, fy = my, radius = short * 0.12, outer = short * 0.3;
     if (lifted) {
-      fx = lifted.x; fy = lifted.y + 22;
-      radius = Math.hypot(lifted.w, lifted.h) / 2 + 30;
+      fx = lifted.x; fy = lifted.y;
+      radius = Math.hypot(lifted.w, lifted.h) / 2 + 20;
       outer = radius * 1.5;
     }
     for (const p of all) {
@@ -183,7 +141,7 @@
         h = p.ar >= 1 ? liftEdge / p.ar : liftEdge;
         x = p.bx + (mx - p.bx) * 0.6; y = p.by + (my - p.by) * 0.6; r = 0;
         x = Math.min(Math.max(x, w / 2 + 12), W - w / 2 - 12);
-        y = Math.min(Math.max(y, h / 2 + 12), H - h / 2 - 64);
+        y = Math.min(Math.max(y, h / 2 + 12), H - h / 2 - 12);
       } else if (!reduce) {
         const dx = p.bx - fx, dy = p.by - fy, d = Math.hypot(dx, dy) || 1;
         if (d < outer) {
@@ -199,10 +157,6 @@
       st.setProperty('--w', p.w.toFixed(1) + 'px');
       st.setProperty('--h', p.h.toFixed(1) + 'px');
       st.setProperty('--r', p.r.toFixed(2) + 'deg');
-    }
-    if (lifted) {
-      caption.style.setProperty('--cx', lifted.x.toFixed(1) + 'px');
-      caption.style.setProperty('--cy', (lifted.y + lifted.h / 2 + 14).toFixed(1) + 'px');
     }
     requestAnimationFrame(frame);
   }

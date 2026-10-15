@@ -619,17 +619,13 @@ def build_home():
 
 def build_gallery():
     """The photo wall: every photograph on the site as a small print on one screen, in close
-    rows that drift sideways; the cursor parts the wall, a click opens the viewer. Five bars
-    bottom right (size, gap, tilt, speed, vary) and a Dark/Light word top right. Tried first as
-    elements/gallery/ and merged on 2026-10-07 at the owner's word. The behaviour is js/wall.js."""
+    rows that drift sideways; the cursor parts the wall and lifts the print nearest it, a click
+    opens the viewer. Nothing else on the page but the top bar: no title, no words, no controls
+    (his call, 2026-10-15, after the six controls of 2026-10-07). The behaviour is js/wall.js."""
     en, zh = {}, {}
     root = ""
-    en.update(pTitle="Gallery", pSub="Move across the wall. Click a photograph to open it.",
-              wallKicker="A photography wall", wallSize="Size", wallGap="Gap", wallTilt="Tilt",
-              wallSpeed="Speed", wallVary="Vary", wallDark="Dark", wallLight="Light", wallLabel="Photographs")
-    zh.update(pTitle="作品集", pSub="滑過這面牆。點一張照片打開它。",
-              wallKicker="一面照片牆", wallSize="大小", wallGap="間距", wallTilt="歪斜",
-              wallSpeed="速度", wallVary="差異", wallDark="深色", wallLight="淺色", wallLabel="照片")
+    en.update(wallLabel="Photographs")
+    zh.update(wallLabel="照片")
     lead = DATA["lead"]
     ids = [lead] + [s["id"] for s in DATA["slides"] if s["id"] != lead]
     tiles = []
@@ -639,30 +635,10 @@ def build_gallery():
         tiles.append(f'<figure class="print"><a {opens(sid, root, en, zh)}>'
                      f'<img src="images/web/640/{s["file"]}" width="{s["w"]}" height="{s["h"]}" '
                      f'alt="{e(s["alt"]["en"])}" data-i18n-alt="sa_{sid}" decoding="async"></a></figure>')
-    def bar(key, label, attrs, shown):
-        return (f'    <label class="bar" for="wall-{key}"><span data-i18n="wall{key.capitalize()}">{label}</span>'
-                f'<input type="range" id="wall-{key}" {attrs}><output id="wall-{key}-out" for="wall-{key}">{shown}</output></label>')
     body = f"""<section class="pwall" aria-label="Photographs" data-i18n-aria="wallLabel">
   <div class="pwall__tiles">
     {"".join(tiles)}
   </div>
-  <div class="pwall__ramp"></div>
-  <header class="pwall__head">
-    <p class="pwall__kicker caps" data-i18n="wallKicker">A photography wall</p>
-    <h1 data-i18n="pTitle">Gallery</h1>
-    <p class="pwall__hint" data-i18n="pSub">Move across the wall. Click a photograph to open it.</p>
-  </header>
-  <div class="pwall__tools">
-    <button type="button" class="caps" id="wall-theme" data-i18n="wallDark">Dark</button>
-  </div>
-  <div class="pwall__bars">
-{bar("size", "Size", 'min="0.6" max="2.4" step="0.1" value="1.2"', "×1.2")}
-{bar("gap", "Gap", 'min="0" max="60" step="1" value="12"', "12px")}
-{bar("tilt", "Tilt", 'min="0" max="8" step="0.5" value="1.5"', "1.5°")}
-{bar("speed", "Speed", 'min="0" max="3" step="0.1" value="0.8"', "×0.8")}
-{bar("vary", "Vary", 'min="0" max="3" step="0.1" value="1"', "×1.0")}
-  </div>
-  <figcaption class="pwall__cap" aria-live="polite"><b></b><span></span></figcaption>
 </section>"""
     write("gallery.html", f"Gallery - {SITE}", f"作品集 - {SITE}",
           "Every landscape photograph by 陳亮元 Thomas Chen on one wall. Open any one to see how it was made.",

@@ -1,3 +1,9 @@
+> **Experiment `gallery` (2026-10-15), port 8643.** The Gallery tab redesigned against its job in
+> `PRODUCT.md` ("every photograph, and nothing else"). His answers before building: keep the
+> drifting wall; no words at all (no title, no hover name); the mixed order stays; a click opens
+> the viewer as now. The six controls (five bars, the Dark word) are removed. No skill; no rule of
+> this file is suspended. Merge only on his word.
+
 # tuan photography 陳亮元 — project instructions
 
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
@@ -38,7 +44,7 @@ updating in the same commit. The short version:
 
 | Thing | Rule |
 |---|---|
-| Ground | warm paper and a stone band alternate by section. **Light only**, no dark theme, except the Gallery page's own Dark word (his call, 2026-10-07) |
+| Ground | warm paper and a stone band alternate by section. **Light only**, no dark theme (the Gallery's Dark word was removed, 2026-10-15) |
 | Colour | eleven tokens in `design 1/css/style.css` `:root`. Never hard-code a colour |
 | Earth colours | clay, olive, slate: whole flat blocks only (the three doors, the footer) |
 | Links | deep clay is the only colour that means "this can be followed" |
@@ -47,7 +53,7 @@ updating in the same commit. The short version:
 | Labels, menu, buttons | Geist in small spaced capitals. No mono face |
 | Corners | square, everywhere, except the Guides cards on the home page (rounded, with a soft shadow; his call, 2026-10-13) |
 | Controls | words, never icons or arrows, except the two round arrows of the Guides cards (2026-10-13) |
-| Photographs | bare, untrimmed in rows, names beneath and never on top. The continent squares are trimmed to even openings (his call, 2026-09-30). The Gallery page is the photo wall: every photograph as a small drifting print, the title and four bars floating over faint prints (his call, 2026-10-07) |
+| Photographs | bare, untrimmed in rows, names beneath and never on top. The continent squares are trimmed to even openings (his call, 2026-09-30). The Gallery page is the photo wall: every photograph as a small drifting print and nothing else, no title, no words, no controls (his call, 2026-10-15) |
 | Punctuation | no long dashes; at most one middle dot in a line; 中文 uses full-width marks |
 
 ### Rules
