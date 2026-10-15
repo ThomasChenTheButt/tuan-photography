@@ -71,6 +71,7 @@ p, h1, h2, figure { margin: 0; }
   left: calc(var(--story-w) + 2 * var(--edge));
 }
 .trip__paint { position: absolute; inset: 0; width: 100%; height: 100%; }
+.trip__now { display: none; }
 /* the drawing runs out into the paper toward the story, as a sketch does at its edge */
 .trip__map { -webkit-mask-image: linear-gradient(to right, transparent, #000 7rem); mask-image: linear-gradient(to right, transparent, #000 7rem); }
 .trip__tooth {
@@ -88,9 +89,10 @@ p, h1, h2, figure { margin: 0; }
 
 .intro { min-height: 100svh; display: flex; flex-direction: column; justify-content: center; padding: 6rem 0 4rem; }
 .intro__when { color: var(--ink-2); margin-bottom: 1.1rem; }
-.intro__title { font-family: var(--serif); font-weight: 400; font-size: clamp(2.75rem, 1.5rem + 4vw, 5.25rem); line-height: 1; letter-spacing: -0.015em; }
-.intro__route { margin-top: 1.4rem; font-style: italic; color: var(--ink-2); font-size: 1.15rem; line-height: 1.55; max-width: 34rem; }
-.intro__hint { margin-top: 3rem; color: var(--ink-2); }
+.intro__title { font-family: var(--serif); font-weight: 400; font-size: clamp(2.75rem, 1.5rem + 4vw, 5.25rem); line-height: 1; letter-spacing: -0.015em; text-wrap: balance; }
+/* a place's name is never broken across two lines */
+.intro__route span { white-space: nowrap; }
+.intro__route { margin-top: 1.4rem; font-style: italic; color: var(--ink-2); font-size: 1.15rem; line-height: 1.55; max-width: 34rem; text-wrap: pretty; }
 :lang(zh-Hant) .intro__title { font-family: var(--serif-zh); font-weight: 500; letter-spacing: 0.06em; line-height: 1.15; }
 :lang(zh-Hant) .intro__route { font-style: normal; letter-spacing: 0.02em; }
 
@@ -98,9 +100,9 @@ p, h1, h2, figure { margin: 0; }
 
 .stop { min-height: 115svh; padding: 34svh 0 16svh; }
 .stop__how { color: var(--ink-2); margin-bottom: 0.9rem; }
-.stop__name { font-family: var(--serif); font-weight: 400; font-size: clamp(2.2rem, 1.4rem + 2.6vw, 3.6rem); line-height: 1.02; letter-spacing: -0.01em; }
+.stop__name { font-family: var(--serif); font-weight: 400; font-size: clamp(2.2rem, 1.4rem + 2.6vw, 3.6rem); line-height: 1.02; letter-spacing: -0.01em; text-wrap: balance; }
 :lang(zh-Hant) .stop__name { font-family: var(--serif-zh); font-weight: 500; letter-spacing: 0.06em; line-height: 1.2; }
-.stop__where { margin-top: 0.6rem; color: var(--ink-2); font-size: 0.95rem; font-variant-numeric: tabular-nums; }
+.stop__where { margin-top: 0.6rem; color: var(--ink-2); font-size: 0.95rem; }
 .stop__photos { display: grid; gap: 3.2rem; margin-top: 2.6rem; }
 
 /* sized before it loads (--ar is the photograph's shape), so the page never jumps under the reader */
@@ -111,11 +113,12 @@ p, h1, h2, figure { margin: 0; }
 :lang(zh-Hant) .shot__name { font-family: var(--serif-zh); font-weight: 500; letter-spacing: 0.04em; }
 :lang(zh-Hant) .shot__where { font-style: normal; letter-spacing: 0.02em; }
 
-/* where a photograph will go: a frame hatched in pen, waiting */
+/* where a photograph will go: a frame hatched in pen, waiting. Kept small and pale, so an
+   empty place never weighs as much as one of his photographs */
 .blank {
-  aspect-ratio: 3 / 2; display: grid; place-items: center;
+  width: min(100%, 20rem); aspect-ratio: 3 / 2; display: grid; place-items: center;
   border: 1px solid var(--hair);
-  background: repeating-linear-gradient(-57deg, oklch(24.5% 0.008 45 / 0.09) 0 1px, transparent 1px 7px) var(--paper-2);
+  background: repeating-linear-gradient(-57deg, oklch(24.5% 0.008 45 / 0.06) 0 1px, transparent 1px 7px) var(--paper-2);
 }
 .blank span { color: var(--ink-2); background: var(--paper-2); padding: 0.35rem 0.7rem; }
 
@@ -131,11 +134,20 @@ p, h1, h2, figure { margin: 0; }
   .trip__story { margin: 0 var(--edge); }
   .beam { display: none; }
   .trip__map { -webkit-mask-image: none; mask-image: none; }
+  /* the place being read, lettered on the map's lower edge: on a phone the stop's own name has
+     already scrolled up under the map by the time the map reaches it */
+  .trip__now {
+    display: block; position: absolute; left: var(--edge); bottom: 0.55rem; margin: 0;
+    font-size: 0.9rem; font-weight: 700; letter-spacing: 0.07em; font-variant-caps: small-caps; color: var(--ink);
+    -webkit-text-stroke: 3.5px var(--paper); paint-order: stroke fill;
+  }
+  :lang(zh-Hant) .trip__now { font-size: 0.86rem; font-weight: 600; letter-spacing: 0.14em; font-variant-caps: normal; }
   .mast { position: absolute; }
   .lang { position: absolute; }
   .intro { min-height: 70svh; padding-top: 3rem; }
   .stop { min-height: 90svh; padding: 10svh 0 12svh; }
   .shot img { width: min(100%, 60svh * var(--ar, 1.5)); }
+  .blank { width: 62%; }
 }
 
 @media (prefers-reduced-motion: reduce) {

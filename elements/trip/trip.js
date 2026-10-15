@@ -36,7 +36,6 @@
 
   const WORDS = {
     en: {
-      hint: 'Scroll to follow the route',
       blank: 'No photograph yet',
       home: 'Home',
       and: ' and ', list: ', ',
@@ -44,11 +43,8 @@
       leg: (m, f) => `${m} from ${f}`,
       then: ', then ',
       tally: (p, n) => `${p} places, ${n} photographs`,
-      lat: (v) => `${Math.abs(v).toFixed(2)}° ${v < 0 ? 'S' : 'N'}`,
-      lng: (v) => `${Math.abs(v).toFixed(2)}° ${v < 0 ? 'W' : 'E'}`,
     },
     zh: {
-      hint: '往下捲，跟著路線走',
       blank: '還沒有照片',
       home: '回家',
       and: '與', list: '、',
@@ -56,8 +52,6 @@
       leg: (m, f) => `從${f}${m}`,
       then: '，再',
       tally: (p, n) => `${p} 個地方，${n} 張照片`,
-      lat: (v) => `${v < 0 ? '南緯' : '北緯'} ${Math.abs(v).toFixed(2)}°`,
-      lng: (v) => `${v < 0 ? '西經' : '東經'} ${Math.abs(v).toFixed(2)}°`,
     },
   };
   let lang = new URLSearchParams(location.search).get('lang') === 'zh' ? 'zh' : 'en';
@@ -122,7 +116,6 @@
     const s = w.leg(w.mode[l.mode] || l.mode, nameOf(l.from));
     return i === 0 ? s : w.then + s;
   }).join('');
-  const where = (ll) => `${W_().lat(ll[0])}  ${W_().lng(ll[1])}`;
   const src = (f, n) => `../images/web/${n ? n + '/' : ''}${f}`;
 
   function renderStory() {
@@ -134,8 +127,7 @@
     let html = `<section class="intro" data-i="-1">
       <p class="intro__when caps">${esc((J.date || J.label)[lang])}</p>
       <h1 class="intro__title">${esc(title)}</h1>
-      <p class="intro__route">${esc(stops.map((c) => nameOf(c.at)).join(w.list))}</p>
-      <p class="intro__hint caps">${esc(w.hint)}</p>
+      <p class="intro__route">${stops.map((c) => `<span>${esc(nameOf(c.at))}</span>`).join(esc(w.list))}</p>
     </section>`;
     chapters.forEach((c, i) => {
       if (c.home) {
@@ -159,7 +151,7 @@
       html += `<section class="stop" data-i="${i}">
         <p class="stop__how caps">${esc(legLine(c))}</p>
         <h2 class="stop__name">${esc(nameOf(c.at))}</h2>
-        <p class="stop__where">${esc(country ? country.name[lang] : '')} · ${esc(where(c.at.ll))}</p>
+        <p class="stop__where">${esc(country ? country.name[lang] : '')}</p>
         <div class="stop__photos">${shots}</div>
       </section>`;
     });
@@ -180,6 +172,7 @@
   /* ------------------------------------------------------------ the map's frame */
 
   const mapEl = $('#map');
+  const nowEl = $('#now');
   const canvas = $('#paint');
   const ctx = canvas.getContext('2d');
   const view = { W: 1, H: 1, dpr: 1 };
@@ -259,8 +252,8 @@
   // the textures: the whole trip, then closer ones around the stops (lon west, east; lat north, south)
   const BANDS = [
     { r: 10, lon: [80, 200], lat: [45, -60], base: true },
-    { r: 36, lon: [135, 180], lat: [-20, -48] },             // the Tasman: both countries
-    { r: 90, lon: [165.5, 179.5], lat: [-33.5, -47.6] },    // New Zealand
+    { r: 36, lon: [135, 181], lat: [-20, -50.5] },             // the Tasman: both countries
+    { r: 90, lon: [165, 179.8], lat: [-33.5, -48.6] },    // New Zealand
     { r: 150, lon: [141.3, 148.3], lat: [-34.4, -41] },     // Melbourne
     { r: 150, lon: [149.6, 156.6], lat: [-24.4, -31] },     // Brisbane and the Gold Coast
     { r: 150, lon: [147.7, 154.7], lat: [-30.6, -37.2] },   // Sydney
@@ -271,8 +264,10 @@
   const env = {
     LON0, LAT_N: 90, LAT_S: -90, SY,
     land: () => state.land50,
-    // close in, the route alone carries the vermilion: the countries keep their own washes
-    travel: () => (state.paintR < 22 ? state.travel : []),
+    // the route alone carries the vermilion, at every distance: the countries keep their own
+    // washes. (A rose wash on the far paintings only showed as a hard-edged block wherever a
+    // closer painting, without it, lay over part of a country.)
+    travel: () => [],
     lakes: (r) => (r >= 45 && state.lakesAll ? state.lakesAll : state.lakes),
     relief: (r) => (r >= 22 && state.reliefFine ? state.reliefFine : state.relief),
   };
@@ -297,7 +292,6 @@
         u0: b.lon[0] - LON0, v0: -b.lat[0] * SY,
         w: Math.round((b.lon[1] - b.lon[0]) * b.r), h: Math.round((b.lat[0] - b.lat[1]) * SY * b.r),
       };
-      state.paintR = b.r;
       try {
         const c = await WC.paint(job, env);
         state.bands.push({ ...job, base: !!b.base, canvas: feather(c, b.base ? 90 : 56), born: performance.now() });
@@ -433,6 +427,7 @@
     ctx.fillStyle = WARM; ctx.fill();
   };
 
+  const nameRects = [];
   let queued = false;
   const queue = () => { if (!queued) { queued = true; requestAnimationFrame(draw); } };
 
@@ -488,10 +483,29 @@
     const nameA = 1 - ss(30, 60, k);
     if (nameA > 0) {
       ctx.globalAlpha = nameA;
+      // kept off the route (all of it, drawn or not, so a name never jumps as the line arrives)
+      // and off the places: the first spot near the middle of the land that is clear
+      nameRects.length = 0;
+      const keepOff = [...legs.flatMap((l) => l.pts.map(S_)), ...stops.map((c) => S_(U(c.at.ll)))];
+      // and off where the places' own names will stand (to the right of each mark)
+      const placeBoxes = [home, ...stops.map((c) => c.at)].map((p) => {
+        const pl = letter(nameOf(p), { size: lang === 'zh' ? 12 : 12.5, colour: 'rgba(38, 34, 33, 0.92)', track: 0.08 });
+        const [x, y] = S_(U(p.ll));
+        return { x: x + 3, y: y - pl.h / 2 - 2, w: pl.w + 6, h: pl.h + 4 };
+      });
       for (const n of state.names) {
         const l = letter(n.c.name[lang], { size: 13, colour: LETTER, track: 0.24 });
-        const [x, y] = S_(U(n.ll));
-        ctx.drawImage(l.c, x - l.w / 2, y - l.h / 2, l.w, l.h);
+        const [x0, y0] = S_(U(n.ll));
+        const hits = (x, y, r) => r.x < x + l.w / 2 && r.x + r.w > x - l.w / 2 && r.y < y + l.h / 2 && r.y + r.h > y - l.h / 2;
+        const clear = (x, y) => !keepOff.some(([px, py]) => px > x - l.w / 2 - 6 && px < x + l.w / 2 + 6 && py > y - l.h / 2 - 4 && py < y + l.h / 2 + 4)
+          && !placeBoxes.some((r) => hits(x, y, r));
+        let at = [x0, y0];
+        for (const [dx, dy] of [[0, 0], [0, -1], [0, 1], [-0.6, 0], [0.6, 0], [0, -2], [0, 2], [-0.6, -1], [0.6, 1], [-0.6, 1], [0.6, -1]]) {
+          const x = x0 + dx * l.w, y = y0 + dy * l.h * 1.1;
+          if (clear(x, y)) { at = [x, y]; break; }
+        }
+        ctx.drawImage(l.c, at[0] - l.w / 2, at[1] - l.h / 2, l.w, l.h);
+        nameRects.push({ x: at[0] - l.w / 2 + 4, y: at[1] - l.h / 2 + 3, w: l.w - 8, h: l.h - 6 });
       }
       ctx.globalAlpha = 1;
     }
@@ -545,7 +559,8 @@
     });
 
     // the places: home a small ink dot; the rest marked once reached, pencilled until then
-    const taken = [];
+    // the places' names keep clear of the countries' names
+    const taken = nameA > 0 ? [...nameRects] : [];
     const free = (r) => !taken.some((q) => r.x < q.x + q.w && r.x + r.w > q.x && r.y < q.y + q.h && r.y + r.h > q.y);
     const order = stops.map((c) => chapters.indexOf(c))
       .sort((a, b) => (a === ci ? -1 : b === ci ? 1 : (a <= ci ? 0 : 1) - (b <= ci ? 0 : 1) || a - b));
@@ -583,6 +598,10 @@
       const [x, y] = S_(U(chapters[ci].at.ll));
       ring(x, y, ss(0.5, 0.74, t));
     }
+
+    // (phones) the place being read, under the map
+    const nowText = ci < 0 ? '' : chapters[ci].home ? nameOf(home) : nameOf(chapters[ci].at);
+    if (nowEl.textContent !== nowText) nowEl.textContent = nowText;
 
     beam(ci, t, X0, Y0, k);
     if (again) queue();
