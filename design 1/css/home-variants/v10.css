@@ -1,0 +1,64 @@
+/* experiment home-variations, variation 10: "Same place, twice".
+   Pairs of photographs of one place, side by side at their own shapes, one larger than the
+   other (alternating), the month and settings under each, the place's name under the pair. */
+
+.v10-intro { padding-block: var(--s-6) 0; text-align: center; }
+.v10-intro h1 { font-size: var(--t-2xl); }
+.v10-intro p { margin: var(--s-3) auto 0; max-width: 42ch; color: var(--text-2); }
+
+/* a pair: the larger photograph stands --big times taller than the smaller; both keep their shape.
+   --ar on the pair is its width over the larger photograph's height, so a pair never stands
+   taller than most of the window. */
+.v10-pair { padding-top: clamp(7rem, 14vw, 12rem); }
+.v10-two {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(0.75rem, 2.2vw, 2rem);
+  max-width: min(76rem, calc(var(--ar) * 76svh));
+  margin-inline: auto;
+}
+.v10-shot { --g: 1; flex: calc(var(--ar) * var(--g)) 1 0; min-width: 0; }
+.v10-shot--big { --g: 1.6; }
+.v10-shot a { display: block; overflow: hidden; aspect-ratio: var(--ar); background: var(--band); }
+.v10-shot a:hover { color: inherit; }
+.v10-shot img { width: 100%; height: 100%; object-fit: cover; transition: transform 900ms var(--out); }
+.v10-shot a:hover img { transform: scale(1.02); }
+.v10-shot figcaption { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.15rem 0.9rem; min-height: 2.6rem; padding-top: 0.7rem; font-size: var(--t-xs); line-height: 1.45; color: var(--text-2); }
+.v10-shot figcaption > .num { color: var(--text); }
+
+.v10-name { margin-top: var(--s-4); text-align: center; }
+.v10-name h2 { font-size: var(--t-xl); }
+.v10-name p { margin-top: var(--s-2); }
+.v10-go { display: inline-block; padding-bottom: 0.3rem; color: var(--text-2); text-decoration: none; border-bottom: 1px solid var(--line); transition: color 200ms var(--out), border-color 200ms var(--out); }
+.v10-go:hover { color: var(--accent); border-color: currentColor; }
+
+/* the way in: the four tabs, each under a hairline */
+.v10-ways { padding-block: clamp(8rem, 15vw, 13rem) var(--s-6); }
+.v10-ways ul { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-3) var(--col-gap); max-width: 68rem; margin-inline: auto; }
+.v10-ways li { border-top: 1px solid var(--line); }
+.v10-ways a { display: block; padding-top: var(--s-2); font-family: var(--serif); font-size: var(--t-xl); line-height: 1.2; text-align: center; text-decoration: none; transition: color 200ms var(--out); }
+:lang(zh-Hant) .v10-ways a { font-weight: 500; letter-spacing: 0.06em; }
+
+/* a phone: one above the other, the smaller inset to one side, alternating */
+@media (max-width: 40rem) {
+  .v10-two { display: grid; row-gap: var(--s-3); max-width: none; }
+  .v10-shot:not(.v10-shot--big) { width: 74%; justify-self: end; }
+  .v10-pair--flip .v10-shot:not(.v10-shot--big) { justify-self: start; }
+  .v10-shot figcaption { min-height: 0; }
+  .v10-ways ul { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: var(--s-4); }
+}
+
+/* the one moment: in each pair the second photograph arrives a beat after the first.
+   v10.js adds v10-wait only when motion is welcome, so the pairs are visible by default.
+   On a phone, where the pair is taller than the window, each photograph waits for its own turn. */
+@media (prefers-reduced-motion: no-preference) {
+  :is(.v10-wait .v10-shot, .v10-shot.v10-wait) a { clip-path: inset(0 0 100% 0); }
+  :is(.v10-wait .v10-shot, .v10-shot.v10-wait) img { transform: scale(1.06); }
+  :is(.v10-wait .v10-shot, .v10-shot.v10-wait) figcaption { opacity: 0; }
+  .v10-shot { --late: 0ms; }
+  .v10-shot--late { --late: 650ms; }
+  @media (max-width: 40rem) { .v10-shot--late { --late: 250ms; } }
+  :is(.v10-in .v10-shot, .v10-shot.v10-in) a { clip-path: inset(0); transition: clip-path 1100ms var(--out) var(--late); }
+  :is(.v10-in .v10-shot, .v10-shot.v10-in) img { transform: none; transition: transform 1600ms var(--out) var(--late); }
+  :is(.v10-in .v10-shot, .v10-shot.v10-in) figcaption { opacity: 1; transition: opacity 700ms var(--out) calc(var(--late) + 500ms); }
+}

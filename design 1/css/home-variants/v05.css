@@ -1,0 +1,79 @@
+/* experiment home-variations, variation 05: "One photograph, all the way".
+   One photograph's account set as a printed specification under the opening photograph:
+   a label at the left of each row, the values large, hairlines between rows. */
+
+/* the account */
+.v05-account { padding-block: var(--s-6); }
+.v05-sheet { max-width: 68rem; margin-inline: auto; border-bottom: 1px solid var(--line); }
+.v05-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 9fr);
+  column-gap: var(--col-gap);
+  padding-block: clamp(2rem, 4.5vw, 3.75rem);
+  --d: calc(var(--i, 0) * 420ms);
+}
+.v05-row::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--line); transform-origin: left center; }
+.v05-label { padding-top: 0.55rem; color: var(--text-2); }
+.v05-val > * + * { margin-top: 0.6rem; }
+
+.v05-big { font-size: var(--t-2xl); text-align: left; }
+.v05-mid { font-family: var(--serif); font-size: var(--t-xl); line-height: 1.2; letter-spacing: 0.005em; }
+:lang(zh-Hant) .v05-mid { font-weight: 500; letter-spacing: 0.04em; }
+.v05-quiet { color: var(--text-2); font-size: var(--t-m); }
+
+/* the four settings, set like a specification */
+.v05-val > .v05-figs { display: grid; grid-template-columns: repeat(4, max-content); gap: var(--s-4) clamp(1.75rem, 4.5vw, 4.5rem); margin-top: var(--s-4); }
+.v05-fig { display: flex; flex-direction: column-reverse; }
+.v05-fig dd { font-size: clamp(2rem, 1.25rem + 2.4vw, 3.4rem); line-height: 1; letter-spacing: -0.01em; color: var(--text); }
+.v05-fig dt { margin-top: 0.75rem; color: var(--text-2); }
+
+/* where to go next: words with a rule beneath */
+.v05-goes { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); padding-top: 0.4rem; }
+.v05-go { display: inline-block; padding-bottom: 0.35rem; color: var(--text); text-decoration: none; border-bottom: 1px solid currentColor; transition: color 200ms var(--out); }
+.v05-go:hover { color: var(--accent); }
+
+/* every photograph here has one: six others, small, at their own shapes */
+.v05-more { text-align: center; padding-top: 0; }
+.v05-line { font-size: var(--t-xl); }
+.v05-sub { margin: 0.8rem auto 0; max-width: 42ch; color: var(--text-2); }
+.v05-row-of { display: flex; gap: var(--gap); align-items: flex-start; margin-top: var(--s-5); text-align: left; }
+.v05-row-of .piece { flex: var(--ar) 1 0; min-width: 0; }
+.v05-row-of .piece a { aspect-ratio: var(--ar); }
+.v05-row-of .piece img { height: 100%; object-fit: cover; }
+.v05-row-of .piece figcaption { display: block; margin-top: 0.6rem; }
+.v05-row-of .piece figcaption b { display: block; font-size: 0.98rem; }
+
+/* the way in: the four tabs as names */
+.v05-ways ul { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-2) clamp(2rem, 6vw, 5.5rem); padding-block: var(--s-6); }
+.v05-ways a { font-family: var(--serif); font-size: var(--t-xl); line-height: 1.2; text-decoration-color: var(--line); }
+:lang(zh-Hant) .v05-ways a { font-weight: 500; letter-spacing: 0.06em; }
+
+@media (max-width: 52rem) {
+  .v05-row { grid-template-columns: 5.5rem minmax(0, 1fr); }
+  .v05-val > .v05-figs { grid-template-columns: repeat(2, max-content); }
+}
+@media (max-width: 40rem) {
+  .v05-row { grid-template-columns: 4.75rem minmax(0, 1fr); column-gap: var(--s-2); }
+  .v05-label { padding-top: 0.4rem; }
+  .v05-big { font-size: 2.1rem; }
+  .v05-row-of { display: block; columns: 2; column-gap: var(--gap); }
+  .v05-row-of .piece { break-inside: avoid; margin-bottom: var(--s-3); }
+  .v05-ways ul { flex-direction: column; align-items: center; gap: var(--s-3); }
+}
+
+/* the one moment: the account arrives in order, where, when, how, as it comes into view.
+   v05.js adds v05-wait only when motion is welcome, so everything is visible by default. */
+@media (prefers-reduced-motion: no-preference) {
+  .v05-sheet.v05-wait .v05-row::before { transform: scaleX(0); }
+  .v05-sheet.v05-wait :is(.v05-label, .v05-val > :not(.v05-figs), .v05-fig) { opacity: 0; transform: translateY(0.9rem); }
+  .v05-sheet.v05-in .v05-row::before { transform: none; transition: transform 1000ms var(--out) var(--d); }
+  .v05-sheet.v05-in :is(.v05-label, .v05-val > :not(.v05-figs)) {
+    opacity: 1; transform: none;
+    transition: opacity 800ms var(--out) calc(var(--d) + 160ms), transform 900ms var(--out) calc(var(--d) + 160ms);
+  }
+  .v05-sheet.v05-in .v05-val .v05-fig {
+    opacity: 1; transform: none;
+    transition: opacity 800ms var(--out) calc(var(--d) + 380ms + var(--i) * 120ms), transform 900ms var(--out) calc(var(--d) + 380ms + var(--i) * 120ms);
+  }
+}
