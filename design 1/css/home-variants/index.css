@@ -17,16 +17,41 @@
 .vx__idea { color: var(--text-2); font-size: var(--t-s); line-height: 1.6; }
 .vx__seen { grid-column: 2; color: var(--text-2); }
 .vx__seen[hidden] { display: none; }
-.vx__mine { grid-column: 2 / -1; display: grid; grid-template-columns: 9rem 1fr; gap: var(--s-2); margin-top: var(--s-2); }
-.vx__mine label { display: grid; gap: 0.4rem; align-content: start; }
+.vx__mine { grid-column: 2 / -1; display: grid; grid-template-columns: 13rem 1fr; gap: var(--s-2); margin-top: var(--s-2); }
+.vx__mine label, .vx__rate { display: grid; gap: 0.4rem; align-content: start; }
 .vx__mine .caps { color: var(--text-2); }
-.vx__mine select, .vx__mine textarea { width: 100%; padding: 0.55rem 0.7rem; border: 1px solid var(--line); border-radius: 0;
-  background: var(--card); color: var(--text); font: inherit; font-size: var(--t-s); line-height: 1.5; }
-.vx__mine select { min-height: 2.75rem; cursor: pointer; font-variant-numeric: tabular-nums; }
-.vx__mine textarea { min-height: 2.75rem; resize: vertical; field-sizing: content; }   /* grows with what he writes */
+.vx__rate { margin: 0; padding: 0; border: 0; min-width: 0; display: block; }
+.vx__rate legend { padding: 0; margin-bottom: 0.4rem; }
+.vx__line { display: flex; flex-wrap: wrap; align-items: center; gap: 0 0.4rem; margin-left: -0.5rem; }
+/* five stars, drawn as shapes in the clay ink; filled up to the one chosen, and up to the one under the pointer */
+.vx__stars { display: flex; }
+.vx__stars label { display: grid; place-items: center; width: 2.4rem; height: 2.75rem; cursor: pointer; }
+.vx__stars input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.vx__star { display: block; width: 1.45rem; height: 1.45rem; background: var(--line);
+  clip-path: polygon(50% 3%, 61.8% 37.6%, 98% 38.2%, 69.1% 60.5%, 79.4% 95%, 50% 74%, 20.6% 95%, 30.9% 60.5%, 2% 38.2%, 38.2% 37.6%);
+  transition: background 150ms var(--out), transform 150ms var(--out); }
+.vx__stars[data-stars="1"] label:nth-child(-n+1) .vx__star,
+.vx__stars[data-stars="2"] label:nth-child(-n+2) .vx__star,
+.vx__stars[data-stars="3"] label:nth-child(-n+3) .vx__star,
+.vx__stars[data-stars="4"] label:nth-child(-n+4) .vx__star,
+.vx__stars[data-stars="5"] label:nth-child(-n+5) .vx__star { background: var(--clay); }
+@media (hover: hover) {
+  .vx__stars:hover label .vx__star { background: var(--line); }
+  .vx__stars:has(label:nth-child(1):hover) label:nth-child(-n+1) .vx__star,
+  .vx__stars:has(label:nth-child(2):hover) label:nth-child(-n+2) .vx__star,
+  .vx__stars:has(label:nth-child(3):hover) label:nth-child(-n+3) .vx__star,
+  .vx__stars:has(label:nth-child(4):hover) label:nth-child(-n+4) .vx__star,
+  .vx__stars:has(label:nth-child(5):hover) label:nth-child(-n+5) .vx__star { background: var(--clay); }
+}
+.vx__stars label:has(input:focus-visible) { outline: 2px solid var(--accent); outline-offset: -2px; }
+.vx__clear { justify-self: start; min-height: 2.75rem; padding: 0 0.6rem; border: 0; background: none; color: var(--text-2); cursor: pointer; text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 0.4em; }
+.vx__clear:hover { color: var(--accent); }
+.vx__clear[hidden] { display: none; }
+.vx__mine textarea { width: 100%; padding: 0.55rem 0.7rem; border: 1px solid var(--line); border-radius: 0;
+  background: var(--card); color: var(--text); font: inherit; font-size: var(--t-s); line-height: 1.5;
+  min-height: 2.75rem; resize: vertical; field-sizing: content; }   /* grows with what he writes */
 .vx__mine textarea::placeholder { color: var(--text-2); opacity: 0.7; }
-.vx__mine select:focus-visible, .vx__mine textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.vx__row.is-ranked .vx__rank select { border-color: var(--text-2); }
+.vx__mine textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 @media (max-width: 40rem) {
   .vx__row { grid-template-columns: 2.5rem 1fr; }
   .vx__idea, .vx__seen, .vx__mine { grid-column: 2; }

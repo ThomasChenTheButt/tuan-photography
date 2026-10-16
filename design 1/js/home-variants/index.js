@@ -1,8 +1,8 @@
-/* Experiment home-variations: his rank and notes for each variation, kept in this browser.
-   One rank per variation and each rank used once: giving a rank another variation holds takes
-   it from that one. A variation he has opened is marked Seen. "Sort by my ranking" puts the
-   ranked ones first, best first; "Copy everything" puts the ranking and notes on the clipboard
-   as plain text, ready to paste into the chat. */
+/* Experiment home-variations: his stars and notes for each variation, kept in this browser.
+   Stars are 1 to 5 and each variation is rated on its own (two can both have five); Clear takes
+   them away. A variation he has opened is marked Seen. "Most stars first" puts the starred ones
+   first; "Copy everything" puts the stars and notes on the clipboard as plain text, ready to
+   paste into the chat. */
 (() => {
   const KEY = 'home-variants-notes';
   const list = document.querySelector('.vx');
@@ -19,22 +19,21 @@
 
   const draw = () => {
     rows.forEach(li => {
-      const n = li.dataset.n, m = mine[n] || {};
-      li.querySelector('select').value = m.rank || '';
+      const n = li.dataset.n, m = mine[n] || {}, s = +m.stars || 0;
+      li.querySelectorAll('input[type="radio"]').forEach(r => { r.checked = +r.value === s; });
+      li.querySelector('.vx__stars').dataset.stars = s;
+      li.querySelector('.vx__clear').hidden = !s;
       const ta = li.querySelector('textarea');
       if (document.activeElement !== ta) ta.value = m.note || '';
       ta.placeholder = word('ixNoteHint');
       li.querySelector('.vx__seen').hidden = !m.seen;
-      li.classList.toggle('is-ranked', !!m.rank);
     });
   };
 
   list.addEventListener('change', e => {
-    const sel = e.target.closest('select');
-    if (!sel) return;
-    const n = sel.dataset.n, r = sel.value;
-    if (r) Object.keys(mine).forEach(k => { if (k !== n && mine[k].rank === r) mine[k].rank = ''; });
-    of(n).rank = r;
+    const r = e.target.closest('input[type="radio"]');
+    if (!r) return;
+    of(r.dataset.n).stars = +r.value;
     save(); draw(); if (sorted) order();
   });
   list.addEventListener('input', e => {
@@ -44,26 +43,26 @@
     save();
   });
   list.addEventListener('click', e => {
+    const c = e.target.closest('.vx__clear');
+    if (c) { of(c.dataset.n).stars = 0; save(); draw(); if (sorted) order(); c.closest('.vx__rate').querySelector('input').focus(); return; }
     const a = e.target.closest('.vx__name');
     if (a) { of(a.closest('.vx__row').dataset.n).seen = true; save(); }
   });
 
-  // sort: ranked first, best first, then the rest in their own order
+  // most stars first; equal stars, and the unstarred, keep their own order
   let sorted = false;
   const sortBtn = document.getElementById('vx-sort');
-  const order = () => {
-    const by = li => { const r = +(mine[li.dataset.n]?.rank || 0); return sorted && r ? r : 100 + +li.dataset.n; };
-    [...rows].sort((a, b) => by(a) - by(b)).forEach(li => list.append(li));
-  };
+  const key = li => (sorted ? -(+mine[li.dataset.n]?.stars || 0) * 100 : 0) + +li.dataset.n;
+  const order = () => [...rows].sort((a, b) => key(a) - key(b)).forEach(li => list.append(li));
   const sortWord = () => { sortBtn.dataset.i18n = sorted ? 'ixUnsort' : 'ixSort'; sortBtn.textContent = word(sortBtn.dataset.i18n); sortBtn.setAttribute('aria-pressed', sorted); };
   sortBtn.addEventListener('click', () => { sorted = !sorted; order(); sortWord(); });
 
-  // copy: one line per variation, ranked first, with the note under it
+  // copy: one line per variation, most stars first, with the note under it
   document.getElementById('vx-copy').addEventListener('click', async () => {
     const lines = [...rows]
       .map(li => ({ n: +li.dataset.n, name: li.querySelector('.vx__name b').textContent, m: mine[li.dataset.n] || {} }))
-      .sort((a, b) => (+a.m.rank || 100 + a.n) - (+b.m.rank || 100 + b.n))
-      .map(x => `${x.m.rank ? '#' + x.m.rank : '-'}  v${String(x.n).padStart(2, '0')} ${x.name}${x.m.note ? '\n    ' + x.m.note.replace(/\n/g, '\n    ') : ''}`);
+      .sort((a, b) => ((+b.m.stars || 0) - (+a.m.stars || 0)) || a.n - b.n)
+      .map(x => `v${String(x.n).padStart(2, '0')} ${x.name}: ${x.m.stars ? x.m.stars + '/5' : '-'}${x.m.note ? '\n    ' + x.m.note.replace(/\n/g, '\n    ') : ''}`);
     try { await navigator.clipboard.writeText(lines.join('\n')); say('ixCopied'); } catch (e) { /* no clipboard */ }
   });
 
