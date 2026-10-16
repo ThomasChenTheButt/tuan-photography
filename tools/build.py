@@ -474,26 +474,26 @@ def timed_cards(root, en, zh):
     lifts out of the row and grows into the new background, and the name of that place rises in
     at the left. The first place is drawn here as plain HTML; the script runs the rest."""
     en.update(tcGuide="Read the guide", tcPhotos="See the photographs", tcPrev="Previous", tcNext="Next",
-              tcLabel="Guides, one place at a time")
+              tcLabel="Guides, one place at a time", tcPause="Pause", tcPlay="Play")
     zh.update(tcGuide="閱讀攻略", tcPhotos="看照片", tcPrev="上一個", tcNext="下一個",
-              tcLabel="攻略，一次一個地方")
+              tcLabel="攻略，一次一個地方", tcPause="暫停", tcPlay="播放")
     conts = {c["id"]: c for c in DATA["continents"]}
     places = []
     for b in DATA["shelf"]:
         if "guide" in b:
             g = next(x for x in DATA["guides"] if x["id"] == b["guide"])
             c = COUNTRIES[g["country"]]
-            name, where, href, btn = g["title"], {"en": c["en"], "zh": c["zh"]}, g["href"], "tcGuide"
+            name, href, btn = g["title"], g["href"], "tcGuide"
         else:
-            c, place = COUNTRIES[b["country"]], b.get("place")
+            c = COUNTRIES[b["country"]]
             name = b.get("title") or {"en": c["en"], "zh": c["zh"]}
-            if name["en"] != c["en"]:
-                where = {"en": c["en"], "zh": c["zh"]}
-            else:
-                k = conts[c["continent"]]
-                where = {"en": k["en"], "zh": k["zh"]}
             href, btn = f"countries/{c['id']}.html", "tcPhotos"
+        # the small line above every name is one kind of thing: the continent
+        k = conts[c["continent"]]
+        where = {"en": k["en"], "zh": k["zh"]}
         sid = b.get("cover") or b.get("photo")
+        if sid == DATA["lead"]:   # the opening photograph is not shown a second time as a card
+            sid = b.get("photo")
         if not sid:
             continue
         x = SLIDES[sid]
@@ -529,17 +529,18 @@ def timed_cards(root, en, zh):
                       f'stroke="currentColor" stroke-width="1.6"/></svg>')
     return f"""<section class="tc" aria-label="{e(en['tcLabel'])}" data-i18n-aria="tcLabel">
   <div class="tc__bg"><div class="tc__layer"><img src="{root}images/web/1280/{first['f']}" srcset="{root}images/web/1280/{first['f']} 1280w, {root}images/web/{first['f']} {first['w']}w" sizes="100vw" alt=""><i class="tc__shade"></i></div></div>
-  <div class="tc__text" aria-live="polite">
+  <div class="tc__text" aria-live="off">
     <i class="tc__rule"></i>
     <p class="tc__where">{e(first['where']['en'])}</p>
     <h3 class="tc__title">{lines}</h3>
     <p class="tc__note">{e(first['note']['en'])}</p>
     <a class="tc__btn" href="{first['href']}">{e(en[first['btn']])}</a>
   </div>
-  <ol class="tc__cards">{cards}</ol>
+  <ol class="tc__cards" aria-hidden="true">{cards}</ol>
   <div class="tc__nav">
     <button class="tc__arrow" type="button" data-go="-1" aria-label="Previous" data-i18n-aria="tcPrev">{chev("M14.5 6 8.5 12l6 6")}</button>
     <button class="tc__arrow" type="button" data-go="1" aria-label="Next" data-i18n-aria="tcNext">{chev("M9.5 6l6 6-6 6")}</button>
+    <button class="tc__pause" type="button" aria-pressed="false" data-i18n="tcPause">Pause</button>
     <span class="tc__bar"><i></i></span>
     <span class="tc__count num"><span>01</span><small>/ {n:02d}</small></span>
   </div>
@@ -553,26 +554,29 @@ def build_home():
     en, zh = {}, {}
     root = ""
     lead = DATA["lead"]
-    n_places = len(COUNTRIES)
     one = DATA["guides"][0] if len(DATA["guides"]) == 1 else None
     en.update(heroLine="Travel like a photographer.",
               heroSay='Landscape photographs by Thomas Chen <span class="nb">陳亮元</span>. Open any one to see how it was made.',
               guidesCta="Read the guide" if one else "Read the guides",
               workTitle="Photographs", workCta="See the gallery", guidesTitle="Guides",
-              moreText=f"Guides for {n_places - 1} more countries are not written yet.",
-              moreCta="See every guide")
+              moreText=(f"One guide is written so far, {one['title']['en']}. The other places have their photographs for now."
+                        if one else f"{len(DATA['guides'])} guides are written so far. The other places have their photographs for now."),
+              moreCta="See every place")
     zh.update(heroLine='<span class="nb">像攝影師</span><span class="nb">一樣旅行。</span>',
               heroSay="陳亮元的風景攝影。點開任何一張，看它是怎麼拍的。",
               guidesCta="閱讀攻略",
               workTitle="作品", workCta="看全部作品", guidesTitle="攻略",
-              moreText=f"還有 {n_places - 1} 個國家的攻略還沒寫。",
-              moreCta="看所有攻略")
+              moreText=(f"目前寫好的攻略只有{one['title']['zh']}一篇，其他地方暫時只有照片。"
+                        if one else f"目前寫好的攻略有 {len(DATA['guides'])} 篇，其他地方暫時只有照片。"),
+              moreCta="看所有地方")
     leads = {g["lead"] for g in DATA["guides"]}
-    # the home page shows a dozen, one from each country in turn; the gallery shows them all
+    # the home page shows a dozen, one from each country in turn; the gallery shows them all.
+    # No photograph is shown twice on the page: the guides' photographs are left to the cards.
     windows = DATA.get("windows", [])
+    cards = {b.get("photo") if b.get("cover") == lead else b.get("cover") or b.get("photo") for b in DATA["shelf"]}
     seen, others = set(), []
     for x in DATA["slides"]:
-        if x["id"] == lead or x["id"] in leads or x["id"] in windows or x["country"] in seen:
+        if x["id"] in (lead, *leads, *windows, *cards) or x["country"] in seen:
             continue
         seen.add(x["country"])
         others.append(x["id"])
@@ -593,21 +597,21 @@ def build_home():
 
 {panes[0]}
 
-<div class="band">
-  <section class="wrap part" aria-labelledby="guides-h">
-    <div class="part__head"><h2 id="guides-h" data-i18n="guidesTitle">Guides</h2></div>
-    {timed_cards(root, en, zh)}
-    <p class="after"><span data-i18n="moreText">{e(en['moreText'])}</span> <a href="{root}guides.html" data-i18n="moreCta">See every guide</a></p>
-  </section>
-</div>
-
-{panes[1]}
-
 <section class="wrap part" aria-labelledby="work-h">
   <div class="part__head"><h2 id="work-h" data-i18n="workTitle">Photographs</h2></div>
   {wall(others, root, en, zh)}
   <p class="part__more"><a class="btn btn--line" href="gallery.html" data-i18n="workCta">See the gallery</a></p>
 </section>
+
+{panes[1]}
+
+<div class="band">
+  <section class="wrap part" aria-labelledby="guides-h">
+    <div class="part__head"><h2 id="guides-h" data-i18n="guidesTitle">Guides</h2></div>
+    {timed_cards(root, en, zh)}
+    <p class="after"><span data-i18n="moreText">{e(en['moreText'])}</span> <a href="{root}guides.html" data-i18n="moreCta">See every place</a></p>
+  </section>
+</div>
 
 {panes[2]}
 </div>"""

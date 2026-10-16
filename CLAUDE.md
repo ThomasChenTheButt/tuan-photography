@@ -300,7 +300,7 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 - Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
   harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
 
-Open now: `journey` (8644, the Journey tab: three directions in `design 2/new/`, he chose Logbook; waiting on keep or change). `home-impeccable` (8646, the five fixes from the Impeccable critique of Home) and `home-variations` (8649, ten whole home pages; `localhost:8649/home-variants/` lists them): waiting on his pick.
+Open now: `journey` (8644, the Journey tab: three directions in `design 2/new/`, he chose Logbook; waiting on keep or change). `home-variations` (8649, ten whole home pages; `localhost:8649/home-variants/` lists them): none caught his eye (2026-10-16); waiting on his word to remove them, keeping the stars-and-notes list for the next round.
 
 Decided experiments. Rejected ideas are not proposed again; the tags hold the code.
 
@@ -325,6 +325,7 @@ Decided experiments. Rejected ideas are not proposed again; the tags hold the co
 | `about` (About rewritten from facts he gave and approved word for word: his name as the heading, three paragraphs on who he is, what he shoots and leaves out, why the guides hold; a contact line with Instagram and email; home base, countries, camera and lenses beside it) | kept | 2026-10-16 | merged into `main`; before it at `before-about-2026-10-16` |
 | `gallery` (the Gallery as the photo wall alone: no title, no words, no hover name, no bars, no Dark word) | dropped: the old Gallery stays for now | 2026-10-16 | tag `exp-gallery-dropped-2026-10-16`; the Gallery before it at `gallery-wall-with-controls-2026-10-16` |
 | `home` (Home as a sequence of eight photographs at changing sizes, then four square photograph doors to the tabs) | dropped: "get rid of it" | 2026-10-16 | tag `exp-home-dropped-2026-10-16` |
+| `home-impeccable` (Impeccable critique of Home, 21/32, and its five fixes: the Guides cards hold still on hover, focus and a Pause word, a card click jumps, continent labels, honest wording, photographs before the guides, three new full-width photographs, the Matterhorn last) | kept | 2026-10-16 | merged into `main`; before it at `before-home-impeccable-2026-10-16` |
 
 **Weekly report 週報** (set up 2026-09-28). A scheduled task, `weekly-web-design-report`, runs
 every Monday about 9:00 and searches the web for the week's new AI web-design tools, skills,

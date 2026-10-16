@@ -39,7 +39,7 @@
 - Experiment `home` (a sequence of photographs at changing sizes, four photograph doors): he said
   get rid of it. Dropped, tag `exp-home-dropped-2026-10-16`.
 - **Impeccable critique of the real home page: 21/32** (`.impeccable/critique/2026-10-15T16-20-02Z__design-1-index-html.md`).
-  Its five fixes are built in experiment **`home-impeccable`** (`localhost:8646`): the Guides cards
+  Its five fixes were built in experiment `home-impeccable` and **kept** (merged 2026-10-16): the Guides cards
   pause on hover, keyboard and a Pause word, click a card to jump, every card's small line is the
   continent, honest wording under them, photographs before the guides, three new full-width photos
   that keep their subject on a phone (aurora, Fuji with the bullet train, the Matterhorn last).
@@ -54,7 +54,7 @@
 
 **Home:** start the `exp-home-variations` preview (`.claude/launch.json`), open
 `localhost:8649/home-variants/` with him and ask which variations he likes. Then keep one (or
-combine), drop the rest, and decide whether `home-impeccable` (the five fixes) is still wanted.
+combine), drop the rest.
 Files: `experiments/home-variations/tools/home_variants/vNN.py`, `design 1/css/home-variants/`.
 
 **Journey:**
@@ -68,7 +68,7 @@ merge `exp/journey` into `main` and check on 8642. Files: `design 2/new/logbook.
 
 ## 等你決定 Waiting on you
 
-- **Home:** which of the ten variations (8649)? And keep or drop `home-impeccable` (8646)?
+- **Home:** remove the ten variations (8649), keeping the stars-and-notes list? None caught his eye.
 
 - **Journey:** merge the Logbook, or change more? If kept: drop Chapters and Atlas (their code
   stays in git), and do the old map and Flights view stay anywhere?
