@@ -52,10 +52,10 @@
 
 ## 接下來 Next up
 
-**Home:** start the `exp-home-variations` preview (`.claude/launch.json`), open
-`localhost:8649/home-variants/` with him and ask which variations he likes. Then keep one (or
-combine), drop the rest.
-Files: `experiments/home-variations/tools/home_variants/vNN.py`, `design 1/css/home-variants/`.
+**Home:** the five fixes are on the real home page. None of the ten variations caught his eye; his
+idea for next time is to bring two or three home pages he likes and build from those. On his word,
+remove `experiments/home-variations` but keep its stars-and-notes list (`tools/home_variants/run.py`,
+`design 1/js/home-variants/index.js`, `design 1/css/home-variants/index.css`) for the next round.
 
 **Journey:**
 
