@@ -300,7 +300,7 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 - Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
   harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
 
-Open now: `journey` (8644, the Journey tab: three directions in `design 2/new/`, he chose Logbook; waiting on keep or change). `home-variations` (8649, ten whole home pages; `localhost:8649/home-variants/` lists them): none caught his eye (2026-10-16); waiting on his word to remove them, keeping the stars-and-notes list for the next round.
+Open now: `journey` (8644, the Journey tab: three directions in `design 2/new/`, he chose Logbook; waiting on keep or change).
 
 Decided experiments. Rejected ideas are not proposed again; the tags hold the code.
 
@@ -326,6 +326,7 @@ Decided experiments. Rejected ideas are not proposed again; the tags hold the co
 | `gallery` (the Gallery as the photo wall alone: no title, no words, no hover name, no bars, no Dark word) | dropped: the old Gallery stays for now | 2026-10-16 | tag `exp-gallery-dropped-2026-10-16`; the Gallery before it at `gallery-wall-with-controls-2026-10-16` |
 | `home` (Home as a sequence of eight photographs at changing sizes, then four square photograph doors to the tabs) | dropped: "get rid of it" | 2026-10-16 | tag `exp-home-dropped-2026-10-16` |
 | `home-impeccable` (Impeccable critique of Home, 21/32, and its five fixes: the Guides cards hold still on hover, focus and a Pause word, a card click jumps, continent labels, honest wording, photographs before the guides, three new full-width photographs, the Matterhorn last) | kept | 2026-10-16 | merged into `main`; before it at `before-home-impeccable-2026-10-16` |
+| `home-variations` (ten whole home pages from the Impeccable redesign round, same paper look, "every photograph has a story": facing pages, two roads, the caption grows, the back of the print, one photograph all the way, exposure, one at a time, margin notes, the fold, same place twice) | dropped: none caught his eye; next time he brings home pages he likes and we build from those | 2026-10-16 | tag `exp-home-variations-dropped-2026-10-16`. Its stars-and-notes review list (1 to 5 stars and a note per version, kept in the browser, "Copy everything" for the chat) is reusable: `tools/home_variants/run.py`, `kit.py`, `design 1/js/home-variants/index.js`, `design 1/css/home-variants/index.css` at that tag |
 
 **Weekly report 週報** (set up 2026-09-28). A scheduled task, `weekly-web-design-report`, runs
 every Monday about 9:00 and searches the web for the week's new AI web-design tools, skills,

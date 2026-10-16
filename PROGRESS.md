@@ -44,18 +44,17 @@
   continent, honest wording under them, photographs before the guides, three new full-width photos
   that keep their subject on a phone (aurora, Fuji with the bullet train, the Matterhorn last).
 - Then he asked for a full redesign with variations, same paper look, "every photograph has a
-  story", and went to sleep asking for at least ten: **experiment `home-variations`
-  (`localhost:8649/home-variants/` lists them)**. Ten whole home pages: 1 Facing pages, 2 Two roads,
+  story", and went to sleep asking for at least ten: experiment `home-variations` (removed; none caught his eye). Ten whole home pages: 1 Facing pages, 2 Two roads,
   3 The caption grows, 4 The back of the print, 5 One photograph all the way, 6 Exposure, 7 One at a
   time, 8 Margin notes, 9 The fold, 10 Same place twice. Each checked on a computer and a phone, in
   both languages; no broken links.
 
 ## 接下來 Next up
 
-**Home:** the five fixes are on the real home page. None of the ten variations caught his eye; his
-idea for next time is to bring two or three home pages he likes and build from those. On his word,
-remove `experiments/home-variations` but keep its stars-and-notes list (`tools/home_variants/run.py`,
-`design 1/js/home-variants/index.js`, `design 1/css/home-variants/index.css`) for the next round.
+**Home:** the five fixes are on the real home page. The ten variations were removed at his word
+(tag `exp-home-variations-dropped-2026-10-16`). Next time he brings two or three home pages he likes;
+build from those, and review the round with the stars-and-notes list kept at that tag
+(`tools/home_variants/run.py`, `design 1/js/home-variants/index.js`, `index.css`).
 
 **Journey:**
 
@@ -68,7 +67,7 @@ merge `exp/journey` into `main` and check on 8642. Files: `design 2/new/logbook.
 
 ## 等你決定 Waiting on you
 
-- **Home:** remove the ten variations (8649), keeping the stars-and-notes list? None caught his eye.
+- **Home:** two or three home pages he likes, as the starting point for the next round.
 
 - **Journey:** merge the Logbook, or change more? If kept: drop Chapters and Atlas (their code
   stays in git), and do the old map and Flights view stay anywhere?
