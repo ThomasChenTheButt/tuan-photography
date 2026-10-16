@@ -120,10 +120,15 @@ def write(n, body, en, zh, js=False):
     """Write design 1/home-variants/vNN.html with its own stylesheet (and script)."""
     name = f"v{n:02d}"
     path = f"home-variants/{name}.html"
+    # a way back to the list of variations, where he ranks and notes them (experiment only)
+    en["ixBack"], zh["ixBack"] = "All ten, rank and notes", "十個版本：排名和筆記"
+    body += '\n<a class="vx-back caps" href="index.html" data-i18n="ixBack">All ten, rank and notes</a>'
+
     title = f"{b.SITE} - Home, variation {n}"
     b.write(path, title, f"{b.SITE} - 首頁 第 {n} 版", "Home page variation, experiment home-variations.",
             None, body, en, zh, over=True, scripts=((f"home-variants/{name}.js",) if js else ()))
     f = OUT / path
     t = f.read_text(encoding="utf-8")
-    link = f'  <link rel="stylesheet" href="../css/home-variants/{name}.css?v={b.STAMP}">\n</head>'
+    link = (f'  <link rel="stylesheet" href="../css/home-variants/index.css?v={b.STAMP}">\n'
+            f'  <link rel="stylesheet" href="../css/home-variants/{name}.css?v={b.STAMP}">\n</head>')
     f.write_text(t.replace("</head>", link, 1), encoding="utf-8")

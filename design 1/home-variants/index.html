@@ -12,9 +12,9 @@
   <link rel="apple-touch-icon" sizes="180x180" href="../icons/apple-touch-icon.png">
   <meta name="apple-mobile-web-app-title" content="PT">
   <link rel="manifest" href="../site.webmanifest">
-  <link rel="stylesheet" href="../css/fonts.css?v=202610160055">
-  <link rel="stylesheet" href="../css/style.css?v=202610160055">
-  <link rel="stylesheet" href="../css/home-variants/index.css?v=202610160055">
+  <link rel="stylesheet" href="../css/fonts.css?v=202610160849">
+  <link rel="stylesheet" href="../css/style.css?v=202610160849">
+  <link rel="stylesheet" href="../css/home-variants/index.css?v=202610160849">
 </head>
 <body>
 <a class="skip btn" href="#main" data-i18n="skip">Skip to the content</a>
@@ -38,19 +38,135 @@
   <header class="page-top">
     <h1 data-i18n="ixTitle">Home, ten ways</h1>
     <p data-i18n="ixSub">Each one is a whole home page. Same paper, same photographs, a different way of showing that every photograph has a story.</p>
+    <p class="vx__how" data-i18n="ixHow">Open one, look, come back, then give it a rank and a note. Everything you write is kept in this browser.</p>
   </header>
   <section class="part">
+    <div class="vx__tools">
+      <button type="button" class="vx__word caps" id="vx-sort" aria-pressed="false" data-i18n="ixSort">Sort by my ranking</button>
+      <button type="button" class="vx__word caps" id="vx-copy" data-i18n="ixCopy">Copy everything</button>
+      <span class="vx__state caps" id="vx-state" aria-live="polite"></span>
+    </div>
     <ol class="vx">
-      <li><a href="v01.html"><span class="num">01</span><b data-i18n="ixN1">Facing pages</b><span data-i18n="ixI1">The home page as an opened travel journal: each photograph on one page, its account on the facing page.</span></a></li>
-      <li><a href="v02.html"><span class="num">02</span><b data-i18n="ixN2">Two roads</b><span data-i18n="ixI2">Under every photograph the road forks: back to the trip it was made on, and on to the place.</span></a></li>
-      <li><a href="v03.html"><span class="num">03</span><b data-i18n="ixN3">The caption grows</b><span data-i18n="ixI3">One photograph per screen; as it settles in the middle, its caption unfolds line by line into the whole account of how it was made, and folds back as you move on.</span></a></li>
-      <li><a href="v04.html"><span class="num">04</span><b data-i18n="ixN4">The back of the print</b><span data-i18n="ixI4">Six prints on the table; turn one over and its story is written on the back.</span></a></li>
-      <li><a href="v05.html"><span class="num">05</span><b data-i18n="ixN5">One photograph, all the way</b><span data-i18n="ixI5">The whole page is one photograph&#x27;s account, set large: where, when, how, and where it leads.</span></a></li>
-      <li><a href="v06.html"><span class="num">06</span><b data-i18n="ixN6">Exposure</b><span data-i18n="ixI6">Each photograph beside its own exposure, set large: the making is the headline, the place name stays small.</span></a></li>
-      <li><a href="v07.html"><span class="num">07</span><b data-i18n="ixN7">One at a time</b><span data-i18n="ixI7">One photograph owns the screen on its own sheet of paper; the next is one flick away.</span></a></li>
-      <li><a href="v08.html"><span class="num">08</span><b data-i18n="ixN8">Margin notes</b><span data-i18n="ixI8">A field notebook: the photographs large in the main column, and beside each one, in the margin, its notes, staying level with it while it passes.</span></a></li>
-      <li><a href="v09.html"><span class="num">09</span><b data-i18n="ixN9">The fold</b><span data-i18n="ixI9">Each photograph is printed on a folded sheet; unfold it and its story is written inside.</span></a></li>
-      <li><a href="v10.html"><span class="num">10</span><b data-i18n="ixN10">Same place, twice</b><span data-i18n="ixI10">Five places photographed twice, side by side, with the month and settings under each.</span></a></li>
+      <li class="vx__row" data-n="1">
+        <span class="num">01</span>
+        <a class="vx__name" href="v01.html"><b data-i18n="ixN1">Facing pages</b></a>
+        <span class="vx__idea" data-i18n="ixI1">The home page as an opened travel journal: each photograph on one page, its account on the facing page.</span>
+        <span class="vx__seen caps" data-i18n="ixSeen" hidden>Seen</span>
+        <div class="vx__mine">
+          <label class="vx__rank"><span class="caps" data-i18n="ixRank">Rank</span>
+            <select data-n="1"><option value="" data-i18n="ixNone">None</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
+          <label class="vx__note"><span class="caps" data-i18n="ixNote">Notes</span>
+            <textarea rows="2" data-n="1"></textarea></label>
+        </div>
+      </li>
+      <li class="vx__row" data-n="2">
+        <span class="num">02</span>
+        <a class="vx__name" href="v02.html"><b data-i18n="ixN2">Two roads</b></a>
+        <span class="vx__idea" data-i18n="ixI2">Under every photograph the road forks: back to the trip it was made on, and on to the place.</span>
+        <span class="vx__seen caps" data-i18n="ixSeen" hidden>Seen</span>
+        <div class="vx__mine">
+          <label class="vx__rank"><span class="caps" data-i18n="ixRank">Rank</span>
+            <select data-n="2"><option value="" data-i18n="ixNone">None</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
+          <label class="vx__note"><span class="caps" data-i18n="ixNote">Notes</span>
+            <textarea rows="2" data-n="2"></textarea></label>
+        </div>
+      </li>
+      <li class="vx__row" data-n="3">
+        <span class="num">03</span>
+        <a class="vx__name" href="v03.html"><b data-i18n="ixN3">The caption grows</b></a>
+        <span class="vx__idea" data-i18n="ixI3">One photograph per screen; as it settles in the middle, its caption unfolds line by line into the whole account of how it was made, and folds back as you move on.</span>
+        <span class="vx__seen caps" data-i18n="ixSeen" hidden>Seen</span>
+        <div class="vx__mine">
+          <label class="vx__rank"><span class="caps" data-i18n="ixRank">Rank</span>
+            <select data-n="3"><option value="" data-i18n="ixNone">None</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
+          <label class="vx__note"><span class="caps" data-i18n="ixNote">Notes</span>
+            <textarea rows="2" data-n="3"></textarea></label>
+        </div>
+      </li>
+      <li class="vx__row" data-n="4">
+        <span class="num">04</span>
+        <a class="vx__name" href="v04.html"><b data-i18n="ixN4">The back of the print</b></a>
+        <span class="vx__idea" data-i18n="ixI4">Six prints on the table; turn one over and its story is written on the back.</span>
+        <span class="vx__seen caps" data-i18n="ixSeen" hidden>Seen</span>
+        <div class="vx__mine">
+          <label class="vx__rank"><span class="caps" data-i18n="ixRank">Rank</span>
+            <select data-n="4"><option value="" data-i18n="ixNone">None</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
+          <label class="vx__note"><span class="caps" data-i18n="ixNote">Notes</span>
+            <textarea rows="2" data-n="4"></textarea></label>
+        </div>
+      </li>
+      <li class="vx__row" data-n="5">
+        <span class="num">05</span>
+        <a class="vx__name" href="v05.html"><b data-i18n="ixN5">One photograph, all the way</b></a>
+        <span class="vx__idea" data-i18n="ixI5">The whole page is one photograph&#x27;s account, set large: where, when, how, and where it leads.</span>
+        <span class="vx__seen caps" data-i18n="ixSeen" hidden>Seen</span>
+        <div class="vx__mine">
+          <label class="vx__rank"><span class="caps" data-i18n="ixRank">Rank</span>
+            <select data-n="5"><option value="" data-i18n="ixNone">None</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
+          <label class="vx__note"><span class="caps" data-i18n="ixNote">Notes</span>
+            <textarea rows="2" data-n="5"></textarea></label>
+        </div>
+      </li>
+      <li class="vx__row" data-n="6">
+        <span class="num">06</span>
+        <a class="vx__name" href="v06.html"><b data-i18n="ixN6">Exposure</b></a>
+        <span class="vx__idea" data-i18n="ixI6">Each photograph beside its own exposure, set large: the making is the headline, the place name stays small.</span>
+        <span class="vx__seen caps" data-i18n="ixSeen" hidden>Seen</span>
+        <div class="vx__mine">
+          <label class="vx__rank"><span class="caps" data-i18n="ixRank">Rank</span>
+            <select data-n="6"><option value="" data-i18n="ixNone">None</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
+          <label class="vx__note"><span class="caps" data-i18n="ixNote">Notes</span>
+            <textarea rows="2" data-n="6"></textarea></label>
+        </div>
+      </li>
+      <li class="vx__row" data-n="7">
+        <span class="num">07</span>
+        <a class="vx__name" href="v07.html"><b data-i18n="ixN7">One at a time</b></a>
+        <span class="vx__idea" data-i18n="ixI7">One photograph owns the screen on its own sheet of paper; the next is one flick away.</span>
+        <span class="vx__seen caps" data-i18n="ixSeen" hidden>Seen</span>
+        <div class="vx__mine">
+          <label class="vx__rank"><span class="caps" data-i18n="ixRank">Rank</span>
+            <select data-n="7"><option value="" data-i18n="ixNone">None</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
+          <label class="vx__note"><span class="caps" data-i18n="ixNote">Notes</span>
+            <textarea rows="2" data-n="7"></textarea></label>
+        </div>
+      </li>
+      <li class="vx__row" data-n="8">
+        <span class="num">08</span>
+        <a class="vx__name" href="v08.html"><b data-i18n="ixN8">Margin notes</b></a>
+        <span class="vx__idea" data-i18n="ixI8">A field notebook: the photographs large in the main column, and beside each one, in the margin, its notes, staying level with it while it passes.</span>
+        <span class="vx__seen caps" data-i18n="ixSeen" hidden>Seen</span>
+        <div class="vx__mine">
+          <label class="vx__rank"><span class="caps" data-i18n="ixRank">Rank</span>
+            <select data-n="8"><option value="" data-i18n="ixNone">None</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
+          <label class="vx__note"><span class="caps" data-i18n="ixNote">Notes</span>
+            <textarea rows="2" data-n="8"></textarea></label>
+        </div>
+      </li>
+      <li class="vx__row" data-n="9">
+        <span class="num">09</span>
+        <a class="vx__name" href="v09.html"><b data-i18n="ixN9">The fold</b></a>
+        <span class="vx__idea" data-i18n="ixI9">Each photograph is printed on a folded sheet; unfold it and its story is written inside.</span>
+        <span class="vx__seen caps" data-i18n="ixSeen" hidden>Seen</span>
+        <div class="vx__mine">
+          <label class="vx__rank"><span class="caps" data-i18n="ixRank">Rank</span>
+            <select data-n="9"><option value="" data-i18n="ixNone">None</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
+          <label class="vx__note"><span class="caps" data-i18n="ixNote">Notes</span>
+            <textarea rows="2" data-n="9"></textarea></label>
+        </div>
+      </li>
+      <li class="vx__row" data-n="10">
+        <span class="num">10</span>
+        <a class="vx__name" href="v10.html"><b data-i18n="ixN10">Same place, twice</b></a>
+        <span class="vx__idea" data-i18n="ixI10">Five places photographed twice, side by side, with the month and settings under each.</span>
+        <span class="vx__seen caps" data-i18n="ixSeen" hidden>Seen</span>
+        <div class="vx__mine">
+          <label class="vx__rank"><span class="caps" data-i18n="ixRank">Rank</span>
+            <select data-n="10"><option value="" data-i18n="ixNone">None</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option></select></label>
+          <label class="vx__note"><span class="caps" data-i18n="ixNote">Notes</span>
+            <textarea rows="2" data-n="10"></textarea></label>
+        </div>
+      </li>
     </ol>
   </section>
 </div>
@@ -78,6 +194,17 @@ window.pageI18n = {
  "en": {
   "ixTitle": "Home, ten ways",
   "ixSub": "Each one is a whole home page. Same paper, same photographs, a different way of showing that every photograph has a story.",
+  "ixHow": "Open one, look, come back, then give it a rank and a note. Everything you write is kept in this browser.",
+  "ixRank": "Rank",
+  "ixNone": "None",
+  "ixNote": "Notes",
+  "ixNoteHint": "What you liked, what you would change",
+  "ixSeen": "Seen",
+  "ixSort": "Sort by my ranking",
+  "ixUnsort": "Back to 1 to 10",
+  "ixCopy": "Copy everything",
+  "ixCopied": "Copied",
+  "ixSaved": "Saved",
   "ixN1": "Facing pages",
   "ixI1": "The home page as an opened travel journal: each photograph on one page, its account on the facing page.",
   "ixN2": "Two roads",
@@ -103,6 +230,17 @@ window.pageI18n = {
  "zh": {
   "ixTitle": "首頁的十種做法",
   "ixSub": "每一版都是完整的首頁。同樣的紙、同樣的照片，用不同的方式讓人看到每張照片背後都有故事。",
+  "ixHow": "點開一版看完，回到這裡，給它排名、寫筆記。你寫的東西都存在這個瀏覽器裡。",
+  "ixRank": "排名",
+  "ixNone": "未排",
+  "ixNote": "筆記",
+  "ixNoteHint": "喜歡什麼、想改什麼",
+  "ixSeen": "看過",
+  "ixSort": "依我的排名排序",
+  "ixUnsort": "回到 1 到 10",
+  "ixCopy": "全部複製",
+  "ixCopied": "已複製",
+  "ixSaved": "已存",
   "ixN1": "對頁",
   "ixI1": "首頁像一本攤開的旅行手帳：照片在一頁，對頁寫著它是怎麼拍的。",
   "ixN2": "兩條路",
@@ -127,6 +265,7 @@ window.pageI18n = {
  }
 };
 </script>
-<script src="../js/main.js?v=202610160055"></script>
+<script src="../js/main.js?v=202610160849"></script>
+<script src="../js/home-variants/index.js?v=202610160849"></script>
 </body>
 </html>
