@@ -1,12 +1,13 @@
 > **Experiment `journey` (started 2026-10-16).** A new look for the Journey tab only, his
-> request: the current pen-and-wash page felt messy ("I don't feel the aesthetic"); he asked for
-> something new and left the direction to Claude, the trip page included. Three directions are
-> built side by side in `design 2/new/` (`localhost:8644/journey/new/` lists them): A `logbook`,
-> B `chapters`, C `atlas`, sharing `kit.js` / `kit.css`. The current page is untouched in
-> `design 2/wc-sketch/` and tagged `journey-pen-and-wash-2026-10-15` (pushed): his rule, keep old
-> versions safe. Suspended here: design 2's pen-and-wash system (each direction has its own
-> look). Kept: light only, nothing written on photographs, both languages, no long dashes.
-> Other sessions redesign the other tabs at the same time: touch Journey only, merge on his word.
+> request: the pen-and-wash page felt messy. Several directions were tried; **on 2026-10-18 he kept
+> the Logbook alone and we work from it**: `design 2/new/logbook.html` (with `kit.js`, `kit.css`),
+> served at `localhost:8644/journey/new/logbook.html`. A trip opens on `design 2/wc-sketch/trip/`
+> ("The trip, along its route", his choice), whose back word returns to the Logbook. Everything
+> else tried (Chapters, Atlas, two Logbook drafts, two mixes, the review list) is at the tag
+> `journey-versions-trimmed-2026-10-18`; the old Journey at `journey-pen-and-wash-2026-10-15`.
+> His marks are in `ideas/reviews/journey.json`. Suspended here: design 2's pen-and-wash system.
+> Kept: light only, nothing written on photographs, both languages, no long dashes. Other
+> sessions redesign the other tabs: touch Journey only, merge on his word.
 
 # tuan photography 陳亮元 — project instructions
 

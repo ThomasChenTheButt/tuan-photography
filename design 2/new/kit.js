@@ -1,8 +1,7 @@
-/* The Journey redesign's shared kit (experiment `journey`, 2026-10-16).
-
-   Three directions are tried side by side (logbook, chapters, atlas). They share the facts,
-   the words in both languages, the trip model (stops, photographs, distances), the site's top
-   bar, a quiet line map and a photograph viewer. Each direction only decides how it looks. */
+/* The Journey Logbook's kit (experiment `journey`): the facts, the words in both languages, the
+   trip model (stops, photographs, distances), the site's top bar, the line map and a photograph
+   viewer. Three directions were tried with it (logbook, chapters, atlas); on 2026-10-18 he kept the
+   Logbook alone. The others are at the tag journey-versions-trimmed-2026-10-18. */
 (() => {
   'use strict';
 

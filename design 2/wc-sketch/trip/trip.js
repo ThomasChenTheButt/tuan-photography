@@ -147,7 +147,7 @@
     const title = names.length > 2 ? names.slice(0, -1).join(w.list) + w.and + names[names.length - 1] : names.join(w.and);
     document.title = `${title} · tuan photography 陳亮元`;
     // opened from the Journey log (experiment `journey`), it leads back there
-    const from = /^(logbook|logbook-atlas|atlas-logbook)$/.test(ask.get('from') || '') ? ask.get('from') : null;
+    const from = ask.get('from') === 'logbook' ? 'logbook' : null;
     if (from) $('#back').href = `../../new/${from}.html`;
     $('#back').textContent = from ? w.log : w.back;
     let html = `<section class="intro" data-i="-1">
