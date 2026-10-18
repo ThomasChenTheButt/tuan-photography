@@ -5,7 +5,11 @@
 > ("The trip, along its route", his choice), whose back word returns to the Logbook. Everything
 > else tried (Chapters, Atlas, two Logbook drafts, two mixes, the review list) is at the tag
 > `journey-versions-trimmed-2026-10-18`; the old Journey at `journey-pen-and-wash-2026-10-15`.
-> His marks are in `ideas/reviews/journey.json`. Suspended here: design 2's pen-and-wash system.
+> His marks are in `ideas/reviews/journey.json`. **2026-10-18, scroll-craft:** at his word the
+> skill was installed and applied: `design 2/new/journey.html` ("rewinding atlas"; brief and
+> fingerprint in `scrollcraft/`), beside the Logbook; `localhost:8644/journey/new/` compares the
+> two with Good / Not for me and notes. The engine (`scrollcraft.js`, `.css`) is copied unedited.
+> Suspended here: design 2's pen-and-wash system.
 > Kept: light only, nothing written on photographs, both languages, no long dashes. Other
 > sessions redesign the other tabs: touch Journey only, merge on his word.
 
