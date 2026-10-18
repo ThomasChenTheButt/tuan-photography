@@ -20,7 +20,7 @@
   // the month without the year, inside a year's group ("August"; "8 月")
   const month = (t) => {
     const d = K.when(t);
-    return K.lang === 'zh' ? d.replace(/^\d{4}\s*年\s*/, '').replace(/^\d{4}$/, '') : d.replace(/\s*\d{4}$/, '').replace(/^\d{4}$/, '');
+    return K.lang === 'zh' ? d.replace(/^\d{4}\s*(年\s*)?/, '').replace(/^\d{4}$/, '') : d.replace(/\s*\d{4}$/, '').replace(/^\d{4}$/, '');
   };
 
   // things are ruled in as they are reached

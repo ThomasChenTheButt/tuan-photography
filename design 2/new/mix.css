@@ -1,0 +1,62 @@
+/* The two mixes (2026-10-18): the Atlas frame with the Logbook's contents. The look comes from
+   the body's class and its own stylesheet's tokens: .logbook (logbook.css) or .atlas (atlas.css). */
+
+.logbook { --been-on: oklch(86% 0.05 58); --f-title: "Geist", "Noto Sans TC", sans-serif; }
+
+.mx-frame { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(24rem, 1fr); }
+.mx-map { position: sticky; top: 0; height: 100svh; margin: 0; border-right: 1px solid var(--hair); background: var(--paper); }
+.mx-map svg { display: block; width: 100%; height: 100%; }
+.mx-side { padding: 0 var(--edge) 6rem clamp(1.5rem, 3vw, 3rem); min-width: 0; }
+
+/* the map: his flights from Taiwan stay drawn; a trip in hand takes the route colour */
+.mx-map .leg { stroke: var(--ink-2); stroke-opacity: 0; stroke-width: 0.8; transition: stroke-opacity 0.6s var(--ease); }
+.mx-map svg.is-trip .leg.is-on { stroke: var(--route); stroke-opacity: 1; stroke-width: 1.7; }
+.mx-map .fly { fill: none; stroke: var(--route); stroke-width: 1.3; stroke-linecap: round; vector-effect: non-scaling-stroke; transition: stroke-opacity 0.6s var(--ease); }
+.mx-map svg.is-trip .fly { stroke-opacity: 0.14; }
+.mx-map .plane { fill: var(--ink); stroke: var(--paper); stroke-width: 1.6px; paint-order: stroke; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.mx-map .ring { fill: none; stroke: var(--route); stroke-width: 1; vector-effect: non-scaling-stroke; }
+.mx-map .end { fill: var(--paper); stroke: var(--route); stroke-width: 1.2; vector-effect: non-scaling-stroke; opacity: 0; transition: opacity 0.6s var(--ease); }
+.mx-map .end.is-in { opacity: 1; }
+.mx-map svg.is-trip .end { opacity: 0.25; }
+.mx-map .visited { fill: var(--been); transition: fill 0.6s var(--ease); }
+.mx-map .visited.is-on { fill: var(--been-on); }
+.mx-map .coast { stroke-width: 0.6; }
+.mx-map .dot { fill: var(--paper); stroke: var(--route); stroke-width: 1.3; vector-effect: non-scaling-stroke; }
+.mx-label { font-family: var(--f-text); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; text-anchor: middle; fill: var(--ink); paint-order: stroke; stroke: var(--paper); stroke-width: 3.5px; stroke-linejoin: round; }
+:lang(zh-Hant) .mx-label { text-transform: none; letter-spacing: 0.08em; }
+
+/* the head */
+.mx-head { padding-block: clamp(2rem, 7vh, 4.5rem) 2.25rem; }
+.mx-head__title { font-family: var(--f-title); font-weight: 500; font-size: clamp(2.8rem, 1.8rem + 3vw, 4.8rem); line-height: 0.92; letter-spacing: -0.035em; }
+.mx-head__intro { color: var(--ink-2); margin-top: 1rem; max-width: 34ch; }
+.mx-head__tally { display: flex; flex-wrap: wrap; gap: 0.2rem 1.5rem; color: var(--ink-3); margin-top: 0.9rem; font-size: 0.9rem; font-variant-numeric: tabular-nums; }
+
+/* a year, then its trips */
+.mx-year { border-top: 1px solid var(--ink); padding: 0.9rem 0 1.75rem; }
+.mx-year__n { font-size: clamp(2.2rem, 1.4rem + 2.2vw, 3.6rem); font-weight: 400; letter-spacing: -0.05em; line-height: 0.9; font-variant-numeric: tabular-nums; margin-bottom: 0.5rem; }
+.mx-trip { padding-block: 1rem; transition: opacity 0.4s var(--ease); }
+.mx-trip__link { display: grid; gap: 0.15rem; text-decoration: none; }
+.mx-trip__when { color: var(--ink-2); }
+.mx-trip__title { font-family: var(--f-title); font-size: clamp(1.3rem, 1.1rem + 0.5vw, 1.6rem); font-weight: 500; letter-spacing: -0.015em; line-height: 1.15; margin-top: 0.2rem; transition: color 0.2s var(--ease); }
+a.mx-trip__link:hover .mx-trip__title { color: var(--link); }
+.mx-trip__route { color: var(--ink-2); font-size: 0.9rem; line-height: 1.45; }
+.mx-trip__strip { display: flex; gap: 0.35rem; align-items: center; margin-top: 0.75rem; overflow: hidden; }
+.mx-trip__thumb { flex: none; height: 4rem; width: auto; cursor: zoom-in; transition: transform 0.5s var(--ease); }
+.mx-trip__thumb:hover { transform: translateY(-3px); }
+.mx-trip__more { color: var(--ink-2); font-size: 0.85rem; padding-left: 0.35rem; }
+
+/* the Atlas look: names in tall capitals, the trips not in hand stepping back */
+.atlas .mx-head__title { font-weight: 400; letter-spacing: 0.01em; line-height: 0.9; font-size: clamp(3.4rem, 2.4rem + 3vw, 5.6rem); }
+.atlas .mx-trip__title { font-weight: 400; font-size: 2.2rem; line-height: 0.95; letter-spacing: 0.012em; }
+:lang(zh-Hant) .atlas :is(.mx-head__title, .mx-trip__title) { font-family: "Noto Sans TC", sans-serif; font-weight: 500; letter-spacing: 0.06em; line-height: 1.25; }
+:lang(zh-Hant) .atlas .mx-trip__title { font-size: 1.55rem; }
+.atlas .mx-year__n { font-family: var(--f-text); font-size: 0.8rem; font-weight: 500; letter-spacing: 0.16em; color: var(--ink-3); margin-bottom: 0.25rem; }
+.atlas .mx-trip { opacity: 0.5; }
+.atlas .mx-trip.is-on, .atlas .mx-trip:hover, .atlas .mx-trip:focus-within { opacity: 1; }
+
+@media (max-width: 63.99rem) {
+  .mx-frame { grid-template-columns: 1fr; }
+  .mx-map { height: 42svh; z-index: 2; border-right: 0; border-bottom: 1px solid var(--hair); }
+  .mx-side { padding-inline: var(--edge); }
+  .atlas .mx-trip { opacity: 0.65; }
+}
