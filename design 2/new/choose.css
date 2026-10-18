@@ -13,7 +13,7 @@
 .cz__go a { color: var(--link); text-underline-offset: 0.25em; text-decoration-thickness: 1px; display: inline-flex; align-items: center; min-height: 2.75rem; }
 .cz__how { color: var(--ink-2); margin-top: 0.75rem; max-width: 52ch; font-size: 0.95rem; }
 .cz__mine { grid-column: 2; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.5rem 1.25rem; align-items: start; margin-top: 0.75rem; }
-.cz__verdict { display: flex; border: 1px solid var(--hair); }
+.cz__verdict { display: flex; justify-self: start; border: 1px solid var(--hair); }
 .cz__v { min-height: 2.75rem; padding: 0 1rem; font-size: 0.85rem; color: var(--ink-2); }
 .cz__v + .cz__v { border-left: 1px solid var(--hair); }
 .cz__v:hover { color: var(--ink); }
