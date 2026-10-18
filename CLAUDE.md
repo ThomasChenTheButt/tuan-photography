@@ -300,7 +300,7 @@ reviews it, then says keep or drop (set up 2026-09-28). The real site is never t
 - Ask for a verdict while an experiment is fresh: the longer it sits while `main` moves on, the
   harder it is to merge. List the open ones under 等你決定 in `PROGRESS.md`.
 
-Open now: `journey` (8644, the Journey tab: three directions in `design 2/new/`, he chose Logbook; waiting on keep or change).
+Open now: `journey` (8644, the Journey tab: he kept the Logbook alone on 2026-10-18 and work goes on from it, `design 2/new/logbook.html`; the other versions are at tag `journey-versions-trimmed-2026-10-18`).
 
 Decided experiments. Rejected ideas are not proposed again; the tags hold the code.
 
