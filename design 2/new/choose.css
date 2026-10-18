@@ -5,7 +5,7 @@
 :lang(zh-Hant) .cz__title { letter-spacing: 0.04em; line-height: 1.2; }
 .cz__intro { color: var(--ink-2); margin-top: 1rem; max-width: 46ch; }
 .cz__list { margin-top: 2.5rem; border-top: 1px solid var(--ink); }
-.cz__item { display: grid; grid-template-columns: 3rem minmax(0, 1fr); gap: 0.25rem 1rem; padding-block: 1.5rem; border-bottom: 1px solid var(--hair); }
+.cz__item { display: grid; grid-template-columns: 3.5rem minmax(0, 1fr); gap: 0.25rem 1rem; padding-block: 1.5rem; border-bottom: 1px solid var(--hair); }
 .cz__mark { font-size: 1.4rem; font-weight: 500; grid-row: span 3; }
 .cz__name { font-size: 1.4rem; font-weight: 500; letter-spacing: -0.01em; }
 .cz__say { color: var(--ink-2); max-width: 56ch; }
