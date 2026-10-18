@@ -50,7 +50,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .top__nav a:hover { color: var(--ink); }
 .top__nav a[aria-current="page"] { color: var(--ink); border-bottom-color: currentColor; }
 .top__lang { display: flex; gap: 0.25rem; }
-.top__lang button { min-width: 2.75rem; min-height: 2.75rem; color: var(--ink-3); }
+.top__lang button { min-width: 2.75rem; min-height: 2.75rem; color: var(--ink-2); }
 .top__lang button[aria-pressed="true"] { color: var(--ink); }
 @media (max-width: 47.99rem) {
   .top { flex-wrap: wrap; gap: 0 1rem; padding-top: 0.5rem; }

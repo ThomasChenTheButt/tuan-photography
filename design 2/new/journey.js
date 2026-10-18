@@ -7,21 +7,28 @@
    countries he had not yet seen go pale, later routes lift off. At 2010 the map is almost empty;
    past it, the map plays forward to the present and holds.
 
-   The scroll-craft engine (scrollcraft.js, unedited) drives the entries, the year wipes and the
-   two counters; the map, the planes and the rewind are this page's own code. */
+   The scroll-craft engine (scrollcraft.js, unedited) drives the entries and the year wipes; the
+   map, the planes, the totals and the rewind are this page's own code.
+
+   Variations (the Impeccable round, 2026-10-18) share this file: a variation is a small script
+   loaded before it that sets window.JourneyVariant, with `shots(t)` for a trip's photographs,
+   `map()` for anything extra inside the map's frame, and `follow(line)` for each scroll. */
 (() => {
   'use strict';
 
   const K = window.Kit;
   const { esc, $ } = K;
   const S = K.S;
+  const V = window.JourneyVariant || {};
   const main = $('#main');
   const top = $('#top');
   const ll = (p) => [p[1], p[0]];
   const clamp = (x, a, b) => Math.max(a, Math.min(b, x));
   const ease = d3.easeCubicInOut;
   const PLANE = 'M9,0C9,-0.8 8,-1.1 6.5,-1.1L2,-1.1L-2.5,-7.5L-4.3,-7.5L-1.8,-1.1L-6,-1.1L-7.8,-3.6L-9,-3.6L-8,0L-9,3.6L-7.8,3.6L-6,1.1L-1.8,1.1L-4.3,7.5L-2.5,7.5L2,1.1L6.5,1.1C8,1.1 9,0.8 9,0Z';
-  const tripHref = (t) => `../wc-sketch/trip/?trip=${encodeURIComponent(t.id)}&from=journey`;
+  // this page's own name, so the trip page's back word returns here, to the entry it was opened from
+  const PAGE = location.pathname.split('/').pop().replace('.html', '') || 'journey';
+  const tripHref = (t) => `../wc-sketch/trip/?trip=${encodeURIComponent(t.id)}&from=${PAGE}`;
 
   const WORDS = {
     en: {
@@ -34,6 +41,7 @@
       since: (t, c, y) => `${t} trips and ${c} countries later, the map is back in ${y}.`,
       guides: 'The places themselves are in Guides.',
       insta: 'More as it happens on Instagram, tuan_1127.',
+      sep: ' ',
     },
     zh: {
       intro: '每一趟帶著相機的旅行，從最近的開始。往下讀，地圖會陪你回到過去。',
@@ -45,9 +53,10 @@
       since: (t, c, y) => `${t} 趟旅行、${c} 個國家之後，地圖回到 ${y} 年。`,
       guides: '那些地方本身，寫在攻略裡。',
       insta: '最新的在 Instagram，tuan_1127。',
+      sep: '',
     },
   };
-  const W = () => WORDS[K.lang];
+  const W = () => Object.assign({}, WORDS[K.lang], (V.words || {})[K.lang]);
 
   // the month without the year, inside a year's chapter ("August"; "8 月")
   const month = (t) => {
@@ -67,6 +76,25 @@
   const countriesBy = (y) => Object.values(firstYear).filter((f) => f <= y).length;
   const totalPhotos = Object.keys(S.slides).length;
   const firstTrip = K.trips[K.trips.length - 1];
+
+  /* ------------------------------------------------------------ photographs, as the entries show them */
+
+  // a photograph that opens the viewer, from the pointer or the keyboard
+  const shot = (id, sizes, cls = '') => `<button type="button" class="jr-shot ${cls}" data-shot="${id}">${K.img(id, sizes, 'jr-shot__img')}</button>`;
+  // the same with its name beneath; --ar lets a row share out its width
+  const print = (id, sizes, cls = '') => {
+    const s = S.slides[id];
+    return `<figure class="jr-print ${cls}" style="--ar: ${(s.w / s.h).toFixed(4)}">${shot(id, sizes)}<figcaption class="jr-print__cap">${esc(s.place[K.lang])}</figcaption></figure>`;
+  };
+  // the page as built: every photograph of the trip in one strip that scrolls sideways
+  const strip = (t) => (t.photos.length ? `<div class="jr-trip__strip" data-set="${t.photos.join(',')}">${t.photos.map((id) => shot(id, '9rem', 'jr-trip__thumb')).join('')}</div>` : '');
+  const shots = V.shots ? (t) => V.shots(t, { shot, print, strip }) : strip;
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('.jr-shot');
+    if (!b || e.target.closest('img')) return;      // an image click is the kit's (it opens the same viewer)
+    const set = b.closest('[data-set]');
+    K.openViewer(set ? set.dataset.set.split(',') : [b.dataset.shot], b.dataset.shot);
+  });
 
   /* ------------------------------------------------------------ the map */
 
@@ -102,6 +130,7 @@
       const km = K.km(S.flightsFrom, c.ll);
       return { c, to: ll(c.ll), go: d3.geoInterpolate(home, ll(c.ll)), first: firstYear[c.id], dur: 1700 + Math.min(1, km / 13000) * 3600 };
     });
+    const longest = Math.max(...flights.map((f) => f.dur));
     const sky = g.append('g').attr('class', 'sky');
     const lines = sky.selectAll('path.fly').data(flights).join('path').attr('class', 'fly')
       .attr('style', (f) => `--i: ${order.indexOf(f.first)}`);
@@ -111,15 +140,19 @@
     const [hx, hy] = proj(home);
     g.append('circle').attr('class', 'home').attr('cx', hx).attr('cy', hy).attr('r', 4);
 
-    // the peak: every plane leaves home at once, once; the countries settle as they land
+    // every plane already landed: the lines whole, the ends in (reduced motion, or coming back)
+    const whole = (f) => path({ type: 'LineString', coordinates: [home, f.to] });
+    function settled(onLand) { lines.attr('d', whole); ends.classed('is-in', true); onLand(flights.length, true, 1); }
+
+    // the peak: every plane leaves home at once, once; the countries settle as they land.
+    // onLand(n landed, done, p): p is how far the longest flight has come, for the totals
     function flyOut(onLand) {
-      const whole = (f) => path({ type: 'LineString', coordinates: [home, f.to] });
-      if (K.reduced) { lines.attr('d', whole); ends.classed('is-in', true); onLand(flights.length, true); return; }
+      if (K.reduced) { settled(onLand); return; }
       const planes = sky.selectAll('path.plane').data(flights).join('path').attr('class', 'plane').attr('d', PLANE).attr('opacity', 0);
       const rings = sky.selectAll('circle.ring').data(flights).join('circle').attr('class', 'ring')
         .attr('cx', (f) => proj(f.to)[0]).attr('cy', (f) => proj(f.to)[1]).attr('opacity', 0);
       const t0 = performance.now();
-      let landed = 0;
+      let landed = -1;
       const frame = (now) => {
         const el = now - t0;
         let busy = false, n = 0;
@@ -144,8 +177,9 @@
           this.setAttribute('r', (3.4 + k * 14).toFixed(2));
         });
         ends.classed('is-in', (f) => el >= f.dur);
-        if (n !== landed) { landed = n; onLand(n, false); }
-        if (busy) requestAnimationFrame(frame); else onLand(flights.length, true);
+        const p = clamp(el / longest, 0, 1);
+        if (n !== landed || p < 1) { landed = n; onLand(n, false, p); }
+        if (busy) requestAnimationFrame(frame); else onLand(flights.length, true, 1);
       };
       requestAnimationFrame(frame);
     }
@@ -164,7 +198,7 @@
       at(Infinity, null);
       setTimeout(() => svg.classed('is-forward', false), 2600);
     }
-    return { flyOut, at, forward };
+    return { flyOut, settled, at, forward };
   }
 
   /* ------------------------------------------------------------ the page */
@@ -181,6 +215,7 @@
         <figure class="jr-map map" aria-hidden="true">
           <svg id="jr-svg"></svg>
           <p class="jr-folio"><span class="jr-folio__year" id="jr-year"></span><span class="jr-folio__by" id="jr-by"></span></p>
+          ${V.map ? V.map() : ''}
         </figure>
         <div class="jr-text">
           <header class="jr-hero">
@@ -189,9 +224,9 @@
               <p class="jr-hero__intro">${esc(w.intro)}</p>
             </div>
             <dl class="jr-totals">
-              <div><dt>${esc(w.trips)}</dt><dd class="sc-nums" data-sc-count="0 ${K.trips.length}" data-sc-count-ms="1500">0</dd></div>
+              <div><dt>${esc(w.trips)}</dt><dd class="sc-nums" id="jr-trips">0</dd></div>
               <div><dt>${esc(w.countries)}</dt><dd class="sc-nums" id="jr-countries">1</dd></div>
-              <div><dt>${esc(w.photos)}</dt><dd class="sc-nums" data-sc-count="0 ${totalPhotos}" data-sc-count-ms="1700">0</dd></div>
+              <div><dt>${esc(w.photos)}</dt><dd class="sc-nums" id="jr-photos">0</dd></div>
             </dl>
           </header>
           <div class="jr-years">${byYear.map(({ y, trips }) => `
@@ -201,35 +236,43 @@
               <p class="jr-year__count">${esc(w.year(trips.length))}</p>
             </header>
             <ol class="jr-trips">${trips.map((t) => `
-              <li class="jr-trip sc-stack" data-sc-in data-sc-stagger="60">
+              <li class="jr-trip sc-stack" id="t-${esc(t.id)}" data-trip="${esc(t.id)}" data-sc-in data-sc-stagger="60">
                 <${t.legs.length ? `a class="jr-trip__link" href="${tripHref(t)}"` : 'div class="jr-trip__link"'}>
-                  <span class="jr-trip__when caps">${esc(month(t))}</span>
-                  <span class="jr-trip__title">${esc(K.title(t))}</span>
+                  ${month(t) ? `<span class="jr-trip__when caps">${esc(month(t))}</span>` : ''}
+                  <h3 class="jr-trip__title">${esc(K.title(t))}</h3>
                   <span class="jr-trip__route">${t.legs.length ? esc(K.route(t).join(ww.list)) : esc(ww.noRoute)}</span>
                 </${t.legs.length ? 'a' : 'div'}>
-                ${t.photos.length ? `<div class="jr-trip__strip" data-set="${t.photos.join(',')}">${t.photos.slice(0, 5).map((id) => K.img(id, '9rem', 'jr-trip__thumb')).join('')}${t.photos.length > 5 ? `<span class="jr-trip__more">+${t.photos.length - 5}</span>` : ''}</div>` : ''}
+                ${shots(t)}
               </li>`).join('')}
             </ol>
           </section>`).join('')}</div>
           <footer class="jr-close">
-            <div class="sc-stack" data-sc-in data-sc-stagger="80">
+            <div class="jr-close__words sc-stack" data-sc-in data-sc-stagger="80">
               <p class="jr-close__kicker caps">${esc(w.began)}</p>
               <p class="jr-close__first">${esc(w.first(firstTrip.stops.map((s) => K.nameOf(s.at)).join(ww.list) || K.title(firstTrip), firstTrip.year))}</p>
               <p class="jr-close__since">${esc(w.since(K.trips.length, S.countries.length, years[0]))}</p>
-              <p class="jr-close__go"><a href="../../guides.html">${esc(w.guides)}</a> <a href="${esc(S.instagram.url)}" rel="noopener">${esc(w.insta)}</a></p>
+              <p class="jr-close__go"><a href="../../guides.html">${esc(w.guides)}</a>${w.sep}<a href="${esc(S.instagram.url)}" rel="noopener">${esc(w.insta)}</a></p>
             </div>
           </footer>
         </div>
       </div>`;
   }
 
+  // the three totals settle as the planes land; the last one stops with the last plane
+  function totals(n, p) {
+    const others = S.countries.length - 1;
+    $('#jr-countries').textContent = String(1 + Math.min(n, others));
+    $('#jr-trips').textContent = String(Math.round(p * K.trips.length));
+    $('#jr-photos').textContent = String(Math.round(p * totalPhotos));
+  }
+
   // the year folio counts through every year between, so going back reads as going back
   function folio(y) {
     const yEl = $('#jr-year'), byEl = $('#jr-by');
     const fig = $('.jr-map');
+    clearInterval(folioTimer);
     fig.classList.toggle('has-year', y !== null);
     if (y === null) { folioYear = null; return; }
-    clearInterval(folioTimer);
     const show = (v) => { yEl.textContent = v; byEl.textContent = W().byThen(countriesBy(v)); };
     if (folioYear === null || K.reduced) { folioYear = y; show(y); return; }
     const dir = y < folioYear ? -1 : 1;
@@ -255,9 +298,11 @@
     const m = $('.jr-map').getBoundingClientRect();
     const edge = m.top <= 1 && m.width >= innerWidth - 2 ? m.bottom : 0;
     const line = edge + (innerHeight - edge) * 0.35;
-    const close = $('.jr-close');
+    if (V.follow) V.follow(line);
     let next = 'now';
-    if (close.getBoundingClientRect().top < innerHeight * 0.55) next = 'forward';
+    // the return plays when the closing words reach the reading line, not when the close's
+    // empty top does: the first trip keeps its near-empty map for a whole screen before it
+    if ($('.jr-close__words').getBoundingClientRect().top < edge + (innerHeight - edge) * 0.6) next = 'forward';
     else {
       for (const sec of main.querySelectorAll('.jr-year')) if (sec.getBoundingClientRect().top < line) next = +sec.dataset.year;
     }
@@ -271,6 +316,20 @@
     folio(next);
   }
 
+  // back from a trip (#t=<id>): no replay; the map whole, the totals settled, the entry in view
+  function returnTo() {
+    const id = (location.hash.match(/^#t=(.+)$/) || [])[1];
+    const el = id && document.getElementById(`t-${decodeURIComponent(id)}`);
+    if (!el) return false;
+    history.replaceState(null, '', location.pathname + location.search);
+    const html = document.documentElement;
+    html.style.scrollBehavior = 'auto';
+    const edge = innerWidth < 1024 ? $('.jr-map').offsetHeight : 0;
+    scrollTo(0, el.getBoundingClientRect().top + scrollY - edge - innerHeight * 0.2);
+    requestAnimationFrame(() => { html.style.scrollBehavior = ''; });
+    return true;
+  }
+
   let onScroll = null;
   async function mount() {
     if (engine && engine.destroy) engine.destroy();
@@ -278,9 +337,7 @@
     engine = window.ScrollCraft.mount(document.body);
     map = await makeMap($('#jr-svg'));
     state = null; folioYear = null;
-    const countEl = $('#jr-countries');
-    const others = S.countries.length - 1;
-    map.flyOut((n) => { countEl.textContent = String(1 + Math.min(n, others)); });
+    if (returnTo()) map.settled(totals); else map.flyOut(totals);
     let raf = 0;
     if (onScroll) removeEventListener('scroll', onScroll);
     onScroll = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(follow); };

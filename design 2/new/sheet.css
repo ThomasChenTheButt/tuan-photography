@@ -1,0 +1,12 @@
+/* Variation S2: every photograph of a trip in rows at their own shapes, names beneath. --ar on
+   each print shares the row's width out by shape, so nothing is trimmed. */
+.jr-sheet { display: flex; flex-wrap: wrap; gap: 1rem 0.6rem; margin-top: 1.1rem; }
+.jr-sheet .jr-print { margin: 0; min-width: 0; display: grid; gap: 0.35rem; align-content: start; flex-grow: calc(var(--ar) * 10); flex-basis: calc(var(--ar) * 7rem); max-width: calc(var(--ar) * 15rem); }
+.jr-sheet .jr-shot { width: 100%; }
+.jr-sheet .jr-shot__img { width: 100%; height: auto; }
+.jr-shot:hover .jr-shot__img { transform: none; }
+.jr-print__cap { color: var(--ink-2); font-size: 0.8rem; line-height: 1.35; }
+.jr-trip { padding-block: 1.4rem 2.2rem; }
+@media (max-width: 63.99rem) {
+  .jr-sheet .jr-print { flex-basis: calc(var(--ar) * 6rem); max-width: none; }
+}

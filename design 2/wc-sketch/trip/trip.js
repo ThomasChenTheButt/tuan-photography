@@ -147,8 +147,8 @@
     const title = names.length > 2 ? names.slice(0, -1).join(w.list) + w.and + names[names.length - 1] : names.join(w.and);
     document.title = `${title} · tuan photography 陳亮元`;
     // opened from the Journey log (experiment `journey`), it leads back there
-    const from = /^(logbook|journey)$/.test(ask.get('from') || '') ? ask.get('from') : null;
-    if (from) $('#back').href = `../../new/${from}.html`;
+    const from = /^[a-z][a-z-]*$/.test(ask.get('from') || '') ? ask.get('from') : null;
+    if (from) $('#back').href = `../../new/${from}.html#t=${encodeURIComponent(J.id)}`;   // back to the entry it was opened from
     $('#back').textContent = from ? w.log : w.back;
     let html = `<section class="intro" data-i="-1">
       <p class="intro__when caps">${esc((J.date || J.label)[lang])}</p>

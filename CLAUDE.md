@@ -9,6 +9,14 @@
 > skill was installed and applied: `design 2/new/journey.html` ("rewinding atlas"; brief and
 > fingerprint in `scrollcraft/`), beside the Logbook; `localhost:8644/journey/new/` compares the
 > two with Good / Not for me and notes. The engine (`scrollcraft.js`, `.css`) is copied unedited.
+> **2026-10-18, Impeccable round:** he was satisfied with the grand-map version (tag
+> `journey-scrollcraft-grandmap-2026-10-18`); the dual-agent critique scored it 20/28 (record in
+> `.impeccable/critique/`), its P0 to P2 fixes went into `journey.*` (2010 holds before the return,
+> the totals stop with the last plane, the fan shows at arrival only, strips scroll with every
+> photograph, the phone folio sits under the map, back from a trip returns to that entry via
+> `#t=<id>`), and three "prints lead" variations were built beside it, each a small script that sets
+> `window.JourneyVariant` before `journey.js`: `prints` (one print per trip), `sheet` (every
+> photograph in rows), `beside` (the print under the docked map). All five are on the review list.
 > Suspended here: design 2's pen-and-wash system.
 > Kept: light only, nothing written on photographs, both languages, no long dashes. Other
 > sessions redesign the other tabs: touch Journey only, merge on his word.

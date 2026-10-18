@@ -14,7 +14,10 @@
       hidden: (n) => `${n} you marked Not for me are put away.`, showThem: 'Show them', hideThem: 'Put them away',
       saved: 'Saved. Claude can read it.', local: 'Saved in this browser only', how: 'Mark each one and write a note. It saves as you go, and Claude reads it straight away.',
       items: [
-        ['S', 'Journey, built with scroll-craft', 'Updated from your note: the grand map now fills the whole screen on arrival, never cut, with trips, countries and photographs counting beneath it and every plane leaving Taiwan at once. As you scroll it glides to the side, still whole. Then the years, newest first, while a large year counts back and the map shows only what you had seen by then. At 2010 it plays forward to now.', 'journey.html'],
+        ['S', 'Journey, built with scroll-craft', 'The one you were satisfied with, after the Impeccable review: 2010 now holds on screen before the map plays forward; the three totals stop with the last plane; beside the reading only the real routes show; every photograph of a trip is in its strip; on the phone the year sits under the map, never on it; back from a trip returns to that trip.', 'journey.html'],
+        ['S1', 'One print per trip', 'The same page, but each trip shows one photograph at the width of the column, its name beneath, and one word for the rest. The strips go.', 'prints.html'],
+        ['S2', 'Every photograph', 'Each trip lays out all of its photographs in rows at their own shapes, names beneath, like a contact sheet. The reading goes at the pace of the pictures.', 'sheet.html'],
+        ['S3', 'The print beside the map', 'Once the map has docked it gives up the lower half of its column to one photograph, the trip you are reading, which changes as you move on. The right column is words only.', 'beside.html'],
         ['A', 'Logbook, now', 'Your pick so far. One plane leaves Taiwan for each country, once; then the trips year by year with a strip of photographs.', 'logbook.html'],
       ],
     },
@@ -26,7 +29,10 @@
       hidden: (n) => `${n} 個標了「不要」的已收起。`, showThem: '顯示', hideThem: '收起',
       saved: '已存，Claude 讀得到。', local: '只存在這個瀏覽器', how: '每一版按喜歡或不要，寫一句筆記。打字就會存，Claude 直接讀得到。',
       items: [
-        ['S', '旅程，用 scroll-craft 做的', '照你的筆記改了：一進來，整張地圖佔滿畫面、不再被切掉，下面數著旅行、國家、照片的總數，所有飛機同時從台灣起飛。往下捲時地圖滑到旁邊，仍然完整。接著按年份往下，大大的年份往回數，地圖只顯示那時你去過的地方。到 2010 年之後，地圖再一路回到現在。', 'journey.html'],
+        ['S', '旅程，用 scroll-craft 做的', '你說滿意的這版，經過 Impeccable 評審後修了幾處：2010 年會停在畫面上一陣子，地圖才回到現在；三個總數跟最後一架飛機一起停下；閱讀時地圖只畫真正走過的路線；每一趟的照片全部都在那一排裡；手機上年份放在地圖下面，不壓在上面；從一趟旅行回來會回到那一趟。', 'journey.html'],
+        ['S1', '每趟一張照片', '同一頁，但每一趟只放一張照片，跟欄位一樣寬，名字在下面，其餘用一句話帶過。一排小圖拿掉了。', 'prints.html'],
+        ['S2', '每一張照片', '每一趟把所有照片按原本的比例排成幾行，名字在下面，像一張印樣。閱讀跟著照片的節奏走。', 'sheet.html'],
+        ['S3', '地圖旁邊的照片', '地圖滑到旁邊後，把欄位的下半部讓給一張照片：你正在讀的那一趟，往下讀會跟著換。右欄只有文字。', 'beside.html'],
         ['A', '旅行日誌，現在', '目前選的這版。一架飛機從台灣飛到每個國家，只飛一次；接著按年份排的旅程和一排照片。', 'logbook.html'],
       ],
     },
@@ -74,7 +80,7 @@
           <span class="cz__mark" aria-hidden="true">${m}</span>
           <h2 class="cz__name">${esc(name)}</h2>
           <p class="cz__say">${esc(say)}</p>
-          <p class="cz__go"><a href="${href}">${esc(w.list)}</a>${m ? (() => { const route = ['A', 'S'].includes(m); const base = route ? '../wc-sketch/trip/' : href; const back = route ? `&from=${href.replace('.html', '')}` : ''; return `<a href="${base}?trip=2026-08${back}">${esc(w.trip)}</a><a href="${base}?trip=2026-01${back}">${esc(w.trip2)}</a>`; })() : ''}</p>
+          <p class="cz__go"><a href="${href}">${esc(w.list)}</a>${m ? (() => { const route = /^[AS]/.test(m); const base = route ? '../wc-sketch/trip/' : href; const back = route ? `&from=${href.replace('.html', '')}` : ''; return `<a href="${base}?trip=2026-08${back}">${esc(w.trip)}</a><a href="${base}?trip=2026-01${back}">${esc(w.trip2)}</a>`; })() : ''}</p>
           <div class="cz__mine">
             <div class="cz__verdict" role="group" aria-label="${esc(name)}">
               <button type="button" class="cz__v" data-v="good" aria-pressed="${my.verdict === 'good'}">${esc(w.good)}</button>
