@@ -17,6 +17,7 @@
 > `#t=<id>`), and three "prints lead" variations were built beside it, each a small script that sets
 > `window.JourneyVariant` before `journey.js`: `prints` (one print per trip), `sheet` (every
 > photograph in rows), `beside` (the print under the docked map). All five are on the review list.
+> **His picks (2026-10-18, in the chat): S3 `beside`; the hero keeps 21 countries (Taiwan counts).**
 > Suspended here: design 2's pen-and-wash system.
 > Kept: light only, nothing written on photographs, both languages, no long dashes. Other
 > sessions redesign the other tabs: touch Journey only, merge on his word.
