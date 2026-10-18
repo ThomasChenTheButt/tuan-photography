@@ -26,3 +26,4 @@
 .cz__general-head { font-size: 1.1rem; font-weight: 500; }
 .cz__state { color: var(--ink-2); font-size: 0.85rem; min-height: 1.4rem; margin-top: 0.75rem; }
 @media (max-width: 47.99rem) { .cz__mine { grid-column: 1 / -1; grid-template-columns: 1fr; } }
+.cz__away { color: var(--ink-2); font-size: 0.9rem; margin-top: 1.25rem; display: flex; flex-wrap: wrap; align-items: center; gap: 0 1rem; }
