@@ -1,7 +1,8 @@
-/* The Journey Logbook's kit (experiment `journey`): the facts, the words in both languages, the
+/* The Journey page's kit (experiment `journey`): the facts, the words in both languages, the
    trip model (stops, photographs, distances), the site's top bar, the line map and a photograph
-   viewer. Three directions were tried with it (logbook, chapters, atlas); on 2026-10-18 he kept the
-   Logbook alone. The others are at the tag journey-versions-trimmed-2026-10-18. */
+   viewer. Several directions were tried with it; on 2026-10-18 he chose the scroll-craft Journey
+   (journey.js). The Logbook and the rest are at the tags journey-versions-trimmed-2026-10-18 and
+   journey-five-versions-2026-10-18. */
 (() => {
   'use strict';
 

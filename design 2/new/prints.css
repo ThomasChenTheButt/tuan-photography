@@ -1,9 +1,0 @@
-/* Variation S1: one print per trip, at the width of the column, its name beneath. */
-.jr-lead { display: grid; gap: 0.5rem; margin-top: 1.1rem; }
-.jr-print { margin: 0; display: grid; gap: 0.45rem; }
-.jr-print .jr-shot { width: 100%; }
-.jr-print .jr-shot__img { width: 100%; height: auto; }
-.jr-shot:hover .jr-shot__img { transform: none; }
-.jr-print__cap { color: var(--ink-2); font-size: 0.85rem; }
-.jr-lead__more { justify-self: start; }
-.jr-trip { padding-block: 1.4rem 2.2rem; }

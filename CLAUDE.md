@@ -1,7 +1,7 @@
 > **Experiment `journey` (started 2026-10-16).** A new look for the Journey tab only, his
-> request: the pen-and-wash page felt messy. Several directions were tried; **on 2026-10-18 he kept
-> the Logbook alone and we work from it**: `design 2/new/logbook.html` (with `kit.js`, `kit.css`),
-> served at `localhost:8644/journey/new/logbook.html`. A trip opens on `design 2/wc-sketch/trip/`
+> request: the pen-and-wash page felt messy. Several directions were tried; on 2026-10-18 he kept
+> the Logbook, then chose the scroll-craft Journey over it (see below): **the page is
+> `design 2/new/journey.html`** (with `kit.js`, `kit.css`), served at `localhost:8644/journey/new/journey.html`. A trip opens on `design 2/wc-sketch/trip/`
 > ("The trip, along its route", his choice), whose back word returns to the Logbook. Everything
 > else tried (Chapters, Atlas, two Logbook drafts, two mixes, the review list) is at the tag
 > `journey-versions-trimmed-2026-10-18`; the old Journey at `journey-pen-and-wash-2026-10-15`.
@@ -17,7 +17,10 @@
 > `#t=<id>`), and three "prints lead" variations were built beside it, each a small script that sets
 > `window.JourneyVariant` before `journey.js`: `prints` (one print per trip), `sheet` (every
 > photograph in rows), `beside` (the print under the docked map). All five are on the review list.
-> **His picks (2026-10-18, in the chat): S3 `beside`; the hero keeps 21 countries (Taiwan counts).**
+> **His picks (2026-10-18, in the chat): S3 `beside`; the hero keeps 21 countries (Taiwan counts).
+> Then "use journey as the new one": S3 was folded into `journey.*` (the print under the docked map
+> is now the page; on the phone the lead print sits in the entry), and the Logbook, S1 and S2 were
+> removed at tag `journey-five-versions-2026-10-18`. The review list keeps the one page for notes.**
 > Suspended here: design 2's pen-and-wash system.
 > Kept: light only, nothing written on photographs, both languages, no long dashes. Other
 > sessions redesign the other tabs: touch Journey only, merge on his word.

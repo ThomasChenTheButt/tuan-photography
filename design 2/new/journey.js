@@ -7,19 +7,19 @@
    countries he had not yet seen go pale, later routes lift off. At 2010 the map is almost empty;
    past it, the map plays forward to the present and holds.
 
-   The scroll-craft engine (scrollcraft.js, unedited) drives the entries and the year wipes; the
-   map, the planes, the totals and the rewind are this page's own code.
+   Once the map has docked it gives up the lower half of its column to one photograph, the trip
+   being read, which changes as the reading moves on; the right column is words only. On the phone
+   the photograph sits in the entry instead. (His pick, 2026-10-18, from three "prints lead"
+   variations after the Impeccable critique; the others are at tag journey-five-versions-2026-10-18.)
 
-   Variations (the Impeccable round, 2026-10-18) share this file: a variation is a small script
-   loaded before it that sets window.JourneyVariant, with `shots(t)` for a trip's photographs,
-   `map()` for anything extra inside the map's frame, and `follow(line)` for each scroll. */
+   The scroll-craft engine (scrollcraft.js, unedited) drives the entries and the year wipes; the
+   map, the planes, the totals, the rewind and the print are this page's own code. */
 (() => {
   'use strict';
 
   const K = window.Kit;
   const { esc, $ } = K;
   const S = K.S;
-  const V = window.JourneyVariant || {};
   const main = $('#main');
   const top = $('#top');
   const ll = (p) => [p[1], p[0]];
@@ -56,7 +56,7 @@
       sep: '',
     },
   };
-  const W = () => Object.assign({}, WORDS[K.lang], (V.words || {})[K.lang]);
+  const W = () => WORDS[K.lang];
 
   // the month without the year, inside a year's chapter ("August"; "8 月")
   const month = (t) => {
@@ -86,9 +86,8 @@
     const s = S.slides[id];
     return `<figure class="jr-print ${cls}" style="--ar: ${(s.w / s.h).toFixed(4)}">${shot(id, sizes)}<figcaption class="jr-print__cap">${esc(s.place[K.lang])}</figcaption></figure>`;
   };
-  // the page as built: every photograph of the trip in one strip that scrolls sideways
-  const strip = (t) => (t.photos.length ? `<div class="jr-trip__strip" data-set="${t.photos.join(',')}">${t.photos.map((id) => shot(id, '9rem', 'jr-trip__thumb')).join('')}</div>` : '');
-  const shots = V.shots ? (t) => V.shots(t, { shot, print, strip }) : strip;
+  // on the phone, where the map has no column to lend, the trip's lead print sits in its entry
+  const shots = (t) => (t.photos.length ? `<div class="jr-lead" data-set="${t.photos.join(',')}">${print(t.lead || t.photos[0], '92vw')}</div>` : '');
   document.addEventListener('click', (e) => {
     const b = e.target.closest('.jr-shot');
     if (!b || e.target.closest('img')) return;      // an image click is the kit's (it opens the same viewer)
@@ -215,7 +214,10 @@
         <figure class="jr-map map" aria-hidden="true">
           <svg id="jr-svg"></svg>
           <p class="jr-folio"><span class="jr-folio__year" id="jr-year"></span><span class="jr-folio__by" id="jr-by"></span></p>
-          ${V.map ? V.map() : ''}
+          <div class="jr-beside">
+            <div class="jr-beside__frame"><img class="jr-beside__img" alt=""><img class="jr-beside__img" alt=""></div>
+            <p class="jr-beside__cap"><span class="jr-beside__name"></span><span class="jr-beside__where"></span></p>
+          </div>
         </figure>
         <div class="jr-text">
           <header class="jr-hero">
@@ -292,13 +294,39 @@
     frame.style.setProperty('--dock', d3.easeCubicInOut(d).toFixed(4));
   }
 
+  // the print under the map: the trip at the reading line is the one whose photograph shows
+  let shown = null, turn = 0;
+  function beside(line) {
+    if (!matchMedia('(min-width: 64rem)').matches) return;
+    let cur = null;
+    for (const el of main.querySelectorAll('.jr-trip')) if (el.getBoundingClientRect().top < line + 40) cur = el;
+    const t = cur && K.byId(cur.dataset.trip);
+    const photo = t && (t.lead || t.photos[0]);
+    if (photo === shown) return;
+    shown = photo;
+    const box = $('.jr-beside');
+    box.classList.toggle('has-print', !!photo);
+    if (!photo) return;
+    const s = S.slides[photo];
+    const imgs = box.querySelectorAll('.jr-beside__img');
+    turn ^= 1;
+    const im = imgs[turn], old = imgs[turn ^ 1];
+    im.srcset = `${K.src(s.file, 640)} 640w, ${K.src(s.file, 1280)} 1280w, ${K.src(s.file)} 2400w`;
+    im.sizes = '48vw';
+    im.src = K.src(s.file, 1280);
+    const show = () => { im.classList.add('is-on'); old.classList.remove('is-on'); };
+    if (im.complete) show(); else im.onload = show;
+    $('.jr-beside__name', box).textContent = s.place[K.lang];
+    $('.jr-beside__where', box).textContent = s.where[K.lang];
+  }
+
   function follow() {
     dock();
     // on a phone the map is pinned across the top: read from its lower edge
     const m = $('.jr-map').getBoundingClientRect();
     const edge = m.top <= 1 && m.width >= innerWidth - 2 ? m.bottom : 0;
     const line = edge + (innerHeight - edge) * 0.35;
-    if (V.follow) V.follow(line);
+    beside(line);
     let next = 'now';
     // the return plays when the closing words reach the reading line, not when the close's
     // empty top does: the first trip keeps its near-empty map for a whole screen before it
@@ -336,7 +364,7 @@
     render();
     engine = window.ScrollCraft.mount(document.body);
     map = await makeMap($('#jr-svg'));
-    state = null; folioYear = null;
+    state = null; folioYear = null; shown = null;
     if (returnTo()) map.settled(totals); else map.flyOut(totals);
     let raf = 0;
     if (onScroll) removeEventListener('scroll', onScroll);

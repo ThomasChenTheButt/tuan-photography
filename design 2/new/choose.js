@@ -8,32 +8,24 @@
   const WORDS = {
     en: {
       title: 'Journey, the versions',
-      intro: 'The same trips, the same facts, different ways of showing them. The first link opens the page; the others open one trip.',
+      intro: 'The Journey page, and a place for your notes on it. The first link opens the page; the others open one trip.',
       list: 'All trips', trip: 'One trip: Vietnam', trip2: 'One trip: Australia and New Zealand',
       good: 'Good', bad: 'Not for me', note: 'A note for Claude: what you like, what to change', general: 'Anything else', generalHint: 'Anything about Journey in general',
       hidden: (n) => `${n} you marked Not for me are put away.`, showThem: 'Show them', hideThem: 'Put them away',
       saved: 'Saved. Claude can read it.', local: 'Saved in this browser only', how: 'Mark each one and write a note. It saves as you go, and Claude reads it straight away.',
       items: [
-        ['S', 'Journey, built with scroll-craft', 'The one you were satisfied with, after the Impeccable review: 2010 now holds on screen before the map plays forward; the three totals stop with the last plane; beside the reading only the real routes show; every photograph of a trip is in its strip; on the phone the year sits under the map, never on it; back from a trip returns to that trip.', 'journey.html'],
-        ['S1', 'One print per trip', 'The same page, but each trip shows one photograph at the width of the column, its name beneath, and one word for the rest. The strips go.', 'prints.html'],
-        ['S2', 'Every photograph', 'Each trip lays out all of its photographs in rows at their own shapes, names beneath, like a contact sheet. The reading goes at the pace of the pictures.', 'sheet.html'],
-        ['S3', 'The print beside the map', 'Once the map has docked it gives up the lower half of its column to one photograph, the trip you are reading, which changes as you move on. The right column is words only.', 'beside.html'],
-        ['A', 'Logbook, now', 'Your pick so far. One plane leaves Taiwan for each country, once; then the trips year by year with a strip of photographs.', 'logbook.html'],
+        ['S', 'Journey, built with scroll-craft', 'The Journey as it stands: the grand map on arrival and every plane leaving Taiwan at once; the years, newest first, while the map rewinds; and, once the map has docked, the photograph of the trip you are reading under it, changing as you move on (your pick, S3, of the three ways of showing photographs). Back from a trip returns to that trip.', 'journey.html'],
       ],
     },
     zh: {
       title: '旅程：各個版本',
-      intro: '同樣的旅行、同樣的資料，不同的呈現方式。第一個連結打開整頁，其他直接打開一趟旅行。',
+      intro: '旅程頁，和給它寫筆記的地方。第一個連結打開整頁，其他直接打開一趟旅行。',
       list: '所有旅程', trip: '一趟：越南', trip2: '一趟：澳洲與紐西蘭',
       good: '喜歡', bad: '不要', note: '給 Claude 的筆記：喜歡什麼、要改什麼', general: '其他想法', generalHint: '對整個旅程頁的想法',
       hidden: (n) => `${n} 個標了「不要」的已收起。`, showThem: '顯示', hideThem: '收起',
       saved: '已存，Claude 讀得到。', local: '只存在這個瀏覽器', how: '每一版按喜歡或不要，寫一句筆記。打字就會存，Claude 直接讀得到。',
       items: [
-        ['S', '旅程，用 scroll-craft 做的', '你說滿意的這版，經過 Impeccable 評審後修了幾處：2010 年會停在畫面上一陣子，地圖才回到現在；三個總數跟最後一架飛機一起停下；閱讀時地圖只畫真正走過的路線；每一趟的照片全部都在那一排裡；手機上年份放在地圖下面，不壓在上面；從一趟旅行回來會回到那一趟。', 'journey.html'],
-        ['S1', '每趟一張照片', '同一頁，但每一趟只放一張照片，跟欄位一樣寬，名字在下面，其餘用一句話帶過。一排小圖拿掉了。', 'prints.html'],
-        ['S2', '每一張照片', '每一趟把所有照片按原本的比例排成幾行，名字在下面，像一張印樣。閱讀跟著照片的節奏走。', 'sheet.html'],
-        ['S3', '地圖旁邊的照片', '地圖滑到旁邊後，把欄位的下半部讓給一張照片：你正在讀的那一趟，往下讀會跟著換。右欄只有文字。', 'beside.html'],
-        ['A', '旅行日誌，現在', '目前選的這版。一架飛機從台灣飛到每個國家，只飛一次；接著按年份排的旅程和一排照片。', 'logbook.html'],
+        ['S', '旅程，用 scroll-craft 做的', '目前的旅程頁：一進來整張地圖佔滿畫面，所有飛機同時從台灣起飛；接著按年份往下，地圖跟著回到過去；地圖滑到旁邊後，下面放著你正在讀的那一趟的照片，往下讀會跟著換（三種放照片的方式裡你選的 S3）。從一趟旅行回來會回到那一趟。', 'journey.html'],
       ],
     },
   };
