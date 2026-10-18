@@ -249,17 +249,17 @@
 - 網址: https://www.siteinspire.com
 - 這是什麼: 挑得很嚴的網站作品庫，偏乾淨、雜誌感、極簡、以字體撐場面的設計。
 - 喜歡它什麼: 先收著，找靈感時翻（他說，2026-10-18）
-- Claude 備註: 六個靈感網站裡最接近「印刷旅行日誌」這個方向的一個，先從這裡看。
+- Claude 備註: 10/18 看過：攝影類 479 個，可以疊上 Minimal 篩選（網址 ?categories=photography,minimal），每週更新，直接連到實際網站。六個裡最值得常看的一個。
 
 ### Godly
 - 類型: 找靈感的地方
 - 日期: 2026-10-18
 - 重點: 視覺大膽，有動畫的影片預覽
 - 狀態: 收集中
-- 網址: https://godly.website
+- 網址: https://godly.website （2026-10-18 查：已轉到 https://recent.design）
 - 這是什麼: 收集視覺大膽的網站，多用 Framer、Webflow、Next.js 做的，每個作品有一段影片預覽，能直接看動畫。
 - 喜歡它什麼: 先收著，找靈感時翻（他說，2026-10-18）
-- Claude 備註: 看動效怎麼做很方便；風格偏重，和網站的克制相反，挑著看。
+- Claude 備註: 10/18 看過：Godly 已改成 recent.design，變成綜合設計動態（網頁、介面、品牌、海報），沒有攝影或極簡的篩選，條目只連到站內頁。對這個網站用處不大。
 
 ### One Page Love
 - 類型: 找靈感的地方
@@ -276,10 +276,10 @@
 - 日期: 2026-10-18
 - 重點: 標明每個網站用什麼做的
 - 狀態: 收集中
-- 網址: https://www.siteofsites.com
+- 網址: https://www.siteofsites.co
 - 這是什麼: 各類創意與商業網站，每一個都標明底下用的平台（Webflow、Framer、自己寫的、WordPress）。
 - 喜歡它什麼: 先收著，找靈感時翻（他說，2026-10-18）
-- Claude 備註: 可以只看「Custom Code」那一類，和你的純 HTML 網站最像。
+- Claude 備註: 10/18 看過：604 個網站，可同時篩「Photography & Video」「Portfolio」「Minimal」「Custom Code」，更新到 2026-10。要找同類網站時最準的一個。
 
 ### Fontshare
 - 類型: 字體來源
