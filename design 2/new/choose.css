@@ -11,3 +11,18 @@
 .cz__say { color: var(--ink-2); max-width: 56ch; }
 .cz__go { display: flex; flex-wrap: wrap; gap: 0 2rem; }
 .cz__go a { color: var(--link); text-underline-offset: 0.25em; text-decoration-thickness: 1px; display: inline-flex; align-items: center; min-height: 2.75rem; }
+.cz__how { color: var(--ink-2); margin-top: 0.75rem; max-width: 52ch; font-size: 0.95rem; }
+.cz__mine { grid-column: 2; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.5rem 1.25rem; align-items: start; margin-top: 0.75rem; }
+.cz__verdict { display: flex; border: 1px solid var(--hair); }
+.cz__v { min-height: 2.75rem; padding: 0 1rem; font-size: 0.85rem; color: var(--ink-2); }
+.cz__v + .cz__v { border-left: 1px solid var(--hair); }
+.cz__v:hover { color: var(--ink); }
+.cz__v[data-v="good"][aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.cz__v[data-v="bad"][aria-pressed="true"] { background: var(--paper-2); color: var(--ink); text-decoration: line-through; }
+.cz__note { width: 100%; font: inherit; font-size: 0.95rem; color: var(--ink); background: var(--paper); border: 1px solid var(--hair); border-radius: 0; padding: 0.6rem 0.75rem; resize: vertical; min-height: 2.75rem; }
+.cz__note::placeholder { color: var(--ink-3); }
+.cz__note:focus { outline: 2px solid var(--link); outline-offset: 1px; border-color: transparent; }
+.cz__general { display: grid; gap: 0.5rem; margin-top: 2rem; }
+.cz__general-head { font-size: 1.1rem; font-weight: 500; }
+.cz__state { color: var(--ink-2); font-size: 0.85rem; min-height: 1.4rem; margin-top: 0.75rem; }
+@media (max-width: 47.99rem) { .cz__mine { grid-column: 1 / -1; grid-template-columns: 1fr; } }
