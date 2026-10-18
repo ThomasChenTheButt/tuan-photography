@@ -14,7 +14,7 @@
       hidden: (n) => `${n} you marked Not for me are put away.`, showThem: 'Show them', hideThem: 'Put them away',
       saved: 'Saved. Claude can read it.', local: 'Saved in this browser only', how: 'Mark each one and write a note. It saves as you go, and Claude reads it straight away.',
       items: [
-        ['S', 'Journey, built with scroll-craft', 'New, from your interview answers. It opens on the whole of it: trips, countries and photographs, with every plane leaving Taiwan at once. Then the years, newest first, while a large year counts back and the map shows only what you had seen by then. At 2010 it plays forward to now.', 'journey.html'],
+        ['S', 'Journey, built with scroll-craft', 'Updated from your note: the grand map now fills the whole screen on arrival, never cut, with trips, countries and photographs counting beneath it and every plane leaving Taiwan at once. As you scroll it glides to the side, still whole. Then the years, newest first, while a large year counts back and the map shows only what you had seen by then. At 2010 it plays forward to now.', 'journey.html'],
         ['A', 'Logbook, now', 'Your pick so far. One plane leaves Taiwan for each country, once; then the trips year by year with a strip of photographs.', 'logbook.html'],
       ],
     },
@@ -26,7 +26,7 @@
       hidden: (n) => `${n} 個標了「不要」的已收起。`, showThem: '顯示', hideThem: '收起',
       saved: '已存，Claude 讀得到。', local: '只存在這個瀏覽器', how: '每一版按喜歡或不要，寫一句筆記。打字就會存，Claude 直接讀得到。',
       items: [
-        ['S', '旅程，用 scroll-craft 做的', '新的，照你訪談的回答做。一開始是全貌：旅行、國家、照片的總數，所有飛機同時從台灣起飛。接著按年份往下，大大的年份往回數，地圖只顯示那時你去過的地方。到 2010 年之後，地圖再一路回到現在。', 'journey.html'],
+        ['S', '旅程，用 scroll-craft 做的', '照你的筆記改了：一進來，整張地圖佔滿畫面、不再被切掉，下面數著旅行、國家、照片的總數，所有飛機同時從台灣起飛。往下捲時地圖滑到旁邊，仍然完整。接著按年份往下，大大的年份往回數，地圖只顯示那時你去過的地方。到 2010 年之後，地圖再一路回到現在。', 'journey.html'],
         ['A', '旅行日誌，現在', '目前選的這版。一架飛機從台灣飛到每個國家，只飛一次；接著按年份排的旅程和一排照片。', 'logbook.html'],
       ],
     },

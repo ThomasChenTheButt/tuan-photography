@@ -29,11 +29,22 @@
 }
 :focus-visible { border-radius: 0; }
 
-/* the frame: the map held on the left, the reading on the right */
-.jr { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(24rem, 1fr); }
-.jr-map { position: sticky; top: 0; height: 100svh; margin: 0; border-right: 1px solid var(--hair); background: var(--paper); }
+/* the frame: the whole world fills the screen on arrival, then glides aside to sit beside the
+   years. The map is one fixed drawing scaled to fit its box, so it is never cropped. --dock (0 to 1)
+   is set by journey.js as the arrival scrolls away. */
+.jr { --mapw: 56vw; --dock: 0; position: relative; }
+#top { position: relative; z-index: 3; }
+.jr-map {
+  position: fixed; left: 0; top: 0; z-index: 0; margin: 0; background: var(--paper);
+  height: 100svh;
+  width: calc(100vw - var(--dock) * (100vw - var(--mapw)));
+  padding: calc(4.75rem * (1 - var(--dock)) + 1rem * var(--dock)) calc(var(--edge) * (1 - var(--dock))) calc(12.5rem * (1 - var(--dock)) + 1rem * var(--dock)) 0;
+  border-right: 1px solid oklch(88% 0.006 80 / var(--dock));
+}
 .jr-map svg { display: block; width: 100%; height: 100%; }
-.jr-text { padding: 0 var(--edge) 0 clamp(1.5rem, 3.5vw, 3.5rem); min-width: 0; }
+.jr-text { position: relative; z-index: 1; }
+.jr-years, .jr-close { margin-left: var(--mapw); padding: 0 var(--edge) 0 clamp(1.5rem, 3.5vw, 3.5rem); background: var(--paper); }
+.jr-years { padding-top: 0.5rem; }
 
 /* the year folio: counts back as the chapters pass */
 .jr-folio { position: absolute; left: clamp(1rem, 2.5vw, 2.25rem); bottom: clamp(1rem, 3vh, 2rem); display: grid; gap: 0.2rem; pointer-events: none; opacity: 0; transform: translateY(0.5rem); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
@@ -60,14 +71,16 @@
 /* the return: his countries and flights come back in the order he first went */
 .jr-map svg.is-forward :is(.visited, .fly, .end) { transition-delay: calc(var(--i, 0) * 110ms); }
 
-/* the arrival: the whole of it, before any year */
-.jr-hero { min-height: calc(100svh - 4.5rem); display: grid; align-content: center; gap: 1.1rem; padding-block: 2rem; }
-.jr-hero__title { font-size: clamp(3rem, 1.6rem + 4.4vw, 5.6rem); font-weight: 500; letter-spacing: -0.045em; line-height: 0.92; }
+/* the arrival: the whole of it, under the grand map */
+.jr-hero { height: calc(100svh - 4.5rem); display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 1rem 3rem; padding: 0 var(--edge) 2.25rem; pointer-events: none; }
+.jr-hero > * { pointer-events: auto; }
+.jr-hero__words { display: grid; gap: 0.6rem; }
+.jr-hero__title { font-size: clamp(3rem, 1.6rem + 4vw, 5.4rem); font-weight: 500; letter-spacing: -0.045em; line-height: 0.92; }
 :lang(zh-Hant) .jr-hero__title { letter-spacing: 0.04em; line-height: 1.15; }
-.jr-hero__intro { color: var(--ink-2); max-width: 34ch; font-size: 1.05rem; }
-.jr-totals { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 0.5rem clamp(1.5rem, 3vw, 2.75rem); margin: 1.5rem 0 0; }
+.jr-hero__intro { color: var(--ink-2); max-width: 40ch; font-size: 1.05rem; }
+.jr-totals { display: grid; grid-template-columns: repeat(3, auto); justify-content: end; gap: 0.5rem clamp(1.5rem, 3vw, 3rem); margin: 0; }
 .jr-totals div { display: flex; flex-direction: column-reverse; gap: 0.35rem; }
-.jr-totals dd { margin: 0; font-size: clamp(2.6rem, 1.6rem + 2.6vw, 4.2rem); font-weight: 400; letter-spacing: -0.05em; line-height: 0.9; }
+.jr-totals dd { margin: 0; font-size: clamp(2.6rem, 1.6rem + 2.6vw, 4.4rem); font-weight: 400; letter-spacing: -0.05em; line-height: 0.9; }
 .jr-totals dt { color: var(--ink-2); font-size: 0.85rem; }
 
 /* a year: a hard rule and its number, then its trips */
@@ -96,11 +109,13 @@ a.jr-trip__link:hover .jr-trip__title { color: var(--link); }
 .jr-close__go a:hover { text-decoration-thickness: 2px; }
 
 @media (max-width: 63.99rem) {
-  .jr { grid-template-columns: 1fr; }
-  .jr-map { height: 42svh; z-index: 5; border-right: 0; border-bottom: 1px solid var(--hair); }
-  .jr-text { padding-inline: var(--edge); }
-  .jr-hero { min-height: auto; padding-block: 2rem 3rem; }
-  .jr-folio__year { font-size: 3rem; }
-  .jr-folio__by { font-size: 0.8rem; }
+  .jr-map { position: sticky; top: 0; z-index: 5; width: 100%; height: auto; padding: 0.5rem 0; border-right: 0; border-bottom: 1px solid var(--hair); }
+  .jr-map svg { height: auto; }
+  .jr-years, .jr-close { margin-left: 0; padding-inline: var(--edge); }
+  .jr-hero { height: auto; grid-template-columns: 1fr; padding-block: 1.5rem 2.5rem; }
+  .jr-totals { justify-content: start; }
+  .jr-folio { bottom: 0.4rem; }
+  .jr-folio__year { font-size: 2.6rem; }
+  .jr-folio__by { font-size: 0.78rem; }
   .jr-totals dd { font-size: 2.4rem; }
 }

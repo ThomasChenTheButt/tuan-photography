@@ -71,14 +71,19 @@
   /* ------------------------------------------------------------ the map */
 
   async function makeMap(svgEl) {
-    const box = svgEl.getBoundingClientRect();
-    const Wd = Math.max(320, box.width), H = Math.max(240, box.height);
-    const svg = d3.select(svgEl).attr('viewBox', `0 0 ${Wd} ${H}`);
+    // the whole world, always: drawn once into its own fixed frame, which the page then scales
+    // to fit (never cropped), whether it fills the screen or sits beside the reading
+    const svg = d3.select(svgEl);
     svg.selectAll('*').remove();
     const proj = d3.geoNaturalEarth1().rotate([-150, 0]);
     const band = [];
-    for (let lon = -180; lon <= 180; lon += 5) band.push([lon, 78], [lon, -56]);
-    proj.fitExtent([[14, 14], [Wd - 14, H - 14]], { type: 'MultiPoint', coordinates: band });
+    for (let lon = -180; lon <= 180; lon += 4) band.push([lon, 80], [lon, 0], [lon, -56]);
+    const outline = { type: 'MultiPoint', coordinates: band };
+    proj.fitWidth(1600, outline);
+    const [[x0, y0], [x1, y1]] = d3.geoPath(proj).bounds(outline);
+    const pad = 16;
+    svg.attr('viewBox', `${(x0 - pad).toFixed(0)} ${(y0 - pad).toFixed(0)} ${(x1 - x0 + 2 * pad).toFixed(0)} ${(y1 - y0 + 2 * pad).toFixed(0)}`)
+      .attr('preserveAspectRatio', 'xMidYMid meet');
     const { g, path } = await K.drawWorld(svg, proj);
     // each of his countries knows the year he first went, and its order in time (for the replay)
     const order = [...new Set(Object.values(isoFirst))].sort((a, b) => a - b);
@@ -101,10 +106,10 @@
     const lines = sky.selectAll('path.fly').data(flights).join('path').attr('class', 'fly')
       .attr('style', (f) => `--i: ${order.indexOf(f.first)}`);
     const ends = sky.selectAll('circle.end').data(flights).join('circle').attr('class', 'end')
-      .attr('cx', (f) => proj(f.to)[0]).attr('cy', (f) => proj(f.to)[1]).attr('r', 2.4)
+      .attr('cx', (f) => proj(f.to)[0]).attr('cy', (f) => proj(f.to)[1]).attr('r', 3.4)
       .attr('style', (f) => `--i: ${order.indexOf(f.first)}`);
     const [hx, hy] = proj(home);
-    g.append('circle').attr('class', 'home').attr('cx', hx).attr('cy', hy).attr('r', 2.8);
+    g.append('circle').attr('class', 'home').attr('cx', hx).attr('cy', hy).attr('r', 4);
 
     // the peak: every plane leaves home at once, once; the countries settle as they land
     function flyOut(onLand) {
@@ -129,14 +134,14 @@
           const e = ease(t);
           const p = proj(f.go(e)), q = proj(f.go(Math.min(1, e + 0.004)));
           this.setAttribute('opacity', 1);
-          this.setAttribute('transform', `translate(${p[0].toFixed(1)},${p[1].toFixed(1)}) rotate(${((Math.atan2(q[1] - p[1], q[0] - p[0]) * 180) / Math.PI).toFixed(1)})`);
+          this.setAttribute('transform', `translate(${p[0].toFixed(1)},${p[1].toFixed(1)}) rotate(${((Math.atan2(q[1] - p[1], q[0] - p[0]) * 180) / Math.PI).toFixed(1)}) scale(1.15)`);
         });
         rings.each(function (f) {
           const k = (el - f.dur) / 1200;
           if (k < 0 || k > 1) { this.setAttribute('opacity', 0); return; }
           busy = true;
           this.setAttribute('opacity', (1 - k).toFixed(3));
-          this.setAttribute('r', (2.4 + k * 10).toFixed(2));
+          this.setAttribute('r', (3.4 + k * 14).toFixed(2));
         });
         ends.classed('is-in', (f) => el >= f.dur);
         if (n !== landed) { landed = n; onLand(n, false); }
@@ -179,15 +184,17 @@
         </figure>
         <div class="jr-text">
           <header class="jr-hero">
-            <h1 class="jr-hero__title">${esc(ww.journey)}</h1>
-            <p class="jr-hero__intro">${esc(w.intro)}</p>
+            <div class="jr-hero__words">
+              <h1 class="jr-hero__title">${esc(ww.journey)}</h1>
+              <p class="jr-hero__intro">${esc(w.intro)}</p>
+            </div>
             <dl class="jr-totals">
               <div><dt>${esc(w.trips)}</dt><dd class="sc-nums" data-sc-count="0 ${K.trips.length}" data-sc-count-ms="1500">0</dd></div>
               <div><dt>${esc(w.countries)}</dt><dd class="sc-nums" id="jr-countries">1</dd></div>
               <div><dt>${esc(w.photos)}</dt><dd class="sc-nums" data-sc-count="0 ${totalPhotos}" data-sc-count-ms="1700">0</dd></div>
             </dl>
           </header>
-          ${byYear.map(({ y, trips }) => `
+          <div class="jr-years">${byYear.map(({ y, trips }) => `
           <section class="jr-year" data-year="${y}">
             <header class="jr-year__head">
               <h2 class="jr-year__n" data-sc-reveal="up">${y}</h2>
@@ -203,7 +210,7 @@
                 ${t.photos.length ? `<div class="jr-trip__strip" data-set="${t.photos.join(',')}">${t.photos.slice(0, 5).map((id) => K.img(id, '9rem', 'jr-trip__thumb')).join('')}${t.photos.length > 5 ? `<span class="jr-trip__more">+${t.photos.length - 5}</span>` : ''}</div>` : ''}
               </li>`).join('')}
             </ol>
-          </section>`).join('')}
+          </section>`).join('')}</div>
           <footer class="jr-close">
             <div class="sc-stack" data-sc-in data-sc-stagger="80">
               <p class="jr-close__kicker caps">${esc(w.began)}</p>
@@ -233,7 +240,17 @@
     }, 55);
   }
 
+  // how far the map has glided aside, 0 (the whole screen) to 1 (beside the years); published as
+  // a number for the stylesheet, as the engine publishes --sc-p
+  function dock() {
+    const frame = $('.jr');
+    const hero = $('.jr-hero');
+    const d = clamp((scrollY - hero.offsetHeight * 0.15) / (hero.offsetHeight * 0.7), 0, 1);
+    frame.style.setProperty('--dock', d3.easeCubicInOut(d).toFixed(4));
+  }
+
   function follow() {
+    dock();
     // on a phone the map is pinned across the top: read from its lower edge
     const m = $('.jr-map').getBoundingClientRect();
     const edge = m.top <= 1 && m.width >= innerWidth - 2 ? m.bottom : 0;
@@ -271,12 +288,6 @@
     follow();
   }
 
-  let width = innerWidth, rt = 0;
-  addEventListener('resize', () => {
-    if (Math.abs(innerWidth - width) < 40) return;
-    width = innerWidth; clearTimeout(rt);
-    rt = setTimeout(async () => { map = await makeMap($('#jr-svg')); map.at(Infinity, null); state = null; follow(); }, 300);
-  });
   K.onLang(mount);
   mount();
 })();
