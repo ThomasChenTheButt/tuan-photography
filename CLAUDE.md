@@ -3,6 +3,37 @@
 Personal travel-photography site for Thomas Chen (陳亮元). Plain HTML/CSS/JS, no framework.
 Bilingual EN / 繁體中文. Owner is not a developer — explain in plain English, handle all tech.
 
+## Design 3, "One day of light" (his call, 2026-10-19). Read this first
+
+He asked to **ignore everything built before and every rule set before**, and to redesign the whole
+site from his Drive travel folder, choosing skills, tools, fonts and components freely. The result is
+`design 3/`, served on **8650** (`design-3` in launch.json; `start.command` now starts and opens it).
+**The rules in the rest of this file describe design 1 and 2. They do not bind design 3.**
+
+- **The home page is "the Passport"** (his call, 2026-10-19, after the first version "One day of
+  light" ordered everything by the hour: "my website is about traveling, about photographs", so it
+  goes by place). Continents are chapters, largest first; every country is a passport stamp (when he
+  went and how he came in: airport code or overland city, from the trip legs) beside its photographs;
+  continents not visited are empty pages; the numbers (countries, trips, flights, kilometres flown)
+  are worked out from his routes. `index.html` + `js/places.js`, styles in the "passport home" block
+  of `css/site.css`. The "One day of light" page is kept as `day.html` (not in the menu).
+- `python3 tools/build3.py` reads `data/site.json`, corrects each photo's camera clock to local time
+  (the zone is in the EXIF), works out the sun's height and each country's visits, and writes
+  `design 3/data.js` and `design 3/guides/barcelona.body.js`. Rerun it after any change to the data.
+- Pages: `index.html` (Places), `journeys.html` (globe of his routes, by time: that is Journeys' job),
+  `photos.html` (every photograph, by place first; `#place=<id>` and `#trip=<id>` preselect),
+  `guides/barcelona.html`, `about.html`, `day.html`. Plain HTML/CSS/JS: `css/site.css`, `js/core.js`
+  plus one script per page. Hand-written, not built.
+- Libraries kept in `design 3/vendor/`: GSAP 3.13 (ScrollTrigger, Flip), Lenis, d3, topojson.
+  Fonts in `design 3/fonts/`: Archivo (variable width), Geist Mono; Noto Sans TC links to design 1's.
+  `design 3/images` links to design 1's photographs. Method: the scroll-craft skill's brief and taste
+  floor, without its engine.
+- Only his 93 confirmed photographs. The Drive trip folders' "pic" and "sample images" folders are
+  other people's reference shots and are not used. Friends' names, emails and addresses in the
+  itineraries stay out. 22 US photographs have no time and are not on the dial; on Journeys they are
+  counted with the 2025 US trip, an assumption.
+- Waiting on him: whether design 3 becomes the site; committing and pushing it.
+
 ## The brief (owner-decided — these win over any generic guidance)
 
 - **Who he is:** a landscape photographer (旅途中的風景 — nature and cities). Not a travel

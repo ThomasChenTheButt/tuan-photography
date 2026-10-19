@@ -4,7 +4,7 @@ cd "$(dirname "$0")" || exit 1
 python3 tools/finder_view.py >/dev/null 2>&1
 
 # the site on 8642; design 2 (the Journey page) is served from inside it, as design 1/journey
-for pair in "8642:design 1"; do
+for pair in "8642:design 1" "8650:design 3"; do
   PORT="${pair%%:*}"; DIR="${pair#*:}"
   if lsof -i ":$PORT" -sTCP:LISTEN >/dev/null 2>&1; then
     echo "$DIR 已經在 $PORT 執行中…"
@@ -14,10 +14,11 @@ for pair in "8642:design 1"; do
 done
 sleep 1
 
-open "http://localhost:8642"
+open "http://localhost:8650"
 
 echo
-echo "  網站：          http://localhost:8642"
+echo "  新網站 design 3：http://localhost:8650"
+echo "  舊網站 design 1：http://localhost:8642"
 echo "  Journey 旅程頁：http://localhost:8642/journey/"
 echo
 echo "要停止伺服器，關掉這個視窗，或按 Ctrl+C。"
