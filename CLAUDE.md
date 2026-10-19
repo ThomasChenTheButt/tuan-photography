@@ -10,19 +10,54 @@ site from his Drive travel folder, choosing skills, tools, fonts and components 
 `design 3/`, served on **8650** (`design-3` in launch.json; `start.command` now starts and opens it).
 **The rules in the rest of this file describe design 1 and 2. They do not bind design 3.**
 
-- **The home page is "the Passport"** (his call, 2026-10-19, after the first version "One day of
-  light" ordered everything by the hour: "my website is about traveling, about photographs", so it
-  goes by place). Continents are chapters, largest first; every country is a passport stamp (when he
-  went and how he came in: airport code or overland city, from the trip legs) beside its photographs;
-  continents not visited are empty pages; the numbers (countries, trips, flights, kilometres flown)
-  are worked out from his routes. `index.html` + `js/places.js`, styles in the "passport home" block
-  of `css/site.css`. The "One day of light" page is kept as `day.html` (not in the menu).
+- **The home page is one camera** (his call, 2026-10-19, after the Impeccable critique scored the
+  four-device version 20/32 and both reviewers said "fewer devices, held longer"). Dark, full-bleed:
+  an opening count of the countries in the order he reached them, landing on home; Aoraki held as
+  the one hero photograph while the coordinates travel from Taipei to the place and a faint globe
+  turns behind it; the record lit word by word; then the film (`#globe-sec`, 14 screens): for each
+  continent the dotted globe turns to it and the flights draw out of Taipei, the continent's name
+  rises with its lead photograph inside the letters, the camera pushes through into the photograph,
+  holds (countries listed, Oceania's hold longest, ending on the aurora), and pulls back to the
+  globe; then every country as an index; then the close on the Matterhorn with the empty continents
+  running across its sky. `index.html` + `js/film.js`, styles in the "film" block of `css/site.css`.
+  Earlier versions kept, not in the menu: `passport.html` (`js/places.js`), `day.html` (`js/home.js`);
+  the four-device version is `js/cine.js` (its markup only in git history). The old versions' first
+  version "One day of light" ordered photos by the hour; the Passport was "less dramatic".
+  **The viewfinder** (his "lacks creativity" note, 2026-10-19): the page is seen through his camera.
+  Corner marks, a focus square that follows the pointer and locks orange when it rests (fine
+  pointers only), and an exposure line at the foot with the photograph's real camera data (focal
+  length, aperture, shutter, ISO from the EXIF; hidden when a file has none, as for the US photos)
+  while a photograph fills the screen: Aoraki, each continent's held place, the Matterhorn close.
+  Off over the globe and the index. A shutter blink as the camera lands in each place; the index
+  opens with a contact sheet of every country's lead print that tips flat as it arrives (the
+  21st.dev hero-parallax mechanic). Motion kit runtime audit after this: B, 70/100 (was C 47,
+  originally -40); animation quality S; the rest is the full-screen photographs' GPU weight.
+  **Six openings to choose from** (his "give me variations", 2026-10-19): `index.html?hero=<name>`,
+  built in `js/heroes.js` (loaded before film.js): `film` the held Aoraki (current), `strip` ten
+  frames rushing past and stopping on Aoraki which grows to the screen, `unfold` the Matterhorn in six
+  blades, `shutter` an iris opening on the aurora with its 20 s exposure counting, `contact` every
+  photograph rushing past the camera, `letters` TUAN cut out of Fuji with a scroll push-through.
+  **Ten ways to count** (his "keep that counting as the landing, at least 10 versions", 2026-10-19):
+  `index.html?intro=<name>`, built in `js/intros.js` (loaded before film.js; `countries` stays in
+  film.js). Every number is worked out from his data: `countries` 21 in the order reached, `flights`
+  41 as routes (TPE to KIX), `km` 169,138 flown with its own globe turning behind, `photos` all 93 as
+  flashes of the pictures, `cities` 60 names as a wall of type, `years` a 2010 to 2026 clock with each
+  year's countries, `light` the photographs by night, blue, golden, day with the ground tinting,
+  `shutter` 71 shutter speeds clicking faster (the flash fires at most three times a second, the
+  photosensitivity limit), `home` a countdown to 01 Taiwan in orange, `dial` a rotary counter locking
+  on 21. A link with `?intro=` or `?hero=` always replays the opening (otherwise once per session).
+  `heroes.html` is the review list for both groups, the ten counts first (Good / Not for me / notes,
+  saved to `ideas/reviews/openings.json` through the site server; read that file before asking what
+  he thought). Waiting on him: which count, and which opening after it.
+  Audited 2026-10-19 with the taste skill, UI UX Pro Max, redesign-existing-projects, the Motion
+  kit's runtime audit, and Impeccable's dual-agent critique (`.impeccable/critique/`); the critique's
+  five issues are fixed in this version. Every page has sharing tags; `404.html` exists.
 - `python3 tools/build3.py` reads `data/site.json`, corrects each photo's camera clock to local time
   (the zone is in the EXIF), works out the sun's height and each country's visits, and writes
   `design 3/data.js` and `design 3/guides/barcelona.body.js`. Rerun it after any change to the data.
 - Pages: `index.html` (Places), `journeys.html` (globe of his routes, by time: that is Journeys' job),
   `photos.html` (every photograph, by place first; `#place=<id>` and `#trip=<id>` preselect),
-  `guides/barcelona.html`, `about.html`, `day.html`. Plain HTML/CSS/JS: `css/site.css`, `js/core.js`
+  `guides/barcelona.html`, `about.html`, and the kept `passport.html` and `day.html`. Plain HTML/CSS/JS: `css/site.css`, `js/core.js`
   plus one script per page. Hand-written, not built.
 - Libraries kept in `design 3/vendor/`: GSAP 3.13 (ScrollTrigger, Flip), Lenis, d3, topojson.
   Fonts in `design 3/fonts/`: Archivo (variable width), Geist Mono; Noto Sans TC links to design 1's.

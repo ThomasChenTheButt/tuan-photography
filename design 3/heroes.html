@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en" data-root="">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Openings · tuan photography 陳亮元</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#07080b">
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/site.css">
+</head>
+<body class="page-cine page-choose" data-page="openings">
+<main id="main" tabindex="-1" class="wrap cz">
+  <h1 class="cz__title display" data-t="title">The openings</h1>
+  <p class="cz__intro" data-t="intro"></p>
+  <p class="cz__how" data-t="how"></p>
+  <ol class="cz__list" id="list"></ol>
+  <label class="cz__general"><span class="cz__general-head" data-t="general"></span><textarea class="cz__note" id="cz-general" rows="3"></textarea></label>
+  <p class="cz__state mono" id="cz-state" role="status" aria-live="polite"></p>
+</main>
+<script src="data.js"></script>
+<script src="js/core.js"></script>
+<script>
+(() => {
+  const W = {
+    en: {
+      title: 'The openings', top: 'Sixteen ways the home page can begin: ten ways to count, then six openings for after the count. Each link opens the whole page with that version; everything after the first screen is the same.',
+      intro: 'Six ways the home page can begin. Each link opens the whole page with that opening; everything after the first screen is the same.',
+      how: 'Mark each one Good or Not for me and write a note. It saves as you go and Claude reads it straight from the file.',
+      open: 'Open', good: 'Good', bad: 'Not for me', note: 'A note for Claude: what you like, what to change', general: 'Anything else', saved: 'Saved. Claude can read it.', local: 'Saved in this browser only',
+      counts: 'Ten ways to count',
+      countsIntro: 'He liked the count. Each of these keeps a count as the landing, then opens on the held Aoraki.',
+      citems: [
+        ['countries', 'Countries', 'The 21 countries in the order he reached them, landing on home. The current one.'],
+        ['flights', 'Flights', '41 flights counted one by one, each as its route: TPE to KIX, KIX to CTS.'],
+        ['km', 'Kilometres', 'The kilometres flown climb to 169,000 while the globe behind turns with them.'],
+        ['photos', 'Photographs', 'All 93 photographs flash past, one frame each, the number counting under them.'],
+        ['cities', 'Cities', '60 cities fill the screen as a wall of names; the number cuts through them.'],
+        ['years', 'Years', 'A year clock from 2010 to 2026, each year showing the countries it added.'],
+        ['light', 'By the light', 'The photographs counted by their light: night, blue hour, golden hour, day; the screen tints with each.'],
+        ['shutter', 'Shutter', '71 shutter speeds read from the files, clicking faster and faster, each click a flash.'],
+        ['home', 'Home', 'It counts down through the 21 to the one he always flies from, Taiwan, which turns orange.'],
+        ['dial', 'The dial', 'The number spins up through every digit on a rotary counter before locking on 21.'],
+      ],
+      items: [
+        ['film', 'Held', 'Aoraki held as the one photograph. The coordinates travel from Taipei to the place while a faint globe turns behind it; the picture pulls into focus.'],
+        ['strip', 'The strip', 'A row of ten frames rushes past and slows to a stop on Aoraki, which then grows to fill the screen.'],
+        ['unfold', 'The curtain', 'The Matterhorn opens in six vertical blades from the centre outward, as a curtain.'],
+        ['shutter', 'The exposure', 'Black. An iris opens on the aurora while the exposure counts its real twenty seconds.'],
+        ['contact', 'The rush', 'Every photograph flies toward the camera and past it; Aoraki is what remains, pulling into focus.'],
+        ['letters', 'The name', 'TUAN cut out of Fuji at dawn. Scrolling pushes the camera through the letters into the photograph.'],
+      ],
+    },
+    zh: {
+      title: '開場', top: '首頁開場的十六種做法：先是十種數法，再來是數完之後的六種開場。每個連結打開整頁，用那一種版本；第一個畫面之後都一樣。',
+      intro: '首頁開場的六種做法。每個連結打開整頁，用那一種開場；第一個畫面之後都一樣。',
+      how: '每一種按「喜歡」或「不要」，寫一句筆記。打字就會存，Claude 直接讀得到。',
+      open: '打開', good: '喜歡', bad: '不要', note: '給 Claude 的筆記：喜歡什麼、要改什麼', general: '其他想法', saved: '已存，Claude 讀得到。', local: '只存在這個瀏覽器',
+      counts: '十種數法',
+      countsIntro: '你喜歡數數的開場。這十種都把數數當作第一個畫面，數完再打開定格的庫克山。',
+      citems: [
+        ['countries', '國家', '21 個國家，照你到達的順序數，最後停在家。目前的版本。'],
+        ['flights', '航班', '41 趟航班一趟一趟數，每一趟是一條航線：TPE 到 KIX、KIX 到 CTS。'],
+        ['km', '公里數', '飛行的公里數一路爬到 169,000，後面的地球跟著轉。'],
+        ['photos', '照片', '93 張照片一張一格閃過去，數字在下面數。'],
+        ['cities', '城市', '60 個城市的名字鋪滿整個畫面；數字從中間穿過去。'],
+        ['years', '年份', '從 2010 數到 2026 的年份鐘，每一年底下出現那年新去的國家。'],
+        ['light', '照光線', '照片依光線數：夜晚、藍調、黃金、白天，畫面跟著變色。'],
+        ['shutter', '快門', '從檔案讀出的 71 個快門速度，越數越快，每一下一道閃光。'],
+        ['home', '家', '從 21 倒數回 1，台灣，每次出發的地方，數字轉成橘色。'],
+        ['dial', '轉盤', '數字像計數器一樣每一位都轉過去，最後鎖在 21。'],
+      ],
+      items: [
+        ['film', '定格', '庫克山一張照片停住。座標從台北走到那個地方，淡淡的地球在後面轉；畫面慢慢對上焦。'],
+        ['strip', '底片', '十格照片快速滑過，慢下來停在庫克山，那一格再放大到整個畫面。'],
+        ['unfold', '布幕', '馬特洪峰從中間往兩邊，六片垂直的葉片像布幕一樣打開。'],
+        ['shutter', '曝光', '全黑。快門光圈在極光上打開，曝光秒數數到它真正的二十秒。'],
+        ['contact', '衝過來', '所有照片朝鏡頭飛來、飛過去；留下來的是庫克山，慢慢對上焦。'],
+        ['letters', '名字', 'TUAN 從黎明的富士山裡切出來。往下捲，鏡頭從字母裡穿進照片。'],
+      ],
+    },
+  };
+  const NAME = 'openings';
+  let mine = { items: {} };
+  try { mine = JSON.parse(localStorage.getItem('d3-openings')) || mine; } catch (e) { /* storage blocked */ }
+  mine.items = mine.items || {};
+  const esc = D3.esc, $ = (s) => document.querySelector(s);
+  const of = (id) => (mine.items[id] = mine.items[id] || {});
+  let timer = 0;
+  function save() {
+    const w = W[D3.lang];
+    mine.names = Object.fromEntries([...W.en.citems, ...W.en.items].map(([id, name]) => [id, name]));
+    try { localStorage.setItem('d3-openings', JSON.stringify(mine)); } catch (e) { /* storage blocked */ }
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      fetch(`/__reviews/${NAME}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(mine) })
+        .then((r) => { $('#cz-state').textContent = r.ok ? w.saved : w.local; })
+        .catch(() => { $('#cz-state').textContent = w.local; });
+    }, 500);
+  }
+  function render() {
+    const w = W[D3.lang];
+    document.title = `${w.title} · tuan photography 陳亮元`;
+    $('[data-t="title"]').textContent = w.title; $('[data-t="intro"]').textContent = w.top; $('[data-t="how"]').textContent = w.how; $('[data-t="general"]').textContent = w.general;
+    $('#cz-general').placeholder = w.general; $('#cz-general').value = mine.general || '';
+    const row = ([id, name, say], i, href) => { const my = mine.items[id] || {}; return `
+      <li class="cz__item" data-id="${id}">
+        <span class="cz__mark mono" aria-hidden="true">${String(i + 1).padStart(2, '0')}</span>
+        <h2 class="cz__name">${esc(name)}</h2>
+        <p class="cz__say">${esc(say)}</p>
+        <p class="cz__go"><a class="link" href="${href}">${esc(w.open)}</a></p>
+        <div class="cz__mine">
+          <div class="cz__verdict" role="group" aria-label="${esc(name)}">
+            <button type="button" class="cz__v" data-v="good" aria-pressed="${my.verdict === 'good'}">${esc(w.good)}</button>
+            <button type="button" class="cz__v" data-v="bad" aria-pressed="${my.verdict === 'bad'}">${esc(w.bad)}</button>
+          </div>
+          <textarea class="cz__note" rows="2" aria-label="${esc(w.note)}" placeholder="${esc(w.note)}">${esc(my.note || '')}</textarea>
+        </div>
+      </li>`; };
+    $('#list').innerHTML = `<li class="cz__group"><h2 class="cz__group-h">${esc(w.counts)}</h2><p class="cz__say">${esc(w.countsIntro)}</p></li>` +
+      w.citems.map((it, i) => row(it, i, `index.html?intro=${it[0]}`)).join('') +
+      `<li class="cz__group"><h2 class="cz__group-h">${esc(w.title)}</h2><p class="cz__say">${esc(w.intro)}</p></li>` +
+      w.items.map((it, i) => row(it, i, `index.html?hero=${it[0]}`)).join('');
+  }
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('.cz__v');
+    if (!b) return;
+    const it = of(b.closest('.cz__item').dataset.id);
+    it.verdict = it.verdict === b.dataset.v ? '' : b.dataset.v;
+    b.closest('.cz__verdict').querySelectorAll('.cz__v').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.v === it.verdict)));
+    save();
+  });
+  document.addEventListener('input', (e) => {
+    const t = e.target.closest('.cz__note');
+    if (!t) return;
+    if (t.id === 'cz-general') mine.general = t.value; else of(t.closest('.cz__item').dataset.id).note = t.value;
+    save();
+  });
+  fetch(`/__reviews/${NAME}`).then((r) => r.json()).then((d) => { if (d && d.items) { mine = d; mine.items = mine.items || {}; render(); } }).catch(() => {});
+  D3.onLang(render);
+  render();
+})();
+</script>
+</body>
+</html>
